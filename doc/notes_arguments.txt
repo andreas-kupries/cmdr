@@ -65,3 +65,11 @@ alias NAME
 
 	Declare the name as alias for the last declared argument.
 	See flag for how the name transforms to the recognized option.
+
+=============================
+value API
+
+flags - query which flags are defined by the argument or flag.
+arguments - query which arg names are defined by the arg or flag
+reset - reset value to empty
+
