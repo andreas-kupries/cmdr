@@ -24,22 +24,20 @@ oo::class create ::xo::actor {
     # # ## ### ##### ######## #############
     ## Lifecycle
 
-    constructor {{thename {}}} {
-	my name: $thename
+    constructor {} {
+	set myname        {}
+	set mydescription {}
+	set mysuper       {}
+	set mystore       {}
 	return
     }
 
     # # ## ### ##### ######## #############
-    ## Public APIs:
-    #
-    # - Perform an action.
-    # - Return help information about the action.
-    # - Return actor name.
-    #
-    ## Overridden by sub-classes.
-
-    method do   {args} {}
-    method help {}     {}
+    ## Public API: Common actor attributes and behaviour
+    ## - Name.
+    ## - Description (help information).
+    ## - Chain of command.
+    ## - Associative data store
 
     method name {} {
 	return $myname
@@ -47,12 +45,60 @@ oo::class create ::xo::actor {
 
     method name: {thename} {
 	set myname $thename
+	return
     }
+
+    method description {} {
+	return $mydescription
+    }
+
+    method description: {thedescription} {
+	set mydescription $the description
+	return
+    }
+
+    method super {} {
+	return $mysuper
+    }
+
+    method super: {thesuper} {
+	set mysuper $thesuper
+	return
+    }
+
+    method get {key} {
+	# Satisfy from local store first ...
+	if {[dict exists $mystore $key]} {
+	    return [dict get $mystore $key]
+	}
+	# ... then ask in the chain of command ...
+	if {$super ne {}} {
+	    return [$super get $key]
+	}
+	# ... and fail if we are at the top.
+	return -code error -errorcode {XO STORE UNKNOWN} \
+	    "Expected known key for get, got \"$key\""
+    }
+
+    method set {key data} {
+	dict set mystore $key $data
+	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Public APIs:
+    ## Overridden by sub-classes.
+
+    # - Perform an action.
+    # - Return help information about the action.
+
+    method do   {args} {}
+    method help {}     {}
 
     ##
     # # ## ### ##### ######## #############
 
-    variable myname
+    variable myname mydescription mysuper mystore
 
     # # ## ### ##### ######## #############
 }

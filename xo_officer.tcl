@@ -37,19 +37,23 @@ oo::class create ::xo::officer {
     # officer $name $actions              --> sub-ordinate officer with more actions.
     # default $name                       --> default action
 
-    constructor {name actions} {
-	next $name
+    constructor {super name actions} {
+	my super: $super
+	my name:  $name
 
 	set myactions  $actions ; # Action spec for future initialization
 	set myinit     no       ; # Dispatch map will be initialized lazily
 	set mymap      {}       ; # Action map starts knowing nothing
 	set mycommands {}       ; # Ditto
-
-	link \
-	    DefAction ValidateAsUnknown Setup \
-	    Last Default Default? Handler
-	# DecodeLine Default Complete
 	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Public API.
+    ## - Determine handler for an action.
+
+    method lookup {name} {
+	return [dict get $mymap a,$name]
     }
 
     # # ## ### ##### ######## #############
@@ -57,32 +61,32 @@ oo::class create ::xo::officer {
     ## Core setup code runs only once.
 
     method Setup {} {
+	# Process myactions only once.
 	if {$myinit} return
-	# Process myactions, initialize our dispatcher.
-	link private officer
-	eval $myactions
-	set mycommands [lsort -dict $mycommands]
 	set myinit 1
+
+	# Make the DSL commands directly available.
+	# Note that "description:" and "common" are superclass methods,
+	# and renamed to their DSL counterparts.
+	link \
+	    private officer default alias \
+	    {description description:} {common set}
+	eval $myactions
+
+	set mycommands [lsort -dict $mycommands]
 	return
     }
 
     # # ## ### ##### ######## #############
     ## Commands of the specification language.
 
-    method private {name arguments cmdprefix} {
-	# Create actor which can perform a specific actions.
-	DefAction private $name $arguments $cmdprefix
-	return
-    }
+    forward private my DefAction private
+    forward officer my DefAction officer
 
-    method officer {name actions} {
-	# Create actor which can perform multiple actions, ...
-	DefAction officer $name $actions
-	return
-    }
-
-    method default {name} {
-	if {![dict exists $mymap a,$name]} {
+    method default {{name {}}} {
+	if {[llength [info level 0]] == 3} {
+	    set name [my Last]
+	} elseif {![dict exists $mymap a,$name]} {
 	    return -code error -errorcode {XO ACTION UNKNOWN} \
 		"Unable to set default, expected action, got \"$name\""
 	}
@@ -90,16 +94,35 @@ oo::class create ::xo::officer {
 	return
     }
 
-    method alias {altname} {
-	ValidateAsUnknown $altname
-	# Copy definition the alias is for.
-	dict set mymap a,$altname [Handler [Last]]
+    method alias {altname args} {
+	set n [llength $args]
+	if {($n == 1) || ([lindex $args 0] ne "=")} {
+	    return -code error \
+		"wrong\#args: should be \"name ?= cmd ?word...??\""
+	}
+	my ValidateAsUnknown $altname
+
+	if {$n == 0} {
+	    # Simple alias, to preceding action.
+	    set handler [my lookup [my Last]]
+	} else {
+	    # Track the chain of words through the existing hierarchy
+	    # of actions to locate the final handler.
+	    set handler $self
+	    foreach word [lassign $args _dummy_] {
+		set handler [$handler lookup $word]
+	    }
+	}
+
+	# Essentially copy the definition of the command the alias
+	# refers to.
+	dict set mymap a,$altname $handler
 	return
     }
 
     # Internal. Common code to declare actions and their handlers.
     method DefAction {what name args} {
-	ValidateAsUnknown $name
+	my ValidateAsUnknown $name
 
 	# Note: By placing the subordinate objects into the officer's
 	# namespace they will be automatically destroyed with the
@@ -141,28 +164,24 @@ oo::class create ::xo::officer {
 	return [dict exists $mymap a,$name]
     }
 
-    method Handler {name} {
-	return [dict get $mymap a,$name]
-    }
-
-
     # # ## ### ##### ######## #############
     ## Command dispatcher. Choose the subordinate and delegate.
 
     method do {args} {
-	Setup
+	my Setup
 
 	# No command specified.
 	if {![llength $args]} {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
+	    error "REPL NYI" ; # XXX completion...
 	    set shell [linenoise::facade new [self]]
 	    $shell repl
 	    $shell destroy
 	    return
 	}
 
-	Do {*}$args
+	my Do {*}$args
 	return
     }
 
@@ -171,8 +190,8 @@ oo::class create ::xo::officer {
 	# Empty command. Delegate to the default, if we have any.
 	# Otherwise fail.
 	if {![llength $args]} {
-	    if {[Default?]} {
-		return [[Handler [Default]] do]
+	    if {[my Default?]} {
+		return [[my lookup [my Default]] do]
 	    }
 	    return -code error -errorcode {XO DO EMPTY} \
 		"No command found."
@@ -182,15 +201,15 @@ oo::class create ::xo::officer {
 	set remainder [lassign $args cmd]
 
 	# Delegate to the handler for a known command.
-	if {[Known $cmd]} {
-	    [Handler $cmd] do {*}$remainder
+	if {[my Known $cmd]} {
+	    [my lookup $cmd] do {*}$remainder
 	}
 
 	# The command word is not known. Delegate the full command to
 	# the default, if we have any. Otherwise fail.
 
-	if {[Default?]} {
-	    return [[Handler [Default]] do {*}$args]
+	if {[my Default?]} {
+	    return [[my lookup [my Default]] do {*}$args]
 	}
 
 	return -code error -errorcode {XO DO UNKNOWN} \
@@ -238,7 +257,7 @@ oo::class create ::xo::officer {
     method complete-words {parse} {
 	# Note: This may be invoked from a higher-level officer doing
 	# command completion.
-	Setup
+	my Setup
 
 	dict with $config {} ;# --> line ok words eos
 
@@ -270,26 +289,11 @@ oo::class create ::xo::officer {
 		# Default: Recurse to its handler with an empty line
 		# and use its results as our own.
 		dict set config line {}
-		return [[Handler [Default]] complete-words $config]
+		return [[my lookup [my Default]] complete-words $config]
 	    }
 
 	    # Some words.
 	    set c [lindex $words 0]
-
-
-	# No ending in whitespace.
-
-	# 1. whitespace at the end of the line?
-	#    string before should have good syntax.
-	#    if not no completion.
-	#    if yes, count words.
-	#    one word, or more -> should be command.
-	#                if not use default.
-	#                no default -> no completion
-	#       we have a command. trim it from the
-	#       beginning of the line, and dispatch
-	#       to the associated subordinate for
-	#       completion of the truncated line.
 
 
 
@@ -311,7 +315,7 @@ oo::class create ::xo::officer {
     # # ## ### ##### ######## #############
 
     method help {} {
-	Setup
+	my Setup
 	# Query each subordinate for their help and use it to piece ours together.
 	# Note: Result is not finally formatted text, but nested dict structure.
 	# Same is expected from the sub-ordinates

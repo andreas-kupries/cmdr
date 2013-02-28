@@ -13,6 +13,7 @@
 package require Tcl 8.5
 package require TclOO
 package require xo::actor
+package require xo::config
 package require ooutil 1.2 ;# link helper
 
 # # ## ### ##### ######## ############# #####################
@@ -25,42 +26,82 @@ oo::class create ::xo::private {
 
     # argument specification + callback performing the action.
     # callback takes dictionary containing the actual arguments
-    constructor {name arguments cmdprefix} {
-	next $name
+    constructor {super name arguments cmdprefix} {
+	my super: $super
+	my name:  $name
+
+	set myarguments $arguments
+	set mycmd       $cmdprefix
+	set myinit      0
+	return
     }
 
-    # argument specification:
-    # - script.
-    # - define the commands.
+    # # ## ### ##### ######## #############
+    ## Internal. Argument processing. Defered until required.
+    ## Core setup code runs only once.
 
+    method Setup {} {
+	# Process myarguments only once.
+	if {$myinit} return
+	set myinit 1
 
-	# XXX run the specification in my instance context. note that
-	# XXX we need access to the methods without 'my'.
+	# Create the instance to hold the arguments.
+	set myconfig [xo::config create config]
 
-	# body or cmd prefix ? - cmdprefix is easier for the arguments to pass in.
-	# - standard argument ? - xo (context)
+	# Make the DSL commands directly available.
+	# Note that "description:" is a superclass method, and renamed
+	# to its DSL counterpart. With the exception of "use"
+	# everything else goes to the internal configuration instance.
 
-	# process interface, filling out holes...
-	# do not touch empty interfaces.
+	link \
+	    {description: description} use input \
+	    optional splat flag invisible alias
 
-	# interface:
-	# -- below is dict. alternate would be script, with commands
-	#    setting things => command object getting configured.
+	eval $myarguments
 
-	# map input names to input specifications -> order important
-	# specification is dictionary.
-	# - input -> argument|flag
-	# - argument may be optional
-	# - flag (input?) may be hidden
-	# - flag may have aliases (alternate names)
-	# - input may have default value, or callback for entry of such
-	# - input may have validation (type of value, callback - snit validation type).
-	# - input may have callback for calculated entry (interactive or other)
+	config complete
+	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Commands of the specification language.
+
+    forward flag      config add flag
+    forward input     config add input
+    forward invisible config add invisible
+    forward optional  config add optional
+    forward splat     config add splat
+    forward alias     config alias
+
+    method use {name} {
+	# Pull code fragment out of the data store and run.
+	uplevel 1 [my get $name]
+	return
+    }
 
     # # ## ### ##### ######## #############
 
-    method do {args} {}
-    method help {} {}
+    method do {args} {
+	my Setup
+
+	config parse {*}$args
+
+	if {[config mustinteract]} {
+	    config interact
+	}
+
+	# Call actual command, hand it the filled configuration.
+	$mycmd $myconfig 
+    }
+
+    method help {} {
+	my Setup
+	return
+    }
+
+    # # ## ### ##### ######## #############
+
+    variable myarguments mycmd myinit myconfig
 
     # # ## ### ##### ######## #############
 }
