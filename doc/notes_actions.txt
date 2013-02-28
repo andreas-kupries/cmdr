@@ -1,0 +1,35 @@
+DSL to declare a tree of actions and their arguments.
+
+description TEXT
+
+	Help text for the officer, i.e. command.
+
+private NAME ARGUMENTS CMD
+
+	Declare private of given name, argument specification an Tcl
+	command prefix to invoke when called on its action.
+
+officer NAME ACTIONS
+
+	Declare officer of given name with script of action
+	specifications (same language).
+
+default ?NAME?
+
+	Declare the named action as the default to use when the
+	incoming command word is not known.
+
+	Without name make the last declared action the default.
+
+alias NAME
+
+	Declare the name as alias for the last declared action.
+
+alias NAME = WORD...
+
+      	Declare the name as alias for the command path in the tree.
+
+common NAME DATA
+
+	Store the named data in the associative data store.
+	This is a separate namespace from the action names.

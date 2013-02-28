@@ -1,0 +1,41 @@
+DSL for the configuration of a single argument (value).
+Not all command apply to all argument classes.
+
+description TEXT
+
+	Help text for the argument or flag.
+	Defaults to the argument name itself, plus the validation command.
+
+	Applies to:		input, optional, splat, flag
+	Does not apply to:	invisible
+
+hidden
+	When present hide the argument or flag from the help.
+	Default: Not hidden.
+
+	Applies to:		input, optional, splat, flag
+	Does not apply to:	invisible
+
+interactive ?TEXT?
+
+	When present the argument can ask interactively for its value.
+	The text is for the interactive prompt.
+	Without text a default text is made, based on the argument
+	name and validation.
+
+	Applies to:		input, optional
+	Does not apply to:	splat, flag, invisible
+
+default DATA
+
+	The raw default value for the argument or flag.
+	When used this value goes through regular validation.
+
+	Applies to:		input, optional, flag, invisible
+	Does not apply to:	splat
+
+generate CMD
+
+validate CMD
+
+on CMD

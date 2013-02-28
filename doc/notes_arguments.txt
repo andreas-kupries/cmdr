@@ -1,0 +1,67 @@
+DSL to declare the arguments for an action.
+See notes_actions.txt, "private" for the Tcl command using this.
+
+description TEXT
+
+	Help text for the private, i.e. command.
+	Has no other place for it than its argument specification.
+
+use NAME
+	Take the named value from the associative data store, possibly
+	following the chain of command. Treat it as script of DSL
+	commands and run them in place.
+
+input NAME VALSPEC
+
+	Declare a regular mandatory command argument.
+	Details of its configuration are in the specification.
+	Arguments are filled in order of occurence, after options
+	have been extracted.
+
+	Future/Maybe: Implies options:
+		--NAME VALUE	For unordered specification
+		--ask-NAME	Bool. Force interactive entry.
+
+optional NAME VALSPEC
+
+	Declare a regular optional command argument.
+	Details of its configuration are in the specification.
+	Arguments are filled in order of occurence, after options
+	have been extracted.
+
+	Future/Maybe: Implies options:
+		--NAME VALUE	For unordered specification
+		--ask-NAME	Bool. Force interactive entry.
+
+splat NAME VALSPEC
+
+	Declare a regular command argument which is a list taking all
+	remaining arguments.
+	Details of its configuration are in the specification.
+
+	Must be last (versus input, and optional).
+
+	Arguments are filled in order of occurence, after options
+	have been extracted.
+
+	Presence affects option extraction. The moment we have found
+	all non-splat non-option arguments the remainder must belong
+	to the splat, regardless of argument or option.
+
+flag NAME VALSPEC
+
+	Declare an option, i.e. flag argument.
+	Details of its configuration are in the specification.
+
+	Recognized option is -N if NAME is a single character.
+	Otherwise it is --NAME
+
+invisible NAME VALSPEC
+
+	Declare an argument not visible to the user and not filled by
+	it. For use by the command, must auto-initialize on use.
+
+alias NAME
+
+	Declare the name as alias for the last declared argument.
+	See flag for how the name transforms to the recognized option.

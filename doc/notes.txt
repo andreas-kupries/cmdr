@@ -1,0 +1,47 @@
+Classes
+	Main xo is wrapper/singleton/enseble around officer.
+
+	actor	base class, instances can do actions
+
+	- private	derived. can do only/exactly one action.
+	  	     	knows how parse and handle argument specs
+
+	- officer	derived. can do multiple actions. but not by
+	  	     	itself, only through delegation to other
+	  	     	officers or privates.
+
+	actors have a name (for use in prompts).
+	actors know their boss (chain of command).
+
+	actors (or just officers?) have associative data store for
+	sharing of knowledge in the chain. -- Use for fragments of
+	argument specs.
+
+	the derived actors parse their specs only when needed,
+	i.e. defered until actually called on in some way. Keeps
+	startup time low, unfolding only the parts of the command
+	hierarchy required by the system.
+
+
+Argument Spec and Values
+
+	config	base class. collection of arguments.
+		in-memory representation of an argument spec.
+
+	value	base class for a single argument.
+		configuration and value.
+		constructed from argument spec.
+
+	- input		derived. mandatory argument.
+	  		filled from parameters in order.
+
+	- optional	derived. optional argument.
+	  		filled from parameters in order.
+
+	- option	derived. option argument.
+
+	- invisible	derived. argument not visible to the user.
+
+	All value instances have access to the configuration instance
+	they are part of. Allows them to have access to all other
+	values, be they arguments, options, or invisible.
