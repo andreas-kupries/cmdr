@@ -69,7 +69,10 @@ alias NAME
 =============================
 value API
 
-flags - query which flags are defined by the argument or flag.
+flags     - query which flags are defined by the argument or flag.
 arguments - query which arg names are defined by the arg or flag
-reset - reset value to empty
+reset     - reset value to empty
 
+process NAME QUEUE - Parse head of queue to get user value of argument or flag.
+
+get - 

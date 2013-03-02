@@ -36,6 +36,34 @@ default DATA
 
 generate CMD
 
+	 Command prefix executed to generate the value (*) of the
+	 argument or flag when requested. The details of its
+	 interaction with
+
+	 	default, interactive
+
+	are expained in a separate document. Note, the result is the
+	internal representation of the value, and thus does not have
+	to be, actually must not be, validated.
+
+	Applies to:		input, optional, flag, invisible
+	Mandatory to:		invisible
+	Does not apply to:	splat
+
 validate CMD
 
+	Command prefix executed to validate user input (string), and
+	return the canonical internal representation of said input.
+
+	Applies to:		input, optional, flag, splat
+	Does not apply to:	invisible
+
 on CMD
+
+	Command prefix executed when the internal value of the
+	argument or flag is defined.
+
+	Applies to:	input, optional, flag, splat, invisible
+
+
+-- skip -- typecheck - allow rejection of value, pass to next

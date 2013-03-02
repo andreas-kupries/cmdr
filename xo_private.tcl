@@ -86,6 +86,7 @@ oo::class create ::xo::private {
 
 	config parse {*}$args
 
+	# XXX not implemented yet.
 	if {[config mustinteract]} {
 	    config interact
 	}
