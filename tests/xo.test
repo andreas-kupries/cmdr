@@ -1,0 +1,51 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## xo.test:  tests for the xo package
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support TclOO
+kt require support oo::util 1.2
+kt require support struct::queue
+kt require support try
+kt require support string::token::shell
+
+kt local   support xo::value
+kt local   support xo::config
+kt local   support xo::actor
+kt local   support xo::private
+kt local   support xo::officer
+
+kt local   testing xo
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-1.0 {new, wrong\#args, not enough} -body {
+    xo new
+} -returnCodes error -result {wrong # args: should be "xo new spec"}
+
+test xo-1.1 {new, wrong\#args, too many} -body {
+    xo new X Y
+} -returnCodes error -result {wrong # args: should be "xo new spec"}
+
+test xo-1.2 {create, wrong\#args, not enough} -body {
+    xo create
+} -returnCodes error -result {wrong # args: should be "xo create obj spec"}
+
+test xo-1.3 {create, wrong\#args, not enough} -body {
+    xo create O
+} -returnCodes error -result {wrong # args: should be "xo create obj spec"}
+
+test xo-1.4 {new, wrong\#args, too many} -body {
+    xo create O X Y
+} -returnCodes error -result {wrong # args: should be "xo create obj spec"}
+
+# # ## ### ##### ######## ############# #####################
+
+
+
+
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests

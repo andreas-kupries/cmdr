@@ -12,9 +12,9 @@
 
 package require Tcl 8.5
 package require TclOO
+package require oo::util 1.2 ;# link helper
 package require xo::actor
 package require xo::config
-package require ooutil 1.2 ;# link helper
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.

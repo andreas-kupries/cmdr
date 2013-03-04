@@ -7,7 +7,7 @@
 
 package require Tcl 8.5
 package require TclOO
-package require ooutil 1.2    ;# link helper
+package require oo::util 1.2    ;# link helper
 
 # # ## ### ##### ######## ############# #####################
 ## Definition

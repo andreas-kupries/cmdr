@@ -11,15 +11,9 @@
 
 package require Tcl 8.5
 package require TclOO
-package require xo::value
-
-package require xo::flag      ;# option argument
-package require xo::input     ;# regular argument
-package require xo::invisible ;# internal state
-package require xo::optional  ;# optional argument, but not option
-package require xo::splat     ;# list of args
-package require ooutil 1.2    ;# link helper
+package require oo::util 1.2    ;# link helper
 package require struct::queue
+package require xo::value ; # Argument classes
 
 # # ## ### ##### ######## ############# #####################
 ## Definition

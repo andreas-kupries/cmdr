@@ -11,11 +11,11 @@
 
 package require Tcl 8.5
 package require TclOO
-package require ooutil 1.2 ;# link helper.
+package require oo::util 1.2 ;# link helper.
+package require string::token::shell
+package require try
 package require xo::actor
 package require xo::private
-package require string::atoken::shell
-package require try
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
