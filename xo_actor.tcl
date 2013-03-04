@@ -49,11 +49,12 @@ oo::class create ::xo::actor {
     }
 
     method description {} {
+	my Setup ; # Calls into the derived class
 	return $mydescription
     }
 
     method description: {thedescription} {
-	set mydescription $the description
+	set mydescription $thedescription
 	return
     }
 
@@ -66,7 +67,14 @@ oo::class create ::xo::actor {
 	return
     }
 
+    method keys {} {
+	my Setup
+	return [dict keys $mystore]
+    }
+
     method get {key} {
+	my Setup ; # Call into derived class.
+
 	# Satisfy from local store first ...
 	if {[dict exists $mystore $key]} {
 	    return [dict get $mystore $key]

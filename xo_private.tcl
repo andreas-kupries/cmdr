@@ -27,6 +27,8 @@ oo::class create ::xo::private {
     # argument specification + callback performing the action.
     # callback takes dictionary containing the actual arguments
     constructor {super name arguments cmdprefix} {
+	next
+
 	my super: $super
 	my name:  $name
 

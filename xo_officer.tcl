@@ -38,6 +38,8 @@ oo::class create ::xo::officer {
     # default $name                       --> default action
 
     constructor {super name actions} {
+	next
+
 	my super: $super
 	my name:  $name
 
@@ -76,6 +78,10 @@ oo::class create ::xo::officer {
 
     method lookup {name} {
 	my Setup
+	if {![dict exists $mymap a,$name]} {
+	    return -code error -errorcode {XO ACTION UNKNOWN} \
+		"Expected action name, got \"$name\""
+	}
 	return [dict get $mymap a,$name]
     }
 
@@ -169,7 +175,7 @@ oo::class create ::xo::officer {
 
     method Last {} {
 	if {![dict exists $mymap last]} {
-	    return code error -errorcode {XO ACTION NO-LAST} \
+	    return -code error -errorcode {XO ACTION NO-LAST} \
 		"Cannot be used as first command"
 	}
 	return [dict get $mymap last]
