@@ -21,12 +21,13 @@ namespace eval ::xo {
 
 # # ## ### ##### ######## #############
 
-proc ::xo::new {spec} {
-    return [xo::officer new $spec]
+proc ::xo::new {name spec} {
+    return [xo::officer new {} $name $spec]
 }
 
-proc ::xo::create {obj spec} {
-    return [xo::officer create $obj $spec]
+proc ::xo::create {obj name spec} {
+    # Uplevel to ensure proper namespace for the 'obj'.
+    return [uplevel 1 [list xo::officer create $obj {} $name $spec]]
 }
 
 # # ## ### ##### ######## ############# #####################

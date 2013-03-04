@@ -49,10 +49,33 @@ oo::class create ::xo::officer {
     }
 
     # # ## ### ##### ######## #############
-    ## Public API.
+    ## Public API. (Introspection, mostly).
+    ## - Determine set of known actions.
+    ## - Determine default action.
     ## - Determine handler for an action.
 
+    method known {} {
+	my Setup
+	set result {}
+	dict for {k v} $mymap {
+	    if {![string match a,* $k]} continue
+	    lappend result [string range $k 2 end]
+	}	
+	return $result
+    }
+
+    method hasdefault {} {
+	my Setup
+	return [dict exists $mymap default]
+    }
+
+    method default {} {
+	my Setup
+	return [dict get $mymap default]
+    }
+
     method lookup {name} {
+	my Setup
 	return [dict get $mymap a,$name]
     }
 
@@ -69,7 +92,7 @@ oo::class create ::xo::officer {
 	# Note that "description:" and "common" are superclass methods,
 	# and renamed to their DSL counterparts.
 	link \
-	    private officer default alias \
+	    private officer {default Default} alias \
 	    {description description:} {common set}
 	eval $myactions
 
@@ -83,8 +106,8 @@ oo::class create ::xo::officer {
     forward private my DefAction private
     forward officer my DefAction officer
 
-    method default {{name {}}} {
-	if {[llength [info level 0]] == 3} {
+    method Default {{name {}}} {
+	if {[llength [info level 0]] == 2} {
 	    set name [my Last]
 	} elseif {![dict exists $mymap a,$name]} {
 	    return -code error -errorcode {XO ACTION UNKNOWN} \
@@ -96,7 +119,7 @@ oo::class create ::xo::officer {
 
     method alias {altname args} {
 	set n [llength $args]
-	if {($n == 1) || ([lindex $args 0] ne "=")} {
+	if {($n == 1) || (($n > 1) && ([lindex $args 0] ne "="))} {
 	    return -code error \
 		"wrong\#args: should be \"name ?= cmd ?word...??\""
 	}
@@ -108,7 +131,7 @@ oo::class create ::xo::officer {
 	} else {
 	    # Track the chain of words through the existing hierarchy
 	    # of actions to locate the final handler.
-	    set handler $self
+	    set handler [self]
 	    foreach word [lassign $args _dummy_] {
 		set handler [$handler lookup $word]
 	    }
@@ -129,7 +152,7 @@ oo::class create ::xo::officer {
 	# officer itself. No special code for cleanup required.
 
 	set handler [self namespace]::${what}_$name
-	xo::$what create $name $handler {*}$args
+	xo::$what create $handler [self] $name {*}$args
 
 	# ... then make it known to the dispatcher.
 	dict set mymap last $name
@@ -139,17 +162,9 @@ oo::class create ::xo::officer {
     }
 
     method ValidateAsUnknown {name} {
-	if {[dict exists mymap a,$name]} return
+	if {![dict exists $mymap a,$name]} return
 	return -code error -errorcode {XO ACTION KNOWN} \
 	    "Unable to learn $name, already specified."
-    }
-
-    method Default? {} {
-	return [dict exists $mymap default]
-    }
-
-    method Default {} {
-	return [dict get $mymap default]
     }
 
     method Last {} {
@@ -190,8 +205,8 @@ oo::class create ::xo::officer {
 	# Empty command. Delegate to the default, if we have any.
 	# Otherwise fail.
 	if {![llength $args]} {
-	    if {[my Default?]} {
-		return [[my lookup [my Default]] do]
+	    if {[my hasdefault]} {
+		return [[my lookup [my default]] do]
 	    }
 	    return -code error -errorcode {XO DO EMPTY} \
 		"No command found."
@@ -208,8 +223,8 @@ oo::class create ::xo::officer {
 	# The command word is not known. Delegate the full command to
 	# the default, if we have any. Otherwise fail.
 
-	if {[my Default?]} {
-	    return [[my lookup [my Default]] do {*}$args]
+	if {[my hasdefault]} {
+	    return [[my lookup [my default]] do {*}$args]
 	}
 
 	return -code error -errorcode {XO DO UNKNOWN} \
@@ -282,14 +297,14 @@ oo::class create ::xo::officer {
 	    # Good syntax
 	    if {![llength $words]} {
 		# No words
-		if {![dict exists mymap default]} {
+		if {![dict exists $mymap default]} {
 		    # No default: no completion.
 		    return {}
 		}
 		# Default: Recurse to its handler with an empty line
 		# and use its results as our own.
 		dict set config line {}
-		return [[my lookup [my Default]] complete-words $config]
+		return [[my lookup [my default]] complete-words $config]
 	    }
 
 	    # Some words.
