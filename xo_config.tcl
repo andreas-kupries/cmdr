@@ -12,7 +12,7 @@
 package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2    ;# link helper
-package require struct::queue
+package require struct::queue 1 ;#
 package require xo::value ; # Argument classes
 
 # # ## ### ##### ######## ############# #####################
@@ -38,8 +38,14 @@ oo::class create ::xo::config {
 
     method complete {} {
 	# Finalize the argument setup.
-	# - ex: unique option prefixes.
-	error "NYI [info level 0]"
+	# - TODO: unique option prefixes.
+	# - TODO: argument min/max counters
+
+	#array set _a $myargs ; parray _a ; unset _a
+	#array set _f $myargs ; parray _f ; unset _f
+	#array set _m $myargs ; parray _m ; unset _m
+
+	#error "NYI [info level 0]"
 	return
     }
 

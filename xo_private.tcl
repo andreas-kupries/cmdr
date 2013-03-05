@@ -56,7 +56,7 @@ oo::class create ::xo::private {
 	# everything else goes to the internal configuration instance.
 
 	link \
-	    {description: description} use input \
+	    {description description:} use input \
 	    optional splat flag invisible alias
 
 	eval $myarguments

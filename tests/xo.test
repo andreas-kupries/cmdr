@@ -80,16 +80,21 @@ test xo-2.1 {create, nothing} -setup {
 # # ## ### ##### ######## ############# #####################
 ## Hierarchy of actions, aliases, defaults.
 
-test xo-3.0 {hierarchy with defaults, aliases} -setup {
+test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -setup {
     proc DUMP {o {prefix {}}} {
+	# Dumping an officer
 	set result {}
+	# Description
 	lappend result [list {*}$prefix $o desc = [$o description]]
+	# Default action, if any.
 	if {[$o hasdefault]} {
 	    lappend result [list {*}$prefix $o default = [$o default]]
 	}
+	# Common store
 	foreach k [lsort -dict [$o keys]] {
 	    lappend result [list {*}$prefix $o $k := [$o get $k]]
 	}
+	# Delegates - Here all officers.
 	foreach a [lsort -dict [$o known]] {
 	    lappend result [list {*}$prefix $o $a = [$o lookup $a]]
 	    set c [$o lookup $a]
@@ -125,29 +130,29 @@ test xo-3.0 {hierarchy with defaults, aliases} -setup {
     x desc = TEST
     x default = bar
     x K := D
-    x bar = ::oo::Obj28::officer_bar
-    x ::oo::Obj28::officer_bar desc = {}
-    x ::oo::Obj28::officer_bar K := D
-    x pliers = ::oo::Obj30::officer_pliers
-    x ::oo::Obj30::officer_pliers desc = {}
-    x ::oo::Obj30::officer_pliers K := D
-    x ::oo::Obj30::officer_pliers U := V
-    x snafu = ::oo::Obj28::officer_bar
-    x ::oo::Obj28::officer_bar desc = {}
-    x ::oo::Obj28::officer_bar K := D
-    x tool = ::oo::Obj28::officer_tool
-    x ::oo::Obj28::officer_tool desc = {}
-    x ::oo::Obj28::officer_tool default = pliers
-    x ::oo::Obj28::officer_tool K := D
-    x ::oo::Obj28::officer_tool U := V
-    x ::oo::Obj28::officer_tool hammer = ::oo::Obj30::officer_hammer
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer desc = {}
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer K := D
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer U := V
-    x ::oo::Obj28::officer_tool pliers = ::oo::Obj30::officer_pliers
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers desc = {}
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers K := D
-    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers U := V
+    x bar = ::oo::Obj30::officer_bar
+    x ::oo::Obj30::officer_bar desc = {}
+    x ::oo::Obj30::officer_bar K := D
+    x pliers = ::oo::Obj32::officer_pliers
+    x ::oo::Obj32::officer_pliers desc = {}
+    x ::oo::Obj32::officer_pliers K := D
+    x ::oo::Obj32::officer_pliers U := V
+    x snafu = ::oo::Obj30::officer_bar
+    x ::oo::Obj30::officer_bar desc = {}
+    x ::oo::Obj30::officer_bar K := D
+    x tool = ::oo::Obj30::officer_tool
+    x ::oo::Obj30::officer_tool desc = {}
+    x ::oo::Obj30::officer_tool default = pliers
+    x ::oo::Obj30::officer_tool K := D
+    x ::oo::Obj30::officer_tool U := V
+    x ::oo::Obj30::officer_tool hammer = ::oo::Obj32::officer_hammer
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer desc = {}
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer K := D
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer U := V
+    x ::oo::Obj30::officer_tool pliers = ::oo::Obj32::officer_pliers
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers desc = {}
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers K := D
+    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers U := V
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -344,6 +349,38 @@ test xo-4.15 {officer DSL, common, wrong\#args} -setup {
 # # ## ### ##### ######## ############# #####################
 
 # TODO: privates (argument specifications & runtime parsing)
+
+test xo-6.0 {basic private} -setup {
+    proc DUMP {o {prefix {}}} {
+	# Dumping a private.
+	set result {}
+	# Description
+	lappend result [list {*}$prefix $o desc = [$o description]]
+	# Common store, inherited
+	foreach k [lsort -dict [$o keys]] {
+	    lappend result [list {*}$prefix $o $k := [$o get $k]]
+	}
+	# TODO: Arguments.
+	return $result
+    }
+    proc WRAP {list} {
+	set p "\n    "
+	return ${p}[join $list $p]\n
+    }
+} -body {
+    xo create x foo {
+	private bar {
+	    description TEST
+	} ::snafu
+    }
+    WRAP [DUMP [x lookup bar] x]
+} -cleanup {
+    x destroy
+    rename DUMP {}
+    rename WRAP {}
+} -result {
+    x ::oo::Obj53::private_bar desc = TEST
+}
 
 # # ## ### ##### ######## ############# #####################
 cleanupTests
