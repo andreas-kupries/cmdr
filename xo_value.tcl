@@ -16,75 +16,107 @@ oo::class create ::xo::value {
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
-    constructor {theconfig name valuespec} {
+    constructor {theconfig order hide list required name desc valuespec} {
 	# The valuespec is parsed immediately.  In contrast to actors,
 	# which defer until they are required.  As arguments are
 	# required when the using private is required further delay is
 	# nonsense.
 
-	set myname $name
+	set myname        $name
+	set mydescription $desc
 
-	# Value's configuration from spec.
-	set mydescription {} ;# no description
-	set myhidden      no ;# visible to help
+	set myisordered   $order
+	set myishidden    $hide
+	set myislist      $list
+	set myisrequired  $required
+
+	set myflags {}
+	if {!$myisordered} { lappend myflags [my Option $myname] }
+
 	set myinteractive no ;# no interactive query of value
 	set myprompt      {} ;# no prompt for interaction
-	set mydefault     {} ;# default value - raw
 	set myhasdefault  no ;# flag for default existence
+	set mydefault     {} ;# default value - raw
 	set mygenerate    {} ;# generator command
 	set myvalidate    {} ;# validation command
 	set myon          {} ;# action-on-definition command
+	set mythreshold   {} ;# threshold for optional arguments
 
-	# Translate the specification.
-	link description hidden interactive default generate validate on
+	# Import the DSL commands to translate the specification.
+	link \
+	    {xxx XXX} \
+	    {optional Optional} \
+	    {interact Interact} \
+	    {default  Default} \
+	    {generate Generate} \
+	    {validate Validate} \
+	    {on       On}
 	eval $valuespec
-	my FinalizeSpec
 
-	my reset
+	# Postprocessing ... Fill validation and other defaults
 
-	# Make the whole collection of arguments this one is a part of
-	# available in our namespace as fixed command "config", for
-	# the various command prefixes (which will be run in that
-	# namespace context).
+	my ValidationDefault
+	my DefaultDefault
+	my Flags
+
+	# Check constraints.
+
+	my Assert {$myisordered||$myhasdefault||[llength $mygenerate]||$myinteractive} \
+	    "Unordered parameter $myname must have default, generator, or interaction"
+	my Assert {$myisrequired||$myhasdefault||[llength $mygenerate]||$myinteractive} \
+	    "Optional parameter $myname must have default, generator, or interaction"
+	my Assert {!$myhasdefault||![llength $mygenerate]} \
+	    "Parameter $myname cannot have both default and generator"
+	my Assert {!$myinteractive||($prompt ne {})} \
+	    "Interactive parameter $myname must have a prompt"
+	my Assert {!$myislist||$myisordered} \
+	    "List parameter $myname must be an argument"
+	my Assert {!$myishidden||(!$myinteractive && !$myisordered)} \
+	    "Hidden parameter must be non-interactive option"
+
+	# Import the whole collection of parameters this one is a part
+	# of into our namespace, as the fixed command "config", for
+	# use by the various command prefixes (generate, validate,
+	# on), all of which will be run in our namespace context.
+
 	set myconfig $theconfig
 	interp alias {} [self namespace]::config {} $theconfig
+
+	# Start with a proper runtime state
+	my reset
 	return
     }
+
+    method isRequired {} { return $myisrequired }
 
     # # ## ### ##### ######## #############
     ## API for value specification DSL.
-    ## The derived classes may override one or more of these
-    ## to customize the DSL for their situation.
 
-    method description {text} {
-	set mydescription $text
-	return
-    }
-
-    method hidden {} {
-	set myhidden yes
-	return
-    }
-
-    method interactive {{prompt {}}} {
+    method Interactive {{prompt {}}} {
+	# (c6)
+	my Assert {!$myishidden} "Hidden parameter $myname cannot be set by the user"
 	if {$prompt eq {}} { set prompt "Enter ${myname}:" }
 	set myinteractive yes
 	set myprompt {}
 	return
     }
 
-    method default {value} {
+    method Default {value} {
+	# (c3)
+	my Assert {![llength $mygenerate]} "Parameter $myname default conflicts with generate command"
 	set myhasdefault yes
 	set mydefault    $value
 	return
     }
 
-    method generate {cmd} {
+    method Generate {cmd} {
+	# (c3)
+	my Assert {!$myhasdefault} "Parameter $myname generat commands conflicts with default value"
 	set mygenerate $cmd
 	return
     }
 
-    method validate {cmd} {
+    method Validate {cmd} {
 	set words [lassign $cmd cmd]
 
 	# Allow FOO shorthand for xo::validate::FOO
@@ -97,46 +129,77 @@ oo::class create ::xo::value {
 	return
     }
 
-    method on {cmd} {
+    method On {cmd} {
 	set myon $cmd
 	return
     }
 
+    method XXX {} {
+	my Assert {$myisordered && !$myisrequired} \
+	    "Required argument cannot change test-mode for optionals"
+	# Switch the mode of the optional argument from testing by
+	# argument counting to peeking at the queue and validating.
+	set mythreshold -1
+	return
+    }
+
     # # ## ### ##### ######## #############
-    ## Must be defined by derived classes.
 
-    method FinalizeSpec {} {
-	if {$myvalidate eq {}} {
-	    # No validator specified. Try to deduce something from the
-	    # default value if there is any. If there is not, go with
-	    # boolean.
+    method Assert {expr msg} {
+	if {[uplevel 1 [list expr $expr]]} return
+	return -code error -errorcode {XO PARAMETER FAIL} $msg
+    }
 
-	    if {!$myhasdefault} {
-		set myvalidate xo::validate::boolean
-	    } elseif {[string is boolean -strict $mydefault]} {
-		set myvalidate xo::validate::boolean
-	    } elseif {[string is integer -strict $mydefault]} {
-		set myvalidate xo::validate::integer
-	    } else {
-		# unable to deduce a type from the default.
-		# assume identity.
-		set myvalidate xo::validate::identity
-	    }
-	}
+    method ValidationDefault {} {
+	if {[llength $myvalidate]} return
 
-	if {!$myhasdefault} {
-	    # Without a default determine one from the chosen
-	    # validator.
+	# The parameter has no user-specified validator. Try to deduce
+	# something from the default value if there is any. If there
+	# is not, go with boolean. Exception: For a generator command
+	# always go with identity. The constraints ensure that we have
+	# no default in that case.
 
-	    if {$myvalidate eq "xo::validate::boolean"} {
-		my default no
-	    } elseif {$myvalidate eq "xo::validate::integer"} {
-		my default 0
-	    } elseif {$myvalidate eq "xo::validate::identity"} {
-		my default {}
-	    }
+	if {[llength $mygenerate]} {
+	    set myvalidate xo::validate::identity
+	} elseif {!$myhasdefault} {
+	    set myvalidate xo::validate::boolean
+	} elseif {[string is boolean -strict $mydefault]} {
+	    set myvalidate xo::validate::boolean
+	} elseif {[string is integer -strict $mydefault]} {
+	    set myvalidate xo::validate::integer
+	} else {
+	    # Unable to deduce a type from the default.
+	    # assume identity.
+	    set myvalidate xo::validate::identity
 	}
 	return
+    }
+
+    method DefaultDefault {} {
+	# Ignore this when a generator command is specified.
+	if {[llength $mygenerate]} return
+
+	# Ditto if the user specified something.
+	if {$myhasdefault} return
+
+	# Ask the chosen validator for a default value.
+	my Default [$myvalidate default]
+	return
+    }
+
+    method Flags {} {
+	# Special flags for boolean options
+	if {$myisordered} return
+	if {$myvalidate ne "xo::validate::boolean"} return
+	lappend myflags --no-$myname
+	return
+    }
+
+    method Option {name} {
+	if {[string length $name] == 1} {
+	    return "-$name"
+	}
+	return "--$name"
     }
 
     # # ## ### ##### ######## #############
@@ -144,84 +207,84 @@ oo::class create ::xo::value {
 
     method reset {} {
 	# Runtime configuration, initial state
-
-	set myhasstring 0
-	set mystring {}
-	set myhasvalue 0
-	set myvalue  {}
+	set myhasstring no
+	set mystring    {}
+	set myhasvalue  no
+	set myvalue     {}
 	return
     }
 
     # # ## ### ##### ######## #############
     ## API for management by xo::config.
-    ## Implemented in the derived classes.
 
-    method flags     {}        { return -code error "Undefined. Extend the sub-class" }
-    method arguments {}        { return -code error "Undefined. Extend the sub-class" }
-    method process   {n queue} { return -code error "Undefined. Extend the sub-class" }
-
-    # # ## ### ##### ######## #############
-    ## APIs for use in the actual command called by the private
-    ## containing the xo::config holding this value.
-    #
-    # - retrieve user string
-    # - retrieve validated value, internal representation.
-    # - query if a value is defined.
-
-    method string {} {
-	if {!$myhasstring} { return -code error Undefined }
-	return $mystring
+    method options {} {
+	return $myflags
     }
-
-    method get {} {
-	# compute argument value if any, cache result.
-	error NYI
-    }
-
-    method defined? {} {
-	# determine if we have an argument value, may compute it.
-	error NYI
-    }
-
-    # # ## ### ##### ######## #############
-
-    variable myconfig myname mydescription myhidden myinteractive \
-	myprompt mydefault myhasdefault myon mygenerate \
-	myvalidate myhasstring mystring myhasvalue myvalue
-
-    # # ## ### ##### ######## #############
-
-    # # ## ### ##### ######## #############
-}
-
-# # ## ### ##### ######## ############# #####################
-## Derived classes for the different kinds of arguments.
-
-# # ## ### ##### ######## ############# #####################
-
-oo::class create ::xo::flag {
-    # DSL overrides.
-
-    method interactive {} {
-	return -code error "Flag cannot be interactive"
-    }
-
-    # API overrides.
-
-    method flags {} {
-	lappend res [my Option $myname]
-	if {$myvalidate eq "xo::validate::boolean"} {
-	    lappend res --no-$myname
-	}
-	return $res
-    }
-
-    method arguments {} { return {} }
 
     method process {n queue} {
-	# XXX Note: Can stuff like this put into the validation class?
+	my Assert {!$myishidden} "Illegal command line input for hidden parameter"
 
+	if {$myisordered} {
+	    my ProcessArgument $queue
+	    return
+	}
+
+	# Option parameters.
+	my ProcessOption $queue
+	return
+    }
+
+    method Take {queue} {
+	if {$mythreshold >= 0} {
+	    # Choose by checking argument count against a threshold.
+	    # To work we now have to process all remaining options first.
+
+	    context parse-options
+	    if {[$queue size] <= $mythreshold} { return 0 }
+	} else {
+	    # Choose by peeking and validating the front value.
+	    try {
+		$myvalidate validate [$queue peek]
+	    } trap {XO VALIDATE} {e o} {
+		return 0
+	    }
+	}
+	return 1
+    }
+
+    method ProcessArgument {queue} {
+	# Argument parameters.
+
+	if {$myisrequired} {
+	    # Required arguments. Unconditionally retrieve their parameter value.
+	    if {$myislist} {
+		my Assert {[$queue size]} \
+		    "Required list argument $myname cannot be empty"
+		set mystring [$queue get [$queue size]]
+	    } else {
+		set mystring [$queue get]
+	    }
+	    set myhasstring 1
+	    return
+	}
+
+	# Optional argument. Conditionally retrieve the parameter
+	# value based on argument count and threshold or validation of
+	# the value. For the count+threshold method to work we have to
+	# process (i.e. remove) all the options first.
+
+	# Note also the possibility of the argument being a list.
+
+	if {![my Take $queue]} return
+	set mystring [$queue get]
+	set myhasstring 1
+	return
+    }
+
+    method ProcessOption {queue} {
 	if {$myvalidate eq "xo::validate::boolean"} {
+	    # XXX Consider a way of pushing this into the validator classes.
+
 	    # Look for and process boolean special forms.
 
 	    # Insert implied boolean flag value.
@@ -253,126 +316,39 @@ oo::class create ::xo::flag {
 	set myhasstring 1
 	return
     }
-}
 
-# # ## ### ##### ######## ############# #####################
+    # # ## ### ##### ######## #############
+    ## APIs for use in the actual command called by the private
+    ## containing the xo::config holding this value.
+    #
+    # - retrieve user string
+    # - retrieve validated value, internal representation.
+    # - query if a value is defined.
 
-oo::class create ::xo::input {
-    # No DSL overrides
-
-    # API overrides
-    # No flags. XXX Maybe: --ask-FOO in the future ?
-    method flags {} { return {} }
-
-    method arguments {} { return [list $myname] }
-
-    method process {n queue} {
-	# pull value. validation comes later, when the value of this
-	# argument is actually requested somewhere.
-	set mystring    [$queue get]
-	set myhasstring 1
-	return
-    }
-}
-
-# # ## ### ##### ######## ############# #####################
-
-oo::class create ::xo::invisible {
-    # DSL overrides
-
-    # Ignore description of invisible (state-only) argument.
-    method description {text} {}
-
-    # Ignore hidden setting. Implied in class.
-    method hidden {} {}
-
-    method interactive {} {
-	return -code error "Invisible (state-only) argument cannot be interactive"
+    method string {} {
+	if {!$myhasstring} { return -code error Undefined }
+	return $mystring
     }
 
-    method FinalizeSpec {} {
-	# Invisible argument does not go into help.
-	set myhidden yes
-
-	if {![llength $mygenerate] && !$myhasdefault} {
-	    return -code error \
-		"Invisible argument must have a generator or a default"
-	}
-	return
-    }
-
-    # API overrides
-
-    method flags     {} { return {} }
-    method arguments {} { return {} }
-
-    method process   {n queue} {
-	return -code error "Illegal command line input for state-only data"
-    }
-}
-
-# # ## ### ##### ######## ############# #####################
-
-oo::class create ::xo::optional {
-    # No DSL overrides
-
-    # API overrides
-
-    # Same as input. Maybe an intermediate base class for these two?
-    # No flags. XXX Maybe: --ask-FOO in the future ?
-    method flags {} { return {} }
-    method arguments {} { return [list $myname] }
-
-    method process {n queue} {
-	# How to choose whether to pull value from queue or not?!
-
-	# XXX (a) Peek, run through validation, pass if it fails to validate.
-	# XXX (b) Counting - How many arguments are in the queue,
-	# versus how many are needed least/most by the following
-	# arguments ? If taking teh value leaves the remainder
-	# unsatisfied, pass on it.
-
+    method get {} {
+	# compute argument value if any, cache result.
 	error NYI
-
-	set myhasstring 1
-	set mystring    [$queue get]
-	return
-    }
-}
-
-# # ## ### ##### ######## ############# #####################
-
-oo::class create ::xo::splat {
-    # Note: xo::config (add) makes sure that splat is the last
-    # argument in argument specifications.
-
-    # DSL overrides
-
-    method interactive {} {
-	return -code error "Collection argument cannot be interactive"
     }
 
-    method default {value} {
-	return -code error "Collection argument cannot have a default"
+    method defined? {} {
+	# determine if we have an argument value, may compute it.
+	error NYI
     }
 
-    method generate {value} {
-	return -code error "Collection argument cannot have a generator"
-    }
+    # # ## ### ##### ######## #############
 
-    # API overrides
+    variable myconfig myname mydescription \
+	myisordered myishidden myislist myisrequired \
+	myinteractive myprompt mydefault myhasdefault \
+	myflags myon mygenerate myvalidate mythreshold \
+	myhasstring mystring myhasvalue myvalue
 
-    # Same as input. Maybe an intermediate base class for these two?
-    # No flags. XXX Maybe: --ask-FOO in the future ?
-    method flags {} { return {} }
-    method arguments {} { return [list $myname] }
-
-    method process {n queue} {
-	# Pull the remaining words for our value.
-	set mystring    [$queue get [$queue size]]
-	set myhasstring 1
-	return
-    }
+    # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################

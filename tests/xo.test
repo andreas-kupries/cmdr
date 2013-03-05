@@ -130,29 +130,29 @@ test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -setup {
     x desc = TEST
     x default = bar
     x K := D
-    x bar = ::oo::Obj30::officer_bar
-    x ::oo::Obj30::officer_bar desc = {}
-    x ::oo::Obj30::officer_bar K := D
-    x pliers = ::oo::Obj32::officer_pliers
-    x ::oo::Obj32::officer_pliers desc = {}
-    x ::oo::Obj32::officer_pliers K := D
-    x ::oo::Obj32::officer_pliers U := V
-    x snafu = ::oo::Obj30::officer_bar
-    x ::oo::Obj30::officer_bar desc = {}
-    x ::oo::Obj30::officer_bar K := D
-    x tool = ::oo::Obj30::officer_tool
-    x ::oo::Obj30::officer_tool desc = {}
-    x ::oo::Obj30::officer_tool default = pliers
-    x ::oo::Obj30::officer_tool K := D
-    x ::oo::Obj30::officer_tool U := V
-    x ::oo::Obj30::officer_tool hammer = ::oo::Obj32::officer_hammer
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer desc = {}
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer K := D
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_hammer U := V
-    x ::oo::Obj30::officer_tool pliers = ::oo::Obj32::officer_pliers
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers desc = {}
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers K := D
-    x ::oo::Obj30::officer_tool ::oo::Obj32::officer_pliers U := V
+    x bar = ::oo::Obj26::officer_bar
+    x ::oo::Obj26::officer_bar desc = {}
+    x ::oo::Obj26::officer_bar K := D
+    x pliers = ::oo::Obj28::officer_pliers
+    x ::oo::Obj28::officer_pliers desc = {}
+    x ::oo::Obj28::officer_pliers K := D
+    x ::oo::Obj28::officer_pliers U := V
+    x snafu = ::oo::Obj26::officer_bar
+    x ::oo::Obj26::officer_bar desc = {}
+    x ::oo::Obj26::officer_bar K := D
+    x tool = ::oo::Obj26::officer_tool
+    x ::oo::Obj26::officer_tool desc = {}
+    x ::oo::Obj26::officer_tool default = pliers
+    x ::oo::Obj26::officer_tool K := D
+    x ::oo::Obj26::officer_tool U := V
+    x ::oo::Obj26::officer_tool hammer = ::oo::Obj28::officer_hammer
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_hammer desc = {}
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_hammer K := D
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_hammer U := V
+    x ::oo::Obj26::officer_tool pliers = ::oo::Obj28::officer_pliers
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_pliers desc = {}
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_pliers K := D
+    x ::oo::Obj26::officer_tool ::oo::Obj28::officer_pliers U := V
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -167,7 +167,7 @@ test xo-4.0 {officer DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"officer ...\""
+    -result "wrong # args: should be \"officer name ...\""
 
 test xo-4.1 {officer DSL, officer, wrong\#args} -setup {
     xo create x foo {
@@ -213,7 +213,7 @@ test xo-4.4 {officer DSL, default, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong # args: should be "default"}
+    -result {wrong # args: should be "default ?name?"}
 
 test xo-4.5 {officer DSL, default, unknown action} -setup {
     xo create x foo {
@@ -237,7 +237,7 @@ test xo-4.6 {officer DSL, alias, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"alias ...\""
+    -result "wrong # args: should be \"alias name ...\""
 
 test xo-4.7 {officer DSL, alias, wrong\#args} -setup {
     xo create x foo {
@@ -294,7 +294,7 @@ test xo-4.11 {officer DSL, description, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"description\""
+    -result "wrong # args: should be \"description text\""
 
 test xo-4.12 {officer DSL, description, wrong\#args} -setup {
     xo create x foo {
@@ -305,7 +305,7 @@ test xo-4.12 {officer DSL, description, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"description\""
+    -result "wrong # args: should be \"description text\""
 
 # # ## ### ##### ######## ############# #####################
 
@@ -318,7 +318,7 @@ test xo-4.13 {officer DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common data\""
+    -result "wrong # args: should be \"common key data\""
 
 test xo-4.14 {officer DSL, common, wrong\#args} -setup {
     xo create x foo {
@@ -329,7 +329,7 @@ test xo-4.14 {officer DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common data\""
+    -result "wrong # args: should be \"common key data\""
 
 test xo-4.15 {officer DSL, common, wrong\#args} -setup {
     xo create x foo {
@@ -340,7 +340,7 @@ test xo-4.15 {officer DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common data\""
+    -result "wrong # args: should be \"common key data\""
 
 # # ## ### ##### ######## ############# #####################
 
@@ -360,7 +360,16 @@ test xo-6.0 {basic private} -setup {
 	foreach k [lsort -dict [$o keys]] {
 	    lappend result [list {*}$prefix $o $k := [$o get $k]]
 	}
-	# TODO: Arguments.
+	# Arguments
+	foreach a [lsort -dict [$o names]] {
+	    lappend result [list {*}$prefix $o A $a]
+	    # TODO: argument configuration
+	}
+	# Options
+	foreach {opt v} [kt dictsort [$o options]] {
+	    lappend result [list {*}$prefix $o O $opt = $v]
+	    # TODO: option handler and configuration
+	}
 	return $result
     }
     proc WRAP {list} {
@@ -369,8 +378,15 @@ test xo-6.0 {basic private} -setup {
     }
 } -body {
     xo create x foo {
+	common def {
+	    input  INPUT  INPUT-DESC
+	    option OPTION OPTION-DESC
+	    state  STATE  STATE-DESC
+	    splat  SPLAT  SPLAT-DESC
+	}
 	private bar {
 	    description TEST
+	    use def
 	} ::snafu
     }
     WRAP [DUMP [x lookup bar] x]
@@ -379,7 +395,42 @@ test xo-6.0 {basic private} -setup {
     rename DUMP {}
     rename WRAP {}
 } -result {
-    x ::oo::Obj53::private_bar desc = TEST
+    x ::oo::Obj49::private_bar desc = TEST
+    x ::oo::Obj49::private_bar def := {
+	    input  INPUT  INPUT-DESC
+	    option OPTION OPTION-DESC
+	    state  STATE  STATE-DESC
+	    splat  SPLAT  SPLAT-DESC
+	}
+    x ::oo::Obj49::private_bar A INPUT
+    x ::oo::Obj49::private_bar A OPTION
+    x ::oo::Obj49::private_bar A SPLAT
+    x ::oo::Obj49::private_bar A STATE
+    x ::oo::Obj49::private_bar O --n = {--no-OPTION --no-STATE}
+    x ::oo::Obj49::private_bar O --no = {--no-OPTION --no-STATE}
+    x ::oo::Obj49::private_bar O --no- = {--no-OPTION --no-STATE}
+    x ::oo::Obj49::private_bar O --no-O = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-OP = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-OPT = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-OPTI = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-OPTIO = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-OPTION = --no-OPTION
+    x ::oo::Obj49::private_bar O --no-S = --no-STATE
+    x ::oo::Obj49::private_bar O --no-ST = --no-STATE
+    x ::oo::Obj49::private_bar O --no-STA = --no-STATE
+    x ::oo::Obj49::private_bar O --no-STAT = --no-STATE
+    x ::oo::Obj49::private_bar O --no-STATE = --no-STATE
+    x ::oo::Obj49::private_bar O --O = --OPTION
+    x ::oo::Obj49::private_bar O --OP = --OPTION
+    x ::oo::Obj49::private_bar O --OPT = --OPTION
+    x ::oo::Obj49::private_bar O --OPTI = --OPTION
+    x ::oo::Obj49::private_bar O --OPTIO = --OPTION
+    x ::oo::Obj49::private_bar O --OPTION = --OPTION
+    x ::oo::Obj49::private_bar O --S = --STATE
+    x ::oo::Obj49::private_bar O --ST = --STATE
+    x ::oo::Obj49::private_bar O --STA = --STATE
+    x ::oo::Obj49::private_bar O --STAT = --STATE
+    x ::oo::Obj49::private_bar O --STATE = --STATE
 }
 
 # # ## ### ##### ######## ############# #####################

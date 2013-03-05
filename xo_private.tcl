@@ -47,37 +47,8 @@ oo::class create ::xo::private {
 	if {$myinit} return
 	set myinit 1
 
-	# Create the instance to hold the arguments.
-	set myconfig [xo::config create config]
-
-	# Make the DSL commands directly available.
-	# Note that "description:" is a superclass method, and renamed
-	# to its DSL counterpart. With the exception of "use"
-	# everything else goes to the internal configuration instance.
-
-	link \
-	    {description description:} use input \
-	    optional splat flag invisible alias
-
-	eval $myarguments
-
-	config complete
-	return
-    }
-
-    # # ## ### ##### ######## #############
-    ## Commands of the specification language.
-
-    forward flag      config add flag
-    forward input     config add input
-    forward invisible config add invisible
-    forward optional  config add optional
-    forward splat     config add splat
-    forward alias     config alias
-
-    method use {name} {
-	# Pull code fragment out of the data store and run.
-	uplevel 1 [my get $name]
+	# Create and fill the parameter collection
+	set myconfig [xo::config create config [self] $myarguments]
 	return
     }
 
@@ -100,6 +71,11 @@ oo::class create ::xo::private {
     method help {} {
 	my Setup
 	return
+    }
+
+    # Redirect anything not known to the parameter collection.
+    method unknown {m args} {
+	config $m {*}$args
     }
 
     # # ## ### ##### ######## #############

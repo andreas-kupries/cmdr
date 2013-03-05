@@ -13,7 +13,8 @@ package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2    ;# link helper
 package require struct::queue 1 ;#
-package require xo::value ; # Argument classes
+package require xo::validate    ; # Core validator commands.
+package require xo::value       ; # Parameters
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -22,78 +23,182 @@ oo::class create ::xo::config {
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
-    constructor {} {
-	set mypq [struct::queue P] ;# actual parameters
-	set myaq [struct::queue A] ;# arguments
+    constructor {context spec} {
+	# Import the context (xo::private).
+	interp alias {} [self namespace]::context {} $context
 
-	set myargs  {} ;# map regular arg name to value object
-	set myflags {} ;# map flag             to value object
-	set mymap   {} ;# map arg names        to value object
-	set mysplat no
+	# Initialize collection state.
+	set mymap     {} ;# parameter name -> object
+	set myoption  {} ;# option         -> object
+	set myfullopt {} ;# option prefix  -> option
+	set myargs    {} ;# List of argument names.
+
+	# Import the DSL commands.
+	link \
+	    {description Description} \
+	    {use         Use} \
+	    {input       Input} \
+	    {splat       Splat} \
+	    {option      Option} \
+	    {state       State}
+
+	set splat no
+	set min 0 ; set minlist {}
+	set max 0 ; set maxlist {}
+
+	eval $spec
+
+	foreach a [lreverse $myargs] min $minlist {
+	    set handler [dict get $mymap $a]
+	    if {[$handler isRequired]} continue
+	    $handler threshold: $min
+	}
+
+	my UniquePrefixes
+
+	set mypq [struct::queue P] ;# actual parameters
+	if {[llength $myargs]} {
+	    set myaq [struct::queue A] ;# formal argument parameters
+	}
+	return
+    }
+
+    method options {} { return $myfullopt }
+    method names   {} { return [dict keys $mymap] }
+
+    method lookup {name} {
+	if {![dict exists $mymap $name]} {
+	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
+		"Expected parameter name, got \"$name\""
+	}
+	return [dict get $mymap $name]
+    }
+
+    # # ## ### ##### ######## #############
+
+    method UniquePrefixes {} {
+	dict for {k v} $myoption {
+	    set prefix ""
+	    foreach c [split $k {}] {
+		append prefix $c
+		if {$prefix in {- --}} continue
+		if {[dict exists $myoption $prefix]} {
+		    dict set myfullopt $prefix [list $k]
+		} else {
+		    dict lappend myfullopt $prefix $k
+		}
+	    }
+	}
+
+	#array set _o $myoption  ; parray _o ; unset _o
+	#array set _f $myfullopt ; parray _f ; unset _f
 	return
     }
 
     # # ## ### ##### ######## #############
-    ## API for xo::private argument specification DSL.
+    ## API for xo::private parameter specification DSL.
 
-    method complete {} {
-	# Finalize the argument setup.
-	# - TODO: unique option prefixes.
-	# - TODO: argument min/max counters
+    # Description is for the context, i.e. the private.
+    forward Description context description:
 
-	#array set _a $myargs ; parray _a ; unset _a
-	#array set _f $myargs ; parray _f ; unset _f
-	#array set _m $myargs ; parray _m ; unset _m
-
-	#error "NYI [info level 0]"
+    # Bespoke 'source' command for common specification fragments.
+    method Use {name} {
+	# Pull code fragment out of the data store and run.
+	uplevel 1 [context get $name]
 	return
     }
 
-    method add {class name valuespec} {
-	if {$mysplat} {
+    # Parameter definition itself.
+    #         order, hide, list, req (O H L R) name ?spec?
+    forward Input  my DefineParameter 1 0 0 1
+    forward Splat  my DefineParameter 1 0 1 1
+    forward Option my DefineParameter 0 0 0 0
+    forward State  my DefineParameter 0 1 0 1
+
+    method DefineParameter {
+	    order hide list required
+	    name desc {spec {}}
+    } {
+	upvar 1 splat splat min min minlist minlist max max maxlist maxlist
+	if {$splat && $order} {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
 		"splat must be last command in argument specification"
 	}
-
 	my ValidateAsUnknown $name
 
-	# Create and fill argument|flag container
-	set a [xo::$class create [self] $name $valuespec]
-	if {$class eq "splat"} {
-	    set mysplat true
-	}
+	# Create and initialize handler.
+	set a [xo::value create param_$name [self] \
+		   $order $hide $list $required \
+		   $name $desc $spec]
 
-	# Remember various mappings for the runtime argument parser.
-
+	# Map parameter name to handler object.
 	dict set mymap $name $a
-	foreach n [$a flags]     { dict set myflag $n $a }
-	foreach n [$a arguments] { dict set myargs $n $a }
+
+	if {$order} {
+	    set splat $list
+	    incr max
+	    if {$required} { incr min }
+	    lappend maxlist $max
+	    lappend minlist $min
+	    # Arguments, keep names, in order of definition.
+	    lappend myargs $name
+	} else {
+	    # Keep map of options to their handlers.
+	    foreach option [$a options] {
+		dict set myoption $option $a
+	    }
+	}
 	return
     }
 
-    method alias {name} {
-	error NYI
+    method ValidateAsUnknown {name} {
+	if {![dict exists $mymap $name]} return
+	return -code error -errorcode {XO CONFIG KNOWN} \
+	    "Duplicate parameter $name, already specified."
     }
 
     # # ## ### ##### ######## #############
     ## API for xo::private use of the arguments.
+    ## Runtime parsing of a command line, parameter extraction.
+
+    method parse-options {} {
+	# The P queue contains a mix of options and arguments.  An
+	# optional argument was encountered and has called on this to
+	# now process all options so that it can decode wether to take
+	# the front value for itself or not. The front value is
+	# definitely not an option.
+
+	lappend arguments [P get]
+
+	while {[P size]} {
+	    set word [P peek]
+	    if {[string match -* $word]} {
+		my ProcessOption
+		continue
+	    }
+	    lappend arguments [P get]
+	}
+
+	# Refill the queue with the arguments which remained after
+	# option processing.
+	P put {*}$arguments
+	return
+    }
 
     method parse {args} {
 	# - Reset the state values (we might be in interactive shell, multiple commands).
 	# - Stash the parameters into a queue for processing.
-	# - Stash the non-option args into second queue.
+	# - Stash the (ordered) arguments into a second queue.
 	# - Operate on parameter and arg queues until empty,
-	#   dispatching the parameters to args and flags.
+	#   dispatching the words to handlers as needed.
 
 	dict for $mymap {name a} { $a reset }
-	P clear
-	A clear
-
-	P put {*}$args
-	A put {*}$myargs
 
 	if {![llength $myargs]} {
-	    # The command has no arguments. It may accept flags.
+	    # The command has no arguments. It may accept options.
+
+	    P clear
+	    P put {*}$args
 
 	    while {[P size]} {
 		set word [P peek]
@@ -101,13 +206,18 @@ oo::class create ::xo::config {
 		    # Error. No regular arguments to accept.
 		    my TooMany
 		}
-		my ProcessFlag
+		my ProcessOption
 	    }
-
 	    return
 	}
 
 	# Process commands and flags, in order.
+
+	P clear
+	A clear
+
+	P put {*}$args
+	A put {*}$myargs
 
 	while {[P size] && [A size]} {
 	    # This loop will terminate.
@@ -116,13 +226,13 @@ oo::class create ::xo::config {
 
 	    set word [P peek]
 	    if {[string match -* $word]} {
-		my ProcessFlag
+		my ProcessOption
 		continue
 	    }
 
-	    # Note: The value instance is responsible for
+	    # Note: The parameter instance is responsible for
 	    # retrieving its value from the parameter queue.
-	    # It may pass on this (xo::optional).
+	    # It may pass on this.
 	    [A get] process $word $mypq
 	}
 
@@ -133,7 +243,6 @@ oo::class create ::xo::config {
 
 	if {![A size] && [P size]} { my TooMany   }
 	if {![P size] && [A size]} { my NotEnough }
-
 
 	# XXX Go through the regular arguments and validate them?
 	# XXX Or can we assume that things will work simply through
@@ -159,42 +268,50 @@ oo::class create ::xo::config {
     ## the values in the config (which may request other values for
     ## their validation, generation, etc.). Access to argument values by name.
 
-    method unkown {m args} {
+    method unknown {m args} {
 	if {![regexp {^@(.*)$} $m -> mraw]} { next $m {*}$args ; return }
 	# @name ... => handlerof(name) ...
 	if {![llength $args]} { lappend args get }
-	return [[dict get $mymap $name] {*}$args]
+	return [[my lookup $name] {*}$args]
     }
 
     # # ## ### ##### ######## #############
 
-    method ProcessFlag {} {
-	# Get flag. Do special handling.
-	# Non special flag gets dispatched to handler (value object).
-	# Handler is responsible for pulling its value.
-	set flag [P get]
+    method ProcessOption {} {
+	# Get option. Do special handling.
+	# Non special option gets dispatched to handler (xo::value instance).
+	# The handler is responsible for retrieved the option's value.
+	set option [P get]
 
 	# Handle general special forms:
 	#
 	# --foo=bar ==> --foo bar
 	# -f=bar    ==> -f bar
 
-	if {[regexp {^(-[^=]+)=(.*)$} $flag --> flag value]} {
+	if {[regexp {^(-[^=]+)=(.*)$} $option --> option value]} {
 	    P unget $value
 	}
 
-	# Validate existence of flag itself
-	if {![dict exists $myflags $flag]} {
+	# Validate existence of the option
+	if {![dict exists $myfullopt $option]} {
 	    return -code error \
-		-errorcode {XO CONFIG BAD FLAG} \
-		"Unknown flag $flag"
+		-errorcode {XO CONFIG BAD OPTION} \
+		"Unknown option $option"
 	}
 
-	# Now map the flag name to its handler and let it deal with
-	# the rest, including pulling the flag argument (if any),
-	# validation, etc.
+	# Map from option prefix to full option
+	set options [dict get $myfullopt $option]
+	if {[llength $options] > 1} {
+	    return -code error \
+		-errorcode {XO CONFIG AMBIGUOUS OPTION} \
+		"Ambiguous option prefix $option, matching [join $options {, }]"
+	}
 
-	[dict get $myflags $flag] process $flag $mypq
+	# Now map the fully expanded option name to its handler and
+	# let it deal with the remaining things, including retrieval
+	# of the option argument (if any), validation, etc.
+
+	[dict get $myoption [lindex $options 0]] process $option $mypq
 	return
     }
 
@@ -212,7 +329,7 @@ oo::class create ::xo::config {
 
     # # ## ### ##### ######## #############
 
-    variable mymap myflags myargs myaq mypq mysplat
+    variable mymap myoption myfullopt myargs myaq mypq
 
     # # ## ### ##### ######## #############
 }
