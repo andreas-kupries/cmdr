@@ -90,27 +90,37 @@ oo::class create ::xo::officer {
     ## Core setup code runs only once.
 
     method Setup {} {
-	# Process myactions only once.
+	# Process the action specification only once.
 	if {$myinit} return
 	set myinit 1
 
-	# Make the DSL commands directly available.
-	# Note that "description:" and "common" are superclass methods,
-	# and renamed to their DSL counterparts.
+	# Make the DSL commands directly available. Note that
+	# "description:" and "common" are superclass methods, and
+	# renamed to their DSL counterparts. The others are unexported
+	# instance methods of this class.
+
 	link \
-	    private officer {default Default} alias \
-	    {description description:} {common set}
+	    {private     Private} \
+	    {officer     Officer} \
+	    {default     Default} \
+	    {alias       Alias} \
+	    {description description:} \
+	    {common      set}
 	eval $myactions
 
+	# Postprocessing.
 	set mycommands [lsort -dict $mycommands]
 	return
     }
 
     # # ## ### ##### ######## #############
-    ## Commands of the specification language.
+    ## Implementation of the action specification language.
 
-    forward private my DefAction private
-    forward officer my DefAction officer
+    # common      => set          (super xo::actor)
+    # description => description: (super xo::actor)
+
+    forward Private my DefineAction private
+    forward Officer my DefineAction officer
 
     method Default {{name {}}} {
 	if {[llength [info level 0]] == 2} {
@@ -123,7 +133,7 @@ oo::class create ::xo::officer {
 	return
     }
 
-    method alias {altname args} {
+    method Alias {altname args} {
 	set n [llength $args]
 	if {($n == 1) || (($n > 1) && ([lindex $args 0] ne "="))} {
 	    return -code error \
@@ -150,7 +160,7 @@ oo::class create ::xo::officer {
     }
 
     # Internal. Common code to declare actions and their handlers.
-    method DefAction {what name args} {
+    method DefineAction {what name args} {
 	my ValidateAsUnknown $name
 
 	# Note: By placing the subordinate objects into the officer's
