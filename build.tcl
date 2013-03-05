@@ -1,4 +1,4 @@
-#!/usr/bin/env kettle -f
-# -*- tcl -*-
-#exec kettle -f "$0" "${1+$@}"
+#!/bin/sh
+# -*- tcl -*- \
+exec kettle -f "$0" "${1+$@}"
 kettle tcl
