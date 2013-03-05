@@ -41,7 +41,7 @@ oo::class create ::xo::value {
 
 	# Import the DSL commands to translate the specification.
 	link \
-	    {xxx XXX} \
+	    {test     Test} \
 	    {optional Optional} \
 	    {interact Interact} \
 	    {default  Default} \
@@ -100,11 +100,26 @@ oo::class create ::xo::value {
     method on          {} { return $myon }
     method hasdefault  {} { return $myhasdefault }
     method default     {} { return $mydefault }
+    method threshold   {} { return $mythreshold }
+
+    method threshold: {n} {
+	# Ignore when parameter is required.
+	if {$myisrequired} return
+	# Ignore when parameter is in test-mode.
+	if {$mythreshold ne {}} return
+	set mythreshold $n
+	return
+    }
 
     # # ## ### ##### ######## #############
     ## API for value specification DSL.
 
-    method Interactive {{prompt {}}} {
+    method Optional {} {
+	set myisrequired no
+	return
+    }
+
+    method Interact {{prompt {}}} {
 	# (c6)
 	my Assert {!$myishidden} "Hidden parameter $myname cannot be set by the user"
 	if {$prompt eq {}} { set prompt "Enter ${myname}:" }
@@ -146,7 +161,7 @@ oo::class create ::xo::value {
 	return
     }
 
-    method XXX {} {
+    method Test {} {
 	my Assert {$myisordered && !$myisrequired} \
 	    "Required argument cannot change test-mode for optionals"
 	# Switch the mode of the optional argument from testing by
@@ -263,7 +278,7 @@ oo::class create ::xo::value {
 	    # To work we now have to process all remaining options first.
 
 	    context parse-options
-	    if {[$queue size] <= $mythreshold} { return 0 }
+	    if {[$queue size] < $mythreshold} { return 0 }
 	} else {
 	    # Choose by peeking and validating the front value.
 	    try {

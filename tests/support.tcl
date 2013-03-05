@@ -99,7 +99,13 @@ proc DumpPrivate {o} {
 	if {[$c interactive]} {
 	    lappend result "        prompt: '[$c prompt]'"
 	}
-
+	if {[$c ordered] && ![$c required]} {
+	    if {[$c threshold] >= 0} {
+		lappend result "        mode=threshold [$c threshold]"
+	    } else {
+		lappend result "        mode=peek+test"
+	    }
+	}
 	lappend result "        \[[$c options]\]"
 	lappend result "        g ([$c generator])"
 	lappend result "        v ([$c validator])"

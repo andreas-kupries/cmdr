@@ -49,9 +49,7 @@ oo::class create ::xo::config {
 	eval $spec
 
 	foreach a [lreverse $myargs] min $minlist {
-	    set param [dict get $mymap $a]
-	    if {[$param required]} continue
-	    $param threshold: $min
+	    [dict get $mymap $a] threshold: $min
 	}
 
 	my UniquePrefixes
@@ -136,7 +134,11 @@ oo::class create ::xo::config {
 
 	if {$order} {
 	    set splat $list
-	    incr max
+	    if {$list} {
+		set max Inf
+	    } else {
+		incr max
+	    }
 	    if {$required} { incr min }
 	    lappend maxlist $max
 	    lappend minlist $min

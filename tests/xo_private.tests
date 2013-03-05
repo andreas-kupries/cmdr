@@ -81,5 +81,78 @@ test xo-6.0 {basic private, parameter default settings} -body {
     }
 }
 
+
+test xo-6.1 {private, optional arguments, thresholding} -body {
+    xo create x foo {
+	private bar {
+	    description 6.1
+	    input A - {}
+	    input B - { optional }
+	    input C - {}
+	    input D - { optional }
+	    input E - {}
+	} ::snafu
+    }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: 6.1
+        P (A) {
+            description: -
+            ordered, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (B) {
+            description: -
+            ordered
+            default: 'no'
+            mode=threshold 4
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (C) {
+            description: -
+            ordered, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (D) {
+            description: -
+            ordered
+            default: 'no'
+            mode=threshold 2
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (E) {
+            description: -
+            ordered, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+# TODO: parameter specification commands (syntax, constraints, effects)
+#
+# optional, interact, default, generate, validate, on
+#
+
 # # ## ### ##### ######## ############# #####################
 return
