@@ -1,0 +1,61 @@
+# -*- tcl -*- Include file for xo.test.
+# # ## ### ##### ######## ############# #####################
+## Basic wrong#args checks.
+
+test xo-1.0 {new, wrong\#args, not enough} -body {
+    xo new
+} -returnCodes error \
+    -result {wrong # args: should be "xo new name spec"}
+
+test xo-1.1 {new, wrong\#args, too many} -body {
+    xo new NAME
+} -returnCodes error \
+    -result {wrong # args: should be "xo new name spec"}
+
+test xo-1.2 {new, wrong\#args, too many} -body {
+    xo new NAME SPEC X
+} -returnCodes error \
+    -result {wrong # args: should be "xo new name spec"}
+
+test xo-1.3 {create, wrong\#args, not enough} -body {
+    xo create
+} -returnCodes error \
+    -result {wrong # args: should be "xo create obj name spec"}
+
+test xo-1.4 {create, wrong\#args, not enough} -body {
+    xo create OBJ
+} -returnCodes error \
+    -result {wrong # args: should be "xo create obj name spec"}
+
+test xo-1.5 {create, wrong\#args, not enough} -body {
+    xo create OBJ NAME
+} -returnCodes error \
+    -result {wrong # args: should be "xo create obj name spec"}
+
+test xo-1.6 {new, wrong\#args, too many} -body {
+    xo create OBJ NAME SPEC X
+} -returnCodes error \
+    -result {wrong # args: should be "xo create obj name spec"}
+
+# # ## ### ##### ######## ############# #####################
+## Basic officer, knows nothing. create/new with proper arguments.
+
+test xo-2.0 {new, nothing} -setup {
+    set x [xo new foo {}]
+} -body {
+    list [$x known] [$x hasdefault]
+} -cleanup {
+    $x destroy
+    unset x
+} -result {{} 0}
+
+test xo-2.1 {create, nothing} -setup {
+    xo create x foo {}
+} -body {
+    list [x known] [x hasdefault]
+} -cleanup {
+    x destroy
+} -result {{} 0}
+
+# # ## ### ##### ######## ############# #####################
+return

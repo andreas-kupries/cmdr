@@ -1,0 +1,248 @@
+# -*- tcl -*- Include file for xo.test.
+# # ## ### ##### ######## ############# #####################
+## Hierarchy of actions, aliases, defaults.
+
+test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
+    xo create x foo {
+	common K D
+	description TEST
+	officer bar {}
+	default
+	alias snafu
+	officer tool {
+	    common U V
+	    officer pliers {}
+	    officer hammer {}
+	    default pliers
+	}
+	alias pliers = tool pliers
+    }
+    ShowOfficer x
+} -cleanup {
+    x destroy
+} -result {
+    foo = {
+        description: TEST
+        default: bar
+        store (K): 'D'
+        bar --> bar
+        pliers --> pliers
+        snafu --> bar
+        tool --> tool
+    }
+    foo bar = {
+        description:
+        no default
+        store (K): 'D'
+    }
+    foo tool = {
+        description:
+        default: pliers
+        store (K): 'D'
+        store (U): 'V'
+        hammer --> hammer
+        pliers --> pliers
+    }
+    foo tool hammer = {
+        description:
+        no default
+        store (K): 'D'
+        store (U): 'V'
+    }
+    foo tool pliers = {
+        description:
+        no default
+        store (K): 'D'
+        store (U): 'V'
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+## Error cases of the action DSL.
+
+test xo-4.0 {officer DSL, officer, wrong\#args} -setup {
+    xo create x foo {
+	officer
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"officer name ...\""
+
+test xo-4.1 {officer DSL, officer, wrong\#args} -setup {
+    xo create x foo {
+	officer foo
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error -match glob \
+    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
+
+test xo-4.2 {officer DSL, officer, wrong\#args} -setup {
+    xo create x foo {
+	officer foo {} x
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error -match glob \
+    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-4.3 {officer DSL, default, missing previous definition} -setup {
+    xo create x foo {
+	default
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Cannot be used as first command}
+
+test xo-4.4 {officer DSL, default, wrong\#args} -setup {
+    xo create x foo {
+	default x y
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong # args: should be "default ?name?"}
+
+test xo-4.5 {officer DSL, default, unknown action} -setup {
+    xo create x foo {
+	default x
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Unable to set default, expected action, got "x"}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-4.6 {officer DSL, alias, wrong\#args} -setup {
+    xo create x foo {
+	alias
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"alias name ...\""
+
+test xo-4.7 {officer DSL, alias, wrong\#args} -setup {
+    xo create x foo {
+	alias x =
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong#args: should be \"name ?= cmd ?word...??\""
+
+test xo-4.8 {officer DSL, alias, wrong\#args} -setup {
+    xo create x foo {
+	alias x + a
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong#args: should be \"name ?= cmd ?word...??\""
+
+test xo-4.9 {officer DSL, alias, missing previous definition} -setup {
+    xo create x foo {
+	alias x
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Cannot be used as first command}
+
+test xo-4.10 {officer DSL, alias, missing definition} -setup {
+    xo create x foo {
+	alias x = y
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Expected action name, got "y"}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-4.11 {officer DSL, description, wrong\#args} -setup {
+    xo create x foo {
+	description
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"description text\""
+
+test xo-4.12 {officer DSL, description, wrong\#args} -setup {
+    xo create x foo {
+	description a b
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"description text\""
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-4.13 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common key data\""
+
+test xo-4.14 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common KEY
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common key data\""
+
+test xo-4.15 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common KEY DATA X
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common key data\""
+
+# # ## ### ##### ######## ############# #####################
+return

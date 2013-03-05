@@ -1,0 +1,85 @@
+# -*- tcl -*- Include file for xo.test.
+# # ## ### ##### ######## ############# #####################
+
+# TODO: privates (argument specifications & runtime parsing)
+
+test xo-6.0 {basic private, parameter default settings} -body {
+    xo create x foo {
+	common def {
+	    input  INPUT  INPUT-DESC
+	    option OPTION OPTION-DESC
+	    state  STATE  STATE-DESC
+	    splat  SPLAT  SPLAT-DESC
+	}
+	private bar {
+	    description TEST
+	    use def
+	} ::snafu
+    }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: TEST
+        store (def): '
+	    input  INPUT  INPUT-DESC
+	    option OPTION OPTION-DESC
+	    state  STATE  STATE-DESC
+	    splat  SPLAT  SPLAT-DESC
+	'
+        --n --> (--no-OPTION)
+        --no --> (--no-OPTION)
+        --no- --> (--no-OPTION)
+        --no-O --> (--no-OPTION)
+        --no-OP --> (--no-OPTION)
+        --no-OPT --> (--no-OPTION)
+        --no-OPTI --> (--no-OPTION)
+        --no-OPTIO --> (--no-OPTION)
+        --no-OPTION --> (--no-OPTION)
+        --O --> (--OPTION)
+        --OP --> (--OPTION)
+        --OPT --> (--OPTION)
+        --OPTI --> (--OPTION)
+        --OPTIO --> (--OPTION)
+        --OPTION --> (--OPTION)
+        P (INPUT) {
+            description: INPUT-DESC
+            ordered, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (OPTION) {
+            description: OPTION-DESC
+            default: 'no'
+            [--OPTION --no-OPTION]
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (SPLAT) {
+            description: SPLAT-DESC
+            ordered, splat, required
+            default: ''
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+        P (STATE) {
+            description: STATE-DESC
+            hidden, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+return
