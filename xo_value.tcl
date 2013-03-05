@@ -30,9 +30,6 @@ oo::class create ::xo::value {
 	set myislist      $list
 	set myisrequired  $required
 
-	set myflags {}
-	if {!$myisordered} { lappend myflags [my Option $myname] }
-
 	set myinteractive no ;# no interactive query of value
 	set myprompt      {} ;# no prompt for interaction
 	set myhasdefault  no ;# flag for default existence
@@ -87,7 +84,22 @@ oo::class create ::xo::value {
 	return
     }
 
-    method isRequired {} { return $myisrequired }
+    # Add context name into it?
+    method name        {} { return $myname }
+    method description {} { return $mydescription }
+
+    # Accessors for parameter configuration
+    method ordered     {} { return $myisordered }
+    method required    {} { return $myisrequired }
+    method hidden      {} { return $myishidden }
+    method list        {} { return $myislist }
+    method interactive {} { return $myinteractive }
+    method prompt      {} { return $myprompt }
+    method generator   {} { return $mygenerate }
+    method validator   {} { return $myvalidate }
+    method on          {} { return $myon }
+    method hasdefault  {} { return $myhasdefault }
+    method default     {} { return $mydefault }
 
     # # ## ### ##### ######## #############
     ## API for value specification DSL.
@@ -182,14 +194,25 @@ oo::class create ::xo::value {
 	# Ditto if the user specified something.
 	if {$myhasdefault} return
 
-	# Ask the chosen validator for a default value.
-	my Default [$myvalidate default]
+	if {$myislist} {
+	    # A list parameter defaults to empty, regardless of validator.
+	    my Default {}
+	} else {
+	    # Ask the chosen validator for a default value.
+	    my Default [$myvalidate default]
+	}
 	return
     }
 
     method Flags {} {
-	# Special flags for boolean options
+	set myflags {}
+	# Ordered and hidden parameters have no flags.
+	# NOTE: Ordered may change in future (--ask-FOO)
 	if {$myisordered} return
+	if {$myishidden} return
+	lappend myflags [my Option $myname]
+
+	# Special flags for boolean options
 	if {$myvalidate ne "xo::validate::boolean"} return
 	lappend myflags --no-$myname
 	return

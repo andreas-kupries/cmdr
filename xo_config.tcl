@@ -49,9 +49,9 @@ oo::class create ::xo::config {
 	eval $spec
 
 	foreach a [lreverse $myargs] min $minlist {
-	    set handler [dict get $mymap $a]
-	    if {[$handler isRequired]} continue
-	    $handler threshold: $min
+	    set param [dict get $mymap $a]
+	    if {[$param required]} continue
+	    $param threshold: $min
 	}
 
 	my UniquePrefixes

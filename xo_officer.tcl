@@ -47,6 +47,7 @@ oo::class create ::xo::officer {
 	set myinit     no       ; # Dispatch map will be initialized lazily
 	set mymap      {}       ; # Action map starts knowing nothing
 	set mycommands {}       ; # Ditto
+	set mychildren {}       ; # List of created subordinates.
 	return
     }
 
@@ -83,6 +84,11 @@ oo::class create ::xo::officer {
 		"Expected action name, got \"$name\""
 	}
 	return [dict get $mymap a,$name]
+    }
+
+    method children {} {
+	my Setup
+	return $mychildren
     }
 
     # # ## ### ##### ######## #############
@@ -169,6 +175,8 @@ oo::class create ::xo::officer {
 
 	set handler [self namespace]::${what}_$name
 	xo::$what create $handler [self] $name {*}$args
+
+	lappend mychildren $handler
 
 	# ... then make it known to the dispatcher.
 	dict set mymap last $name
@@ -356,7 +364,7 @@ oo::class create ::xo::officer {
 
     # # ## ### ##### ######## #############
 
-    variable myinit myactions mymap mycommands
+    variable myinit myactions mymap mycommands mychildren
 
     # # ## ### ##### ######## #############
 }

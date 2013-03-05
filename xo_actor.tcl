@@ -43,6 +43,15 @@ oo::class create ::xo::actor {
 	return $myname
     }
 
+    method fullname {} {
+	set result {}
+	if {$mysuper ne {}} {
+	    lappend result {*}[$mysuper fullname]
+	}
+	lappend result $myname
+	return $result
+    }
+
     method name: {thename} {
 	set myname $thename
 	return
