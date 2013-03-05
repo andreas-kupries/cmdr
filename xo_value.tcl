@@ -148,7 +148,7 @@ oo::class create ::xo::value {
 
 	# Allow FOO shorthand for xo::validate::FOO
 	if {![llength [info commands $cmd]] &&
-	    [llength [info commands xo::validate::$cmd]]} {
+	    [llength [info commands ::xo::validate::$cmd]]} {
 	    set cmd xo::validate::$cmd
 	}
 	set cmd [list $cmd {*}$words]
@@ -274,10 +274,12 @@ oo::class create ::xo::value {
 
     method Take {queue} {
 	if {$mythreshold >= 0} {
-	    # Choose by checking argument count against a threshold.
-	    # To work we now have to process all remaining options first.
 
-	    context parse-options
+	    # Choose by checking argument count against a threshold.
+	    # For this to work correctly we now have to process all
+	    # the remaining options first.
+
+	    config parse-options
 	    if {[$queue size] < $mythreshold} { return 0 }
 	} else {
 	    # Choose by peeking and validating the front value.
@@ -370,12 +372,13 @@ oo::class create ::xo::value {
 
     method get {} {
 	# compute argument value if any, cache result.
-	error NYI
+	#error NYI
     }
 
     method defined? {} {
 	# determine if we have an argument value, may compute it.
-	error NYI
+	#error NYI
+	return 0
     }
 
     # # ## ### ##### ######## #############

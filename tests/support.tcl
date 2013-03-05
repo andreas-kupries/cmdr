@@ -4,6 +4,7 @@
 
 proc ShowOfficer {o} { Wrap [DumpOfficer $o] }
 proc ShowPrivate {o} { Wrap [DumpPrivate $o] }
+proc ShowParsed  {o} { Wrap [DumpParsed  $o] }
 
 # Indent a list of lines, generate text block.
 proc Wrap {list} {
@@ -113,6 +114,19 @@ proc DumpPrivate {o} {
 	lappend result "    \}"
     }
 
+    lappend result "\}"
+    return $result
+}
+
+# Dumping the parsed parameters of a private
+proc DumpParsed {o} {
+    set name [$o fullname]
+    set result {}
+    lappend result "$name = \{"
+    foreach name [lsort -dict [$o names]] {
+	set c [$o lookup $name]
+	lappend result "    P ($name) =	'[$c string]' [$c defined?] '[$c get]'"
+    }
     lappend result "\}"
     return $result
 }

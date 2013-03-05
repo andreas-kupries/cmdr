@@ -154,5 +154,62 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
 # optional, interact, default, generate, validate, on
 #
 
+test xo-7.0 {private, parsing, opt args, thresholding} -setup {
+    proc ::snafu {x} {}
+} -body {
+    xo create x foo {
+	private bar {
+	    description 6.1
+	    input A - { validate integer }
+	    input B - { validate integer; optional ; default 0 }
+	    input C - { validate integer }
+	    input D - { validate integer; optional ; default 0 }
+	    input E - { validate integer }
+	} ::snafu
+    }
+    [x lookup bar] do 1 2 3 4 5
+    ShowParsed [x lookup bar]
+} -cleanup {
+    x destroy
+    rename ::snafu {}
+} -result {
+    foo bar = {
+        P (A) =	'1' 0 ''
+        P (B) =	'2' 0 ''
+        P (C) =	'3' 0 ''
+        P (D) =	'4' 0 ''
+        P (E) =	'5' 0 ''
+    }
+}
+
+test xo-7.1 {private, parsing, opt args, thresholding} -setup {
+    proc ::snafu {x} {}
+} -body {
+    xo create x foo {
+	private bar {
+	    description 6.1
+	    input A - { validate integer }
+	    input B - { validate integer; optional ; default 0 }
+	    input C - { validate integer }
+	    input D - { validate integer; optional ; default 0 }
+	    input E - { validate integer }
+	} ::snafu
+    }
+    [x lookup bar] do 1 2 3
+    ShowParsed [x lookup bar]
+} -cleanup {
+    x destroy
+    rename ::snafu {}
+} -result {
+    foo bar = {
+        P (A) =	'1' 0 ''
+        P (B) =	'0' 0 ''
+        P (C) =	'2' 0 ''
+        P (D) =	'0' 0 ''
+        P (E) =	'3' 0 ''
+    }
+}
+
+
 # # ## ### ##### ######## ############# #####################
 return

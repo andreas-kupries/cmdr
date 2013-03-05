@@ -194,7 +194,7 @@ oo::class create ::xo::config {
 	# - Operate on parameter and arg queues until empty,
 	#   dispatching the words to handlers as needed.
 
-	dict for $mymap {name a} { $a reset }
+	dict for {name a} $mymap { $a reset }
 
 	if {![llength $myargs]} {
 	    # The command has no arguments. It may accept options.
@@ -235,7 +235,8 @@ oo::class create ::xo::config {
 	    # Note: The parameter instance is responsible for
 	    # retrieving its value from the parameter queue.
 	    # It may pass on this.
-	    [A get] process $word $mypq
+
+	    [dict get $mymap [A get]] process $word $mypq
 	}
 
 	# End conditions:
