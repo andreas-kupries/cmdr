@@ -1,0 +1,94 @@
+
+xo::validate
+xo::value
+xo::config	collection of xo::values representing command arguments.
+
+/officer
+	common
+	- context chain
+	alias a = ...
+	default ?name?
+
+/arg spec
+	input, optional, option, invisible
+	use - pull scripts out of common blocks.
+
+
+-validate ... empty - type from -default - fallback boolean/no
+
+value  - description - argument | help
+config - description - action   | help
+
+validators have config as context
+config has actor as accessible context
+
+
+
+value specification
+Data per value
+
+Cons	name
+Cons	class	input|optional|option|invisible
+		(just state)
+		/derived classes/
+Cons	req'd	mandatory value or not ?
+
+Conf	hidden	from help, boolean, default no
+Conf	iactive	flag, boolean, default no
+Conf	prompt	for interactive entry.
+Conf	default	default value, raw string
+Conf	gencmd	command prefix to generate value
+		output assumed final, no validation.
+Conf	valcmd	validation command prefix.
+		output is final value, i.e. not raw.
+		input is raw.
+Conf	action	action command prefix, runs when
+		the value becomes known.
+
+Run	raw	raw string value, user entered (cmd line, interactive)
+Run	value	transformed actual value
+
+Methods
+
+*	Construct
+
+*	Calculate value, from most prefered to least
+
+	(1) User entered value ?
+	    => Validate, transforms.
+
+	(2) Generation command ?
+	    => Run
+
+	(3) Default value ?
+	    => Validate, transforms
+
+	(4) Interactive entry possible ? (general config, plus per value)
+	    Enter, validate, transforms
+	    - mini shell - ^C abort
+	    - completion => Validator API
+
+	(5) Optional ?
+	    => It is ok to not have the value.
+
+	(6) FAIL. 
+
+*	Test if we have a value
+
+	Similar to above, no validation, no transforms
+
+*	Query required
+*	query interactivity
+
+
+*	Settings
+
+	- Flag to force interactive entry
+
+
+=====
+Validator API...
+
+validate $value
+complete $value
+text	 - for help, prompt

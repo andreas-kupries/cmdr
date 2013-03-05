@@ -1,69 +1,66 @@
-DSL for the configuration of a single argument (value).
-Not all command apply to all argument classes.
+DSL for the configuration of a single parameter (value).
 
-description TEXT
+Parameter attributes
+====================
 
-	Help text for the argument or flag.
-	Defaults to the argument name itself, plus the validation command.
+	---------	----	--------	-------	-----------
+	Attribute	Type	Notes		Default	Description
+	---------	----	--------	-------	-----------
+(a1)	name		TEXT	required	-	Parameter name
+(a2)	description	TEXT	required	-	Human readable description
+	---------	----	--------	-------	-----------
+(a3)	ordered		BOOL	required	-	Fill by order (argument) or name (option)
+(a4)	hidden		BOOL	optional	no
+(a5)	list		BOOL	optional	no	Single value versus list of values.
+(a6)	required	BOOL	optional	yes	mandatory vs. optional parameter.
+(a7)	interactive	BOOL	optional	no	Allow user interaction to set value
+	---------	----	--------	-------	-----------
+(a8)	prompt		TEXT	optional	<name>	Text for interactive prompt
+(a9)	default		TEXT	optional	-	Default value to use (raw, validate on use)
+	---------	----	--------	-------	-----------
+(a10)	generate	CMD	optional	{}	Command to generate default
+(a11)	validate	CMD	optional	{}	Command to validate and transform user input
+(a12)	on		CMD	optional	{}	Command to run when the parameter value is defined.
+	---------	----	--------	-------	-----------
+	flags		list(TEXT)			List of flags to recognize.
 
-	Applies to:		input, optional, splat, flag
-	Does not apply to:	invisible
+Constraints (between attributes):
 
-hidden
-	When present hide the argument or flag from the help.
-	Default: Not hidden.
+(c1)	!ordered		=> default|generate|interactive
+(c2)	!required		=> default|generate|interactive
+(c3)	default			=> !generate
+(c4)	interactive		=> prompt
+(c5)	list			=> ordered && is-last()
+(c6)	hidden	   		=> !interactive && !ordered
 
-	Applies to:		input, optional, splat, flag
-	Does not apply to:	invisible
+Legend:
+	x  <=> defined (x)
+	!x <=> undefined (x)
 
-interactive ?TEXT?
+	A => B  <==> !A || B
 
-	When present the argument can ask interactively for its value.
-	The text is for the interactive prompt.
-	Without text a default text is made, based on the argument
-	name and validation.
+==============================================================================
 
-	Applies to:		input, optional
-	Does not apply to:	splat, flag, invisible
+Definition commands. See also "notes_arguments.txt"
 
-default DATA
+	   Attribute defaults
+input	    ordered, !hidden, !list,  required, !interactive, !generate, !default, !validate, !on, !prompt
+splat	    ordered, !hidden,  list,  required, !interactive, !generate, !default, !validate, !on, !prompt
+option	   !ordered, !hidden, !list, !required, !interactive, !generate, !default, !validate, !on, !prompt
+state	   !ordered,  hidden, !list,  required, !interactive, !generate, !default, !validate, !on, !prompt
+	    (a3)     (a4)     (a5)   (standard)
 
-	The raw default value for the argument or flag.
-	When used this value goes through regular validation.
+==============================================================================
 
-	Applies to:		input, optional, flag, invisible
-	Does not apply to:	splat
+Not all commands apply to all parameters. See constraints.
 
-generate CMD
-
-	 Command prefix executed to generate the value (*) of the
-	 argument or flag when requested. The details of its
-	 interaction with
-
-	 	default, interactive
-
-	are expained in a separate document. Note, the result is the
-	internal representation of the value, and thus does not have
-	to be, actually must not be, validated.
-
-	Applies to:		input, optional, flag, invisible
-	Mandatory to:		invisible
-	Does not apply to:	splat
-
-validate CMD
-
-	Command prefix executed to validate user input (string), and
-	return the canonical internal representation of said input.
-
-	Applies to:		input, optional, flag, splat
-	Does not apply to:	invisible
-
-on CMD
-
-	Command prefix executed when the internal value of the
-	argument or flag is defined.
-
-	Applies to:	input, optional, flag, splat, invisible
-
-
--- skip -- typecheck - allow rejection of value, pass to next
+	Command		Affected attribute	Notes
+	-------		------------------	-----
+(a6)	optional	required (reset)
+(a7,a8)	interact ?TEXT?	interactive, prompt	Fail for hidden 	(c6)
+(a9)	default DATA	default	 		Fail for generate	(c3)
+(a10)	generate CMD	generate		Fail for default	(c3)
+(a11)	validate CMD	validate
+(a12)	on CMD		on
+	-------		------------------	-----
+	alias		Extend list of flags	Fail for ordered|hidden

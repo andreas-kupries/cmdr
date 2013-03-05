@@ -11,67 +11,20 @@ use NAME
 	following the chain of command. Treat it as script of DSL
 	commands and run them in place.
 
-input NAME VALSPEC
+input	NAME DESCRIPTION ?PARAMETER_SPEC?
+splat	NAME DESCRIPTION ?PARAMETER_SPEC?
+option	NAME DESCRIPTION ?PARAMETER_SPEC?
+state	NAME DESCRIPTION ?PARAMETER_SPEC?
 
-	Declare a regular mandatory command argument.
-	Details of its configuration are in the specification.
-	Arguments are filled in order of occurence, after options
-	have been extracted.
-
-	Future/Maybe: Implies options:
-		--NAME VALUE	For unordered specification
-		--ask-NAME	Bool. Force interactive entry.
-
-optional NAME VALSPEC
-
-	Declare a regular optional command argument.
-	Details of its configuration are in the specification.
-	Arguments are filled in order of occurence, after options
-	have been extracted.
-
-	Future/Maybe: Implies options:
-		--NAME VALUE	For unordered specification
-		--ask-NAME	Bool. Force interactive entry.
-
-splat NAME VALSPEC
-
-	Declare a regular command argument which is a list taking all
-	remaining arguments.
-	Details of its configuration are in the specification.
-
-	Must be last (versus input, and optional).
-
-	Arguments are filled in order of occurence, after options
-	have been extracted.
-
-	Presence affects option extraction. The moment we have found
-	all non-splat non-option arguments the remainder must belong
-	to the splat, regardless of argument or option.
-
-flag NAME VALSPEC
-
-	Declare an option, i.e. flag argument.
-	Details of its configuration are in the specification.
-
-	Recognized option is -N if NAME is a single character.
-	Otherwise it is --NAME
-
-invisible NAME VALSPEC
-
-	Declare an argument not visible to the user and not filled by
-	it. For use by the command, must auto-initialize on use.
-
-alias NAME
-
-	Declare the name as alias for the last declared argument.
-	See flag for how the name transforms to the recognized option.
+	Declare a parameter, argument or option.
+	Name and description are mandatory.
+	All other attributes are effected through the specification.
 
 =============================
 value API
 
-flags     - query which flags are defined by the argument or flag.
-arguments - query which arg names are defined by the arg or flag
-reset     - reset value to empty
+options - query which flags are defined by the argument or flag.
+reset   - reset value to empty
 
 process NAME QUEUE - Parse head of queue to get user value of argument or flag.
 
