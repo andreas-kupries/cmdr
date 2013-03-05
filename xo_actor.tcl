@@ -53,8 +53,8 @@ oo::class create ::xo::actor {
 	return $mydescription
     }
 
-    method description: {thedescription} {
-	set mydescription $thedescription
+    method description: {text} {
+	set mydescription $text
 	return
     }
 

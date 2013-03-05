@@ -133,13 +133,13 @@ oo::class create ::xo::officer {
 	return
     }
 
-    method Alias {altname args} {
+    method Alias {name args} {
 	set n [llength $args]
 	if {($n == 1) || (($n > 1) && ([lindex $args 0] ne "="))} {
 	    return -code error \
 		"wrong\#args: should be \"name ?= cmd ?word...??\""
 	}
-	my ValidateAsUnknown $altname
+	my ValidateAsUnknown $name
 
 	if {$n == 0} {
 	    # Simple alias, to preceding action.
@@ -155,7 +155,7 @@ oo::class create ::xo::officer {
 
 	# Essentially copy the definition of the command the alias
 	# refers to.
-	dict set mymap a,$altname $handler
+	dict set mymap a,$name $handler
 	return
     }
 
