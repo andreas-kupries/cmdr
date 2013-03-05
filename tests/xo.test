@@ -87,6 +87,9 @@ test xo-3.0 {hierarchy with defaults, aliases} -setup {
 	if {[$o hasdefault]} {
 	    lappend result [list {*}$prefix $o default = [$o default]]
 	}
+	foreach k [lsort -dict [$o keys]] {
+	    lappend result [list {*}$prefix $o $k := [$o get $k]]
+	}
 	foreach a [lsort -dict [$o known]] {
 	    lappend result [list {*}$prefix $o $a = [$o lookup $a]]
 	    set c [$o lookup $a]
@@ -99,13 +102,14 @@ test xo-3.0 {hierarchy with defaults, aliases} -setup {
 	return ${p}[join $list $p]\n
     }
 } -body {
-    # TODO: common
     xo create x foo {
+	common K D
 	description TEST
 	officer bar {}
 	default
 	alias snafu
 	officer tool {
+	    common U V
 	    officer pliers {}
 	    officer hammer {}
 	    default pliers
@@ -120,19 +124,30 @@ test xo-3.0 {hierarchy with defaults, aliases} -setup {
 } -result {
     x desc = TEST
     x default = bar
+    x K := D
     x bar = ::oo::Obj28::officer_bar
     x ::oo::Obj28::officer_bar desc = {}
+    x ::oo::Obj28::officer_bar K := D
     x pliers = ::oo::Obj30::officer_pliers
     x ::oo::Obj30::officer_pliers desc = {}
+    x ::oo::Obj30::officer_pliers K := D
+    x ::oo::Obj30::officer_pliers U := V
     x snafu = ::oo::Obj28::officer_bar
     x ::oo::Obj28::officer_bar desc = {}
+    x ::oo::Obj28::officer_bar K := D
     x tool = ::oo::Obj28::officer_tool
     x ::oo::Obj28::officer_tool desc = {}
     x ::oo::Obj28::officer_tool default = pliers
+    x ::oo::Obj28::officer_tool K := D
+    x ::oo::Obj28::officer_tool U := V
     x ::oo::Obj28::officer_tool hammer = ::oo::Obj30::officer_hammer
     x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer desc = {}
+    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer K := D
+    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_hammer U := V
     x ::oo::Obj28::officer_tool pliers = ::oo::Obj30::officer_pliers
     x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers desc = {}
+    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers K := D
+    x ::oo::Obj28::officer_tool ::oo::Obj30::officer_pliers U := V
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -147,7 +162,7 @@ test xo-4.0 {officer DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong \# args: should be "officer ..."}
+    -result "wrong # args: should be \"officer ...\""
 
 test xo-4.1 {officer DSL, officer, wrong\#args} -setup {
     xo create x foo {
@@ -158,7 +173,7 @@ test xo-4.1 {officer DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error -match glob \
-    -result {wrong \# args: should be "xo::officer create ::oo::*::officer_foo super name actions"}
+    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
 
 test xo-4.2 {officer DSL, officer, wrong\#args} -setup {
     xo create x foo {
@@ -169,7 +184,7 @@ test xo-4.2 {officer DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error -match glob \
-    -result {wrong \# args: should be "xo::officer create ::oo::*::officer_foo super name actions"}
+    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
 
 # # ## ### ##### ######## ############# #####################
 
@@ -217,7 +232,7 @@ test xo-4.6 {officer DSL, alias, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong \# args: should be "alias ..."}
+    -result "wrong # args: should be \"alias ...\""
 
 test xo-4.7 {officer DSL, alias, wrong\#args} -setup {
     xo create x foo {
@@ -228,7 +243,7 @@ test xo-4.7 {officer DSL, alias, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong\#args: should be "name ?= cmd ?word...??"}
+    -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
 test xo-4.8 {officer DSL, alias, wrong\#args} -setup {
     xo create x foo {
@@ -239,7 +254,7 @@ test xo-4.8 {officer DSL, alias, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong\#args: should be "name ?= cmd ?word...??"}
+    -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
 test xo-4.9 {officer DSL, alias, missing previous definition} -setup {
     xo create x foo {
@@ -274,7 +289,7 @@ test xo-4.11 {officer DSL, description, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong \# args: should be "description"}
+    -result "wrong # args: should be \"description\""
 
 test xo-4.12 {officer DSL, description, wrong\#args} -setup {
     xo create x foo {
@@ -285,15 +300,50 @@ test xo-4.12 {officer DSL, description, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {wrong \# args: should be "description"}
+    -result "wrong # args: should be \"description\""
 
 # # ## ### ##### ######## ############# #####################
 
-# TODO: common
+test xo-4.13 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common data\""
+
+test xo-4.14 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common KEY
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common data\""
+
+test xo-4.15 {officer DSL, common, wrong\#args} -setup {
+    xo create x foo {
+	common KEY DATA X
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"common data\""
 
 # # ## ### ##### ######## ############# #####################
 
 # TODO: keys, get (super chain)
+
+# # ## ### ##### ######## ############# #####################
+
+# TODO: privates (argument specifications & runtime parsing)
 
 # # ## ### ##### ######## ############# #####################
 cleanupTests

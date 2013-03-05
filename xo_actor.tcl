@@ -69,7 +69,12 @@ oo::class create ::xo::actor {
 
     method keys {} {
 	my Setup
-	return [dict keys $mystore]
+	set result [dict keys $mystore]
+	if {$mysuper ne {}} {
+	    lappend result {*}[$mysuper keys]
+	    set result [lsort -unique $result]
+	}
+	return $result
     }
 
     method get {key} {
@@ -80,8 +85,8 @@ oo::class create ::xo::actor {
 	    return [dict get $mystore $key]
 	}
 	# ... then ask in the chain of command ...
-	if {$super ne {}} {
-	    return [$super get $key]
+	if {$mysuper ne {}} {
+	    return [$mysuper get $key]
 	}
 	# ... and fail if we are at the top.
 	return -code error -errorcode {XO STORE UNKNOWN} \
