@@ -128,7 +128,7 @@ oo::class create ::xo::config {
 	upvar 1 splat splat min min minlist minlist
 	if {$splat && $order} {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
-		"splat must be last command in argument specification"
+		"A splat must be the last argument in the specification"
 	}
 	my ValidateAsUnknown $name
 

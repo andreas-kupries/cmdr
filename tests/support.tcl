@@ -6,6 +6,12 @@ proc ShowOfficer {o} { Wrap [DumpOfficer $o] }
 proc ShowPrivate {o} { Wrap [DumpPrivate $o] }
 proc ShowParsed  {o} { Wrap [DumpParsed  $o] }
 
+proc Trigger {o} {
+    # o is xo::private
+    # Force DSL execution.
+    $o keys
+}
+
 # Indent a list of lines, generate text block.
 proc Wrap {list} {
     set p "\n    "
