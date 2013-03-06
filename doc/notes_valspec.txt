@@ -30,8 +30,11 @@ Constraints (between attributes):
 (c2)	!required		=> default|generate|interactive
 (c3)	default			=> !generate
 (c4)	interactive		=> prompt
+----	----------------------------------------------------------
 (c5)	list			=> ordered && is-last()
-(c6)	hidden	   		=> !interactive && !ordered
+(c6)	hidden	   		=> !interactive && !ordered && required && !list
+(c7)    !hidden && !ordered     => !required
+----	----------------------------------------------------------
 
 Legend:
 	x  <=> defined (x)
@@ -48,7 +51,44 @@ input	    ordered, !hidden, !list,  required, !interactive, !generate, !default,
 splat	    ordered, !hidden,  list,  required, !interactive, !generate, !default, !validate, !on, !prompt
 option	   !ordered, !hidden, !list, !required, !interactive, !generate, !default, !validate, !on, !prompt
 state	   !ordered,  hidden, !list,  required, !interactive, !generate, !default, !validate, !on, !prompt
-	    (a3)     (a4)     (a5)   (standard)
+	    (a3)     (a4)     (a5)   (default)		(standard)
+
+input    vs splat  <-> list
+option   vs state  <-> hidden
+argument vs other  <-> ordered
+
+splat  = list     argument
+input  = non-list argument
+option = visible unordered --> implies optional
+state  = hidden  unordered --> implies required, not list
+
+==============================================================================
+
+	Or Hi Li Rq Notes
+	-- -- -- -- --------------------------
+*	0  0  0  0  scalar option
+	0  0  0  1	FAIL c7 (visible unordered => !required)
+*	0  0  1  0  list option
+	0  0  1  1	FAIL c7 (visible unordered => !required)
+
+	0  1  0  0	FAIL c6 (hidden => required)
+*	0  1  0  1  state
+	0  1  1  0	FAIL c6 (hidden => required)
+	0  1  1  1	FAIL c6 (hidden => !list)
+
+*	1  0  0  0  optional argument | input
+*	1  0  0  1  required argument | input
+*	1  0  1  0  optional splat    | splat
+*	1  0  1  1  required splat    | splat
+
+	1  1  0  0	FAIL c6 (hidden => !ordered)
+	1  1  0  1	FAIL c6
+	1  1  1  0	FAIL c6
+	1  1  1  1	FAIL c6
+	-- -- -- -- --------------------------
+7 of 16
+
+Allow 'list option' => multiple uses, collected.
 
 ==============================================================================
 
@@ -62,5 +102,6 @@ Not all commands apply to all parameters. See constraints.
 (a10)	generate CMD	generate		Fail for default	(c3)
 (a11)	validate CMD	validate
 (a12)	on CMD		on
+	list		list (set)		Fail for state, arguments (input)
 	-------		------------------	-----
 	alias		Extend list of flags	Fail for ordered|hidden

@@ -62,7 +62,7 @@ oo::class create ::xo::value {
 	# Check constraints.
 
 	my Assert {$myisordered||$myhasdefault||[llength $mygenerate]||$myinteractive} \
-	    "Unordered parameter $myname must have default, generator, or interaction"
+	    "Option $myname must have default, generator, or interaction"
 	my Assert {$myisrequired||$myhasdefault||[llength $mygenerate]||$myinteractive} \
 	    "Optional parameter $myname must have default, generator, or interaction"
 	my Assert {!$myhasdefault||![llength $mygenerate]} \
@@ -72,7 +72,7 @@ oo::class create ::xo::value {
 	my Assert {!$myislist||$myisordered} \
 	    "List parameter $myname must be an argument"
 	my Assert {!$myishidden||(!$myinteractive && !$myisordered)} \
-	    "Hidden parameter must be non-interactive option"
+	    "Hidden parameter $myname must be non-interactive option"
 
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
@@ -118,8 +118,8 @@ oo::class create ::xo::value {
     ## API for value specification DSL.
 
     method Alias {name} {
-	my Assert {!$myisordered} "Argument $myname cannot have aliases"
-	my Assert {!$myishidden}  "Hidden parameter $myname cannot have aliases"
+	my Syntax {!$myisordered} "Argument $myname cannot have aliases"
+	my Syntax {!$myishidden}  "Hidden parameter $myname cannot have aliases"
 	lappend myflags [my Option $name]
 	return
     }
@@ -131,7 +131,7 @@ oo::class create ::xo::value {
 
     method Interact {{prompt {}}} {
 	# (c6)
-	my Assert {!$myishidden} "Hidden parameter $myname cannot be set by the user"
+	my Syntax {!$myishidden} "Hidden parameter $myname cannot be set by the user"
 	if {$prompt eq {}} { set prompt "Enter ${myname}:" }
 	set myinteractive yes
 	set myprompt $prompt
@@ -140,7 +140,7 @@ oo::class create ::xo::value {
 
     method Default {value} {
 	# (c3)
-	my Assert {![llength $mygenerate]} "Parameter $myname default conflicts with generate command"
+	my Syntax {![llength $mygenerate]} "Parameter $myname default conflicts with generate command"
 	set myhasdefault yes
 	set mydefault    $value
 	return
@@ -148,7 +148,7 @@ oo::class create ::xo::value {
 
     method Generate {cmd} {
 	# (c3)
-	my Assert {!$myhasdefault} "Parameter $myname generat commands conflicts with default value"
+	my Syntax {!$myhasdefault} "Parameter $myname generat commands conflicts with default value"
 	set mygenerate $cmd
 	return
     }
@@ -172,11 +172,11 @@ oo::class create ::xo::value {
     }
 
     method Test {} {
-	my Assert {!$myishidden} \
+	my Syntax {!$myishidden} \
 	    "Hidden parameter $myname cannot change test-mode for optional argument"
-	my Assert {$myisordered} \
+	my Syntax {$myisordered} \
 	    "Option $myname cannot change test-mode for optional argument"
-	my Assert {!$myisrequired} \
+	my Syntax {!$myisrequired} \
 	    "Required argument $myname cannot change test-mode for optional argument"
 	# Switch the mode of the optional argument from testing by
 	# argument counting to peeking at the queue and validating.
@@ -188,7 +188,12 @@ oo::class create ::xo::value {
 
     method Assert {expr msg} {
 	if {[uplevel 1 [list expr $expr]]} return
-	return -code error -errorcode {XO PARAMETER FAIL} $msg
+	return -code error -errorcode {XO PARAMETER CONSTRAINT} $msg
+    }
+
+    method Syntax {expr msg} {
+	if {[uplevel 1 [list expr $expr]]} return
+	return -code error -errorcode {XO PARAMETER SYNTAX} $msg
     }
 
     method ValidationDefault {} {
