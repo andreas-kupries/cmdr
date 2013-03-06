@@ -11,7 +11,7 @@ kt require support struct::queue
 kt require support try
 kt require support string::token::shell
 
-kt local   support xo::value
+kt local   support xo::parameter
 kt local   support xo::config
 kt local   support xo::actor
 kt local   support xo::private

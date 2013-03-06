@@ -14,7 +14,7 @@ package require TclOO
 package require oo::util 1.2    ;# link helper
 package require struct::queue 1 ;#
 package require xo::validate    ; # Core validator commands.
-package require xo::value       ; # Parameters
+package require xo::parameter       ; # Parameters
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -125,7 +125,7 @@ oo::class create ::xo::config {
 	my ValidateAsUnknown $name
 
 	# Create and initialize handler.
-	set a [xo::value create param_$name [self] \
+	set a [xo::parameter create param_$name [self] \
 		   $order $hide $list $required \
 		   $name $desc $spec]
 
@@ -282,7 +282,7 @@ oo::class create ::xo::config {
 
     method ProcessOption {} {
 	# Get option. Do special handling.
-	# Non special option gets dispatched to handler (xo::value instance).
+	# Non special option gets dispatched to handler (xo::parameter instance).
 	# The handler is responsible for retrieved the option's value.
 	set option [P get]
 
