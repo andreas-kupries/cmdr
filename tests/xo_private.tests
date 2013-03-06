@@ -335,14 +335,15 @@ test xo-6.7 {private, input, on} -body {
 
 test xo-6.8 {private, input, alias} -body {
     xo create x foo { private bar { input A - { alias X } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
-} -returnCodes error -result {Argument A cannot have aliases}
+} -returnCodes error \
+    -result {Argument A cannot have aliases}
 
 test xo-6.9 {private, input, test} -body {
     xo create x foo { private bar { input A - { test } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
 } -returnCodes error \
@@ -534,14 +535,15 @@ test xo-7.7 {private, splat, on} -body {
 
 test xo-7.8 {private, splat, alias} -body {
     xo create x foo { private bar { splat A - { alias X } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
-} -returnCodes error -result {Argument A cannot have aliases}
+} -returnCodes error \
+    -result {Argument A cannot have aliases}
 
 test xo-7.9 {private, splat, test} -body {
     xo create x foo { private bar { splat A - { test } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
 } -returnCodes error \
@@ -774,7 +776,7 @@ test xo-8.8 {private, option, alias} -body {
 
 test xo-8.9 {private, option, test} -body {
     xo create x foo { private bar { option A - { test } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
 } -returnCodes error \
@@ -804,10 +806,11 @@ test xo-9.2 {private, state, optional} -body {
 
 test xo-9.3 {private, state, interact} -body {
     xo create x foo { private bar { state A - { interact } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
-} -returnCodes error -result {Hidden parameter A cannot be set by the user}
+} -returnCodes error \
+    -result {Hidden parameter A cannot be set by the user}
 
 test xo-9.4.0 {private, state, default} -body {
     xo create x foo { private bar { state A - { default 0 } } ::snafu }
@@ -951,14 +954,15 @@ test xo-9.7 {private, state, on} -body {
 
 test xo-9.8 {private, state, alias} -body {
     xo create x foo { private bar { state A - { alias X } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
-} -returnCodes error -result {Hidden parameter A cannot have aliases}
+} -returnCodes error \
+    -result {Hidden parameter A cannot have aliases}
 
 test xo-9.9 {private, state, test} -body {
     xo create x foo { private bar { state A - { test } } ::snafu }
-    ShowPrivate [x lookup bar]
+    [x lookup bar] keys
 } -cleanup {
     x destroy
 } -returnCodes error \
