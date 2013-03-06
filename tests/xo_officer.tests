@@ -22,7 +22,7 @@ test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
     x destroy
 } -result {
     foo = {
-        description: TEST
+        description: 'TEST'
         default: bar
         store (K): 'D'
         bar --> bar
@@ -31,12 +31,12 @@ test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
         tool --> tool
     }
     foo bar = {
-        description:
+        description: ''
         no default
         store (K): 'D'
     }
     foo tool = {
-        description:
+        description: ''
         default: pliers
         store (K): 'D'
         store (U): 'V'
@@ -44,13 +44,13 @@ test xo-3.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
         pliers --> pliers
     }
     foo tool hammer = {
-        description:
+        description: ''
         no default
         store (K): 'D'
         store (U): 'V'
     }
     foo tool pliers = {
-        description:
+        description: ''
         no default
         store (K): 'D'
         store (U): 'V'

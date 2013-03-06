@@ -22,7 +22,7 @@ proc DumpOfficer {o} {
 
     # Description
     lappend result "$name = \{"
-    lappend result "    description: [$o description]"
+    lappend result "    description: '[$o description]'"
     # Default action, if any.
     if {[$o hasdefault]} {
 	lappend result "    default: [$o default]"
@@ -60,7 +60,7 @@ proc DumpPrivate {o} {
 
     # Description
     lappend result "$name = \{"
-    lappend result "    description: [$o description]"
+    lappend result "    description: '[$o description]'"
 
     # Data store. Inherited. Note how it shows the entire inherited
     # store, not just the local settings. Which a private usually has
@@ -75,12 +75,15 @@ proc DumpPrivate {o} {
 	# TODO: option handler and configuration
     }
 
+    # Options II. From full options to their parameter.
+    # TODO
+
     # All parameters.
     foreach name [lsort -dict [$o names]] {
 	set c [$o lookup $name]
 
 	lappend result "    P ($name) \{"
-	lappend result "        description: [$c description]"
+	lappend result "        description: '[$c description]'"
 
 	set state {}
 	if {[$c ordered]}     { lappend state ordered }
@@ -125,7 +128,14 @@ proc DumpParsed {o} {
     lappend result "$name = \{"
     foreach name [lsort -dict [$o names]] {
 	set c [$o lookup $name]
-	lappend result "    P ($name) =	'[$c string]' [$c defined?] '[$c get]'"
+
+	set s <undef>
+	if {[$c string?]}  { set s [$c string] }
+
+	set d <undef>
+	if {[$c defined?]} { set d [$c get] }
+
+	lappend result "    P ($name) =	[$c string?] '$s' [$c defined?] '$d'"
     }
     lappend result "\}"
     return $result

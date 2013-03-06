@@ -1,7 +1,7 @@
 # -*- tcl -*- Include file for xo.test.
 # # ## ### ##### ######## ############# #####################
 
-# TODO: privates (argument specifications & runtime parsing)
+# TODO: privates (argument specifications)
 
 test xo-6.0 {basic private, parameter default settings} -body {
     xo create x foo {
@@ -21,7 +21,7 @@ test xo-6.0 {basic private, parameter default settings} -body {
     x destroy
 } -result {
     foo bar = {
-        description: TEST
+        description: 'TEST'
         store (def): '
 	    input  INPUT  INPUT-DESC
 	    option OPTION OPTION-DESC
@@ -44,7 +44,7 @@ test xo-6.0 {basic private, parameter default settings} -body {
         --OPTIO --> (--OPTION)
         --OPTION --> (--OPTION)
         P (INPUT) {
-            description: INPUT-DESC
+            description: 'INPUT-DESC'
             ordered, required
             default: 'no'
             []
@@ -53,15 +53,15 @@ test xo-6.0 {basic private, parameter default settings} -body {
             o ()
         }
         P (OPTION) {
-            description: OPTION-DESC
+            description: 'OPTION-DESC'
             default: 'no'
-            [--OPTION --no-OPTION]
+            [--no-OPTION --OPTION]
             g ()
             v (xo::validate::boolean)
             o ()
         }
         P (SPLAT) {
-            description: SPLAT-DESC
+            description: 'SPLAT-DESC'
             ordered, splat, required
             default: ''
             []
@@ -70,7 +70,7 @@ test xo-6.0 {basic private, parameter default settings} -body {
             o ()
         }
         P (STATE) {
-            description: STATE-DESC
+            description: 'STATE-DESC'
             hidden, required
             default: 'no'
             []
@@ -98,9 +98,9 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
     x destroy
 } -result {
     foo bar = {
-        description: 6.1
+        description: '6.1'
         P (A) {
-            description: -
+            description: '-'
             ordered, required
             default: 'no'
             []
@@ -109,7 +109,7 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
             o ()
         }
         P (B) {
-            description: -
+            description: '-'
             ordered
             default: 'no'
             mode=threshold 4
@@ -119,7 +119,7 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
             o ()
         }
         P (C) {
-            description: -
+            description: '-'
             ordered, required
             default: 'no'
             []
@@ -128,7 +128,7 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
             o ()
         }
         P (D) {
-            description: -
+            description: '-'
             ordered
             default: 'no'
             mode=threshold 2
@@ -138,7 +138,7 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
             o ()
         }
         P (E) {
-            description: -
+            description: '-'
             ordered, required
             default: 'no'
             []
@@ -149,67 +149,820 @@ test xo-6.1 {private, optional arguments, thresholding} -body {
     }
 }
 
-# TODO: parameter specification commands (syntax, constraints, effects)
-#
-# optional, interact, default, generate, validate, on
-#
+# # ## ### ##### ######## ############# #####################
 
-test xo-7.0 {private, parsing, opt args, thresholding} -setup {
-    proc ::snafu {x} {}
-} -body {
-    xo create x foo {
-	private bar {
-	    description 6.1
-	    input A - { validate integer }
-	    input B - { validate integer; optional ; default 0 }
-	    input C - { validate integer }
-	    input D - { validate integer; optional ; default 0 }
-	    input E - { validate integer }
-	} ::snafu
-    }
-    [x lookup bar] do 1 2 3 4 5
-    ShowParsed [x lookup bar]
+test xo-6.2 {private, input, optional} -body {
+    xo create x foo { private bar { input A - { optional } } ::snafu }
+    ShowPrivate [x lookup bar]
 } -cleanup {
     x destroy
-    rename ::snafu {}
 } -result {
     foo bar = {
-        P (A) =	'1' 0 ''
-        P (B) =	'2' 0 ''
-        P (C) =	'3' 0 ''
-        P (D) =	'4' 0 ''
-        P (E) =	'5' 0 ''
+        description: ''
+        P (A) {
+            description: '-'
+            ordered
+            default: 'no'
+            mode=threshold 1
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
     }
 }
 
-test xo-7.1 {private, parsing, opt args, thresholding} -setup {
-    proc ::snafu {x} {}
-} -body {
-    xo create x foo {
-	private bar {
-	    description 6.1
-	    input A - { validate integer }
-	    input B - { validate integer; optional ; default 0 }
-	    input C - { validate integer }
-	    input D - { validate integer; optional ; default 0 }
-	    input E - { validate integer }
-	} ::snafu
-    }
-    [x lookup bar] do 1 2 3
-    ShowParsed [x lookup bar]
+test xo-6.3 {private, input, interact} -body {
+    xo create x foo { private bar { input A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
 } -cleanup {
     x destroy
-    rename ::snafu {}
 } -result {
     foo bar = {
-        P (A) =	'1' 0 ''
-        P (B) =	'0' 0 ''
-        P (C) =	'2' 0 ''
-        P (D) =	'0' 0 ''
-        P (E) =	'3' 0 ''
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required, interact
+            default: 'no'
+            prompt: 'Enter A:'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
     }
 }
 
+test xo-6.4.0 {private, input, default} -body {
+    xo create x foo { private bar { input A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: '0'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-6.4.1 {private, input, default} -body {
+    xo create x foo { private bar { input A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: '2'
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-6.4.2 {private, input, default} -body {
+    xo create x foo { private bar { input A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: 'X'
+            []
+            g ()
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-6.5 {private, input, generate} -body {
+    xo create x foo { private bar { input A - { generate X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            no default
+            []
+            g (X)
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-6.6.0 {private, input, validate} -body {
+    xo create x foo { private bar { input A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: '0'
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-6.6.1 {private, input, validate} -body {
+    xo create x foo { private bar { input A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: ''
+            []
+            g ()
+            v (::xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-6.7 {private, input, on} -body {
+    xo create x foo { private bar { input A - { on X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o (X)
+        }
+    }
+}
+
+test xo-6.8 {private, input, alias} -body {
+    xo create x foo { private bar { input A - { alias X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error -result {Argument A cannot have aliases}
+
+test xo-6.9 {private, input, test} -body {
+    xo create x foo { private bar { input A - { test } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument A cannot change test-mode for optional argument}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-7.2 {private, splat, optional} -body {
+    xo create x foo { private bar { splat A - { optional } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat
+            default: ''
+            mode=threshold 1
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-7.3 {private, splat, interact} -body {
+    xo create x foo { private bar { splat A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required, interact
+            default: ''
+            prompt: 'Enter A:'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-7.4.0 {private, splat, default} -body {
+    xo create x foo { private bar { splat A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: '0'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-7.4.1 {private, splat, default} -body {
+    xo create x foo { private bar { splat A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: '2'
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-7.4.2 {private, splat, default} -body {
+    xo create x foo { private bar { splat A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: 'X'
+            []
+            g ()
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-7.5 {private, splat, generate} -body {
+    xo create x foo { private bar { splat A - { generate X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            no default
+            []
+            g (X)
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-7.6.0 {private, splat, validate} -body {
+    xo create x foo { private bar { splat A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: ''
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-7.6.1 {private, splat, validate} -body {
+    xo create x foo { private bar { splat A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: ''
+            []
+            g ()
+            v (::xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-7.7 {private, splat, on} -body {
+    xo create x foo { private bar { splat A - { on X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            ordered, splat, required
+            default: ''
+            []
+            g ()
+            v (xo::validate::boolean)
+            o (X)
+        }
+    }
+}
+
+test xo-7.8 {private, splat, alias} -body {
+    xo create x foo { private bar { splat A - { alias X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error -result {Argument A cannot have aliases}
+
+test xo-7.9 {private, splat, test} -body {
+    xo create x foo { private bar { splat A - { test } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument A cannot change test-mode for optional argument}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-8.2 {private, option, optional} -body {
+    xo create x foo { private bar { option A - { optional } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        --n --> (--no-A)
+        --no --> (--no-A)
+        --no- --> (--no-A)
+        --no-A --> (--no-A)
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: 'no'
+            [--no-A -A]
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-8.3 {private, option, interact} -body {
+    xo create x foo { private bar { option A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        --n --> (--no-A)
+        --no --> (--no-A)
+        --no- --> (--no-A)
+        --no-A --> (--no-A)
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            interact
+            default: 'no'
+            prompt: 'Enter A:'
+            [--no-A -A]
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-8.4.0 {private, option, default} -body {
+    xo create x foo { private bar { option A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        --n --> (--no-A)
+        --no --> (--no-A)
+        --no- --> (--no-A)
+        --no-A --> (--no-A)
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: '0'
+            [--no-A -A]
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-8.4.1 {private, option, default} -body {
+    xo create x foo { private bar { option A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: '2'
+            [-A]
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-8.4.2 {private, option, default} -body {
+    xo create x foo { private bar { option A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: 'X'
+            [-A]
+            g ()
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-8.5 {private, option, generate} -body {
+    xo create x foo { private bar { option A - { generate X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            no default
+            [-A]
+            g (X)
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-8.6.0 {private, option, validate} -body {
+    xo create x foo { private bar { option A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: '0'
+            [-A]
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-8.6.1 {private, option, validate} -body {
+    xo create x foo { private bar { option A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: ''
+            [-A]
+            g ()
+            v (::xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-8.7 {private, option, on} -body {
+    xo create x foo { private bar { option A - { on X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        --n --> (--no-A)
+        --no --> (--no-A)
+        --no- --> (--no-A)
+        --no-A --> (--no-A)
+        -A --> (-A)
+        P (A) {
+            description: '-'
+            default: 'no'
+            [--no-A -A]
+            g ()
+            v (xo::validate::boolean)
+            o (X)
+        }
+    }
+}
+
+test xo-8.8 {private, option, alias} -body {
+    xo create x foo { private bar { option A - { alias X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        --n --> (--no-A)
+        --no --> (--no-A)
+        --no- --> (--no-A)
+        --no-A --> (--no-A)
+        -A --> (-A)
+        -X --> (-X)
+        P (A) {
+            description: '-'
+            default: 'no'
+            [--no-A -A -X]
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-8.9 {private, option, test} -body {
+    xo create x foo { private bar { option A - { test } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Option A cannot change test-mode for optional argument}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-9.2 {private, state, optional} -body {
+    xo create x foo { private bar { state A - { optional } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-9.3 {private, state, interact} -body {
+    xo create x foo { private bar { state A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error -result {Hidden parameter A cannot be set by the user}
+
+test xo-9.4.0 {private, state, default} -body {
+    xo create x foo { private bar { state A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: '0'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o ()
+        }
+    }
+}
+
+test xo-9.4.1 {private, state, default} -body {
+    xo create x foo { private bar { state A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: '2'
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-9.4.2 {private, state, default} -body {
+    xo create x foo { private bar { state A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: 'X'
+            []
+            g ()
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-9.5 {private, state, generate} -body {
+    xo create x foo { private bar { state A - { generate X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            no default
+            []
+            g (X)
+            v (xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-9.6.0 {private, state, validate} -body {
+    xo create x foo { private bar { state A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: '0'
+            []
+            g ()
+            v (xo::validate::integer)
+            o ()
+        }
+    }
+}
+
+test xo-9.6.1 {private, state, validate} -body {
+    xo create x foo { private bar { state A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: ''
+            []
+            g ()
+            v (::xo::validate::identity)
+            o ()
+        }
+    }
+}
+
+test xo-9.7 {private, state, on} -body {
+    xo create x foo { private bar { state A - { on X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        P (A) {
+            description: '-'
+            hidden, required
+            default: 'no'
+            []
+            g ()
+            v (xo::validate::boolean)
+            o (X)
+        }
+    }
+}
+
+test xo-9.8 {private, state, alias} -body {
+    xo create x foo { private bar { state A - { alias X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error -result {Hidden parameter A cannot have aliases}
+
+test xo-9.9 {private, state, test} -body {
+    xo create x foo { private bar { state A - { test } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Hidden parameter A cannot change test-mode for optional argument}
 
 # # ## ### ##### ######## ############# #####################
 return

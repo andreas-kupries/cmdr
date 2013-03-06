@@ -38,9 +38,11 @@ oo::class create ::xo::value {
 	set myvalidate    {} ;# validation command
 	set myon          {} ;# action-on-definition command
 	set mythreshold   {} ;# threshold for optional arguments
+	set myflags       {} ;# Flags to recognize for options.
 
 	# Import the DSL commands to translate the specification.
 	link \
+	    {alias    Alias} \
 	    {test     Test} \
 	    {optional Optional} \
 	    {interact Interact} \
@@ -50,11 +52,12 @@ oo::class create ::xo::value {
 	    {on       On}
 	eval $valuespec
 
-	# Postprocessing ... Fill validation and other defaults
+	# Postprocessing ... Fill in validation and other defaults
 
 	my ValidationDefault
 	my DefaultDefault
 	my Flags
+	set myflags [lsort -dict $myflags]
 
 	# Check constraints.
 
@@ -64,7 +67,7 @@ oo::class create ::xo::value {
 	    "Optional parameter $myname must have default, generator, or interaction"
 	my Assert {!$myhasdefault||![llength $mygenerate]} \
 	    "Parameter $myname cannot have both default and generator"
-	my Assert {!$myinteractive||($prompt ne {})} \
+	my Assert {!$myinteractive||($myprompt ne {})} \
 	    "Interactive parameter $myname must have a prompt"
 	my Assert {!$myislist||$myisordered} \
 	    "List parameter $myname must be an argument"
@@ -114,6 +117,13 @@ oo::class create ::xo::value {
     # # ## ### ##### ######## #############
     ## API for value specification DSL.
 
+    method Alias {name} {
+	my Assert {!$myisordered} "Argument $myname cannot have aliases"
+	my Assert {!$myishidden}  "Hidden parameter $myname cannot have aliases"
+	lappend myflags [my Option $name]
+	return
+    }
+
     method Optional {} {
 	set myisrequired no
 	return
@@ -124,7 +134,7 @@ oo::class create ::xo::value {
 	my Assert {!$myishidden} "Hidden parameter $myname cannot be set by the user"
 	if {$prompt eq {}} { set prompt "Enter ${myname}:" }
 	set myinteractive yes
-	set myprompt {}
+	set myprompt $prompt
 	return
     }
 
@@ -162,8 +172,12 @@ oo::class create ::xo::value {
     }
 
     method Test {} {
-	my Assert {$myisordered && !$myisrequired} \
-	    "Required argument cannot change test-mode for optionals"
+	my Assert {!$myishidden} \
+	    "Hidden parameter $myname cannot change test-mode for optional argument"
+	my Assert {$myisordered} \
+	    "Option $myname cannot change test-mode for optional argument"
+	my Assert {!$myisrequired} \
+	    "Required argument $myname cannot change test-mode for optional argument"
 	# Switch the mode of the optional argument from testing by
 	# argument counting to peeking at the queue and validating.
 	set mythreshold -1
@@ -220,7 +234,6 @@ oo::class create ::xo::value {
     }
 
     method Flags {} {
-	set myflags {}
 	# Ordered and hidden parameters have no flags.
 	# NOTE: Ordered may change in future (--ask-FOO)
 	if {$myisordered} return
@@ -228,6 +241,7 @@ oo::class create ::xo::value {
 	lappend myflags [my Option $myname]
 
 	# Special flags for boolean options
+	# XXX Consider pushing this into the validators.
 	if {$myvalidate ne "xo::validate::boolean"} return
 	lappend myflags --no-$myname
 	return
@@ -370,14 +384,45 @@ oo::class create ::xo::value {
 	return $mystring
     }
 
+    method string? {} {
+	return $myhasstring
+    }
+
     method get {} {
 	# compute argument value if any, cache result.
 	#error NYI
+
+	# Calculate value, from most prefered to least
+	#
+	# (1) User entered value ?
+	#     => Validate, transforms.
+	#
+	# (2) Generation command ?
+	#     => Run
+	#
+	# (3) Default value ?
+	#     => Validate, transforms
+	#
+	# (4) Interactive entry possible ? (general config, plus per value)
+	#     Enter, validate, transforms
+	#     - mini shell - ^C abort
+	#     - completion => Validator API
+	#
+	# (5) Optional ?
+	#     => It is ok to not have the value.
+	#
+	# (6) FAIL. 
+
+
     }
 
     method defined? {} {
 	# determine if we have an argument value, may compute it.
 	#error NYI
+
+	# Test if we have a value
+	# Similar to 'get' above, no validation, no transforms
+
 	return 0
     }
 
