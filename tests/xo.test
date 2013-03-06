@@ -26,10 +26,11 @@ kt local   testing xo
 
 # # ## ### ##### ######## ############# #####################
 
-::kt source xo_main.tests     ; # Entrypoints.
-::kt source xo_officer.tests  ; # Action DSL
-::kt source xo_private.tests  ; # Parameter DSL
-::kt source xo_runtime.tests  ; # Runtime command line parsing
+::kt source xo_main.tests      ; # Entrypoints.
+::kt source xo_officer.tests   ; # Action DSL
+::kt source xo_private.tests   ; # Parameter DSL, collection
+::kt source xo_parameter.tests ; # Parameter DSL, details
+::kt source xo_runtime.tests   ; # Runtime command line parsing
 
 # TODO: keys, get (super chain)
 
