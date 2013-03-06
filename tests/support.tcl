@@ -69,31 +69,33 @@ proc DumpPrivate {o} {
 	lappend result "    store ($k): '[$o get $k]'"
     }
 
-    # Options (Mapping from prefix to full options).
-    foreach {opt v} [kt dictsort [$o options]] {
-	lappend result "    $opt --> ($v)"
-	# TODO: option handler and configuration
+    # List the argument and option parameters.
+    foreach name [lsort -dict [$o arguments]] {
+	lappend result "    argument ($name)"
+    }
+    foreach name [lsort -dict [$o options]] {
+	lappend result "    option ($name) = [[$o lookup-option $name] name]"
     }
 
-    # Options II. From full options to their parameter.
-    # TODO
+    # List the mapping from option prefixes to the list of full options.
+    foreach {opt v} [kt dictsort [$o eoptions]] {
+	lappend result "    map $opt --> ($v)"
+    }
 
-    # All parameters.
+    # Lastly, show the full state of all parameters.
     foreach name [lsort -dict [$o names]] {
 	set c [$o lookup $name]
 
-	lappend result "    P ($name) \{"
+	lappend result "    para ($name) \{"
 	lappend result "        description: '[$c description]'"
 
 	set state {}
-	if {[$c ordered]}     { lappend state ordered }
-	if {[$c hidden]}      { lappend state hidden }
-	if {[$c list]}        { lappend state splat }
-	if {[$c required]}    { lappend state required }
-	if {[$c interactive]} { lappend state interact }
-	if {[llength $state]} {
-	    lappend result "        [join $state {, }]"
-	}
+	if {[$c ordered]}     { lappend state ordered  } else { lappend state !ordered  }
+	if {[$c cmdline]}     { lappend state cmdline  } else { lappend state !cmdline  }
+	if {[$c list]}        { lappend state splat    } else { lappend state !splat    }
+	if {[$c required]}    { lappend state required } else { lappend state !required }
+	if {[$c interactive]} { lappend state interact } else { lappend state !interact }
+	lappend result "        [join $state {, }]"
 
 	if {[$c hasdefault]}  {
 	    lappend result "        default: '[$c default]'"
@@ -103,17 +105,17 @@ proc DumpPrivate {o} {
 	if {[$c interactive]} {
 	    lappend result "        prompt: '[$c prompt]'"
 	}
-	if {[$c ordered] && ![$c required]} {
+	if {[$c cmdline] && [$c ordered] && ![$c required]} {
 	    if {[$c threshold] >= 0} {
 		lappend result "        mode=threshold [$c threshold]"
 	    } else {
 		lappend result "        mode=peek+test"
 	    }
 	}
-	lappend result "        \[[$c options]\]"
-	lappend result "        g ([$c generator])"
-	lappend result "        v ([$c validator])"
-	lappend result "        o ([$c on])"
+	lappend result "        flags \[[$c options]\]"
+	lappend result "        ge ([$c generator])"
+	lappend result "        va ([$c validator])"
+	lappend result "        wd ([$c when-defined])"
 	lappend result "    \}"
     }
 

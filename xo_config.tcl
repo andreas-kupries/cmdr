@@ -41,9 +41,9 @@ oo::class create ::xo::config {
 	    {option      Option} \
 	    {state       State}
 
-	set splat no
-	set min 0 ; set minlist {}
-	set max 0 ; set maxlist {}
+	set splat   no
+	set min     0
+	set minlist {}
 
 	eval $spec
 
@@ -60,8 +60,10 @@ oo::class create ::xo::config {
 	return
     }
 
-    method options {} { return $myfullopt }
-    method names   {} { return [dict keys $mymap] }
+    method eoptions  {} { return $myfullopt }
+    method names     {} { return [dict keys $mymap] }
+    method arguments {} { return $myargs }
+    method options   {} { return [dict keys $myoption] }
 
     method lookup {name} {
 	if {![dict exists $mymap $name]} {
@@ -69,6 +71,14 @@ oo::class create ::xo::config {
 		"Expected parameter name, got \"$name\""
 	}
 	return [dict get $mymap $name]
+    }
+
+    method lookup-option {name} {
+	if {![dict exists $myoption $name]} {
+	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
+		"Expected option name, got \"$name\""
+	}
+	return [dict get $myoption $name]
     }
 
     # # ## ### ##### ######## #############
@@ -115,7 +125,7 @@ oo::class create ::xo::config {
 	    order cmdline required
 	    name desc {spec {}}
     } {
-	upvar 1 splat splat min min minlist minlist max max maxlist maxlist
+	upvar 1 splat splat min min minlist minlist
 	if {$splat && $order} {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
 		"splat must be last command in argument specification"
@@ -123,29 +133,23 @@ oo::class create ::xo::config {
 	my ValidateAsUnknown $name
 
 	# Create and initialize handler.
-	set a [xo::parameter create param_$name [self] \
-		   $order $cmdline $required \
-		   $name $desc $spec]
+	set para [xo::parameter create param_$name [self] \
+		      $order $cmdline $required \
+		      $name $desc $spec]
 
 	# Map parameter name to handler object.
-	dict set mymap $name $a
+	dict set mymap $name $para
 
 	if {$order} {
-	    set splat [$a list]
-	    if {$list} {
-		set max Inf
-	    } else {
-		incr max
-	    }
+	    set splat [$para list]
 	    if {$required} { incr min }
-	    lappend maxlist $max
 	    lappend minlist $min
 	    # Arguments, keep names, in order of definition.
 	    lappend myargs $name
 	} else {
 	    # Keep map of options to their handlers.
-	    foreach option [$a options] {
-		dict set myoption $option $a
+	    foreach option [$para options] {
+		dict set myoption $option $para
 	    }
 	}
 	return

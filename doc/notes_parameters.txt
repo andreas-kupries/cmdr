@@ -30,7 +30,7 @@ This raises the constraint
 
 	(C1)	!cmdline => !ordered			[R6]
 	<=>	 ordered =>  cmdline
-	<=>	 cmdline || ordered
+	<=>	 cmdline || !ordered
 
 and the full mapping becomes
 
@@ -172,7 +172,7 @@ Collected property contraints
 
 	(C1)	!cmdline => !ordered			[R6]
 	<=>	 ordered =>  cmdline
-	<=>	 cmdline || ordered
+	<=>	 cmdline || !ordered
 
 	(C2)	cmdline && !ordered => !required	[R9]
 	<=>	required => !cmdline || ordered

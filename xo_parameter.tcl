@@ -1,7 +1,9 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
 ## XO - Value - Definition of command parameters (for a private).
-## See "doc/notes_parameter.txt"
+
+## Reference "doc/notes_parameter.txt". The Rnnn and Cnnn tags are
+## links into this document.
 
 # # ## ### ##### ######## ############# #####################
 ## Requisites
@@ -51,89 +53,32 @@ oo::class create ::xo::parameter {
 
 	# Start with a proper runtime state
 	my reset
+
+	# Import the whole collection of parameters this one is a part
+	# of into our namespace, as the fixed command "config", for
+	# use by the various command prefixes (generate, validate,
+	# when-defined), all of which will be run in our namespace
+	# context.
+
+	set myconfig $theconfig
+	interp alias {} [self namespace]::config {} $theconfig
 	return
     }
 
     # # ## ### ##### ######## #############
-    # Constraints.
+    ## API: Property accessors...
 
-    forward C1_StateIsUnordered \
-	my Assert {$myiscmdline || $myisordered} \
-	{State parameter "@" must be unordered}
-
-    forward C2_OptionIsOptional \
-	my Assert {!$myisrequired || !$myiscmdline || $myisordered} \
-	{Option argument "@" must be optional}
-
-    forward C3_StateIsRequired \
-	my Assert {$myiscmdline || $myisrequired} \
-	{State parameter "@" must be required}
-
-    forward C5_OptionalHasAlternateInput \
-	my Assert {$myisrequired||$myhasdefault||[llength $mygenerate]||$myinteractive} \
-	{Optional parameter "@" must have default value, generator command, or interaction}
-
-    forward C5_StateHasAlternateInput \
-	my Assert {$myiscmdline||$myhasdefault||[llength $mygenerate]||$myinteractive} \
-	"State parameter "@" must have default value, generator command, or interaction"
-
-    forward C6_RequiredArgumentForbiddenDefault \
-	my Assert {!$myhasdefault || !$myisrequired || !$myiscmdline} \
-	{Required argument "@" must not have default value}
-
-    forward C6_RequiredArgumentForbiddenGenerator \
-	my Assert {![llength $mygenerate] || !$myisrequired || !$myiscmdline} \
-	{Required argument "@" must not have generator command}
-
-    forward C6_RequiredArgumentForbiddenInteract \
-	my Assert {!$myinteractive || !$myisrequired || !$myiscmdline} \
-	{Required argument "@" must not have user interaction}
-
-    forward C7_DefaultGeneratorConflict \
-	my Assert {!$myhasdefault || ![llength $mygenerate]} \
-	{Default value and generator command for parameter "@" are in conflict}
-
-    # # ## ### ##### ######## #############
-    ## Syntax constraints.
-
-    forward Alias_Option \
-	my Assert {$myiscmdline && !$myisordered} \
-	{Non-option parameter "@" cannot have alias}
-
-    forward Optional_Option \
-	my Assert {$myisordered} \
-	{Option "@" is already optional}
-
-    forward Optional_State \
-	my Assert {$myiscmdline} \
-	{State parameter "@" cannot be optional}
-
-    forward Test_NotState \
-	my Assert {$myiscmdline} \
-	{State parameter "@" has no test-mode}
-
-    forward Test_NotOption \
-	my Assert {$myisordered} \
-	{Option "@" has no test-mode}
-
-    forward Test_NotRequired \
-	my Assert {!$myisrequired} \
-	{Required argument "@" has no test-mode}
-
-    # # ## ### ##### ######## #############
-    ## Public accessors...
-
-    # Add context name into it?
+    # Identification and help. Add context name into it?
     method name        {} { return $myname }
     method description {} { return $mydescription }
 
-    # Accessors for the various properties
+    # Core classification properties
     method ordered      {} { return $myisordered }
     method cmdline      {} { return $myiscmdline }
     method required     {} { return $myisrequired }
     method list         {} { return $myislist }
 
-    # - alternate input
+    # Alternate sources for the parameter value.
     method hasdefault   {} { return $myhasdefault }
     method default      {} { return $mydefault }
     method generator    {} { return $mygenerate }
@@ -153,7 +98,7 @@ oo::class create ::xo::parameter {
     }
 
     # # ## ### ##### ######## #############
-    ## API for value specification DSL.
+    ## Internal: Parameter DSL implementation + support.
 
     method ExecuteSpecification {valuespec} {
 	set myflags {} ;# List of flags to recognize for an option.
@@ -178,7 +123,7 @@ oo::class create ::xo::parameter {
 	my DefineStandardFlags
 	set myflags [lsort -dict $myflags]
 
-	# Check all constraints.
+	# Validate all constraints.
 
 	my C1_StateIsUnordered
 	my C2_OptionIsOptional
@@ -190,16 +135,11 @@ oo::class create ::xo::parameter {
 	my C6_RequiredArgumentForbiddenInteract
 	my C7_DefaultGeneratorConflict
 
-	# Import the whole collection of parameters this one is a part
-	# of into our namespace, as the fixed command "config", for
-	# use by the various command prefixes (generate, validate,
-	# when-defined), all of which will be run in our namespace
-	# context.
-
-	set myconfig $theconfig
-	interp alias {} [self namespace]::config {} $theconfig
 	return
     }
+
+    # # ## ### ##### ######## #############
+    ## Internal: Parameter DSL commands.
 
     method List {} {
 	set myislist yes
@@ -213,9 +153,10 @@ oo::class create ::xo::parameter {
     }
 
     method Optional {} {
-	# Arguments only. Options are already optional, and state parameters must not be.
-	my Optional_Option
-	my Optional_State
+	# Arguments only. Options are already optional, and state
+	# parameters must not be.
+	my Optional_State  ; # Order of tests is important, enabling us
+	my Optional_Option ; # to simplify the guard conditions inside.
 	set myisrequired no
 	return
     }
@@ -259,7 +200,7 @@ oo::class create ::xo::parameter {
 	    [llength [info commands ::xo::validate::$cmd]]} {
 	    set cmd ::xo::validate::$cmd
 	}
-	set cmd [list $cmd {*}$words]
+	set cmd [::list $cmd {*}$words]
 	set myvalidate $cmd
 	return
     }
@@ -280,13 +221,83 @@ oo::class create ::xo::parameter {
     }
 
     # # ## ### ##### ######## #############
-    ## DSL Helper commands.
+    ## Internal: DSL support.
+
+    # # ## ### ##### ######## #############
+    ## Internal: DSL support. Constraints.
+
+    forward C1_StateIsUnordered \
+	my Assert {$myiscmdline || !$myisordered} \
+	{State parameter "@" must be unordered}
+
+    forward C2_OptionIsOptional \
+	my Assert {!$myisrequired || !$myiscmdline || $myisordered} \
+	{Option argument "@" must be optional}
+
+    forward C3_StateIsRequired \
+	my Assert {$myiscmdline || $myisrequired} \
+	{State parameter "@" must be required}
+
+    forward C5_OptionalHasAlternateInput \
+	my Assert {$myisrequired||$myhasdefault||[llength $mygenerate]||$myinteractive} \
+	{Optional parameter "@" must have default value, generator command, or interaction}
+
+    forward C5_StateHasAlternateInput \
+	my Assert {$myiscmdline||$myhasdefault||[llength $mygenerate]||$myinteractive} \
+	{State parameter "@" must have default value, generator command, or interaction}
+
+    forward C6_RequiredArgumentForbiddenDefault \
+	my Assert {!$myhasdefault || !$myisrequired || !$myiscmdline} \
+	{Required argument "@" must not have default value}
+
+    forward C6_RequiredArgumentForbiddenGenerator \
+	my Assert {![llength $mygenerate] || !$myisrequired || !$myiscmdline} \
+	{Required argument "@" must not have generator command}
+
+    forward C6_RequiredArgumentForbiddenInteract \
+	my Assert {!$myinteractive || !$myisrequired || !$myiscmdline} \
+	{Required argument "@" must not have user interaction}
+
+    forward C7_DefaultGeneratorConflict \
+	my Assert {!$myhasdefault || ![llength $mygenerate]} \
+	{Default value and generator command for parameter "@" are in conflict}
+
+    # # ## ### ##### ######## #############
+    ## Internal: DSL support. Syntax constraints.
+
+    forward Alias_Option \
+	my Assert {$myiscmdline && !$myisordered} \
+	{Non-option parameter "@" cannot have alias}
+
+    forward Optional_Option \
+	my Assert {$myisordered} \
+	{Option "@" is already optional}
+
+    forward Optional_State \
+	my Assert {$myiscmdline} \
+	{State parameter "@" cannot be optional}
+
+    forward Test_NotState \
+	my Assert {$myiscmdline} \
+	{State parameter "@" has no test-mode}
+
+    forward Test_NotOption \
+	my Assert {$myisordered} \
+	{Option "@" has no test-mode}
+
+    forward Test_NotRequired \
+	my Assert {!$myisrequired} \
+	{Required argument "@" has no test-mode}
+
+    # # ## ### ##### ######## #############
+    ## Internal: DSL support. General helpers.
 
     method Assert {expr msg} {
-	if {[uplevel 1 [list expr $expr]]} return
+	# Note: list is a local command, we want the builtin
+	if {[uplevel 1 [::list expr $expr]]} return
 	return -code error \
 	    -errorcode {XO PARAMETER CONSTRAINT VIOLATION} \
-	    [string map [list @ $myname] $msg]
+	    [string map [::list @ $myname] $msg]
     }
 
     method FillMissingValidation {} {
@@ -359,7 +370,8 @@ oo::class create ::xo::parameter {
     }
 
     # # ## ### ##### ######## #############
-    ## API for management by xo::config
+    ## API. Support for runtime command line parsing.
+    ## See "xo::config" for the main controller.
 
     method reset {} {
 	# Runtime configuration, initial state
@@ -369,9 +381,6 @@ oo::class create ::xo::parameter {
 	set myvalue     {}
 	return
     }
-
-    # # ## ### ##### ######## #############
-    ## API for management by xo::config.
 
     method options {} { return $myflags }
 
@@ -386,25 +395,6 @@ oo::class create ::xo::parameter {
 	# Option parameters.
 	my ProcessOption $queue
 	return
-    }
-
-    method Take {queue} {
-	if {$mythreshold >= 0} {
-	    # Choose by checking argument count against a threshold.
-	    # For this to work correctly we now have to process all
-	    # the remaining options first.
-
-	    config parse-options
-	    if {[$queue size] < $mythreshold} { return 0 }
-	} else {
-	    # Choose by peeking and validating the front value.
-	    try {
-		$myvalidate validate [$queue peek]
-	    } trap {XO VALIDATE} {e o} {
-		return 0
-	    }
-	}
-	return 1
     }
 
     method ProcessArgument {queue} {
@@ -479,6 +469,29 @@ oo::class create ::xo::parameter {
 	}
 	set myhasstring 1
 	return
+    }
+
+    method Take {queue} {
+	if {$mythreshold >= 0} {
+	    # Choose by checking argument count against a threshold.
+	    # For this to work correctly we now have to process all
+	    # the remaining options first.
+
+	    config parse-options
+	    if {[$queue size] < $mythreshold} {
+		# Not enough values left, pass.
+		return 0
+	    }
+	} else {
+	    # Choose by peeking at and validating the front value.
+	    try {
+		$myvalidate validate [$queue peek]
+	    } trap {XO VALIDATE} {e o} {
+		# Type mismatch, pass.
+		return 0
+	    }
+	}
+	return 1
     }
 
     # # ## ### ##### ######## #############
