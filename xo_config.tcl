@@ -38,13 +38,12 @@ oo::class create ::xo::config {
 	    {description Description} \
 	    {use         Use} \
 	    {input       Input} \
-	    {splat       Splat} \
 	    {option      Option} \
 	    {state       State}
 
-	set splat no
-	set min 0 ; set minlist {}
-	set max 0 ; set maxlist {}
+	set splat   no
+	set min     0
+	set minlist {}
 
 	eval $spec
 
@@ -61,8 +60,10 @@ oo::class create ::xo::config {
 	return
     }
 
-    method options {} { return $myfullopt }
-    method names   {} { return [dict keys $mymap] }
+    method eoptions  {} { return $myfullopt }
+    method names     {} { return [dict keys $mymap] }
+    method arguments {} { return $myargs }
+    method options   {} { return [dict keys $myoption] }
 
     method lookup {name} {
 	if {![dict exists $mymap $name]} {
@@ -70,6 +71,14 @@ oo::class create ::xo::config {
 		"Expected parameter name, got \"$name\""
 	}
 	return [dict get $mymap $name]
+    }
+
+    method lookup-option {name} {
+	if {![dict exists $myoption $name]} {
+	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
+		"Expected option name, got \"$name\""
+	}
+	return [dict get $myoption $name]
     }
 
     # # ## ### ##### ######## #############
@@ -107,47 +116,40 @@ oo::class create ::xo::config {
     }
 
     # Parameter definition itself.
-    #         order, hide, list, req (O H L R) name ?spec?
-    forward Input  my DefineParameter 1 0 0 1
-    forward Splat  my DefineParameter 1 0 1 1
-    forward Option my DefineParameter 0 0 0 0
-    forward State  my DefineParameter 0 1 0 1
+    #       order, cmdline, required (O C R) name ?spec?
+    forward Input  my DefineParameter 1 1 1
+    forward Option my DefineParameter 0 1 0
+    forward State  my DefineParameter 0 0 1
 
     method DefineParameter {
-	    order hide list required
+	    order cmdline required
 	    name desc {spec {}}
     } {
-	upvar 1 splat splat min min minlist minlist max max maxlist maxlist
+	upvar 1 splat splat min min minlist minlist
 	if {$splat && $order} {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
-		"splat must be last command in argument specification"
+		"A splat must be the last argument in the specification"
 	}
 	my ValidateAsUnknown $name
 
 	# Create and initialize handler.
-	set a [xo::parameter create param_$name [self] \
-		   $order $hide $list $required \
-		   $name $desc $spec]
+	set para [xo::parameter create param_$name [self] \
+		      $order $cmdline $required \
+		      $name $desc $spec]
 
 	# Map parameter name to handler object.
-	dict set mymap $name $a
+	dict set mymap $name $para
 
 	if {$order} {
-	    set splat $list
-	    if {$list} {
-		set max Inf
-	    } else {
-		incr max
-	    }
+	    set splat [$para list]
 	    if {$required} { incr min }
-	    lappend maxlist $max
 	    lappend minlist $min
 	    # Arguments, keep names, in order of definition.
 	    lappend myargs $name
 	} else {
 	    # Keep map of options to their handlers.
-	    foreach option [$a options] {
-		dict set myoption $option $a
+	    foreach option [$para options] {
+		dict set myoption $option $para
 	    }
 	}
 	return

@@ -1,0 +1,981 @@
+# -*- tcl -*- Include file for xo.test.
+# # ## ### ##### ######## ############# #####################
+## DSL commands under test:
+## (1) alias
+## (2) default
+## (3) generate
+## (4) interact
+## (5) list
+## (6) optional
+## (7) test
+## (8) validate
+## (9) when-defined
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'alias' across parameters (input, option, state)
+
+test xo-parameter-1.0 {parameter DSL, alias, wrong num args, not enough} -body {
+    xo create x foo { private bar { input A - { alias } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"alias name\""
+
+test xo-parameter-1.1 {parameter DSL, alias, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { alias X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"alias name\""
+
+test xo-parameter-1.2 {parameter DSL, input, alias} -body {
+    xo create x foo { private bar { input A - { alias X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Non-option parameter "A" cannot have alias}
+
+test xo-parameter-1.3 {parameter DSL, option, alias} -body {
+    xo create x foo { private bar { option A - { alias X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        option (-X) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        map -X --> (-X)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: 'no'
+            flags [--no-A -A -X]
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-1.4 {parameter DSL, state, alias} -body {
+    xo create x foo { private bar { state A - { alias X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Non-option parameter "A" cannot have alias}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'default' across parameters (input, option, state)
+
+test xo-parameter-2.0 {parameter DSL, default, wrong num args, not enough} -body {
+    xo create x foo { private bar { input A - { default } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"default value\""
+
+test xo-parameter-2.1 {parameter DSL, default, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { default X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"default value\""
+
+test xo-parameter-2.2 {(C6) parameter DSL, input, default, forbidden} -body {
+    xo create x foo { private bar { input A - { default VALUE } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument "A" must not have default value}
+
+test xo-parameter-2.3 {parameter DSL, optional input, default, auto validate boolean} -body {
+    xo create x foo { private bar { input A - { optional ; default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            default: '0'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.4 {parameter DSL, optional input, default, auto validate integer} -body {
+    xo create x foo { private bar { input A - { optional ; default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            default: '2'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.5 {parameter DSL, optional input, default, auto validate identity} -body {
+    xo create x foo { private bar { input A - { optional ; default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            default: 'X'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.6 {parameter DSL, option, default, auto validate boolean} -body {
+    xo create x foo { private bar { option A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: '0'
+            flags [--no-A -A]
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.7 {parameter DSL, option, default, auto validate integer } -body {
+    xo create x foo { private bar { option A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (-A) = A
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: '2'
+            flags [-A]
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.8 {parameter DSL, option, default, auto validate identity} -body {
+    xo create x foo { private bar { option A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (-A) = A
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: 'X'
+            flags [-A]
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.9 {parameter DSL, state, default, auto validate boolean} -body {
+    xo create x foo { private bar { state A - { default 0 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: '0'
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.10 {parameter DSL, state, default, auto validate integer} -body {
+    xo create x foo { private bar { state A - { default 2 } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: '2'
+            flags []
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.11 {parameter DSL, state, default, auto validate identity} -body {
+    xo create x foo { private bar { state A - { default X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: 'X'
+            flags []
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-2.12 {(C7) parameter DSL, optional input, default after generate} -body {
+    xo create x foo { private bar { input A - { optional ; generate X ; default VALUE } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+test xo-parameter-2.13 {(C7) parameter DSL, option, default after generate} -body {
+    xo create x foo { private bar { option A - { generate X ; default VALUE } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+test xo-parameter-2.14 {(C7) parameter DSL, state, default after generate} -body {
+    xo create x foo { private bar { state A - { generate X ; default VALUE } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'generate' across parameters (input, option, state)
+
+test xo-parameter-3.0 {parameter DSL, optional, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { generate X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"generate cmd\""
+
+test xo-parameter-3.1 {parameter DSL, optional, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { generate X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"generate cmd\""
+
+test xo-parameter-3.1 {(C6) parameter DSL, input, generate, forbidden} -body {
+    xo create x foo { private bar { input A - { generate G } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument "A" must not have generator command}
+
+test xo-parameter-3.2 {parameter DSL, optional input, generate} -body {
+    xo create x foo { private bar { input A - { optional ; generate G } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            no default
+            mode=threshold 1
+            flags []
+            ge (G)
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-3.3 {parameter DSL, option, generate} -body {
+    xo create x foo { private bar { option A - { generate G } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (-A) = A
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            no default
+            flags [-A]
+            ge (G)
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-3.4 {parameter DSL, state, generate} -body {
+    xo create x foo { private bar { state A - { generate G } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            no default
+            flags []
+            ge (G)
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-3.5 {(C7) parameter DSL, optional input, generate after default} -body {
+    xo create x foo { private bar { input A - { optional ; default VALUE ; generate X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+test xo-parameter-3.6 {(C7) parameter DSL, option, generate after default} -body {
+    xo create x foo { private bar { option A - { default VALUE ; generate X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+test xo-parameter-3.7 {(C7) parameter DSL, state, generate after default} -body {
+    xo create x foo { private bar { state A - { default VALUE ; generate X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Default value and generator command for parameter "A" are in conflict}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'interact' across parameters (input, option, state)
+
+test xo-parameter-4.0 {parameter DSL, optional, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { interact X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"interact ?prompt?\""
+
+test xo-parameter-4.1 {(C6) parameter DSL, input, interact, forbidden} -body {
+    xo create x foo { private bar { input A - { interact } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument "A" must not have user interaction}
+
+test xo-parameter-4.2 {parameter DSL, optional input, interact, default prompt} -body {
+    xo create x foo { private bar { input A - { optional ; interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, interact
+            default: 'no'
+            prompt: 'Enter A:'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-4.3 {parameter DSL, optional input, interact, custom prompt} -body {
+    xo create x foo { private bar { input A - { optional ; interact HERE } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, interact
+            default: 'no'
+            prompt: 'HERE'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-4.4 {parameter DSL, option, interact} -body {
+    xo create x foo { private bar { option A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, interact
+            default: 'no'
+            prompt: 'Enter A:'
+            flags [--no-A -A]
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-4.5 {parameter DSL, state, interact} -body {
+    xo create x foo { private bar { state A - { interact } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, interact
+            default: 'no'
+            prompt: 'Enter A:'
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'list' across parameters (input, option, state)
+
+test xo-parameter-5.0 {parameter DSL, list, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { list X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"list\""
+
+test xo-parameter-5.1 {parameter DSL, list input} -body {
+    xo create x foo { private bar { input A - { list } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, splat, required, !interact
+            no default
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-5.2 {parameter DSL, list input not last} -body {
+    xo create x foo { private bar { input A - { list } ; input X - } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {A splat must be the last argument in the specification}
+
+test xo-parameter-5.3 {parameter DSL, list option} -body {
+    xo create x foo { private bar { option A - { list } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, splat, !required, !interact
+            default: ''
+            flags [--no-A -A]
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-5.4 {parameter DSL, list state} -body {
+    xo create x foo { private bar { state A - { list } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, splat, required, !interact
+            default: ''
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'optional' across parameters (input, option, state)
+
+test xo-parameter-6.0 {parameter DSL, optional, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { optional X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"optional\""
+
+test xo-parameter-6.1 {parameter DSL, optional input} -body {
+    xo create x foo { private bar { input A - { optional } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            default: 'no'
+            mode=threshold 1
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-6.2 {parameter DSL, optional option} -body {
+    xo create x foo { private bar { option A - { optional } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Option "A" is already optional}
+
+test xo-parameter-6.3 {parameter DSL, optional state} -body {
+    xo create x foo { private bar { state A - { optional } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {State parameter "A" cannot be optional}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'test' across parameters (input, option, state)
+
+test xo-parameter-7.0 {parameter DSL, test, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { test X } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"test\""
+
+test xo-parameter-7.1 {parameter DSL, input, test} -body {
+    xo create x foo { private bar { input A - { test } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Required argument "A" has no test-mode}
+
+test xo-parameter-7.2 {parameter DSL, optional input, test} -body {
+    xo create x foo { private bar { input A - { optional ; test } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, !required, !interact
+            default: 'no'
+            mode=peek+test
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-7.3 {parameter DSL, option, test} -body {
+    xo create x foo { private bar { option A - { test } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Option "A" has no test-mode}
+
+test xo-parameter-7.4 {parameter DSL, state, test} -body {
+    xo create x foo { private bar { state A - { test } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {State parameter "A" has no test-mode}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'validate' across parameters (input, option, state)
+
+test xo-parameter-8.0 {parameter DSL, validate, wrong num args, not enough} -body {
+    xo create x foo { private bar { input A - { validate } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"validate cmd\""
+
+test xo-parameter-8.1 {parameter DSL, validate, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { validate X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"validate cmd\""
+
+test xo-parameter-8.2 {parameter DSL, input, validate, shorthand} -body {
+    xo create x foo { private bar { input A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, required, !interact
+            no default
+            flags []
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-8.3 {parameter DSL, input, validate} -body {
+    xo create x foo { private bar { input A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, required, !interact
+            no default
+            flags []
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-8.4 {parameter DSL, option, validate, shorthand} -body {
+    xo create x foo { private bar { option A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (-A) = A
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: '0'
+            flags [-A]
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-8.5 {parameter DSL, option, validate} -body {
+    xo create x foo { private bar { option A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (-A) = A
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: ''
+            flags [-A]
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-8.6 {parameter DSL, state, validate, shorthand} -body {
+    xo create x foo { private bar { state A - { validate integer } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: '0'
+            flags []
+            ge ()
+            va (::xo::validate::integer)
+            wd ()
+        }
+    }
+}
+
+test xo-parameter-8.7 {parameter DSL, state, validate} -body {
+    xo create x foo { private bar { state A - { validate ::xo::validate::identity } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: ''
+            flags []
+            ge ()
+            va (::xo::validate::identity)
+            wd ()
+        }
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+## Parameter DSL: 'when-defined' across parameters (input, option, state)
+
+test xo-parameter-9.0 {parameter DSL, when-defined, wrong num args, not enough} -body {
+    xo create x foo { private bar { input A - { when-defined } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"when-defined cmd\""
+
+test xo-parameter-9.1 {parameter DSL, when-defined, wrong num args, too many} -body {
+    xo create x foo { private bar { input A - { when-defined X Y } } ::snafu }
+    Trigger [x lookup bar]
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result "wrong # args: should be \"when-defined cmd\""
+
+test xo-parameter-9.2 {parameter DSL, input, when-defined} -body {
+    xo create x foo { private bar { input A - { when-defined X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        argument (A)
+        para (A) {
+            description: '-'
+            ordered, cmdline, !splat, required, !interact
+            no default
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd (X)
+        }
+    }
+}
+
+test xo-parameter-9.3 {parameter DSL, option, when-defined} -body {
+    xo create x foo { private bar { option A - { when-defined X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        para (A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: 'no'
+            flags [--no-A -A]
+            ge ()
+            va (::xo::validate::boolean)
+            wd (X)
+        }
+    }
+}
+
+test xo-parameter-9.4 {parameter DSL, state, when-defined} -body {
+    xo create x foo { private bar { state A - { when-defined X } } ::snafu }
+    ShowPrivate [x lookup bar]
+} -cleanup {
+    x destroy
+} -result {
+    foo bar = {
+        description: ''
+        para (A) {
+            description: '-'
+            !ordered, !cmdline, !splat, required, !interact
+            default: 'no'
+            flags []
+            ge ()
+            va (::xo::validate::boolean)
+            wd (X)
+        }
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
+return
