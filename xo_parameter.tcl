@@ -385,7 +385,7 @@ oo::class create ::xo::parameter {
     method options {} { return $myflags }
 
     method process {n queue} {
-	my Assert {!$myiscmdline} "Illegal command line input for state parameter"
+	my Assert {$myiscmdline} "Illegal command line input for state parameter \"$myname\""
 
 	if {$myisordered} {
 	    my ProcessArgument $queue
