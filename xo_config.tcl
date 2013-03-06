@@ -38,7 +38,6 @@ oo::class create ::xo::config {
 	    {description Description} \
 	    {use         Use} \
 	    {input       Input} \
-	    {splat       Splat} \
 	    {option      Option} \
 	    {state       State}
 
@@ -107,14 +106,13 @@ oo::class create ::xo::config {
     }
 
     # Parameter definition itself.
-    #         order, hide, list, req (O H L R) name ?spec?
-    forward Input  my DefineParameter 1 0 0 1
-    forward Splat  my DefineParameter 1 0 1 1
-    forward Option my DefineParameter 0 0 0 0
-    forward State  my DefineParameter 0 1 0 1
+    #       order, cmdline, required (O C R) name ?spec?
+    forward Input  my DefineParameter 1 1 1
+    forward Option my DefineParameter 0 1 0
+    forward State  my DefineParameter 0 0 1
 
     method DefineParameter {
-	    order hide list required
+	    order cmdline required
 	    name desc {spec {}}
     } {
 	upvar 1 splat splat min min minlist minlist max max maxlist maxlist
@@ -126,14 +124,14 @@ oo::class create ::xo::config {
 
 	# Create and initialize handler.
 	set a [xo::parameter create param_$name [self] \
-		   $order $hide $list $required \
+		   $order $cmdline $required \
 		   $name $desc $spec]
 
 	# Map parameter name to handler object.
 	dict set mymap $name $a
 
 	if {$order} {
-	    set splat $list
+	    set splat [$a list]
 	    if {$list} {
 		set max Inf
 	    } else {

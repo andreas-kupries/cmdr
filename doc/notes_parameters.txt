@@ -1,40 +1,201 @@
-DSL for the configuration of a single parameter (value).
+DSL for the specification of a single parameter (value).
+========================================================
 
-Parameter attributes
-====================
+(R1)	All parameters are uniquely named, for proper identification within the
+	system.
 
-	---------	----	--------	-------	-----------
-	Attribute	Type	Notes		Default	Description
-	---------	----	--------	-------	-----------
-(a1)	name		TEXT	required	-	Parameter name
-(a2)	description	TEXT	required	-	Human readable description
-	---------	----	--------	-------	-----------
-(a3)	ordered		BOOL	required	-	Fill by order (argument) or name (option)
-(a4)	hidden		BOOL	optional	no
-(a5)	list		BOOL	optional	no	Single value versus list of values.
-(a6)	required	BOOL	optional	yes	mandatory vs. optional parameter.
-(a7)	interactive	BOOL	optional	no	Allow user interaction to set value
-	---------	----	--------	-------	-----------
-(a8)	prompt		TEXT	optional	<name>	Text for interactive prompt
-(a9)	default		TEXT	optional	-	Default value to use (raw, validate on use)
-	---------	----	--------	-------	-----------
-(a10)	generate	CMD	optional	{}	Command to generate default
-(a11)	validate	CMD	optional	{}	Command to validate and transform user input
-(a12)	on		CMD	optional	{}	Command to run when the parameter value is defined.
-	---------	----	--------	-------	-----------
-	flags		list(TEXT)			List of flags to recognize.
+(R2)	All parameters additionally have a descriptive, humand readable text.
 
-Constraints (between attributes):
+(R3)	Parameters come in three kinds: Arguments, Options, and State.
 
-(c1)	!ordered		=> default|generate|interactive
-(c2)	!required		=> default|generate|interactive
-(c3)	default			=> !generate
-(c4)	interactive		=> prompt
-----	----------------------------------------------------------
-(c5)	list			=> ordered && is-last()
-(c6)	hidden	   		=> !interactive && !ordered && required && !list
-(c7)    !hidden && !ordered     => !required
-----	----------------------------------------------------------
+(R4)	Arguments and options are supplied from the command line, state is not.
+
+(R5)	The values of arguments are filled in order, whereas the option's
+	values are specified in any order, through, well, options.
+
+The last three rules can be modeled with two boolean flags: cmdline, and ordered,
+with following the mapping to kinds:
+
+	cmdline ordered	kind
+	-------	-------	----
+	y	y	argument
+	y	n	option
+	n	-	state
+	-------	-------	----
+
+(R6)	Instead of using a don't-care for ordered we declare 'state' parameters
+	as unordered, and the last possible combination is forbidden.
+
+This raises the constraint
+
+	(C1)	!cmdline => !ordered			[R6]
+	<=>	 ordered =>  cmdline
+	<=>	 cmdline || ordered
+
+and the full mapping becomes
+
+	cmdline ordered	kind
+	-------	-------	----
+	 y	 y	argument
+	 y	n	option
+	n	 y		FORBIDDEN	[C1]
+	n	n	state
+	-------	-------	----
+
+(R7)	Another property of all parameters is whether they must be specified by
+	the user or not, i.e. if they are required, or not.
+
+This is another boolean flag.
+
+(R8)	Arguments can be both, required or not.
+
+(R9)	Options are never required.
+
+(R10)	State is always required.
+
+These last two rules raise two associated constraints:
+
+	(C2)	cmdline && !ordered => !required	[R9]
+	<=>	required => !cmdline || ordered
+	<=>	!required || !cmdline || ordered
+
+	(C3)	!cmdline  => required			[R10]
+	<=>	!required => cmdline
+	<=>	cmdline || required
+
+	cmdline ordered	required	kind
+	-------	-------	--------	----
+	 y	 y	 y		required argument
+	 y	 y	n		optional argument
+	 y	n	 y			FORBIDDEN	[C2]
+	 y	n	n		option
+	n	 y	 y			FORBIDDEN	[C1]
+	n	 y	n			FORBIDDEN	[C1]
+	n	n	 y		state
+	n	n	n			FORBIDDEN	[C3]
+	-------	-------	----
+
+(R11)	For all parameters we may not just collect a single value, but a list.
+	This is another boolean property, without any constraints on it.
+
+	For list arguments we actually have one constraint: only one such
+	argument is allowed, and if present it has to be the last argument.
+
+	(C4)	list && cmdline && ordered => is-last()
+
+(R12)	Now, given that we want all parameters to have a value, even the
+	optional ones we need some way of defining a value for these latter.
+	Actually we have three methods:
+
+	(R12.1)	A fixed default value.
+
+	(R12.2)	A command prefix to generate (compute) the value.
+
+	(R12.3)	Allowing the system to prompt the user for the value, outside
+		of the command line.
+
+	(R12.4)	Of these methods [.1] and [.2] exclude each other, and one must
+		be specified.
+
+	(R12.5) Method [.3] is independent of [.1] and [.2], sitting on top.
+
+(R13)	The above method also apply to state parameters, as they will not get a
+	value from the command line, like optional arguments might.
+
+(R14)	Required arguments are not allowed to have any of these methods.
+
+The relevant and associated constraints are:
+
+	(C5)	(!required || !cmdline) => (default || generate || interact)
+	<=>	(required && cmdline) || default || generate || interact
+
+	(C6)	(default || generate || interact) => (!required || !cmdline)
+	<=>	(!default && !generate && !interact) || !required || !cmdline
+	<=>	   (!default  || !required || !cmdline)
+		&& (!generate || !required || !cmdline)
+		&& (!interact || !required || !cmdline)
+	
+
+	(C7)	Under the precondition of (default || generate):
+		default => !generate
+	<=>	generate => !default
+	<=>	!(default && generate)
+
+	cmdline ordered	required	kind
+	-------	-------	--------	----
+	 y	 y	 y		required argument		!default && !generate && !interact
+	 y	 y	n		optional argument		default || generate || interact
+	 y	n	 y			FORBIDDEN	[C2]
+	 y	n	n		option				default || generate || interact
+	n	 y	 y			FORBIDDEN	[C1]
+	n	 y	n			FORBIDDEN	[C1]
+	n	n	 y		state				default || generate || interact
+	n	n	n			FORBIDDEN	[C3]
+	-------	-------	----
+
+(R15)	One thing we wish to do for the parameter value is validation, i.e.
+	ensuring that it has the proper type. For this each parameter has a
+	command prefix.
+
+(R16)	Sometimes it is advantageous to perform an action the moment a
+	parameter (value) is defined. For this each parameter has a
+	command prefix.
+
+Collected parameter attributes (properties)
+===========================================
+
+		---------	----	-----------
+		Attribute	Type	Description
+		---------	----	-----------
+[R1]		name		TEXT	Parameter name.
+[R2]		description	TEXT	Human readable description.
+		---------	----	-----------
+[R3,4,5,6]	ordered		BOOL	Filled in order, vs. by name.
+[R3,4,5,6]	cmdline		BOOL	Filled from the command line.
+		---------	----	-----------
+[R7,8,9,10]	required	BOOL	parameter is required vs. optional.
+		---------	----	-----------
+[R11]		list		BOOL	Single value versus list of values.
+		---------	----	-----------
+[R12.1,13,14]	default		TEXT	Default value to use (raw, validate on use)
+[R12.2,13,14]	generate	CMD	Command to generate default
+[R12.3,13,14]	interactive	BOOL	Allow user interaction to set value
+[R12.3,13,14]	prompt		TEXT	Text for the interactive prompt
+		---------	----	-----------
+[R15]		validate	CMD	Command to validate and transform user input
+[R16]		when-defined	CMD	Command to run when the parameter value is defined.
+		---------	----	-----------
+		flags		list(TEXT)	List of flags to recognize.
+
+Collected property contraints
+=============================
+
+	(C1)	!cmdline => !ordered			[R6]
+	<=>	 ordered =>  cmdline
+	<=>	 cmdline || ordered
+
+	(C2)	cmdline && !ordered => !required	[R9]
+	<=>	required => !cmdline || ordered
+	<=>	!required || !cmdline || ordered
+
+	(C3)	!cmdline  => required			[R10]
+	<=>	!required => cmdline
+	<=>	cmdline || required
+
+	(C4)	list && cmdline && ordered => is-last()
+
+	(C5)	(!required || !cmdline) => (default || generate || interact)
+	<=>	(required && cmdline) || default || generate || interact
+	<=>	   (required || default || generate || interact)
+		&& (cmdline  || default || generate || interact)
+
+	(C6)	(default || generate || interact) => (!required || !cmdline)
+	<=>	(!default && !generate && !interact) || !required || !cmdline
+
+	(C7)	Under the precondition of (default || generate):
+		default => !generate
+	<=>	generate => !default
+	<=>	!(default && generate)
 
 Legend:
 	x  <=> defined (x)
@@ -43,65 +204,27 @@ Legend:
 	A => B  <==> !A || B
 
 ==============================================================================
+Definition commands.
+	See also "notes_arguments.txt"
+	The properties below are the starting values.
 
-Definition commands. See also "notes_arguments.txt"
-
-	   Attribute defaults
-input	    ordered, !hidden, !list,  required, !interactive, !generate, !default, !validate, !on, !prompt
-splat	    ordered, !hidden,  list,  required, !interactive, !generate, !default, !validate, !on, !prompt
-option	   !ordered, !hidden, !list, !required, !interactive, !generate, !default, !validate, !on, !prompt
-state	   !ordered,  hidden, !list,  required, !interactive, !generate, !default, !validate, !on, !prompt
-	    (a3)     (a4)     (a5)   (default)		(standard)
-
-input    vs splat  <-> list
-option   vs state  <-> hidden
-argument vs other  <-> ordered
-
-splat  = list     argument
-input  = non-list argument
-option = visible unordered --> implies optional
-state  = hidden  unordered --> implies required, not list
+input	    ordered, !hidden,  required, !list, !interactive, !generate, !default, !validate, !on, !prompt
+option	   !ordered, !hidden, !required, !list, !interactive, !generate, !default, !validate, !on, !prompt
+state	   !ordered,  hidden,  required, !list, !interactive, !generate, !default, !validate, !on, !prompt
 
 ==============================================================================
+Property commands.
 
-	Or Hi Li Rq Notes
-	-- -- -- -- --------------------------
-*	0  0  0  0  scalar option
-	0  0  0  1	FAIL c7 (visible unordered => !required)
-*	0  0  1  0  list option
-	0  0  1  1	FAIL c7 (visible unordered => !required)
-
-	0  1  0  0	FAIL c6 (hidden => required)
-*	0  1  0  1  state
-	0  1  1  0	FAIL c6 (hidden => required)
-	0  1  1  1	FAIL c6 (hidden => !list)
-
-*	1  0  0  0  optional argument | input
-*	1  0  0  1  required argument | input
-*	1  0  1  0  optional splat    | splat
-*	1  0  1  1  required splat    | splat
-
-	1  1  0  0	FAIL c6 (hidden => !ordered)
-	1  1  0  1	FAIL c6
-	1  1  1  0	FAIL c6
-	1  1  1  1	FAIL c6
-	-- -- -- -- --------------------------
-7 of 16
-
-Allow 'list option' => multiple uses, collected.
+	Command			Affected properties	Notes
+	-------			-------------------	-----
+	list			list (set)		[R11], [C4]
+	optional		required (reset)	[R7,8,9,10], [C2,3,5,6]
+	default	DATA		default (set)		[R12,13,14], [C5,6,7]
+	generate CMD		generate (set)		[R12,13,14], [C5,6,7]
+	interact ?TEXT?		interactive, prompt	[R12,13,14], [C5,6,7]
+	validate CMD		validate (set)		[R15]
+	when-defined CMD	when-defined (set)	[R16]
+	alias NAME   		flags	     		cmdline && !ordered
+	-------			-------------------	-----
 
 ==============================================================================
-
-Not all commands apply to all parameters. See constraints.
-
-	Command		Affected attribute	Notes
-	-------		------------------	-----
-(a6)	optional	required (reset)
-(a7,a8)	interact ?TEXT?	interactive, prompt	Fail for hidden 	(c6)
-(a9)	default DATA	default	 		Fail for generate	(c3)
-(a10)	generate CMD	generate		Fail for default	(c3)
-(a11)	validate CMD	validate
-(a12)	on CMD		on
-	list		list (set)		Fail for state, arguments (input)
-	-------		------------------	-----
-	alias		Extend list of flags	Fail for ordered|hidden
