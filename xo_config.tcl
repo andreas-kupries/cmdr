@@ -146,8 +146,8 @@ oo::class create ::xo::config {
 
 	if {$order} {
 	    set splat [$para list]
-	    if {[$para required]} { incr min }
 	    lappend minlist $min
+	    if {[$para required]} { incr min }
 	    # Arguments, keep names, in order of definition.
 	    lappend myargs $name
 	} else {
@@ -176,8 +176,15 @@ oo::class create ::xo::config {
 	# the front value for itself or not. The front value is
 	# definitely not an option.
 
+	# Nothing to process.
+	if {![P size]} return
+
+	# Unshift the front value under consideration by
+	# 'xo::parameter Take'.
+
 	lappend arguments [P get]
 
+	# Process the remainder for options and their values.
 	while {[P size]} {
 	    set word [P peek]
 	    if {[string match -* $word]} {
@@ -189,6 +196,7 @@ oo::class create ::xo::config {
 
 	# Refill the queue with the arguments which remained after
 	# option processing.
+	if {![llength $arguments]} return
 	P put {*}$arguments
 	return
     }
@@ -202,17 +210,17 @@ oo::class create ::xo::config {
 
 	dict for {name a} $mymap { $a reset }
 
+	P clear
+	if {[llength $args]} { P put {*}$args }
+
 	if {![llength $myargs]} {
 	    # The command has no arguments. It may accept options.
-
-	    P clear
-	    P put {*}$args
 
 	    while {[P size]} {
 		set word [P peek]
 		if {![string match -* $word]} {
 		    # Error. No regular arguments to accept.
-		    my TooMany
+		    my tooMany
 		}
 		my ProcessOption
 	    }
@@ -221,37 +229,43 @@ oo::class create ::xo::config {
 
 	# Process commands and flags, in order.
 
-	P clear
 	A clear
-
-	P put {*}$args
 	A put {*}$myargs
 
-	while {[P size] && [A size]} {
-	    # This loop will terminate.
-	    # Each round removes either at least one parameter,
-	    # or one argument handler.
-
-	    set word [P peek]
-	    if {[string match -* $word]} {
-		my ProcessOption
-		continue
+	#puts /[A size]|[P size]
+	while {[A size]} {
+	    # Option ... Leaves A unchanged.
+	    if {[P size]} {
+		set word [P peek]
+		if {[string match -* $word]} {
+		    my ProcessOption
+		    continue
+		}
 	    }
 
 	    # Note: The parameter instance is responsible for
-	    # retrieving its value from the parameter queue.
-	    # It may pass on this.
+	    # retrieving its value from the parameter queue.  It may
+	    # pass on this. This also checks if there is enough in the
+	    # P queue, aborting if not.
 
-	    [dict get $mymap [A get]] process $word $mypq
+	    set argname [A get]
+	    #puts [A size]|$argname|[P size]
+	    [dict get $mymap $argname] process $argname $mypq
+	    #puts \t==>[P size]
 	}
+
+	#puts "a[A size] p[P size]"
 
 	# End conditions:
 	# P left, A empty. - wrong#args, too many.
 	# A left, P empty. - wrong#args, not enough.
 	# A, P empty.      - OK
 
-	if {![A size] && [P size]} { my TooMany   }
-	if {![P size] && [A size]} { my NotEnough }
+	# Note that 'not enough' should not be reached here, but in
+	# the parameter instances. I.e. early.
+
+	if {![A size] && [P size]} { my tooMany   }
+	if {![P size] && [A size]} { my notEnough }
 
 	# XXX Go through the regular arguments and validate them?
 	# XXX Or can we assume that things will work simply through
@@ -324,13 +338,13 @@ oo::class create ::xo::config {
 	return
     }
 
-    method TooMany {} {
+    method tooMany {} {
 	return -code error \
 	    -errorcode {XO CONFIG WRONG-ARGS TOO-MANY} \
 	    "wrong#args, too many"
     }
 
-    method NotEnough {} {
+    method notEnough {} {
 	return -code error \
 	    -errorcode {XO CONFIG WRONG-ARGS NOT-ENOUGH} \
 	    "wrong#args, not enough"

@@ -20,25 +20,50 @@
 ## Take examples from the intended target app
 ## NOTE: interaction not testable!! linenoise - mockup ?!
 
-test xo-runtime-1.0 {private, parsing, opt args, thresholding} -body {
+# # ## ### ##### ######## ############# #####################
+## Group I: 5 parameters, required and optional alternating. Called
+## with zero to six arguments.
+
+test xo-runtime-1.0 {required + optional arguments, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
 	input C - { validate integer }
 	input D - { validate integer; optional ; default 0 }
 	input E - { validate integer }
-    } 1 2 3 4 5
+    }
 } -cleanup {
     x destroy
-} -result {
-    A = yes '1'
-    B = yes '2'
-    C = yes '3'
-    D = yes '4'
-    E = yes '5'
-}
+} -returnCodes error \
+    -result {wrong#args, not enough}
 
-test xo-runtime-1.1 {private, parsing, opt args, thresholding} -body {
+test xo-runtime-1.1 {required + optional arguments, not enough} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { validate integer; optional ; default 0 }
+	input C - { validate integer }
+	input D - { validate integer; optional ; default 0 }
+	input E - { validate integer }
+    } 1
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-1.2 {required + optional arguments, not enough} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { validate integer; optional ; default 0 }
+	input C - { validate integer }
+	input D - { validate integer; optional ; default 0 }
+	input E - { validate integer }
+    } 1 2
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-1.3 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -50,13 +75,13 @@ test xo-runtime-1.1 {private, parsing, opt args, thresholding} -body {
     x destroy
 } -result {
     A = yes '1'
-    B = no '<undef>'
+    B = no <undefined>
     C = yes '2'
-    D = no '<undef>'
+    D = no <undefined>
     E = yes '3'
 }
 
-test xo-runtime-1.2 {private, parsing, opt args, thresholding} -body {
+test xo-runtime-1.4 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -70,11 +95,11 @@ test xo-runtime-1.2 {private, parsing, opt args, thresholding} -body {
     A = yes '1'
     B = yes '2'
     C = yes '3'
-    D = no '<undef>'
+    D = no <undefined>
     E = yes '4'
 }
 
-test xo-runtime-1.3 {private, parsing, opt args, thresholding} -body {
+test xo-runtime-1.5 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -90,6 +115,136 @@ test xo-runtime-1.3 {private, parsing, opt args, thresholding} -body {
     C = yes '3'
     D = yes '4'
     E = yes '5'
+}
+
+test xo-runtime-1.6 {required + optional arguments, too many} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { validate integer; optional ; default 0 }
+	input C - { validate integer }
+	input D - { validate integer; optional ; default 0 }
+	input E - { validate integer }
+    } 1 2 3 4 5 6
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, too many}
+
+# # ## ### ##### ######## ############# #####################
+## Group II: Splat arguments, required and optional
+
+test xo-runtime-2.0 {required + required splat, not enough} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; validate integer }
+    }
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-2.1 {required + required splat, not enough} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; validate integer }
+    } 1
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-2.2 {required + required splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; validate integer }
+    } 1 2
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+}
+
+test xo-runtime-2.3 {required + required splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; validate integer }
+    } 1 2 3
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3'
+}
+
+test xo-runtime-2.4 {required + required splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; validate integer }
+    } 1 2 3 4
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3 4'
+}
+
+test xo-runtime-2.5 {required + optional splat, not enough} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; optional ; validate integer }
+    }
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-2.6 {required + optional splat, empty} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = no <undefined>
+}
+
+test xo-runtime-2.7 {required + optional splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+}
+
+test xo-runtime-2.8 {required + optional splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2 3
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3'
+}
+
+test xo-runtime-2.9 {required + optional splat} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2 3 4
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3 4'
 }
 
 # # ## ### ##### ######## ############# #####################
