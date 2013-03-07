@@ -3,21 +3,33 @@
 ## Supporting procedures for xo.test et. al.
 
 proc NiceParamSpec {kind spec} {
-    xo create x foo [list private bar [list $kind A - $spec] {}]
-    ShowPrivate [x lookup bar]
+    try {
+	xo create x foo [list private bar [list $kind A - $spec] {}]
+	ShowPrivate [x lookup bar]
+    } finally {
+	x destroy
+    }
 }
 
 proc BadParamSpec {kind spec} {
-    xo create x foo [list private bar [list $kind A A $spec] {}]
-    [x lookup bar] keys
+    try {
+	xo create x foo [list private bar [list $kind A A $spec] {}]
+	[x lookup bar] keys
+    } finally {
+	x destroy
+    }
 }
 
 proc Parse {spec args} {
-    xo create x foo \
-	[list private bar $spec \
-	     {::apply {{config} {}}}]
-    [x lookup bar] do {*}$args
-    ShowParsed [x lookup bar]
+    try {
+	xo create x foo \
+	    [list private bar $spec \
+		 {::apply {{config} {}}}]
+	[x lookup bar] do {*}$args
+	ShowParsed [x lookup bar]
+    } finally {
+	x destroy
+    }
 }
 
 # # ## ### ##### ######## ############# #####################

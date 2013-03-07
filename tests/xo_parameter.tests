@@ -16,29 +16,21 @@
 
 test xo-parameter-1.0 {parameter DSL, alias, wrong num args, not enough} -body {
     BadParamSpec input { alias }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"alias name\""
 
 test xo-parameter-1.1 {parameter DSL, alias, wrong num args, too many} -body {
     BadParamSpec input { alias X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"alias name\""
 
 test xo-parameter-1.2 {parameter DSL, input, alias} -body {
     BadParamSpec input { alias X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Non-option parameter "A" cannot have alias}
 
 test xo-parameter-1.3 {parameter DSL, option, alias} -body {
     NiceParamSpec option { alias X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -65,8 +57,6 @@ test xo-parameter-1.3 {parameter DSL, option, alias} -body {
 
 test xo-parameter-1.4 {parameter DSL, state, alias} -body {
     BadParamSpec state { alias X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Non-option parameter "A" cannot have alias}
 
@@ -75,29 +65,21 @@ test xo-parameter-1.4 {parameter DSL, state, alias} -body {
 
 test xo-parameter-2.0 {parameter DSL, default, wrong num args, not enough} -body {
     BadParamSpec input { default }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"default value\""
 
 test xo-parameter-2.1 {parameter DSL, default, wrong num args, too many} -body {
     BadParamSpec input { default X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"default value\""
 
 test xo-parameter-2.2 {(C6) parameter DSL, input, default, forbidden} -body {
     BadParamSpec input { default VALUE }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Required argument "A" must not have default value}
 
 test xo-parameter-2.3 {parameter DSL, optional input, default, auto validate boolean} -body {
     NiceParamSpec input { optional ; default 0 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -117,8 +99,6 @@ test xo-parameter-2.3 {parameter DSL, optional input, default, auto validate boo
 
 test xo-parameter-2.4 {parameter DSL, optional input, default, auto validate integer} -body {
     NiceParamSpec input { optional ; default 2 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -138,8 +118,6 @@ test xo-parameter-2.4 {parameter DSL, optional input, default, auto validate int
 
 test xo-parameter-2.5 {parameter DSL, optional input, default, auto validate identity} -body {
     NiceParamSpec input { optional ; default X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -159,8 +137,6 @@ test xo-parameter-2.5 {parameter DSL, optional input, default, auto validate ide
 
 test xo-parameter-2.6 {parameter DSL, option, default, auto validate boolean} -body {
     NiceParamSpec option { default 0 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -185,8 +161,6 @@ test xo-parameter-2.6 {parameter DSL, option, default, auto validate boolean} -b
 
 test xo-parameter-2.7 {parameter DSL, option, default, auto validate integer } -body {
     NiceParamSpec option { default 2 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -206,8 +180,6 @@ test xo-parameter-2.7 {parameter DSL, option, default, auto validate integer } -
 
 test xo-parameter-2.8 {parameter DSL, option, default, auto validate identity} -body {
     NiceParamSpec option { default X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -227,8 +199,6 @@ test xo-parameter-2.8 {parameter DSL, option, default, auto validate identity} -
 
 test xo-parameter-2.9 {parameter DSL, state, default, auto validate boolean} -body {
     NiceParamSpec state { default 0 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -246,8 +216,6 @@ test xo-parameter-2.9 {parameter DSL, state, default, auto validate boolean} -bo
 
 test xo-parameter-2.10 {parameter DSL, state, default, auto validate integer} -body {
     NiceParamSpec state { default 2 }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -265,8 +233,6 @@ test xo-parameter-2.10 {parameter DSL, state, default, auto validate integer} -b
 
 test xo-parameter-2.11 {parameter DSL, state, default, auto validate identity} -body {
     NiceParamSpec state { default X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -284,22 +250,16 @@ test xo-parameter-2.11 {parameter DSL, state, default, auto validate identity} -
 
 test xo-parameter-2.12 {(C7) parameter DSL, optional input, default after generate} -body {
     BadParamSpec input { optional ; generate X ; default VALUE }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
 test xo-parameter-2.13 {(C7) parameter DSL, option, default after generate} -body {
     BadParamSpec option { generate X ; default VALUE }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
 test xo-parameter-2.14 {(C7) parameter DSL, state, default after generate} -body {
     BadParamSpec state { generate X ; default VALUE }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
@@ -308,29 +268,21 @@ test xo-parameter-2.14 {(C7) parameter DSL, state, default after generate} -body
 
 test xo-parameter-3.0 {parameter DSL, optional, wrong num args, too many} -body {
     BadParamSpec input { generate X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"generate cmd\""
 
 test xo-parameter-3.1 {parameter DSL, optional, wrong num args, too many} -body {
     BadParamSpec input { generate X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"generate cmd\""
 
 test xo-parameter-3.1 {(C6) parameter DSL, input, generate, forbidden} -body {
     BadParamSpec input { generate G }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Required argument "A" must not have generator command}
 
 test xo-parameter-3.2 {parameter DSL, optional input, generate} -body {
     NiceParamSpec input { optional ; generate G }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -350,8 +302,6 @@ test xo-parameter-3.2 {parameter DSL, optional input, generate} -body {
 
 test xo-parameter-3.3 {parameter DSL, option, generate} -body {
     NiceParamSpec option { generate G }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -371,8 +321,6 @@ test xo-parameter-3.3 {parameter DSL, option, generate} -body {
 
 test xo-parameter-3.4 {parameter DSL, state, generate} -body {
     NiceParamSpec state { generate G }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -390,22 +338,16 @@ test xo-parameter-3.4 {parameter DSL, state, generate} -body {
 
 test xo-parameter-3.5 {(C7) parameter DSL, optional input, generate after default} -body {
     BadParamSpec input { optional ; default VALUE ; generate X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
 test xo-parameter-3.6 {(C7) parameter DSL, option, generate after default} -body {
     BadParamSpec option { default VALUE ; generate X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
 test xo-parameter-3.7 {(C7) parameter DSL, state, generate after default} -body {
     BadParamSpec state { default VALUE ; generate X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Default value and generator command for parameter "A" are in conflict}
 
@@ -414,22 +356,16 @@ test xo-parameter-3.7 {(C7) parameter DSL, state, generate after default} -body 
 
 test xo-parameter-4.0 {parameter DSL, optional, wrong num args, too many} -body {
     BadParamSpec input { interact X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"interact ?prompt?\""
 
 test xo-parameter-4.1 {(C6) parameter DSL, input, interact, forbidden} -body {
     BadParamSpec input { interact }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Required argument "A" must not have user interaction}
 
 test xo-parameter-4.2 {parameter DSL, optional input, interact, default prompt} -body {
     NiceParamSpec input { optional ; interact }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -450,8 +386,6 @@ test xo-parameter-4.2 {parameter DSL, optional input, interact, default prompt} 
 
 test xo-parameter-4.3 {parameter DSL, optional input, interact, custom prompt} -body {
     NiceParamSpec input { optional ; interact HERE }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -472,8 +406,6 @@ test xo-parameter-4.3 {parameter DSL, optional input, interact, custom prompt} -
 
 test xo-parameter-4.4 {parameter DSL, option, interact} -body {
     NiceParamSpec option { interact }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -499,8 +431,6 @@ test xo-parameter-4.4 {parameter DSL, option, interact} -body {
 
 test xo-parameter-4.5 {parameter DSL, state, interact} -body {
     NiceParamSpec state { interact }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -522,15 +452,11 @@ test xo-parameter-4.5 {parameter DSL, state, interact} -body {
 
 test xo-parameter-5.0 {parameter DSL, list, wrong num args, too many} -body {
     BadParamSpec input { list X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"list\""
 
 test xo-parameter-5.1 {parameter DSL, list input} -body {
     NiceParamSpec input { list }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -563,8 +489,6 @@ test xo-parameter-5.2 {parameter DSL, list input not last} -body {
 
 test xo-parameter-5.3 {parameter DSL, list option} -body {
     NiceParamSpec option { list }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -589,8 +513,6 @@ test xo-parameter-5.3 {parameter DSL, list option} -body {
 
 test xo-parameter-5.4 {parameter DSL, list state} -body {
     NiceParamSpec state { list }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -611,15 +533,11 @@ test xo-parameter-5.4 {parameter DSL, list state} -body {
 
 test xo-parameter-6.0 {parameter DSL, optional, wrong num args, too many} -body {
     BadParamSpec input { optional X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"optional\""
 
 test xo-parameter-6.1 {parameter DSL, optional input} -body {
     NiceParamSpec input { optional }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -639,15 +557,11 @@ test xo-parameter-6.1 {parameter DSL, optional input} -body {
 
 test xo-parameter-6.2 {parameter DSL, optional option} -body {
     BadParamSpec option { optional }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Option "A" is already optional}
 
 test xo-parameter-6.3 {parameter DSL, optional state} -body {
     BadParamSpec state { optional }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {State parameter "A" cannot be optional}
 
@@ -656,22 +570,16 @@ test xo-parameter-6.3 {parameter DSL, optional state} -body {
 
 test xo-parameter-7.0 {parameter DSL, test, wrong num args, too many} -body {
     BadParamSpec input { test X }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"test\""
 
 test xo-parameter-7.1 {parameter DSL, input, test} -body {
     BadParamSpec input { test }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Required argument "A" has no test-mode}
 
 test xo-parameter-7.2 {parameter DSL, optional input, test} -body {
     NiceParamSpec input { optional ; test }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -691,15 +599,11 @@ test xo-parameter-7.2 {parameter DSL, optional input, test} -body {
 
 test xo-parameter-7.3 {parameter DSL, option, test} -body {
     BadParamSpec option { test }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {Option "A" has no test-mode}
 
 test xo-parameter-7.4 {parameter DSL, state, test} -body {
     BadParamSpec state { test }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result {State parameter "A" has no test-mode}
 
@@ -708,22 +612,16 @@ test xo-parameter-7.4 {parameter DSL, state, test} -body {
 
 test xo-parameter-8.0 {parameter DSL, validate, wrong num args, not enough} -body {
     BadParamSpec input { validate }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"validate cmd\""
 
 test xo-parameter-8.1 {parameter DSL, validate, wrong num args, too many} -body {
     BadParamSpec input { validate X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"validate cmd\""
 
 test xo-parameter-8.2 {parameter DSL, input, validate, shorthand} -body {
     NiceParamSpec input { validate integer }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -742,8 +640,6 @@ test xo-parameter-8.2 {parameter DSL, input, validate, shorthand} -body {
 
 test xo-parameter-8.3 {parameter DSL, input, validate} -body {
     NiceParamSpec input { validate ::xo::validate::identity }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -762,8 +658,6 @@ test xo-parameter-8.3 {parameter DSL, input, validate} -body {
 
 test xo-parameter-8.4 {parameter DSL, option, validate, shorthand} -body {
     NiceParamSpec option { validate integer }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -783,8 +677,6 @@ test xo-parameter-8.4 {parameter DSL, option, validate, shorthand} -body {
 
 test xo-parameter-8.5 {parameter DSL, option, validate} -body {
     NiceParamSpec option { validate ::xo::validate::identity }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -804,8 +696,6 @@ test xo-parameter-8.5 {parameter DSL, option, validate} -body {
 
 test xo-parameter-8.6 {parameter DSL, state, validate, shorthand} -body {
     NiceParamSpec state { validate integer }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -823,8 +713,6 @@ test xo-parameter-8.6 {parameter DSL, state, validate, shorthand} -body {
 
 test xo-parameter-8.7 {parameter DSL, state, validate} -body {
     NiceParamSpec state { validate ::xo::validate::identity }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -845,22 +733,16 @@ test xo-parameter-8.7 {parameter DSL, state, validate} -body {
 
 test xo-parameter-9.0 {parameter DSL, when-defined, wrong num args, not enough} -body {
     BadParamSpec input { when-defined }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"when-defined cmd\""
 
 test xo-parameter-9.1 {parameter DSL, when-defined, wrong num args, too many} -body {
     BadParamSpec input { when-defined X Y }
-} -cleanup {
-    x destroy
 } -returnCodes error \
     -result "wrong # args: should be \"when-defined cmd\""
 
 test xo-parameter-9.2 {parameter DSL, input, when-defined} -body {
     NiceParamSpec input { when-defined X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -879,8 +761,6 @@ test xo-parameter-9.2 {parameter DSL, input, when-defined} -body {
 
 test xo-parameter-9.3 {parameter DSL, option, when-defined} -body {
     NiceParamSpec option { when-defined X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
@@ -905,8 +785,6 @@ test xo-parameter-9.3 {parameter DSL, option, when-defined} -body {
 
 test xo-parameter-9.4 {parameter DSL, state, when-defined} -body {
     NiceParamSpec state { when-defined X }
-} -cleanup {
-    x destroy
 } -result {
     foo bar = {
         description: ''
