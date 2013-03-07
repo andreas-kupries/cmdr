@@ -41,11 +41,15 @@ oo::class create ::xo::config {
 	    {option      Option} \
 	    {state       State}
 
-	set splat   no
-	set min     0
-	set minlist {}
+	set splat   no ;# Updated in my DefineParameter
+	set min     0  ;# Ditto
+	set minlist {} ;# Ditto
 
 	eval $spec
+
+	#puts A|$myargs|
+	#puts M|$minlist|
+	#puts T|[lreverse $minlist]|
 
 	foreach a [lreverse $myargs] min $minlist {
 	    [dict get $mymap $a] threshold: $min
@@ -142,7 +146,7 @@ oo::class create ::xo::config {
 
 	if {$order} {
 	    set splat [$para list]
-	    if {$required} { incr min }
+	    if {[$para required]} { incr min }
 	    lappend minlist $min
 	    # Arguments, keep names, in order of definition.
 	    lappend myargs $name
@@ -326,7 +330,7 @@ oo::class create ::xo::config {
 	    "wrong#args, too many"
     }
 
-    method TooMany {} {
+    method NotEnough {} {
 	return -code error \
 	    -errorcode {XO CONFIG WRONG-ARGS NOT-ENOUGH} \
 	    "wrong#args, not enough"

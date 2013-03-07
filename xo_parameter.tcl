@@ -48,6 +48,9 @@ oo::class create ::xo::parameter {
 	set mywhendef     {} ;# action-on-definition command
 
 	set mythreshold   {} ;# threshold for optional arguments
+	#                    ;# empty: Undefined
+	#                    ;#    -1: No threshold, peek and validate for choice.
+	#                    ;#  else: #required arguments after this one.
 
 	my ExecuteSpecification $valuespec
 
@@ -478,10 +481,14 @@ oo::class create ::xo::parameter {
 	    # the remaining options first.
 
 	    config parse-options
-	    if {[$queue size] < $mythreshold} {
+
+
+	    if {[$queue size] <= $mythreshold} {
+		#puts "$myname (Q[$queue size] <=  T$mythreshold)? pass"
 		# Not enough values left, pass.
 		return 0
 	    }
+	    #puts "$myname (Q[$queue size] >  T$mythreshold)? take"
 	} else {
 	    # Choose by peeking at and validating the front value.
 	    try {

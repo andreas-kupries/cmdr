@@ -56,5 +56,41 @@ test xo-runtime-1.1 {private, parsing, opt args, thresholding} -body {
     E = yes '3'
 }
 
+test xo-runtime-1.2 {private, parsing, opt args, thresholding} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { validate integer; optional ; default 0 }
+	input C - { validate integer }
+	input D - { validate integer; optional ; default 0 }
+	input E - { validate integer }
+    } 1 2 3 4
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+    C = yes '3'
+    D = no '<undef>'
+    E = yes '4'
+}
+
+test xo-runtime-1.3 {private, parsing, opt args, thresholding} -body {
+    Parse {
+	input A - { validate integer }
+	input B - { validate integer; optional ; default 0 }
+	input C - { validate integer }
+	input D - { validate integer; optional ; default 0 }
+	input E - { validate integer }
+    } 1 2 3 4 5
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+    C = yes '3'
+    D = yes '4'
+    E = yes '5'
+}
+
 # # ## ### ##### ######## ############# #####################
 return
