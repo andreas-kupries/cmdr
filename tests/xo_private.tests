@@ -107,7 +107,7 @@ test xo-private-1.1 {private basics, optional arguments, thresholding} -body {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: 'no'
-            mode=threshold 4
+            mode=threshold 2
             flags []
             ge ()
             va (::xo::validate::boolean)
@@ -126,7 +126,7 @@ test xo-private-1.1 {private basics, optional arguments, thresholding} -body {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: 'no'
-            mode=threshold 2
+            mode=threshold 1
             flags []
             ge ()
             va (::xo::validate::boolean)

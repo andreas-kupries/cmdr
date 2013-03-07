@@ -106,7 +106,7 @@ test xo-parameter-2.3 {parameter DSL, optional input, default, auto validate boo
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: '0'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::boolean)
@@ -127,7 +127,7 @@ test xo-parameter-2.4 {parameter DSL, optional input, default, auto validate int
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: '2'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::integer)
@@ -148,7 +148,7 @@ test xo-parameter-2.5 {parameter DSL, optional input, default, auto validate ide
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: 'X'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::identity)
@@ -339,7 +339,7 @@ test xo-parameter-3.2 {parameter DSL, optional input, generate} -body {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             no default
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge (G)
             va (::xo::validate::identity)
@@ -439,7 +439,7 @@ test xo-parameter-4.2 {parameter DSL, optional input, interact, default prompt} 
             ordered, cmdline, !splat, !required, interact
             default: 'no'
             prompt: 'Enter A:'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::boolean)
@@ -461,7 +461,7 @@ test xo-parameter-4.3 {parameter DSL, optional input, interact, custom prompt} -
             ordered, cmdline, !splat, !required, interact
             default: 'no'
             prompt: 'HERE'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::boolean)
@@ -628,7 +628,7 @@ test xo-parameter-6.1 {parameter DSL, optional input} -body {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
             default: 'no'
-            mode=threshold 1
+            mode=threshold 0
             flags []
             ge ()
             va (::xo::validate::boolean)
