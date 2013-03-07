@@ -2,15 +2,29 @@
 # # ## ### ##### ######## ############# #####################
 ## Supporting procedures for xo.test et. al.
 
+proc NiceParamSpec {kind spec} {
+    xo create x foo [list private bar [list $kind A - $spec] {}]
+    ShowPrivate [x lookup bar]
+}
+
+proc BadParamSpec {kind spec} {
+    xo create x foo [list private bar [list $kind A A $spec] {}]
+    [x lookup bar] keys
+}
+
+proc Parse {spec args} {
+    xo create x foo \
+	[list private bar $spec \
+	     {::apply {{config} {}}}]
+    [x lookup bar] do {*}$args
+    ShowParsed [x lookup bar]
+}
+
+# # ## ### ##### ######## ############# #####################
+
 proc ShowOfficer {o} { Wrap [DumpOfficer $o] }
 proc ShowPrivate {o} { Wrap [DumpPrivate $o] }
 proc ShowParsed  {o} { Wrap [DumpParsed  $o] }
-
-proc Trigger {o} {
-    # o is xo::private
-    # Force DSL execution.
-    $o keys
-}
 
 # Indent a list of lines, generate text block.
 proc Wrap {list} {
@@ -133,18 +147,13 @@ proc DumpPrivate {o} {
 proc DumpParsed {o} {
     set name [$o fullname]
     set result {}
-    lappend result "$name = \{"
     foreach name [lsort -dict [$o names]] {
 	set c [$o lookup $name]
-
 	set s <undef>
-	if {[$c string?]}  { set s [$c string] }
-
-	set d <undef>
-	if {[$c defined?]} { set d [$c get] }
-
-	lappend result "    P ($name) =	[$c string?] '$s' [$c defined?] '$d'"
+	if {[$c string?]} {
+	    set s [$c string]
+	}
+	lappend result "$name = [$c string?] '$s'"
     }
-    lappend result "\}"
     return $result
 }
