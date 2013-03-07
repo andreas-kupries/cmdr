@@ -41,20 +41,13 @@ oo::class create ::xo::config {
 	    {option      Option} \
 	    {state       State}
 
-	set splat   no ;# Updated in my DefineParameter
-	set min     0  ;# Ditto
-	set minlist {} ;# Ditto
+	set splat no ;# Updated in my DefineParameter
 
 	eval $spec
 
-	#puts A|$myargs|
-	#puts M|$minlist|
-	#puts T|[lreverse $minlist]|
+	# Postprocessing
 
-	foreach a [lreverse $myargs] min $minlist {
-	    [dict get $mymap $a] threshold: $min
-	}
-
+	my SetThresholds
 	my UniquePrefixes
 
 	set mypq [struct::queue P] ;# actual parameters
@@ -86,6 +79,35 @@ oo::class create ::xo::config {
     }
 
     # # ## ### ##### ######## #############
+
+    method SetThresholds {} {
+	# Compute the threshold needed by optional arguments to decide
+	# when they can take an argument.
+
+	# The threshold is the number of actual parameters required to
+	# satisfy all _required_ arguments coming after the current
+	# argument. Computed from back to front, starting with 0 (none
+	# required after the last argument), this value increments for
+	# each required argument found. Optional arguments do not count.
+
+	set required 0
+	#set rlist {} ; # Debugging aid
+
+	foreach a [lreverse $myargs] {
+	    set para [dict get $mymap $a]
+	    $para threshold: $required
+	    #lappend rlist $required
+	    if {[$para required]} {
+		incr required
+	    }
+	}
+
+	# Debug, show mapping.
+	#puts A|$myargs|
+	#puts T|[lreverse $rlist]|
+
+	return
+    }
 
     method UniquePrefixes {} {
 	dict for {k v} $myoption {
@@ -129,7 +151,7 @@ oo::class create ::xo::config {
 	    order cmdline required
 	    name desc {spec {}}
     } {
-	upvar 1 splat splat min min minlist minlist
+	upvar 1 splat splat
 	if {$splat && $order} {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
 		"A splat must be the last argument in the specification"
@@ -145,11 +167,9 @@ oo::class create ::xo::config {
 	dict set mymap $name $para
 
 	if {$order} {
-	    set splat [$para list]
-	    lappend minlist $min
-	    if {[$para required]} { incr min }
 	    # Arguments, keep names, in order of definition.
 	    lappend myargs $name
+	    set splat [$para list]
 	} else {
 	    # Keep map of options to their handlers.
 	    foreach option [$para options] {
