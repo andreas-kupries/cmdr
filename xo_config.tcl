@@ -123,6 +123,12 @@ oo::class create ::xo::config {
 	    }
 	}
 
+	# Sort the expansions, for the error messages.
+	dict for {k v} $myfullopt {
+	    if {[llength $v] == 1} continue
+	    dict set myfullopt $k [lsort -dict $v]
+	}
+
 	#array set _o $myoption  ; parray _o ; unset _o
 	#array set _f $myfullopt ; parray _f ; unset _f
 	return

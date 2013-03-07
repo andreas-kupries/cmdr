@@ -369,5 +369,182 @@ test xo-runtime-2.19 {optional + optional splat} -body {
     A = yes '1'
     B = yes '2 3 4'
 }
+
+# # ## ### ##### ######## ############# #####################
+## Group III: Options.
+
+test xo-runtime-3.0 {options, simple, boolean} -body {
+    Parse {
+	option A -
+    }
+} -cleanup {
+    x destroy
+} -result {
+    A = no <undefined>
+}
+
+test xo-runtime-3.1 {options, simple, boolean} -body {
+    Parse {
+	option A -
+    } -A 1
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+}
+
+test xo-runtime-3.2 {options, simple, boolean} -body {
+    Parse {
+	option A -
+    } -A 0
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '0'
+}
+
+test xo-runtime-3.2 {options, simple, boolean, multiple use} -body {
+    Parse {
+	option A -
+    } -A 0 -A 1
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+}
+
+test xo-runtime-3.3 {options, simple, boolean, special forms} -body {
+    Parse {
+	option A -
+	option B -
+	option C -
+	option D -
+	option E -
+	option F -
+	option G - { validate identity }
+    } -A -G X --no-B -G X -C 1 -D 0 --no-E 1 --no-F 0
+} -cleanup {
+    x destroy
+} -result {
+    A = yes 'yes'
+    B = yes '0'
+    C = yes '1'
+    D = yes '0'
+    E = yes '0'
+    F = yes '1'
+    G = yes 'X'
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-3.4 {options, list, string} -body {
+    Parse {
+	option A - { list ; validate identity }
+    }
+} -cleanup {
+    x destroy
+} -result {
+    A = no <undefined>
+}
+
+test xo-runtime-3.5 {options, list, string, missing value} -body {
+    Parse {
+	option A - { list ; validate identity }
+    } -A
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-3.6 {options, list, string} -body {
+    Parse {
+	option A - { list ; validate identity }
+    } -A X
+} -cleanup {
+    x destroy
+} -result {
+    A = yes 'X'
+}
+
+test xo-runtime-3.7 {options, list, string} -body {
+    Parse {
+	option A - { list ; validate identity }
+    } -A X -A Y
+} -cleanup {
+    x destroy
+} -result {
+    A = yes 'X Y'
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-3.8 {options, aliases} -body {
+    Parse {
+	option A - { validate identity ; alias Z }
+    } -A X -Z Y
+} -cleanup {
+    x destroy
+} -result {
+    A = yes 'Y'
+}
+
+test xo-runtime-3.9 {options, aliases, list} -body {
+    Parse {
+	option A - { list ; validate identity ; alias Z }
+    } -A X -Z Y
+} -cleanup {
+    x destroy
+} -result {
+    A = yes 'X Y'
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-3.10 {options, long names} -body {
+    Parse {
+	option ALPHA - { list ; validate identity }
+    } --ALPHA Z
+} -cleanup {
+    x destroy
+} -result {
+    ALPHA = yes 'Z'
+}
+
+test xo-runtime-3.11 {options, unique prefix expansion} -body {
+    Parse {
+	option ALPHA - { list ; validate identity }
+    } --AL Z
+} -cleanup {
+    x destroy
+} -result {
+    ALPHA = yes 'Z'
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-3.12 {options, unknown option} -body {
+    Parse {
+	option A - { validate identity }
+    } -B Z
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Unknown option -B}
+
+test xo-runtime-3.13 {options, ambiguous prefix} -body {
+    Parse {
+	option ALPHA - { validate identity }
+	option ALNUM - { validate identity }
+    } --AL Z
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Ambiguous option prefix --AL, matching --ALNUM, --ALPHA}
+
+# # ## ### ##### ######## ############# #####################
+## Group IV: Mix options and arguments.
+
+
+
 # # ## ### ##### ######## ############# #####################
 return
