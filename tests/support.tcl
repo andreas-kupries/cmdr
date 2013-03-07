@@ -149,11 +149,11 @@ proc DumpParsed {o} {
     set result {}
     foreach name [lsort -dict [$o names]] {
 	set c [$o lookup $name]
-	set s <undef>
+	set s <undefined>
 	if {[$c string?]} {
-	    set s [$c string]
+	    set s '[$c string]'
 	}
-	lappend result "$name = [$c string?] '$s'"
+	lappend result "$name = [$c string?] $s"
     }
     return $result
 }

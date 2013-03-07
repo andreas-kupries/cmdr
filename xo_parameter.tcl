@@ -404,10 +404,11 @@ oo::class create ::xo::parameter {
 	# Arguments.
 
 	if {$myisrequired} {
-	    # Required. Unconditionally retrieve its parameter value.
+	    # Required. Unconditionally retrieve its parameter
+	    # value. Must have a value.
+	    if {![$queue size]} { config notEnough }
+
 	    if {$myislist} {
-		my Assert {[$queue size]} \
-		    "Required list argument $myname cannot be empty"
 		set mystring [$queue get [$queue size]]
 	    } else {
 		set mystring [$queue get]
@@ -450,9 +451,10 @@ oo::class create ::xo::parameter {
 	    # --no-foo NO  ==> --foo YES
 
 	    # Take implied or explicit value.
-	    if {![string is boolean -strict [$queue peek]]} {
+	    if {![$queue size] || ![string is boolean -strict [$queue peek]]} {
 		set value yes
 	    } else {
+		# queue size && boolean
 		set value [$queue get]
 	    }
 
@@ -461,7 +463,8 @@ oo::class create ::xo::parameter {
 		set value [expr {!$value}]
 	    }
 	} else {
-	    # Everything else has no special forms.
+	    # Everything else has no special forms. Value now required.
+	    if {![$queue size]} { config notEnough }
 	    set value [$queue get]
 	}
 
@@ -481,7 +484,6 @@ oo::class create ::xo::parameter {
 	    # the remaining options first.
 
 	    config parse-options
-
 
 	    if {[$queue size] <= $mythreshold} {
 		#puts "$myname (Q[$queue size] <=  T$mythreshold)? pass"
