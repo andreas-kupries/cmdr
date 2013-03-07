@@ -387,7 +387,10 @@ oo::class create ::xo::parameter {
 
     method options {} { return $myflags }
 
-    method process {n queue} {
+    method process {detail queue} {
+	# detail = actual flag (option)
+	#        = parameter name (argument)
+
 	my Assert {$myiscmdline} "Illegal command line input for state parameter \"$myname\""
 
 	if {$myisordered} {
@@ -396,7 +399,7 @@ oo::class create ::xo::parameter {
 	}
 
 	# Option parameters.
-	my ProcessOption $queue
+	my ProcessOption $detail $queue
 	return
     }
 
@@ -435,7 +438,7 @@ oo::class create ::xo::parameter {
 	return
     }
 
-    method ProcessOption {queue} {
+    method ProcessOption {flag queue} {
 	if {$myvalidate eq "::xo::validate::boolean"} {
 	    # XXX Consider a way of pushing this into the validator classes.
 
@@ -459,7 +462,7 @@ oo::class create ::xo::parameter {
 	    }
 
 	    # Invert meaning, if so requested.
-	    if {[string match --no-* $n]} {
+	    if {[string match --no-* $flag]} {
 		set value [expr {!$value}]
 	    }
 	} else {
