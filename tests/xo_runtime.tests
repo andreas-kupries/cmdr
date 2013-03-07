@@ -189,6 +189,8 @@ test xo-runtime-2.4 {required + required splat} -body {
     B = yes '2 3 4'
 }
 
+# # ## ### ##### ######## ############# #####################
+
 test xo-runtime-2.5 {required + optional splat, not enough} -body {
     Parse {
 	input A - { validate integer }
@@ -247,5 +249,125 @@ test xo-runtime-2.9 {required + optional splat} -body {
     B = yes '2 3 4'
 }
 
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-2.10 {optional + required splat, not enough} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; validate integer }
+    }
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {wrong#args, not enough}
+
+test xo-runtime-2.11 {optional + required splat, not enough} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; validate integer }
+    } 1
+} -cleanup {
+    x destroy
+} -result {
+    A = no <undefined>
+    B = yes '1'
+}
+test xo-runtime-2.12 {optional + required splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; validate integer }
+    } 1 2
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+}
+
+test xo-runtime-2.13 {optional + required splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; validate integer }
+    } 1 2 3
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3'
+}
+
+test xo-runtime-2.14 {optional + required splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; validate integer }
+    } 1 2 3 4
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3 4'
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-runtime-2.15 {optional + optional splat, not enough} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; optional ; validate integer }
+    }
+} -cleanup {
+    x destroy
+} -result {
+    A = no <undefined>
+    B = no <undefined>
+}
+
+test xo-runtime-2.16 {optional + optional splat, empty} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = no <undefined>
+}
+
+test xo-runtime-2.17 {optional + optional splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2'
+}
+
+test xo-runtime-2.18 {optional + optional splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2 3
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3'
+}
+
+test xo-runtime-2.19 {optional + optional splat} -body {
+    Parse {
+	input A - { optional ; validate integer }
+	input B - { list ; optional ; validate integer }
+    } 1 2 3 4
+} -cleanup {
+    x destroy
+} -result {
+    A = yes '1'
+    B = yes '2 3 4'
+}
 # # ## ### ##### ######## ############# #####################
 return
