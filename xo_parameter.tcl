@@ -409,7 +409,7 @@ oo::class create ::xo::parameter {
 	    } else {
 		set mystring [$queue get]
 	    }
-	    set myhasstring 1
+	    set myhasstring yes
 	    return
 	}
 
@@ -427,7 +427,7 @@ oo::class create ::xo::parameter {
 	} else {
 	    set mystring [$queue get]
 	}
-	set myhasstring 1
+	set myhasstring yes
 	return
     }
 
@@ -467,7 +467,7 @@ oo::class create ::xo::parameter {
 	} else {
 	    set mystring $value
 	}
-	set myhasstring 1
+	set myhasstring yes
 	return
     }
 
