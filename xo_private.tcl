@@ -65,7 +65,7 @@ oo::class create ::xo::private {
 	}
 
 	# Call actual command, hand it the filled configuration.
-	$mycmd $myconfig 
+	{*}$mycmd $myconfig 
     }
 
     method help {} {
