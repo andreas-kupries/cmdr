@@ -243,6 +243,7 @@ oo::class create ::xo::officer {
 	# Delegate to the handler for a known command.
 	if {[my Known $cmd]} {
 	    [my lookup $cmd] do {*}$remainder
+	    return
 	}
 
 	# The command word is not known. Delegate the full command to
