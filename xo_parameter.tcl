@@ -567,7 +567,17 @@ oo::class create ::xo::parameter {
 	if {$myhasstring} {
 	    # See my FillMissingValidation on why we always have a
 	    # validator command.
-	    set myvalue [{*}$myvalidate validate $mystring]
+
+	    if {$myislist} {
+		# Treat user-specified value as list and validate each
+		# element.
+		set myvalue {}
+		foreach v $mystring {
+		    lappend myvalue [{*}$myvalidate validate $v]
+		}
+	    } else {
+		set myvalue [{*}$myvalidate validate $mystring]
+	    }
 	    set myhasvalue yes
 	    return $myvalue
 	}
@@ -581,7 +591,16 @@ oo::class create ::xo::parameter {
 	if {$myhasdefault} {
 	    # See my FillMissingValidation on why we always have a
 	    # validator command.
-	    set myvalue [{*}$myvalidate validate $mydefault]
+	    if {$myislist} {
+		# Treat the default value as a list and validate each
+		# element.
+		set myvalue {}
+		foreach v $mydefault {
+		    lappend myvalue [{*}$myvalidate validate $v]
+		}
+	    } else {		
+		set myvalue [{*}$myvalidate validate $mydefault]
+	    }
 	    set myhasvalue yes
 	    return $myvalue
 	}

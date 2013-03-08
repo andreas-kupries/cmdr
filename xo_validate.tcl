@@ -17,7 +17,7 @@ namespace eval ::xo {
 }
 
 namespace eval ::xo::validate {
-    namespace export boolean integer identity
+    namespace export boolean integer identity Fail
     namespace ensemble create
 }
 
