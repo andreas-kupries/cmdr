@@ -1,0 +1,7 @@
+Class relationships in XO.
+
+officer is-a actor		(multi-action, through delegation)
+private is-a actor		(single-action, with parameters)
+officer has  (0:n) actor	(delegates for multi-action)
+private has  (1:1) config	(parameter collection for action)
+config  has  (0:n) parameter	(parameters for single-action)
