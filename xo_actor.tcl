@@ -27,6 +27,7 @@ oo::class create ::xo::actor {
     constructor {} {
 	set myname        {}
 	set mydescription {}
+	set mydocumented  yes
 	set mysuper       {}
 	set mystore       {}
 	return
@@ -64,6 +65,16 @@ oo::class create ::xo::actor {
 
     method description: {text} {
 	set mydescription $text
+	return
+    }
+
+    method documented {} {
+	my Setup ; # Calls into the derived class
+	return $mydocumented
+    }
+
+    method undocumented {} {
+	set mydocumented no
 	return
     }
 
@@ -120,7 +131,7 @@ oo::class create ::xo::actor {
     ##
     # # ## ### ##### ######## #############
 
-    variable myname mydescription mysuper mystore
+    variable myname mydescription mydocumented mysuper mystore
 
     # # ## ### ##### ######## #############
 }
