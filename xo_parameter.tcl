@@ -519,15 +519,18 @@ oo::class create ::xo::parameter {
 	return $mystring
     }
 
-    method string? {} {
+    method defined? {} {
 	return $myhasstring
     }
 
-    method get {} {
+    method value {} {
 	# compute argument value if any, cache result.
 	#error NYI
 
 	# Calculate value, from most prefered to least
+	#
+	# (0) Cache valid ?
+	#     => Return
 	#
 	# (1) User entered value ?
 	#     => Validate, transforms.
@@ -544,21 +547,59 @@ oo::class create ::xo::parameter {
 	#     - completion => Validator API
 	#
 	# (5) Optional ?
-	#     => It is ok to not have the value.
+	#     => It is ok to not have the value. Return empty string.
+	#     This should not be possible actually, because of [R12],
+	#     [C5], and [C6].
+	#
 	#
 	# (6) FAIL. 
 
+	if {$myhasvalue} { return $myvalue }
 
-    }
+	# Note that myvalidate and mygenerate are executed in this
+	# scope, which implies the parameter instance namespace, which
+	# implies access to the 'config' command, and thus the other
+	# parameters. IOW, parameter generation and/or validation can
+	# use the value of other parameters for their work. Catching
+	# infinite loops so created are outside the scope of this
+	# code.
 
-    method defined? {} {
-	# determine if we have an argument value, may compute it.
-	#error NYI
+	if {$myhasstring} {
+	    # See my FillMissingValidation on why we always have a
+	    # validator command.
+	    set myvalue [{*}$myvalidate validate $mystring]
+	    set myhasvalue yes
+	    return $myvalue
+	}
 
-	# Test if we have a value
-	# Similar to 'get' above, no validation, no transforms
+	if {[llength $mygenerate]} {
+	    set myvalue [{*}$mygenerate]
+	    set myhasvalue yes
+	    return $myvalue
+	}
 
-	return 0
+	if {$myhasdefault} {
+	    # See my FillMissingValidation on why we always have a
+	    # validator command.
+	    set myvalue [{*}$myvalidate validate $mydefault]
+	    set myhasvalue yes
+	    return $myvalue
+	}
+
+	if {$myinteractive} {
+	    error NYI
+	    # TODO: prompt to enter value, or cmdloop to enter a list.
+	    # Note: ^C for prompt aborts system.
+	    #       ^C for list aborts loop, but not system.
+	}
+
+	if {!$myisrequired} {
+	    set myvalue {}
+	    set myhasvalue yes
+	    return $myvalue
+	}
+
+	return -code error Undefined
     }
 
     # # ## ### ##### ######## #############

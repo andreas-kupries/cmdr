@@ -320,7 +320,7 @@ oo::class create ::xo::config {
     method unknown {m args} {
 	if {![regexp {^@(.*)$} $m -> mraw]} { next $m {*}$args ; return }
 	# @name ... => handlerof(name) ...
-	if {![llength $args]} { lappend args get }
+	if {![llength $args]} { lappend args value }
 	return [[my lookup $name] {*}$args]
     }
 
