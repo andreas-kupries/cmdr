@@ -347,7 +347,15 @@ oo::class create ::xo::parameter {
 	if {[llength $mygenerate]} {
 	    set myvalidate ::xo::validate::identity
 	} elseif {!$myhasdefault} {
-	    set myvalidate ::xo::validate::boolean
+	    # Without a default value base the validation type on the
+	    # kind of parameter we have here:
+	    # - input, state: identity
+	    # - option:       boolean
+	    if {$myiscmdline && !$myisordered} {
+		set myvalidate ::xo::validate::boolean
+	    } else {
+		set myvalidate ::xo::validate::identity
+	    }
 	} elseif {[string is boolean -strict $mydefault]} {
 	    set myvalidate ::xo::validate::boolean
 	} elseif {[string is integer -strict $mydefault]} {
