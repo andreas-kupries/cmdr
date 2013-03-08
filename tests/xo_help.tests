@@ -1,0 +1,39 @@
+# -*- tcl -*- Include file for xo.test.
+# # ## ### ##### ######## ############# #####################
+## Help structure generation.
+
+test xo-help-1.0 {help structure} -body {
+    xo create x foo {
+	description TEST
+	officer bar {
+	    private aloha {
+		description hawaii
+		option lulu loop {}
+		input yoyo height
+		input jump gate { optional }
+		input run lane { list }
+	    } ::hula
+	}
+	default
+	alias snafu
+	officer tool {
+	    officer pliers {}
+	    officer hammer {
+		private nail {
+		    description workbench
+		    option driver force { validate adouble ; default 0 ; list ; alias force }
+		    state  context orientation
+		    input supply magazine { list ; optional }
+		} ::wall
+	    }
+	    default hammer
+	}
+	alias hammer = tool hammer
+    }
+    x help
+} -cleanup {
+    x destroy
+} -result {{bar aloha} {hawaii {--lulu loop --no-lulu loop} {{+ yoyo height} {? jump gate} {+* run lane}}} {snafu aloha} {hawaii {--lulu loop --no-lulu loop} {{+ yoyo height} {? jump gate} {+* run lane}}} {tool hammer nail} {workbench {--driver force --force force} {{?* supply magazine}}} {hammer nail} {workbench {--driver force --force force} {{?* supply magazine}}}}
+
+# # ## ### ##### ######## ############# #####################
+return

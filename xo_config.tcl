@@ -57,6 +57,35 @@ oo::class create ::xo::config {
 	return
     }
 
+    method help {} {
+	# command =          list (description options arguments)
+	# Here we are responsible for -> list (options arguments)
+	# options   = list (option...)
+	# option    = dict (name -> description)
+	# arguments = list (argument...)
+	# argument  = list (code name description)
+	# code in {
+	#     +		<=> required
+	#     ?		<=> optional
+	#     +*	<=> required splat
+	#     ?* 	<=> optional splat
+	# }
+
+	set options {}
+	dict for {o para} $myoption {
+	    dict set options $o [$para description]
+	}
+
+	set arguments {}
+	foreach a $myargs {
+	    set arg [dict get $mymap $a]
+	    lappend arguments [list [$arg code] $a [$arg description]]
+	}
+
+	return [list $options $arguments]
+    }
+
+
     method eoptions  {} { return $myfullopt }
     method names     {} { return [dict keys $mymap] }
     method arguments {} { return $myargs }

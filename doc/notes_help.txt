@@ -1,0 +1,21 @@
+
+Help is given as structure listing command and their parameters in a
+short/compressed form.
+
+help        = dict (name -> command)
+name        = string
+command     = list (description options arguments)
+description = string
+options     = list (option...)
+option      = dict (name -> description)
+arguments   = list (argument...)
+argument    = list (code name description)
+code in {
+     +		<=> required
+     ?		<=> optional
+     +*		<=> required splat
+     ?* 	<=> optional splat
+}
+
+The conversion of this form into a help text, or other structure is
+outside of the scope of xo/cmdr

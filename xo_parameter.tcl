@@ -71,6 +71,19 @@ oo::class create ::xo::parameter {
     # # ## ### ##### ######## #############
     ## API: Property accessors...
 
+    method code {} {
+	# code in {
+	#     +		<=> required
+	#     ?		<=> optional
+	#     +*	<=> required splat
+	#     ?* 	<=> optional splat
+	# }
+	my Assert {$myiscmdline} {State parameter "@" has no help (coding)}
+	append code [expr {$myisrequired ? "+" : "?"}]
+	append code [expr {$myislist     ? "*" : ""}]
+	return $code
+    }
+
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
     method description {} { return $mydescription }
