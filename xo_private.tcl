@@ -68,12 +68,11 @@ oo::class create ::xo::private {
 	{*}$mycmd $myconfig 
     }
 
-    method help {} {
+    method help {{prefix {}}} {
 	my Setup
 	# help    = dict (name -> command)
 	# command = list (description options arguments)
-	# caller supplies/extends name, in context (might be alias!)
-	return [dict create {} [list [my description] {*}[config help]]]
+	return [dict create $prefix [config help]]
     }
 
     # Redirect anything not known to the parameter collection.

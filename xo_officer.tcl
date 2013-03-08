@@ -353,7 +353,7 @@ oo::class create ::xo::officer {
 
     # # ## ### ##### ######## #############
 
-    method help {} {
+    method help {{prefix {}}} {
 	my Setup
 	# Query each subordinate for their help and use it to piece ours together.
 	# Note: Result is not finally formatted text, but nested dict structure.
@@ -362,9 +362,9 @@ oo::class create ::xo::officer {
 	# help = dict (name -> command)
 	set help {}
 	foreach c [my known] {
-	    dict for {cmd h} [[my lookup $c] help] {
-		dict set help [list $c {*}$cmd] $h
-	    }
+	    set cname [list {*}$prefix $c]
+	    set actor [my lookup $c]
+	    set help [dict merge $help [$actor help $cname]]
 	}
 	return $help
     }
