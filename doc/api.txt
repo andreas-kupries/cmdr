@@ -1,0 +1,69 @@
+xo::parameter
+
+	// command implementation view
+
+	defined?	bool	has user-specifed information
+	string		string	the user-specified information
+	value		any	actual value, user-specified
+				transformed, or default ...
+
+	// general acessors
+
+	name        
+	description 
+	ordered     
+	cmdline     
+	required    
+	list        
+	hasdefault  
+	default     
+	generator   
+	interactive 
+	prompt      
+	validator
+	when-defined
+
+xo::config
+
+	names		list of all parameter names in the
+			collection.
+	@NAME		forward to parameter NAME, value()
+	@NAME ...	forward to parameter NAME, specific
+	      		method and args.
+
+xo::private, xo::officer
+
+	do ...		parse command line ...
+	help		return help structure for command.
+
+	//superclass methods (actor)
+
+	name
+	fullname
+	name:
+	description
+	description:
+	super
+	super:
+	keys
+	get
+	set
+
+xo::private
+	// internal xo::config methods.
+
+	names
+	@NAME
+	@NAME ...
+
+Command prefixes in parameters:
+
+	validator
+		<V> validate X
+		<V> default
+
+	generator
+		<G>
+
+	when-defined
+		<W> X

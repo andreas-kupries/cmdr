@@ -527,7 +527,6 @@ oo::class create ::xo::parameter {
 
     method value {} {
 	# compute argument value if any, cache result.
-	#error NYI
 
 	# Calculate value, from most prefered to least
 	#
@@ -606,7 +605,7 @@ oo::class create ::xo::parameter {
 	}
 
 	if {$myinteractive} {
-	    error NYI
+	    error "REPL/PROMPT parameter NYI"
 	    # TODO: prompt to enter value, or cmdloop to enter a list.
 	    # Note: ^C for prompt aborts system.
 	    #       ^C for list aborts loop, but not system.

@@ -213,7 +213,7 @@ oo::class create ::xo::officer {
 	if {![llength $args]} {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
-	    error "REPL NYI" ; # XXX completion...
+	    error "REPL officer NYI" ; # XXX completion...
 	    set shell [linenoise::facade new [self]]
 	    $shell repl
 	    $shell destroy
