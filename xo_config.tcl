@@ -304,12 +304,12 @@ oo::class create ::xo::config {
 	# config has regular arguments, none are defined by the user
 	# (!mustinteract <=> no arguments specified, and config allows that).
 
-	error "REPL NYI - wrong\#args"
+	error "REPL config NYI - test if required"
     }
 
     method interact {} {
 	# compare xo::officer REPL.
-	error "REPL NYI"
+	error "REPL config NYI - private - full data entry ..."
     }
 
     # # ## ### ##### ######## #############
@@ -318,7 +318,11 @@ oo::class create ::xo::config {
     ## their validation, generation, etc.). Access to argument values by name.
 
     method unknown {m args} {
-	if {![regexp {^@(.*)$} $m -> mraw]} { next $m {*}$args ; return }
+	if {![regexp {^@(.*)$} $m -> mraw]} {
+	    # Standard error message when not @name ...
+	    next $m {*}$args
+	    return
+	}
 	# @name ... => handlerof(name) ...
 	if {![llength $args]} { lappend args value }
 	return [[my lookup $name] {*}$args]
