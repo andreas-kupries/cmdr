@@ -35,7 +35,8 @@ oo::class create ::xo::config {
 
 	# Import the DSL commands.
 	link \
-	    {description Description} \
+	    {undocumented Undocumented} \
+	    {description  Description} \
 	    {use         Use} \
 	    {input       Input} \
 	    {option      Option} \
@@ -176,7 +177,8 @@ oo::class create ::xo::config {
     ## API for xo::private parameter specification DSL.
 
     # Description is for the context, i.e. the private.
-    forward Description context description:
+    forward Description  context description:
+    forward Undocumented context undocumented
 
     # Bespoke 'source' command for common specification fragments.
     method Use {name} {

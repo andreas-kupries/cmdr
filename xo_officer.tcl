@@ -111,6 +111,7 @@ oo::class create ::xo::officer {
 	    {default     Default} \
 	    {alias       Alias} \
 	    {description description:} \
+	    undocumented \
 	    {common      set}
 	eval $myactions
 
@@ -360,6 +361,7 @@ oo::class create ::xo::officer {
 	# Same is expected from the sub-ordinates
 
 	# help = dict (name -> command)
+	if {![my documented]} { return {} }
 	set help {}
 	foreach c [my known] {
 	    set cname [list {*}$prefix $c]

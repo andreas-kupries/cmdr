@@ -29,6 +29,15 @@ test xo-help-1.0 {help structure} -body {
 	    default hammer
 	}
 	alias hammer = tool hammer
+
+	private hidden {
+	    undocumented
+	} ::missing
+
+	officer stealth {
+	    undocumented
+	    private cloak {} ::dagger
+	}
     }
     x help
 } -cleanup {
