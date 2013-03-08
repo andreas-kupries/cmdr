@@ -83,10 +83,10 @@ test xo-runtime-1.4 {required + optional arguments, assignment under thresholdin
     } 1 2 3 4
 } -result {
     A = '1'         v'1'
-    B = '2'	    v'2'
-    C = '3'	    v'3'
+    B = '2'         v'2'
+    C = '3'         v'3'
     D = <undefined> v'0'
-    E = '4'	    v'4'
+    E = '4'         v'4'
 }
 
 test xo-runtime-1.5 {required + optional arguments, assignment under thresholding} -body {
@@ -460,10 +460,118 @@ test xo-runtime-3.13 {options, ambiguous prefix} -body {
 # # ## ### ##### ######## ############# #####################
 ## Group IV: Mix options and arguments.
 
+test xo-runtime-4.1 {options, arguments, and splat} -body {
+    Parse {
+	input  A - { optional ; validate identity }
+	input  C - { optional ; validate identity ; list }
+	option T - { validate identity }
+    } A -T X C C C -T Y
+    # The threshold method for optional arguments processes options
+    # before arguments, handling the 2nd -T before splat collection.
+    # Compare to 5.1.
+} -result {
+    A = 'A'     v'A'
+    C = 'C C C' v'C C C'
+    T = 'Y'     v'Y'
+}
 
 # # ## ### ##### ######## ############# #####################
 ## Group V: Optional arguments, via peek+validate
 
+test xo-runtime-5.1 {options, arguments, and splat, peek} -body {
+    Parse {
+	input  A - { optional ; validate identity ; test }
+	input  C - { optional ; validate identity ; test ; list }
+	option T - { validate identity }
+    } A -T X C C C -T Y
+    # The peek+validate method for optional arguments does not look
+    # ahead beyond that, thus the 2nd -T becomes part of the splat
+    # collection. Compare to 4.1. Note that the splat is _also_ put
+    # into peek+validate mode, otherwise it would force the options to
+    # be processed first.
+} -result {
+    A = 'A'          v'A'
+    C = 'C C C -T Y' v'C C C -T Y'
+    T = 'X'          v'X'
+}
+
+# # ## ### ##### ######## ############# #####################
+## Group VI: Introspect on the context of the generate, validate, and
+##           when-defined command prefixes. Ensure that they are
+##           called and work.
+
+test xo-runtime-6.1 {generator command} -setup {
+    StartNotes
+    set ons A ; # Trigger parse to save the parameter object namespace.
+} -body {
+    Note {*}[split [Parse {
+	input A - {
+	    optional
+	    generate {apply {{} {
+		Note generate  [uplevel 1 [list namespace current]]
+		return G
+	    }}}
+	}
+    }] \n]
+    string map [list $::ons MATCH] [Notes]
+} -cleanup {
+    unset ons
+    StopNotes
+} -result {
+    generate MATCH
+    {} {    A = <undefined> v'G'} {}
+}
+
+test xo-runtime-6.2 {validation, default supplication} -setup {
+    StartNotes
+    set ons A ; # Trigger parse to save the object namespace.
+} -body {
+    Note {*}[split [Parse {
+	input A - {
+	    optional
+	    validate {apply {{kind args} {
+		Note validate $kind [uplevel 1 [list namespace current]]
+		switch -glob -- $kind {
+		    validate { return [lindex $args 0] }
+		    default  { return zZzZz }
+		    * { error $kind }
+		}
+	    }}}
+	}
+    }] \n]
+    string map [list $::ons MATCH] [Notes]
+} -cleanup {
+    unset ons
+    StopNotes
+} -result {
+    validate default MATCH
+    validate validate MATCH
+    {} {    A = <undefined> v'zZzZz'} {}
+}
+
+test xo-runtime-6.3 {generator command} -setup {
+    StartNotes
+    set ons A ; # Trigger parse to save the parameter object namespace.
+} -body {
+    Note {*}[split [Parse {
+	input A - {
+	    optional
+	    when-defined {apply {{v} {
+		Note defined = $v
+		Note defined [uplevel 1 [list namespace current]]
+		return
+	    }}}
+	}
+    }] \n]
+    string map [list $::ons MATCH] [Notes]
+} -cleanup {
+    unset ons
+    StopNotes
+} -result {
+    defined = no
+    defined MATCH
+    {} {    A = <undefined> v'no'} {}
+}
 
 # # ## ### ##### ######## ############# #####################
 return

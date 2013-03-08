@@ -45,7 +45,7 @@ oo::class create ::xo::parameter {
 	set myprompt      {} ;# no prompt for interaction
 
 	set myvalidate    {} ;# validation command
-	set mywhendef     {} ;# action-on-definition command
+	set mywhendef     {} ;# action-on-definition command.
 
 	set mythreshold   {} ;# threshold for optional arguments
 	#                    ;# empty: Undefined
@@ -344,7 +344,7 @@ oo::class create ::xo::parameter {
 	} else {
 	    # For non-list parameters ask the chosen validation type
 	    # for a default value.
-	    my Default [$myvalidate default]
+	    my Default [{*}$myvalidate default]
 	}
 	return
     }
@@ -481,6 +481,8 @@ oo::class create ::xo::parameter {
     }
 
     method Take {queue} {
+	#puts "$myname take $mythreshold"
+
 	if {$mythreshold >= 0} {
 	    # Choose by checking argument count against a threshold.
 	    # For this to work correctly we now have to process all
@@ -554,7 +556,9 @@ oo::class create ::xo::parameter {
 	#
 	# (6) FAIL. 
 
-	if {$myhasvalue} { return $myvalue }
+	if {$myhasvalue} {
+	    return $myvalue
+	}
 
 	# Note that myvalidate and mygenerate are executed in this
 	# scope, which implies the parameter instance namespace, which
@@ -578,14 +582,11 @@ oo::class create ::xo::parameter {
 	    } else {
 		set myvalue [{*}$myvalidate validate $mystring]
 	    }
-	    set myhasvalue yes
-	    return $myvalue
+	    my Value: $myvalue
 	}
 
 	if {[llength $mygenerate]} {
-	    set myvalue [{*}$mygenerate]
-	    set myhasvalue yes
-	    return $myvalue
+	    my Value: [{*}$mygenerate]
 	}
 
 	if {$myhasdefault} {
@@ -601,8 +602,7 @@ oo::class create ::xo::parameter {
 	    } else {		
 		set myvalue [{*}$myvalidate validate $mydefault]
 	    }
-	    set myhasvalue yes
-	    return $myvalue
+	    my Value: $myvalue
 	}
 
 	if {$myinteractive} {
@@ -613,12 +613,21 @@ oo::class create ::xo::parameter {
 	}
 
 	if {!$myisrequired} {
-	    set myvalue {}
-	    set myhasvalue yes
-	    return $myvalue
+	    my Value: {}
 	}
 
 	return -code error Undefined
+    }
+
+    # # ## ### ##### ######## #############
+
+    method Value: {v} {
+	if {[llength $mywhendef]} {
+	    {*}$mywhendef $v
+	}
+	set myvalue $v
+	set myhasvalue yes
+	return -code return $myvalue
     }
 
     # # ## ### ##### ######## #############
