@@ -64,7 +64,7 @@ oo::class create ::xo::actor {
     }
 
     method description: {text} {
-	set mydescription $text
+	set mydescription [string trim $text]
 	return
     }
 
