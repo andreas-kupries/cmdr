@@ -58,11 +58,15 @@ oo::class create ::xo::config {
     }
 
     method help {} {
-	# command =          list (description options arguments)
+	# command   = dict ('desc'      -> description
+	#                   'options'   -> options
+	#                   'arguments' -> arguments)
 	# options   = list (option...)
 	# option    = dict (name -> description)
 	# arguments = list (argument...)
-	# argument  = list (code name description)
+	# argument  = dict (name -> argdesc)
+	# argdesc   = dict ('code' -> code
+	#                   'desc' -> description)
 	# code in {
 	#     +		<=> required
 	#     ?		<=> optional
@@ -77,11 +81,17 @@ oo::class create ::xo::config {
 
 	set arguments {}
 	foreach a $myargs {
-	    set arg [dict get $mymap $a]
-	    lappend arguments [list [$arg code] $a [$arg description]]
+	    set para [dict get $mymap $a]
+	    dict set arguments $a \
+		[dict create \
+		     code [$para code] \
+		     desc [$para description]]
 	}
 
-	return [list [context description] $options $arguments]
+	return [dict create \
+		    desc      [context description] \
+		    options   $options \
+		    arguments $arguments]
     }
 
 

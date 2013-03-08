@@ -4,12 +4,16 @@ short/compressed form.
 
 help        = dict (name -> command)
 name        = string
-command     = list (description options arguments)
+command     = dict ('desc'      -> description
+		    'options'   -> options
+		    'arguments' -> arguments)
 description = string
 options     = list (option...)
 option      = dict (name -> description)
 arguments   = list (argument...)
-argument    = list (code name description)
+argument    = dict (name -> argdesc)
+argdesc     = dict ('code' -> code
+		    'desc' -> description)
 code in {
      +		<=> required
      ?		<=> optional
