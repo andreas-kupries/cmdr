@@ -65,8 +65,28 @@ namespace eval ::xo::validate::identity {
     namespace ensemble create
 }
 
-proc ::xo::validate::identity::default {} { return {} }
+proc ::xo::validate::identity::default  {}  { return {} }
 proc ::xo::validate::identity::validate {x} { return $x }
+
+# # ## ### ##### ######## ############# #####################
+
+namespace eval ::xo::validate::pass {
+    namespace export default validate
+    namespace ensemble create
+}
+
+proc ::xo::validate::pass::default  {}  { return {} }
+proc ::xo::validate::pass::validate {x} { return $x }
+
+# # ## ### ##### ######## ############# #####################
+
+namespace eval ::xo::validate::string {
+    namespace export default validate
+    namespace ensemble create
+}
+
+proc ::xo::validate::string::default  {}  { return {} }
+proc ::xo::validate::string::validate {x} { return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
