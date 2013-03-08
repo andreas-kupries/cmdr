@@ -1,6 +1,21 @@
 # -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
+
+if 0 {tcltest::customMatch exact Seq ; proc Seq {a b} {
+    if {$a ne $b} {
+	puts A|[string map [list "\n" "\\N" "\t" "\\T"] $a]|
+	puts B|[string map [list "\n" "\\N" "\t" "\\T"] $b]|
+    }
+    string equal $a $b
+}}
+
+# # ## ### ##### ######## ############# #####################
 ## Supporting procedures for xo.test et. al.
+
+proc StartNotes {}     { set ::result {} ; return }
+proc Note       {args} { lappend ::result $args ; return }
+proc StopNotes  {}     { unset ::result ; return }
+proc Notes      {}     { Wrap $::result }
 
 proc NiceParamSpec {kind spec} {
     try {
@@ -21,10 +36,18 @@ proc BadParamSpec {kind spec} {
 }
 
 proc Parse {spec args} {
+    upvar 1 ons ons
     try {
 	xo create x foo \
 	    [list private bar $spec \
 		 {::apply {{config} {}}}]
+	# Eval the spec first.
+	[x lookup bar] keys
+	if {[info exists ons]} {
+	    # x = officer, bar = private, ons = parameter
+	    set ons [info object namespace [[x lookup bar] lookup $ons]]
+	}
+	# Now the runtime args processing.
 	[x lookup bar] do {*}$args
 	ShowParsed [x lookup bar]
     } finally {
@@ -175,7 +198,7 @@ proc DumpParsed {o} {
     }
 
     # Table formatted output.
-    foreach name [Padr $names] s [Padr $strings] v [Padr $values] {
+    foreach name [Padr $names] s [Padr $strings] v $values {
 	lappend result "$name = $s $v"
     }
     return $result

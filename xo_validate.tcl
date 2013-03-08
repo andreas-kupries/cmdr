@@ -39,7 +39,7 @@ namespace eval ::xo::validate::boolean {
 proc ::xo::validate::boolean::default {} { return no }
 
 proc ::xo::validate::boolean::validate {x} {
-    if {[string is integer -strict $x]} { return $x }
+    if {[string is boolean -strict $x]} { return $x }
     Fail BOOLEAN "a boolean" $x
 }
 
