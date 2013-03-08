@@ -365,7 +365,7 @@ oo::class create ::xo::config {
 	}
 	# @name ... => handlerof(name) ...
 	if {![llength $args]} { lappend args value }
-	return [[my lookup $name] {*}$args]
+	return [[my lookup $mraw] {*}$args]
     }
 
     # # ## ### ##### ######## #############
