@@ -1,3 +1,23 @@
+
+
+input  - validate default: str!    (new, change)
+option - validate default boolean! (as-is)
+state  - validate default as input
+
+
+New attribute:
+	force - Force value (and when-defined action)
+	        before dispatching to the command prefix of
+		the actor.
+
+Extended common handling
+
+Key *all* is special to the parameter DSL, always and automatically
+'use'd when present, as first action. For common options, common
+state, possibly forced. (s.a.).
+
+
+
 Classes
 	Main xo is wrapper/singleton/enseble around officer.
 
