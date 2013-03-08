@@ -31,6 +31,7 @@ kt local   testing xo
 ::kt source xo_private.tests   ; # Parameter DSL, collection
 ::kt source xo_parameter.tests ; # Parameter DSL, details
 ::kt source xo_runtime.tests   ; # Runtime command line parsing
+::kt source xo_help.tests      ; # Help structures
 
 # TODO: keys, get (super chain)
 

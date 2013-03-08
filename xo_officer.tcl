@@ -358,8 +358,15 @@ oo::class create ::xo::officer {
 	# Query each subordinate for their help and use it to piece ours together.
 	# Note: Result is not finally formatted text, but nested dict structure.
 	# Same is expected from the sub-ordinates
-	# XXX spec the structure.
-	return
+
+	# help = dict (name -> command)
+	set help {}
+	foreach c [my known] {
+	    dict for {cmd h} [[my lookup $c] help] {
+		dict set help [list $c {*}$cmd] $h
+	    }
+	}
+	return $help
     }
 
     # # ## ### ##### ######## #############
