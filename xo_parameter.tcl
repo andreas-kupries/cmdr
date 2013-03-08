@@ -516,7 +516,7 @@ oo::class create ::xo::parameter {
 	    } trap {XO VALIDATE} {e o} {
 		# Type mismatch, pass.
 		return 0
-	    }
+	    } ; # internal errors bubble further
 	}
 	return 1
     }
