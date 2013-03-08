@@ -38,6 +38,8 @@ oo::class create ::xo::parameter {
 
 	set myislist      no ;# scalar vs list parameter
 
+	set myisdocumented yes
+	set myisforced    no ;# force define value before command call
 	set myhasdefault  no ;# flag for default existence
 	set mydefault     {} ;# default value - raw
 	set mygenerate    {} ;# generator command
@@ -101,6 +103,9 @@ oo::class create ::xo::parameter {
     method interactive  {} { return $myinteractive }
     method prompt       {} { return $myprompt }
 
+    method forced       {} { return $myisforced }
+    method documented   {} { return $myisdocumented }
+
     method validator    {} { return $myvalidate }
     method when-defined {} { return $mywhendef }
 
@@ -123,11 +128,13 @@ oo::class create ::xo::parameter {
 	link \
 	    {alias        Alias} \
 	    {default      Default} \
+	    {force        Force} \
 	    {generate     Generate} \
 	    {interact     Interact} \
 	    {list         List} \
 	    {optional     Optional} \
 	    {test         Test} \
+	    {undocumented Undocumented} \
 	    {validate     Validate} \
 	    {when-defined WhenDefined}
 	eval $valuespec
@@ -159,6 +166,16 @@ oo::class create ::xo::parameter {
 
     method List {} {
 	set myislist yes
+	return
+    }
+
+    method Force {} {
+	set myisforced yes
+	return
+    }
+
+    method Undocumented {} {
+	set myisdocumented no
 	return
     }
 
@@ -648,7 +665,8 @@ oo::class create ::xo::parameter {
 	myisordered myiscmdline myislist myisrequired \
 	myinteractive myprompt mydefault myhasdefault \
 	myflags mywhendef mygenerate myvalidate mythreshold \
-	myhasstring mystring myhasvalue myvalue
+	myhasstring mystring myhasvalue myvalue myisforced \
+	myisdocumented
 
     # # ## ### ##### ######## #############
 }

@@ -44,6 +44,9 @@ oo::class create ::xo::config {
 
 	set splat no ;# Updated in my DefineParameter
 
+	# Auto inherit common options, state, arguments.
+	# May not be defined.
+	catch { use *all* }
 	eval $spec
 
 	# Postprocessing
@@ -77,6 +80,7 @@ oo::class create ::xo::config {
 
 	set options {}
 	dict for {o para} $myoption {
+	    if {![$para documented]} continue
 	    dict set options $o [$para description]
 	}
 
@@ -115,6 +119,16 @@ oo::class create ::xo::config {
 		"Expected option name, got \"$name\""
 	}
 	return [dict get $myoption $name]
+    }
+
+    method force {} {
+	# Compute the value of all parameters forcing the issue.
+	dict for {name para} $mymap {
+	    if {[$para forced]} {
+		$para value
+	    }
+	}
+	return
     }
 
     # # ## ### ##### ######## #############
