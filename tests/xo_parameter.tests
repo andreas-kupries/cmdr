@@ -373,12 +373,12 @@ test xo-parameter-4.2 {parameter DSL, optional input, interact, default prompt} 
         para (A) {
             description: '-'
             ordered, cmdline, !splat, !required, interact
-            default: 'no'
+            default: ''
             prompt: 'Enter A:'
             mode=threshold 0
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -393,12 +393,12 @@ test xo-parameter-4.3 {parameter DSL, optional input, interact, custom prompt} -
         para (A) {
             description: '-'
             ordered, cmdline, !splat, !required, interact
-            default: 'no'
+            default: ''
             prompt: 'HERE'
             mode=threshold 0
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -437,11 +437,11 @@ test xo-parameter-4.5 {parameter DSL, state, interact} -body {
         para (A) {
             description: '-'
             !ordered, !cmdline, !splat, required, interact
-            default: 'no'
+            default: ''
             prompt: 'Enter A:'
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -467,7 +467,7 @@ test xo-parameter-5.1 {parameter DSL, list input} -body {
             no default
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -522,7 +522,7 @@ test xo-parameter-5.4 {parameter DSL, list state} -body {
             default: ''
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -545,11 +545,11 @@ test xo-parameter-6.1 {parameter DSL, optional input} -body {
         para (A) {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
-            default: 'no'
+            default: ''
             mode=threshold 0
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -587,11 +587,11 @@ test xo-parameter-7.2 {parameter DSL, optional input, test} -body {
         para (A) {
             description: '-'
             ordered, cmdline, !splat, !required, !interact
-            default: 'no'
+            default: ''
             mode=peek+test
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd ()
         }
     }
@@ -753,7 +753,7 @@ test xo-parameter-9.2 {parameter DSL, input, when-defined} -body {
             no default
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd (X)
         }
     }
@@ -791,10 +791,10 @@ test xo-parameter-9.4 {parameter DSL, state, when-defined} -body {
         para (A) {
             description: '-'
             !ordered, !cmdline, !splat, required, !interact
-            default: 'no'
+            default: ''
             flags []
             ge ()
-            va (::xo::validate::boolean)
+            va (::xo::validate::identity)
             wd (X)
         }
     }

@@ -1,4 +1,9 @@
 
+Make chart of v-type heuristics to select one when not specified by
+the user.
+
+Similarly make chart for default value heuristics
+
 
 input  - validate default: str!    (new, change)
 option - validate default boolean! (as-is)

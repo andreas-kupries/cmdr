@@ -568,9 +568,9 @@ test xo-runtime-6.3 {generator command} -setup {
     unset ons
     StopNotes
 } -result {
-    defined = no
+    defined = {}
     defined MATCH
-    {} {    A = <undefined> v'no'} {}
+    {} {    A = <undefined> v''} {}
 }
 
 # # ## ### ##### ######## ############# #####################
