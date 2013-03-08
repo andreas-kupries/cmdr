@@ -59,7 +59,6 @@ oo::class create ::xo::config {
 
     method help {} {
 	# command =          list (description options arguments)
-	# Here we are responsible for -> list (options arguments)
 	# options   = list (option...)
 	# option    = dict (name -> description)
 	# arguments = list (argument...)
@@ -82,7 +81,7 @@ oo::class create ::xo::config {
 	    lappend arguments [list [$arg code] $a [$arg description]]
 	}
 
-	return [list $options $arguments]
+	return [list [context description] $options $arguments]
     }
 
 

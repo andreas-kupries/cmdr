@@ -126,7 +126,7 @@ oo::class create ::xo::actor {
     # - Return help information about the action.
 
     method do   {args} {}
-    method help {}     {}
+    method help {{prefix {}}} {}
 
     ##
     # # ## ### ##### ######## #############
