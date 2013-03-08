@@ -64,6 +64,9 @@ oo::class create ::xo::private {
 	    config interact
 	}
 
+	# Forcibly define the value of all parameters requesting such.
+	config force
+
 	# Call actual command, hand it the filled configuration.
 	{*}$mycmd $myconfig 
     }
