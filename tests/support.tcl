@@ -159,13 +159,48 @@ proc DumpPrivate {o} {
 proc DumpParsed {o} {
     set name [$o fullname]
     set result {}
-    foreach name [lsort -dict [$o names]] {
+
+    set names [lsort -dict [$o names]]
+
+    # Retrieve data
+    foreach name $names {
 	set c [$o lookup $name]
-	set s <undefined>
-	if {[$c string?]} {
+	if {[$c defined?]} {
 	    set s '[$c string]'
+	} else {
+	    set s <undefined>
 	}
-	lappend result "$name = [$c string?] $s"
+	lappend strings $s
+	lappend values  v'[$c value]'
+    }
+
+    # Table formatted output.
+    foreach name [Padr $names] s [Padr $strings] v [Padr $values] {
+	lappend result "$name = $s $v"
     }
     return $result
+}
+
+proc Padr {list} {
+    set maxl 0
+    foreach str $list {
+	set l [string length $str]
+	if {$l <= $maxl} continue
+	set maxl $l
+    }
+    set res {}
+    foreach str $list { lappend res [format "%-*s" $maxl $str] }
+    return $res
+}
+
+proc Padl {list} {
+    set maxl 0
+    foreach str $list {
+	set l [string length $str]
+	if {$l <= $maxl} continue
+	set maxl $l
+    }
+    set res {}
+    foreach str $list { lappend res [format "%*s" $maxl $str] }
+    return $res
 }
