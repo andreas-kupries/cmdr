@@ -31,7 +31,7 @@ proc ::xo::help::query {actor words} {
     foreach word $words {
 	set actor [$actor lookup $word]
     }
-    return [$actor help]
+    return [$actor help $words]
 }
 
 # # ## ### ##### ######## ############# #####################

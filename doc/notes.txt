@@ -1,4 +1,14 @@
 
+help generation todo.
+
+     do not document the special forms of the
+     booleans
+
+     document aliases, group them with the main option!
+
+
+
+
 Make chart of v-type heuristics to select one when not specified by
 the user.
 
