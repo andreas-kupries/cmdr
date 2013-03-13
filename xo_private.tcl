@@ -87,6 +87,19 @@ oo::class create ::xo::private {
     }
 
     # # ## ### ##### ######## #############
+    ## Command completion. This is the entry point for recursion from
+    ## the higher level officers.
+
+    ## Note that command completion for the REPL of the private is
+    ## handled by the internal xo::config instance, which also manages
+    ## the REPL itself.
+
+    method complete-words {parse} {
+	# No completions. Yet.
+	return {}
+    }
+
+    # # ## ### ##### ######## #############
 
     variable myarguments mycmd myinit myconfig
 
