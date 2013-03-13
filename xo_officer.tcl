@@ -65,7 +65,7 @@ oo::class create ::xo::officer {
 	dict for {k v} $mymap {
 	    if {![string match a,* $k]} continue
 	    lappend result [string range $k 2 end]
-	}	
+	}
 	return $result
     }
 
@@ -303,8 +303,8 @@ oo::class create ::xo::officer {
 	try {
 	    set completions [my complete-words [my ParseLine $line]]
 	} on error {e o} {
-	    #puts stderr "ERROR: $e"
-	    #puts stderr $::errorInfo
+	    puts stderr "ERROR: $e"
+	    puts stderr $::errorInfo
 	    set completions {}
 	}
 	#puts stderr =($completions)
@@ -384,17 +384,15 @@ oo::class create ::xo::officer {
 	# as well.
 
 	#puts stderr \tMATCH\ ($current)
-	set completions {}
-	dict for {k v} $mymap {
-	    if {![string match a,* $k]} continue
-	    set name [lindex [split $k ,] 1]
-	    if {![string match ${current}* $name]} continue
-	    my AddResult $name ; # imports completions, line, words
+
+	set commands [my known]
+	if {$doexit && [string match ${current}* exit]} {
+	    lappend commands exit
 	}
 
-	if {$doexit && [string match ${current}* exit]} {
-	    my AddResult exit ; # imports completions, line, words
-	}
+	set completions \
+	    [my completions $parse \
+		 [my match $parse $commands]]
 
 	if {[my hasdefault]} {
 	    dict set parse doexit 0
@@ -403,34 +401,6 @@ oo::class create ::xo::officer {
 
 	#puts stderr \tC($completions)
 	return [lsort -unique [lsort -dict $completions]]
-    }
-
-    method AddResult {cmd} {
-	upvar 1 completions completions line line words words
-
-	# The -> cmd is a valid completion of the line.  The actual
-	# completion is the line itself, plus the command.  We have
-	# however have to chop off the incomplete part of cmd to make
-	# things right.
-	#
-	# Example:
-	# line       = "foo b"
-	# cmd            = "bar"
-	# completion = "foo bar"
-
-	if {[string first { } $cmd] >= 0} {
-	    # Command has spaces, insert as single-quoted word.
-	    # TODO: We have to handle command names containing double- and single-quotes also!
-	    set cmd '$cmd'
-	}
-
-	# Determine the chop point: Just before the first character of the last word.
-	set  start [lindex $words end 1]
-	incr start -1
-
-	# Chop and complete.
-	lappend completions [string range $line 0 $start]$cmd
-	return
     }
 
     method ParseLine {line} {
@@ -475,19 +445,14 @@ oo::class create ::xo::officer {
 	# actually in their REPL.
 	dict set parse doexit 0
 
-	set handlers {}
-	dict for {k v} $mymap {
-	    if {![string match a,* $k]} continue
-	    set name [lindex [split $k ,] 1]
-	    if {![string match ${current}* $name]} continue
-	    lappend handlers $v
-	}
+	set matches [my match $parse [my known]]
 
-	if {[llength $handlers] == 1} {
+	if {[llength $matches] == 1} {
 	    # Proper subordinate found. Delegate. Note: Step to next
 	    # word, we have processed the current one.
 	    dict incr parse at
-	    return [[lindex $handlers 0] complete-words $parse]
+	    set handler [my lookup [lindex $matches 0]]
+	    return [$handler complete-words $parse]
 	}
 
 	# The search was inconclusive. Try the default, if we have any.

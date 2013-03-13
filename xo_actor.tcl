@@ -134,6 +134,68 @@ oo::class create ::xo::actor {
     variable myname mydescription mydocumented mysuper mystore
 
     # # ## ### ##### ######## #############
+    ## Helper methods common to command completion in actors.
+
+    method Quote {word} {
+	# Check if word contains special characters, and quote it to
+	# prevent special interpretation of these characters, if so.
+	if {
+	    [string match "*\[ \"'()\$\|\{\}\]*" $word] ||
+	    [string match "*\]*"                 $word] ||
+	    [string match "*\[\[\]*"             $word]
+	} {
+	    set map [list \" \\\"]
+	    return \"[string map $map $word]\"
+	} else {
+	    return $word
+	}
+    }
+
+    method completions {parse cmdlist} {
+	dict with parse {}
+	# -> line, words (ignored: ok, nwords, at, doexit)
+
+	# The -> cmd is a valid completion of the line.  The actual
+	# completion is the line itself, plus the command.  Note that
+	# we have to chop off the incomplete part of cmd in the line
+	# before adding the complete command.
+	#
+	# Example:
+	# line       = "foo b"
+	# cmd            = "bar"
+	# completion = "foo bar"
+
+	# Determine the chop point, then chop: Just before the first
+	# character of the last word. Which is a prefix to all
+	# commands in the list.
+	set  chop [lindex $words end 1]
+	incr chop -1
+	set line [string range $line 0 $chop]
+
+	set completions {}
+	foreach cmd $cmdlist {
+	    set cmd [my Quote $cmd]
+	    # Chop and complete.
+	    lappend completions $line$cmd
+	}
+	return $completions
+    }
+
+    # Could possibly use 'struct::list filter', plus a lambda.
+    method match {parse cmdlist} {
+	dict with parse {}
+	# -> words, at (ignored: ok, nwords, line, doexit)
+	set current [lindex $words $at end]
+	set filtered {}
+	foreach cmd $cmdlist {
+	    if {![string match ${current}* $cmd]} continue
+	    lappend filtered $cmd
+	}
+	return $filtered
+    }
+
+    ##
+    # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
