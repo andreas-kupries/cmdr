@@ -44,11 +44,12 @@ oo::class create ::xo::officer {
 	my super: $super
 	my name:  $name
 
-	set myactions  $actions ; # Action spec for future initialization
-	set myinit     no       ; # Dispatch map will be initialized lazily
-	set mymap      {}       ; # Action map starts knowing nothing
-	set mycommands {}       ; # Ditto
-	set mychildren {}       ; # List of created subordinates.
+	set myactions   $actions ; # Action spec for future initialization
+	set myinit      no       ; # Dispatch map will be initialized lazily
+	set mymap       {}       ; # Action map starts knowing nothing
+	set mycommands  {}       ; # Ditto
+	set myccommands exit     ; # Completion knows 'exit' command.
+	set mychildren  {}       ; # List of created subordinates.
 	return
     }
 
@@ -117,7 +118,8 @@ oo::class create ::xo::officer {
 	eval $myactions
 
 	# Postprocessing.
-	set mycommands [lsort -dict $mycommands]
+	set mycommands  [lsort -dict $mycommands]
+	set myccommands [lsort -unique [lsort -dict $myccommands]]
 	return
     }
 
@@ -183,7 +185,8 @@ oo::class create ::xo::officer {
 	# ... then make it known to the dispatcher.
 	dict set mymap last $name
 	dict set mymap a,$name $handler
-	lappend mycommands $name
+	lappend mycommands  $name
+	lappend myccommands $name
 	return
     }
 
@@ -262,7 +265,7 @@ oo::class create ::xo::officer {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1  {} { return "[my name]> " }
+    method prompt1  {} { return "[my fullname]> " }
     method prompt2  {} { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
 
@@ -295,28 +298,195 @@ oo::class create ::xo::officer {
     # Shell hook method - Command line completion.
 
     method complete {line} {
-	return [my complete-words [my ParseLine $line]]
+	try {
+	    return [my complete-words [my ParseLine $line]]
+	} on error {e o} {
+	    #puts "ERROR: $e"
+	    #puts $::errorInfo
+	    return {}
+	}
     }
 
     method complete-words {parse} {
-	# Note: This may be invoked from a higher-level officer doing
-	# command completion.
+	# Note: This method has to entry-points.
+	# (1) Above in 'complete', for command completion from self's REPL.
+	# (2) Below, as part of recursion from a higher officer while
+	#     following the chain of words to the actor responsible
+	#     for handling the last word.
+
 	my Setup
 
+	# Unfold the parse state
+	dict with parse {} ;# --> line ok words at nwords doexit
+	# ok     - boolean flag, syntax ok ? yes/no
+	# line   - string, the raw command line with quotes, escapes, etc.
+	# nwords - number of words found in the -> line
+	# words  - list of words found in the -> line.
+	# at     - index of the current word to process.
+	# doexit - boolean flag, pseudo-command 'exit' active ? yes/no
+	#
+	# words = list (tuple), where tuple = (type startoff endoff string)
+	# doexit - True only for entry point (1), false for all of (2) and down.
+
+	# Parse error, bad syntax. No completions.
+
+	if {!$ok} {
+	    return {}
+	}
+
+	# Empty line. All our commands are completions, plus the
+	# special 'exit' command to stop the REPL. Thus using
+	# my<c>commands instead of mycommands.
+
+	if {$line eq {}} {
+	    set completions $myccommands
+	    if {[my hasdefault]} {
+		dict set parse doexit 0
+		lappend completions {*}[[my lookup [my default]] complete-words $parse]
+	    }
+	    return [lsort -unique [lsort -dict $completions]]
+	}
+
+	# Beyond the end of the line. No completions.
+
+	if {$at == $nwords} {
+	    return {}
+	}
+
+	# Extract the text of the current word. The type and offset
+	# parts are irrelevant at the moment.
+	set current [lindex $words $at end]
+
+	if {$at < ($nwords - 1)} {
+	    # This officer has to handle a word in the middle of the
+	    # command line. This is done by delegating to the
+	    # subordinate associated with the current word and letting
+	    # it handle the remainder.
+
+	    return [my CompleteRecurse $current $parse]
+	}
+
+	# This officer is responsible for handling the last word on
+	# the command line. We do this by computing the set of
+	# matching commands from the set the officer knows and
+	# providing them as completions. One tricky thing: If we have
+	# a default we ask it as well, and merge its completions to
+	# ours. Lastly, we may have to add the 'exit' pseudo-command
+	# as well.
+
+	set completions {}
+	dict for {k v} $mymap {
+	    if {![string match a,* $k]} continue
+	    set name [lindex [split $k ,] 1]
+	    if {![string match ${current}* $name]} continue
+	    my AddResult $name ; # imports completions, line, words
+	}
+
+	if {$doexit && [string match ${current}* exit]} {
+	    my AddResult exit ; # imports completions, line, words
+	}
+
+	if {[my hasdefault]} {
+	    dict set parse doexit 0
+	    lappend completions {*}[[my lookup [my default]] complete-words $parse]
+	}
+
+	return [lsort -unique [lsort -dict $completions]]
+    }
+
+    method AddResult {cmd} {
+	upvar 1 completions completions line line words words
+
+	# The -> cmd is a valid completion of the line.  The actual
+	# completion is the line itself, plus the command.  We have
+	# however have to chop off the incomplete part of cmd to make
+	# things right.
+	#
+	# Example:
+	# line       = "foo b"
+	# cmd            = "bar"
+	# completion = "foo bar"
+
+	if {[string first { } $cmd] >= 0} {
+	    # Command has spaces, insert as single-quoted word.
+	    # TODO: We have to handle command names containing double- and single-quotes also!
+	    set cmd '$cmd'
+	}
+
+	# Determine the chop point: Just before the first character of the last word.
+	set  start [lindex $words end 1]
+	incr start -1
+
+	# Chop and complete.
+	lappend r [string range $line 0 $start]$cmd
+	return
     }
 
     method ParseLine {line} {
-	set hasspace [string match {*[ 	]} $line]
-	set ok 1
+	set ok    1
 	set words {}
+
 	try {
 	    set words [string token shell -partial -indices $line]
 	} trap {STRING TOKEN SHELL BAD} {e o} {
 	    set ok 0
 	}
-	return [dict create line $line ok $ok eos $hasspace words $words ]
+
+	set len [string length $line]
+
+	if {$ok} {
+	    # last word, end index
+	    set lwe [lindex $words end 2]
+	    # last word ends before end of line -> trailing whitespace
+	    # add the implied empty word for the completion processing.
+	    if {$lwe < ($len-1)} {
+		lappend words [list PLAIN $len $len {}]
+	    }
+	}
+	set parse [dict create \
+		       doexit 1 \
+		       at     0 \
+		       line   $line \
+		       ok     $ok \
+		       words  $words \
+		       nwords [llength $words]]
+
+	return $parse
     }
 
+    method CompleteRecurse {current parse} {
+	# Inside the command line. Find the relevant subordinate based
+	# on the current word and let it handle everything.
+
+	# The 'exit' pseudo-command of the subordinate is irrelevant
+	# during recursion from the current or higher REPL, suppress
+	# it. The pseudo-command is only relevant to the officers
+	# actually in their REPL.
+	dict set parse doexit 0
+
+	set handlers {}
+	dict for {k v} $mymap {
+	    if {![string match a,* $k]} continue
+	    set name [lindex [split $k ,] 1]
+	    if {![string match ${current}* $name]} continue
+	    lappend handlers $v
+	}
+
+	if {[llength $handlers] == 1} {
+	    # Proper subordinate found. Delegate. Note: Step to next
+	    # word, we have processed the current one.
+	    dict incr parse at
+	    return [[lindex $handlers 0] complete-words $parse]
+	}
+
+	# The search was inconclusive. Try the default, if we have any.
+	if {[my hasdefault]} {
+	    return [[my lookup [my default]] complete-words $parse]
+	}
+
+	# No default, no completions.
+	return {}
+    }
 
     # # ## ### ##### ######## #############
 
@@ -339,7 +509,7 @@ oo::class create ::xo::officer {
 
     # # ## ### ##### ######## #############
 
-    variable myinit myactions mymap mycommands mychildren myreplexit
+    variable myinit myactions mymap mycommands myccommands mychildren myreplexit
 
     # # ## ### ##### ######## #############
 }
