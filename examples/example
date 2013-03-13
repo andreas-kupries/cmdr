@@ -1,0 +1,17 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require xo
+
+xo create cmdline cmdline {
+
+    private scissors {} ::cut
+    officer hammer {
+	private nail  {} ::drive
+	private screw {} ::drive
+    }
+    default hammer
+}
+
+cmdline do
+exit
