@@ -221,6 +221,7 @@ oo::class create ::xo::officer {
 
 	    set shell [linenoise::facade new [self]]
 	    set myreplexit 0 ; # Initialize stop signal, no stopping
+	    $shell history 1
 	    $shell repl
 	    $shell destroy
 	    return
@@ -298,16 +299,20 @@ oo::class create ::xo::officer {
     # Shell hook method - Command line completion.
 
     method complete {line} {
+	#puts stderr ////////$line
 	try {
-	    return [my complete-words [my ParseLine $line]]
+	    set completions [my complete-words [my ParseLine $line]]
 	} on error {e o} {
-	    #puts "ERROR: $e"
-	    #puts $::errorInfo
-	    return {}
+	    #puts stderr "ERROR: $e"
+	    #puts stderr $::errorInfo
+	    set completions {}
 	}
+	#puts stderr =($completions)
+	return $completions
     }
 
     method complete-words {parse} {
+	#puts stderr [my fullname]/[self]/$parse/
 	# Note: This method has to entry-points.
 	# (1) Above in 'complete', for command completion from self's REPL.
 	# (2) Below, as part of recursion from a higher officer while
@@ -331,6 +336,7 @@ oo::class create ::xo::officer {
 	# Parse error, bad syntax. No completions.
 
 	if {!$ok} {
+	    #puts stderr \tBAD
 	    return {}
 	}
 
@@ -339,6 +345,7 @@ oo::class create ::xo::officer {
 	# my<c>commands instead of mycommands.
 
 	if {$line eq {}} {
+	    #puts stderr \tALL
 	    set completions $myccommands
 	    if {[my hasdefault]} {
 		dict set parse doexit 0
@@ -350,6 +357,7 @@ oo::class create ::xo::officer {
 	# Beyond the end of the line. No completions.
 
 	if {$at == $nwords} {
+	    #puts stderr \tBEYOND
 	    return {}
 	}
 
@@ -363,6 +371,7 @@ oo::class create ::xo::officer {
 	    # subordinate associated with the current word and letting
 	    # it handle the remainder.
 
+	    #puts stderr \tRECURSE
 	    return [my CompleteRecurse $current $parse]
 	}
 
@@ -374,6 +383,7 @@ oo::class create ::xo::officer {
 	# ours. Lastly, we may have to add the 'exit' pseudo-command
 	# as well.
 
+	#puts stderr \tMATCH\ ($current)
 	set completions {}
 	dict for {k v} $mymap {
 	    if {![string match a,* $k]} continue
@@ -391,6 +401,7 @@ oo::class create ::xo::officer {
 	    lappend completions {*}[[my lookup [my default]] complete-words $parse]
 	}
 
+	#puts stderr \tC($completions)
 	return [lsort -unique [lsort -dict $completions]]
     }
 
@@ -418,7 +429,7 @@ oo::class create ::xo::officer {
 	incr start -1
 
 	# Chop and complete.
-	lappend r [string range $line 0 $start]$cmd
+	lappend completions [string range $line 0 $start]$cmd
 	return
     }
 
