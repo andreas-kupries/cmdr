@@ -12,10 +12,11 @@
 package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2 ;# link helper.
-package require string::token::shell
+package require string::token::shell 1.1
 package require try
 package require xo::actor
 package require xo::private
+package require linenoise::facade
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
@@ -214,8 +215,9 @@ oo::class create ::xo::officer {
 	if {![llength $args]} {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
-	    error "REPL officer NYI" ; # XXX completion...
+
 	    set shell [linenoise::facade new [self]]
+	    set myreplexit 0 ; # Initialize stop signal, no stopping
 	    $shell repl
 	    $shell destroy
 	    return
@@ -260,11 +262,14 @@ oo::class create ::xo::officer {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1  {} { my name }
+    method prompt1  {} { return "[my name]> " }
     method prompt2  {} { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
 
     method dispatch {cmd} {
+	if {$cmd eq "exit"} {
+	    set myreplexit 1 ; return
+	}
 	my Do {*}[string token shell $cmd]
     }
 
@@ -284,59 +289,19 @@ oo::class create ::xo::officer {
 	}
     }
 
-    method exit {} { return 0 }
+    method exit {} { return $myreplexit }
 
     # # ## ### ##### ######## #############
     # Shell hook method - Command line completion.
 
     method complete {line} {
-	return {}
-	# XXX TODO XXX
-	return [complete-words [ParseLine $line]]
+	return [my complete-words [my ParseLine $line]]
     }
 
     method complete-words {parse} {
 	# Note: This may be invoked from a higher-level officer doing
 	# command completion.
 	my Setup
-
-	dict with $config {} ;# --> line ok words eos
-
-	# Empty line. All our commands.
-	if {$line eq {}} { return $mycommands }
-
-	# trailing whitespace or not?
-	# ok syntax for the line before trailing whitespace?
-	# how many words?
-
-	# Not ending in whitespace. 
-	if {!$eos} {
-
-
-	}
-
-	# XXX XXX XXX later
-
-	    # Bad syntax: no completion.
-	    if {!$ok} { return {} }
-
-	    # Good syntax
-	    if {![llength $words]} {
-		# No words
-		if {![dict exists $mymap default]} {
-		    # No default: no completion.
-		    return {}
-		}
-		# Default: Recurse to its handler with an empty line
-		# and use its results as our own.
-		dict set config line {}
-		return [[my lookup [my default]] complete-words $config]
-	    }
-
-	    # Some words.
-	    set c [lindex $words 0]
-
-
 
     }
 
@@ -345,7 +310,7 @@ oo::class create ::xo::officer {
 	set ok 1
 	set words {}
 	try {
-	    set words [string token shell $line]
+	    set words [string token shell -partial -indices $line]
 	} trap {STRING TOKEN SHELL BAD} {e o} {
 	    set ok 0
 	}
@@ -374,7 +339,7 @@ oo::class create ::xo::officer {
 
     # # ## ### ##### ######## #############
 
-    variable myinit myactions mymap mycommands mychildren
+    variable myinit myactions mymap mycommands mychildren myreplexit
 
     # # ## ### ##### ######## #############
 }

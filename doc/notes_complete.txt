@@ -1,0 +1,26 @@
+
+Command completion. Decision table.
+===================================
+
+Officers
+--------
+
+Input is syntax ok/bad flag.
+Input is list of words.
+Input is text of the command line. - empty/not-empty.
+
+Input is where in the list of words the officer is. Can be at last word, or before it.
+Last word can be empty.
+
+ok/bad		 OK
+empty/not-empty	 EMPTY
+last/not-last	 LAST
+last-empty/not	 LEMP
+
+OK	EMPTY	LAST	LEMP	Action
+--	-----	----	----	------
+no	*	*	*	No completions
+yes	yes	*	*	Completions = officer commands.
+	no	yes	*	Completions = matching officer commands + line as prefix
+		no	*	Find subordinate to handle, dispatch. go next word
+--	-----	----	----	------
