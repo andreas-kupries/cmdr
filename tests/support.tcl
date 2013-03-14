@@ -17,9 +17,9 @@ proc Note       {args} { lappend ::result $args ; return }
 proc StopNotes  {}     { unset ::result ; return }
 proc Notes      {}     { Wrap $::result }
 
-proc NiceParamSpec {kind spec} {
+proc NiceParamSpec {kind spec {name A}} {
     try {
-	xo create x foo [list private bar [list $kind A - $spec] {}]
+	xo create x foo [list private bar [list $kind $name - $spec] {}]
 	ShowPrivate [x lookup bar]
     } finally {
 	x destroy
