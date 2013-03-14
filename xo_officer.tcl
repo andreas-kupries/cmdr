@@ -102,6 +102,11 @@ oo::class create ::xo::officer {
 	if {$myinit} return
 	set myinit 1
 
+	my learn $myactions
+	return
+    }
+
+    method learn {script} {
 	# Make the DSL commands directly available. Note that
 	# "description:" and "common" are superclass methods, and
 	# renamed to their DSL counterparts. The others are unexported
@@ -115,7 +120,7 @@ oo::class create ::xo::officer {
 	    {description description:} \
 	    undocumented \
 	    {common      set}
-	eval $myactions
+	eval $script
 
 	# Postprocessing.
 	set mycommands  [lsort -dict $mycommands]
@@ -361,10 +366,6 @@ oo::class create ::xo::officer {
 	    return {}
 	}
 
-	# Extract the text of the current word. The type and offset
-	# parts are irrelevant at the moment.
-	set current [lindex $words $at end]
-
 	if {$at < ($nwords - 1)} {
 	    # This officer has to handle a word in the middle of the
 	    # command line. This is done by delegating to the
@@ -372,7 +373,7 @@ oo::class create ::xo::officer {
 	    # it handle the remainder.
 
 	    #puts stderr \tRECURSE
-	    return [my CompleteRecurse $current $parse]
+	    return [my CompleteRecurse $parse]
 	}
 
 	# This officer is responsible for handling the last word on
@@ -383,12 +384,10 @@ oo::class create ::xo::officer {
 	# ours. Lastly, we may have to add the 'exit' pseudo-command
 	# as well.
 
-	#puts stderr \tMATCH\ ($current)
+	#puts stderr \tMATCH\ ([lindex $words $at end])
 
 	set commands [my known]
-	if {$doexit && [string match ${current}* exit]} {
-	    lappend commands exit
-	}
+	if {$doexit} { lappend commands exit }
 
 	set completions \
 	    [my completions $parse \
@@ -435,7 +434,7 @@ oo::class create ::xo::officer {
 	return $parse
     }
 
-    method CompleteRecurse {current parse} {
+    method CompleteRecurse {parse} {
 	# Inside the command line. Find the relevant subordinate based
 	# on the current word and let it handle everything.
 
