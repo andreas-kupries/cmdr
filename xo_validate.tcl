@@ -70,7 +70,7 @@ proc ::xo::validate::boolean::validate {x} {
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::xo::validate::integer {
-    namespace export default validate
+    namespace export default validate complete release
     namespace ensemble create
     namespace import ::xo::validate::Fail
 }
@@ -86,7 +86,7 @@ proc ::xo::validate::integer::validate {x} {
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::xo::validate::identity {
-    namespace export default validate
+    namespace export default validate complete release
     namespace ensemble create
 }
 
@@ -98,7 +98,7 @@ proc ::xo::validate::identity::validate {x} { return $x }
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::xo::validate::pass {
-    namespace export default validate
+    namespace export default validate complete release
     namespace ensemble create
 }
 
@@ -110,7 +110,7 @@ proc ::xo::validate::pass::validate {x} { return $x }
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::xo::validate::str {
-    namespace export default validate
+    namespace export default validate complete release
     namespace ensemble create
 }
 
