@@ -56,8 +56,12 @@ oo::class create ::xo::parameter {
 
 	my ExecuteSpecification $valuespec
 
-	# Start with a proper runtime state
-	my reset
+	# Start with a proper runtime state. See also method 'reset'
+	# for an exported variant with cleanup, for use by xo::config.
+	set myhasstring no
+	set mystring    {}
+	set myhasvalue  no
+	set myvalue     {}
 
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
@@ -414,8 +418,14 @@ oo::class create ::xo::parameter {
     ## API. Support for runtime command line parsing.
     ## See "xo::config" for the main controller.
 
-    method reset {} {
-	# Runtime configuration, initial state
+    method reset {{cleanup 1}} {
+	# Runtime configuration, force initial state. See also the
+	# constructor for and inlined variant without cleanup.
+
+	if {$myhasvalue} {
+	    my ValueRelease $myvalue
+	}
+
 	set myhasstring no
 	set mystring    {}
 	set myhasvalue  no
@@ -534,14 +544,23 @@ oo::class create ::xo::parameter {
 		return 0
 	    }
 	    #puts "$myname (Q[$queue size] >  T$mythreshold)? take"
-	} else {
+	} elseif {[$queue size]} {
 	    # Choose by peeking at and validating the front value.
+	    # Note: We may not have a front value!
+
+	    # If that was ok it has to be released also!
+	    # XXX Or should we maybe immediately cache it for 'value'?
 	    try {
-		$myvalidate validate [$queue peek]
+		my ValueRelease \
+		    [{*}$myvalidate validate \
+			 [$queue peek]]
 	    } trap {XO VALIDATE} {e o} {
 		# Type mismatch, pass.
 		return 0
 	    } ; # internal errors bubble further
+	} else {
+	    # peek+test mode, nothing to peek at, pass.
+	    return 0
 	}
 	return 1
     }
@@ -665,6 +684,21 @@ oo::class create ::xo::parameter {
 	set myvalue $v
 	set myhasvalue yes
 	return -code return $myvalue
+    }
+
+    method ValueRelease {value} {
+	# The validation type knows how to fully clean up the
+	# value it returned during validation (See methods
+	# 'value' and 'Take' (mode peek+test)).
+
+	if {$myislist} {
+	    foreach v $myvalue {
+		{*}$myvalidate release $v
+	    }
+	} else {
+	    {*}$myvalidate release $myvalue
+	}
+	return
     }
 
     # # ## ### ##### ######## #############
