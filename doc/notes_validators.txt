@@ -3,3 +3,4 @@ Validator API
 default    - Default value
 validate X - Check and transform X
 complete X - Command completion based on X.
+release  X - Cleanup method for transformed values returned by validate!
