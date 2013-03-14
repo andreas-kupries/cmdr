@@ -185,7 +185,11 @@ oo::class create ::xo::actor {
     method match {parse cmdlist} {
 	dict with parse {}
 	# -> words, at (ignored: ok, nwords, line, doexit)
+
+	# Extract the text of the current word. The type and offset
+	# parts are irrelevant at the moment.
 	set current [lindex $words $at end]
+
 	set filtered {}
 	foreach cmd $cmdlist {
 	    if {![string match ${current}* $cmd]} continue
