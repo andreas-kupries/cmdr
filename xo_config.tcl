@@ -81,7 +81,7 @@ oo::class create ::xo::config {
 	set options {}
 	dict for {o para} $myoption {
 	    if {![$para documented]} continue
-	    dict set options $o [$para description]
+	    dict set options $o [$para description $o]
 	}
 
 	set arguments {}

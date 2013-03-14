@@ -60,6 +60,32 @@ test xo-parameter-1.4 {parameter DSL, state, alias} -body {
 } -returnCodes error \
     -result {Non-option parameter "A" cannot have alias}
 
+test xo-parameter-1.5 {parameter DSL, negative option, alias} -body {
+    NiceParamSpec option { alias X } no-A
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = no-A
+        option (-A) = no-A
+        option (-X) = no-A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        map -X --> (-X)
+        para (no-A) {
+            description: '-'
+            !ordered, cmdline, !splat, !required, !interact
+            default: 'no'
+            flags [--no-A -A -X]
+            ge ()
+            va (::xo::validate::boolean)
+            wd ()
+        }
+    }
+}
+
 # # ## ### ##### ######## ############# #####################
 ## Parameter DSL: 'default' across parameters (input, option, state)
 

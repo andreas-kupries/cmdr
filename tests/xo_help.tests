@@ -42,7 +42,20 @@ test xo-help-1.0 {help structure} -body {
     x help
 } -cleanup {
     x destroy
-} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu loop} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu loop} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {tool hammer nail} {desc workbench options {--driver force --force force} arguments {supply {code ?* desc magazine}}} {hammer nail} {desc workbench options {--driver force --force force} arguments {supply {code ?* desc magazine}}}}
+} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {tool hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}} {hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}}}
+
+test xo-help-1.1 {help structure, inverted boolean option} -body {
+    xo create x foo {
+	description TEST
+	private nail {
+	    description workbench
+	    option no-driver force { list ; alias force }
+	} ::wall
+    }
+    x help
+} -cleanup {
+    x destroy
+} -result {nail {desc workbench options {--driver {Alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} arguments {}}}
 
 # # ## ### ##### ######## ############# #####################
 return

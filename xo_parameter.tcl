@@ -92,7 +92,16 @@ oo::class create ::xo::parameter {
 
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
-    method description {} { return $mydescription }
+    method description {{detail {}}} {
+	if {($detail ne {}) && [dict exists $myflags $detail]} {
+	    switch -exact -- [dict get $myflags $detail] {
+		primary  {}
+		alias    { return "Alias of [my Option $myname]." }
+		inverted { return "Complementary alias of [my Option $myname]." }
+	    }
+	}
+	return $mydescription
+    }
 
     # Core classification properties
     method ordered      {} { return $myisordered }
@@ -126,7 +135,12 @@ oo::class create ::xo::parameter {
     ## Internal: Parameter DSL implementation + support.
 
     method ExecuteSpecification {valuespec} {
-	set myflags {} ;# List of flags to recognize for an option.
+	# Dictionary of flags to recognize for an option.
+	# The value indicates if the flag is primary or alias, or
+	# inverted alias. This is used by 'description' to return
+	# generated text as description of the aliases.
+
+	set myflags {}
 
 	# Import the DSL commands to translate the specification.
 	link \
@@ -148,7 +162,6 @@ oo::class create ::xo::parameter {
 	my FillMissingValidation
 	my FillMissingDefault
 	my DefineStandardFlags
-	set myflags [lsort -dict $myflags]
 
 	# Validate all constraints.
 
@@ -185,7 +198,7 @@ oo::class create ::xo::parameter {
 
     method Alias {name} {
 	my Alias_Option
-	lappend myflags [my Option $name]
+	dict set myflags [my Option $name] alias
 	return
     }
 
@@ -397,11 +410,18 @@ oo::class create ::xo::parameter {
 	if {!$myiscmdline || $myisordered} return
 
 	# Flag derived from option name.
-	lappend myflags [my Option $myname]
+	dict set myflags [my Option $myname] primary
 	# Special flags for boolean options
 	# XXX Consider pushing this into the validators.
 	if {$myvalidate ne "::xo::validate::boolean"} return
-	lappend myflags --no-$myname
+
+	if {[string match no-* $myname]} {
+	    # The primary option has prefix 'no-', create an alias without it.
+	    dict set myflags [my Option [string range $myname 3 end]] alias
+	} else {
+	    # The primary option is not inverted, make an alias which is.
+	    dict set myflags [my Option no-$myname] inverted
+	}
 	return
     }
 
@@ -433,7 +453,9 @@ oo::class create ::xo::parameter {
 	return
     }
 
-    method options {} { return $myflags }
+    method options {} { 
+	return [lsort -dict [dict keys $myflags]]
+    }
 
     method process {detail queue} {
 	# detail = actual flag (option)
