@@ -57,11 +57,10 @@ oo::class create ::xo::private {
     method do {args} {
 	my Setup
 
-	config parse {*}$args
-
-	# XXX not implemented yet.
-	if {[config mustinteract]} {
-	    config interact
+	try {
+	    config parse {*}$args
+	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
+	    if {![config interact]} return
 	}
 
 	# Forcibly define the value of all parameters requesting such.
@@ -81,23 +80,15 @@ oo::class create ::xo::private {
 	return [dict create $prefix [config help]]
     }
 
+    method complete-words {parse} {
+	my Setup
+	return [my completions $parse [config complete-words $parse]]
+    }
+
     # Redirect anything not known to the parameter collection.
     method unknown {m args} {
 	my Setup
 	config $m {*}$args
-    }
-
-    # # ## ### ##### ######## #############
-    ## Command completion. This is the entry point for recursion from
-    ## the higher level officers.
-
-    ## Note that command completion for the REPL of the private is
-    ## handled by the internal xo::config instance, which also manages
-    ## the REPL itself.
-
-    method complete-words {parse} {
-	# No completions. Yet.
-	return {}
     }
 
     # # ## ### ##### ######## #############
