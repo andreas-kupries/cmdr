@@ -618,7 +618,11 @@ oo::class create ::xo::parameter {
     # - query if a value is defined.
 
     method string {} {
-	if {!$myhasstring} { return -code error Undefined }
+	if {!$myhasstring} {
+	    return -code error \
+		-errorcode {XO PARAMETER UNDEFINED} \
+		"Undefined: $myname"
+	}
 	return $mystring
     }
 
