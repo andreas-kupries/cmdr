@@ -442,19 +442,61 @@ oo::class create ::xo::parameter {
 	# Runtime configuration, force initial state. See also the
 	# constructor for and inlined variant without cleanup.
 
-	if {$myhasvalue} {
-	    my ValueRelease $myvalue
-	}
+	my forget
 
 	set myhasstring no
 	set mystring    {}
+	return
+    }
+
+    method forget {} {
+	# Clear a cached value.
+
+	if {$myhasvalue} {
+	    my ValueRelease $myvalue
+	}
 	set myhasvalue  no
 	set myvalue     {}
-	return
     }
 
     method options {} { 
 	return [lsort -dict [dict keys $myflags]]
+    }
+
+    method complete-words {parse} {
+	# Entrypoint for completion, called by
+	# xo::config/complete-words (config REPL).
+	# See xo::actor/parse-line for structure definition.
+	dict with parse {}
+	# -> words, at (ignored: ok, nwords, line, doexit)
+	# assert (at == 1)
+
+	# We need just the text of the current word.
+	set current [lindex $words $at end]
+
+	# Actual completion is delegated to the validation type of the
+	# parameter.
+	return [{*}$myvalidate complete $current]
+    }
+
+    method setq {queue} {
+	if {$myislist} {
+	    set mystring [$queue get [$queue size]]
+	} else {
+	    set mystring [$queue get]
+	}
+	set myhasstring yes
+	return
+    }
+
+    method set {value} {
+	if {$myislist} {
+	    lappend mystring $value
+	} else {
+	    set mystring $value
+	}
+	set myhasstring yes
+	return
     }
 
     method process {detail queue} {
@@ -480,15 +522,7 @@ oo::class create ::xo::parameter {
 	    # Required. Unconditionally retrieve its parameter
 	    # value. Must have a value.
 	    if {![$queue size]} { config notEnough }
-
-	    if {$myislist} {
-		set mystring [$queue get [$queue size]]
-	    } else {
-		set mystring [$queue get]
-	    }
-	    set myhasstring yes
-	    return
-	}
+	} elseif {![my Take $queue]} return
 
 	# Optional. Conditionally retrieve the parameter value based
 	# on argument count and threshold or validation of the
@@ -497,14 +531,7 @@ oo::class create ::xo::parameter {
 
 	# Note also the possibility of the argument being a list.
 
-	if {![my Take $queue]} return
-
-	if {$myislist} {
-	    set mystring [$queue get [$queue size]]
-	} else {
-	    set mystring [$queue get]
-	}
-	set myhasstring yes
+	my setq $queue
 	return
     }
 
@@ -541,12 +568,7 @@ oo::class create ::xo::parameter {
 	    set value [$queue get]
 	}
 
-	if {$myislist} {
-	    lappend mystring $value
-	} else {
-	    set mystring $value
-	}
-	set myhasstring yes
+	my set $value
 	return
     }
 
@@ -694,7 +716,9 @@ oo::class create ::xo::parameter {
 	    my Value: {}
 	}
 
-	return -code error Undefined
+	return -code error \
+	    -errorcode {XO PARAMETER UNDEFINED} \
+	    "Undefined: $myname"
     }
 
     # # ## ### ##### ######## #############
