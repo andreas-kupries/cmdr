@@ -7,6 +7,7 @@
 
 package require Tcl 8.5
 package require textutil::adjust
+package require xo::util
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -113,7 +114,7 @@ proc ::xo::help::format::Plain {width name command} {
 proc ::xo::help::format::DefList {width labels defs} {
     upvar 1 lines lines
 
-    set labels [PadR $labels]
+    set labels [xo util padr $labels]
 
     set  nl [string length [lindex $labels 0]]
     incr nl 5
@@ -154,21 +155,6 @@ proc ::xo::help::format::HasOptions {options} {
     } else {
 	return {}
     }
-}
-
-proc ::xo::help::format::PadR {list} {
-    if {[llength $list] <= 1} {
-	return $list
-    }
-    set maxl 0
-    foreach str $list {
-	set l [string length $str]
-	if {$l <= $maxl} continue
-	set maxl $l
-    }
-    set res {}
-    foreach str $list { lappend res [format "%-*s" $maxl $str] }
-    return $res
 }
 
 # # ## ### ##### ######## ############# #####################
