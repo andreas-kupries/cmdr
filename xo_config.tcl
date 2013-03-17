@@ -12,9 +12,14 @@
 package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2    ;# link helper
-package require struct::queue 1 ;#
+package require try
+package require linenoise::facade
+package require struct::queue 1 ; #
 package require xo::validate    ; # Core validator commands.
-package require xo::parameter       ; # Parameters
+package require xo::parameter   ; # Parameter to collect
+package require xo::util
+
+package require  term::ansi::code::ctrl
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -29,6 +34,7 @@ oo::class create ::xo::config {
 
 	# Initialize collection state.
 	set mymap     {} ;# parameter name -> object
+	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
 	set myoption  {} ;# option         -> object
 	set myfullopt {} ;# option prefix  -> option
 	set myargs    {} ;# List of argument names.
@@ -102,6 +108,7 @@ oo::class create ::xo::config {
 
     method eoptions  {} { return $myfullopt }
     method names     {} { return [dict keys $mymap] }
+    method public    {} { return [dict keys $mypub] }
     method arguments {} { return $myargs }
     method options   {} { return [dict keys $myoption] }
 
@@ -226,8 +233,13 @@ oo::class create ::xo::config {
 	# Map parameter name to handler object.
 	dict set mymap $name $para
 
+	# And a second map, cmdline visible parameters only.
+	if {[$para cmdline]} {
+	    dict set mypub $name $para
+	}
+
 	if {$order} {
-	    # Arguments, keep names, in order of definition.
+	    # Arguments, keep names, in order of definition
 	    lappend myargs $name
 	    set splat [$para list]
 	} else {
@@ -282,14 +294,13 @@ oo::class create ::xo::config {
     }
 
     method parse {args} {
-	# - Reset the state values (we might be in interactive shell, multiple commands).
+	# - Reset the state values (we might be in an interactive shell, multiple commands).
 	# - Stash the parameters into a queue for processing.
 	# - Stash the (ordered) arguments into a second queue.
 	# - Operate on parameter and arg queues until empty,
 	#   dispatching the words to handlers as needed.
 
-	dict for {name a} $mymap { $a reset }
-
+	my reset
 	P clear
 	if {[llength $args]} { P put {*}$args }
 
@@ -353,6 +364,20 @@ oo::class create ::xo::config {
 	return
     }
 
+    method reset {} {
+	dict for {name para} $mymap {
+	    $para reset
+	}
+	return
+    }
+
+    method forget {} {
+	dict for {name para} $mymap {
+	    $para forget
+	}
+	return
+    }
+
     method mustinteract {} {
 	return 0
 	# config has regular arguments, none are defined by the user
@@ -362,8 +387,206 @@ oo::class create ::xo::config {
     }
 
     method interact {} {
-	# compare xo::officer REPL.
-	error "REPL config NYI - private - full data entry ..."
+	# compare xo::officer REPL (=> method "do").
+
+	set shell [linenoise::facade new [self]]
+	set myreplexit   0 ; # Flag: Stop repl, not yet.
+	set myreplok     0 ; # Flag: We can't commit properly
+	set myreplcommit 0 ; # Flag: We are not asked to commit yet.
+
+	my ShowState
+
+	$shell history 1
+	$shell repl
+	$shell destroy
+
+	if {$myreplcommit && !$myreplok} {
+	    # Bad commit with incomplete data.
+	    return -code error \
+		-errorcode {XO CONFIG COMMIT FAIL} \
+		"Unable to perform \"[context fullname]\", incomplete arguments"
+	}
+	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Shell hook methods called by the linenoise::facade.
+
+    method prompt1   {}     { return "[context fullname]> " }
+    method prompt2   {}     { error {Continuation lines are not supported} }
+    method continued {line} { return 0 }
+    method exit      {}     { return $myreplexit }
+
+    method dispatch {cmd} {
+	if {$cmd eq ".ok"} {
+	    set myreplexit   1
+	    set myreplcommit 1
+	    return
+	} elseif {$cmd eq ".cancel"} {
+	    set myreplexit 1
+	    return
+	}
+	set words [lassign [string token shell $cmd] cmd]
+	# cmd = parameter name, words = parameter value.
+	# Note: All pseudo commands take a single argument!
+
+	set para [my lookup $cmd]
+
+	if {[llength $words] != 1} {
+	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
+		"wrong \# args: should be \"$cmd value\""
+	}
+
+	# cmd is option => Add the nessary dashes? No. Only needed for
+	# boolean special form, and direct interaction does not allow
+	# that.
+
+	$para set {*}$words
+	return
+    }
+
+    method report {what data} {
+	my ShowState
+
+	switch -exact -- $what {
+	    ok {
+		if {$data eq {}} return
+		puts stdout $data
+	    }
+	    fail {
+		puts stderr $data
+	    }
+	    default {
+		return -code error \
+		    "Internal error, bad result type \"$what\", expected ok, or fail"
+	    }
+	}
+    }
+
+    # # ## ### ##### ######## #############
+    # Shell hook method - Command line completion.
+
+    method complete {line} {
+	#puts stderr ////////$line
+	try {
+	    set completions [my complete-words [context parse-line $line]]
+	} on error {e o} {
+	    puts stderr "ERROR: $e"
+	    puts stderr $::errorInfo
+	    set completions {}
+	}
+	#puts stderr =($completions)
+	return $completions
+    }
+
+    method complete-words {parse} {
+	#puts stderr [my fullname]/[self]/$parse/
+
+	dict with parse {}
+	# -> line, words, nwords, ok, at, doexit
+
+	if {!$ok} {
+	    #puts stderr \tBAD
+	    return {}
+	}
+
+	# All arguments and options are (pseudo-)commands.
+	# The special exit commands as well.
+	set     commands [my public]
+	lappend commands .ok
+	lappend commands .cancel
+
+	set commands [lsort -unique [lsort -dict $commands]]
+
+	if {$line eq {}} {
+	    return $commands
+	}
+
+	if {$nwords == 1} {
+	    # Match among the arguments, options, and specials
+	    return [context completions $parse [context match $parse $commands]]
+	}
+
+	if {$nwords == 2} {
+	    # Locate the responsible parameter and let it complete.
+
+	    set matches [context match $parse [my public]]
+
+	    if {[llength $matches] == 1} {
+		# Proper subordinate found. Delegate. Note: Step to next
+		# word, we have processed the current one, the command.
+		dict incr parse at
+		set para [my lookup [lindex $matches 0]]
+		return [context completions $parse [$para complete-words $parse]]
+	    }
+
+	    # No completion if nothing found, or ambiguous.
+	    return {}
+	}
+
+	# No completion beyond the command and 1st argument.
+	return {}
+    }
+
+    method ShowState {} {
+	set plist [lsort -dict [my public]]
+	set labels [xo util padr $plist]
+	set blank  [string repeat { } [string length [lindex $labels 0]]]
+
+	set allok 1
+	puts -nonewline [::term::ansi::code::ctrl::clear]
+	flush stdout
+
+	puts [context fullname]:
+
+	foreach label $labels para $plist {
+	    set para [my lookup $para]
+
+	    set required [$para required]
+	    set islist   [$para list]
+	    set defined  [$para defined?]
+
+	    try {
+		set value [$para value]
+		$para forget
+	    } trap {XO PARAMETER UNDEFINED} {e o} {
+		set value {}
+	    }
+
+	    set theline {    }
+
+	    set reset 0
+	    if {$required} {
+		if {!$defined} {
+		    append theline [::term::ansi::code::ctrl::sda_fgred]
+		    set allok 0
+		    set reset 1
+		}
+	    }
+	    append theline $label
+	    if {$reset} {
+		append theline [::term::ansi::code::ctrl::sda_reset]
+	    }
+	    append theline { : }
+
+	    if {!$islist} {
+		append theline $value
+	    } else {
+		set remainder [lassign $value first]
+		append theline $first
+		foreach r $remainder {
+		    append theline "\n$blank $r"
+		}
+	    }
+
+	    puts $theline
+	}
+
+	if {$allok} {
+	    puts [::term::ansi::code::ctrl::sda_fggreen]OK[::term::ansi::code::ctrl::sda_reset]
+	    set myreplok 1
+	}
+	return
     }
 
     # # ## ### ##### ######## #############
@@ -436,7 +659,8 @@ oo::class create ::xo::config {
 
     # # ## ### ##### ######## #############
 
-    variable mymap myoption myfullopt myargs myaq mypq
+    variable mymap mypub myoption myfullopt myargs myaq mypq \
+	myreplexit myreplok myreplcommit
 
     # # ## ### ##### ######## #############
 }

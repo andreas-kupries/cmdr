@@ -1,0 +1,18 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require xo
+
+xo create cmdline cmdline {
+
+    private scissors {
+	state s XXX {}
+	option o YYY {}
+	input a AAA { }
+	input b BBB { optional }
+	input c CCC { list }
+    } ::cut
+}
+
+[cmdline lookup scissors] interact
+exit
