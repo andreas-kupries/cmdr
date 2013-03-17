@@ -83,6 +83,7 @@ oo::class create ::xo::private {
 
     # Redirect anything not known to the parameter collection.
     method unknown {m args} {
+	my Setup
 	config $m {*}$args
     }
 
