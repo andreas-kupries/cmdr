@@ -119,6 +119,7 @@ oo::class create ::xo::parameter {
     method forced       {} { return $myisforced }
     method documented   {} { return $myisdocumented }
 
+    method isbool       {} { return [expr {$myvalidate eq "::xo::validate::boolean"}] }
     method validator    {} { return $myvalidate }
     method when-defined {} { return $mywhendef }
 
@@ -465,11 +466,10 @@ oo::class create ::xo::parameter {
 
     method complete-words {parse} {
 	# Entrypoint for completion, called by
-	# xo::config/complete-words (config REPL).
+	# xo::config (complete-words|complete-repl).
 	# See xo::actor/parse-line for structure definition.
 	dict with parse {}
 	# -> words, at (ignored: ok, nwords, line, doexit)
-	# assert (at == 1)
 
 	# We need just the text of the current word.
 	set current [lindex $words $at end]
@@ -486,6 +486,8 @@ oo::class create ::xo::parameter {
 	    set mystring [$queue get]
 	}
 	set myhasstring yes
+
+	my forget
 	return
     }
 
@@ -496,6 +498,8 @@ oo::class create ::xo::parameter {
 	    set mystring $value
 	}
 	set myhasstring yes
+
+	my forget
 	return
     }
 
@@ -536,7 +540,7 @@ oo::class create ::xo::parameter {
     }
 
     method ProcessOption {flag queue} {
-	if {$myvalidate eq "::xo::validate::boolean"} {
+	if {[my isbool]} {
 	    # XXX Consider a way of pushing this into the validator classes.
 
 	    # Look for and process boolean special forms.

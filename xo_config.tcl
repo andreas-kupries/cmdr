@@ -13,13 +13,12 @@ package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2    ;# link helper
 package require try
-package require linenoise::facade
 package require struct::queue 1 ; #
+package require term::ansi::code::ctrl
+package require linenoise::facade
 package require xo::validate    ; # Core validator commands.
 package require xo::parameter   ; # Parameter to collect
 package require xo::util
-
-package require  term::ansi::code::ctrl
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -29,6 +28,8 @@ oo::class create ::xo::config {
     ## Lifecycle.
 
     constructor {context spec} {
+	my Colors
+
 	# Import the context (xo::private).
 	interp alias {} [self namespace]::context {} $context
 
@@ -59,6 +60,7 @@ oo::class create ::xo::config {
 
 	my SetThresholds
 	my UniquePrefixes
+	my CompletionGraph
 
 	set mypq [struct::queue P] ;# actual parameters
 	if {[llength $myargs]} {
@@ -138,6 +140,36 @@ oo::class create ::xo::config {
 	return
     }
 
+    method reset {} {
+	dict for {name para} $mymap {
+	    $para reset
+	}
+	return
+    }
+
+    method forget {} {
+	dict for {name para} $mymap {
+	    $para forget
+	}
+	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## API for use by the actual command run by the private, and by
+    ## the values in the config (which may request other values for
+    ## their validation, generation, etc.). Access to argument values by name.
+
+    method unknown {m args} {
+	if {![regexp {^@(.*)$} $m -> mraw]} {
+	    # Standard error message when not @name ...
+	    next $m {*}$args
+	    return
+	}
+	# @name ... => handlerof(name) ...
+	if {![llength $args]} { lappend args value }
+	return [[my lookup $mraw] {*}$args]
+    }
+
     # # ## ### ##### ######## #############
 
     method SetThresholds {} {
@@ -191,6 +223,78 @@ oo::class create ::xo::config {
 
 	#array set _o $myoption  ; parray _o ; unset _o
 	#array set _f $myfullopt ; parray _f ; unset _f
+	return
+    }
+
+    method CompletionGraph {} {
+
+	set next {}
+	set start .(start)
+	set end   .(end)
+
+	# Basic graph, linear chain of the arguments
+	foreach from [linsert $myargs 0 $start] to [linsert $myargs end $end] {
+	    dict lappend next $from $to
+	    # Loop the chain for a list argument.
+	    if {($from ne $start) && [[dict get $mymap $from] list]} {
+		dict lappend next $from $from
+	    }
+	} ; #my SCG $start $next chain
+
+	# Extend the graph, adding links bypassing the optional
+	# arguments.  Essentially an iterative transitive closure
+	# where the epsilon links are only implied.
+
+	set changed 1
+	set handled {} ;# Track processed epsilon links to not follow
+			# them again.
+
+	while {$changed} {
+	    set changed 0
+	    foreach a [linsert $myargs 0 $start] {
+		foreach n [dict get $next $a] {
+		    if {$n eq $end} continue
+		    if {[[dict get $mymap $n] required]} continue
+		    if {[dict exists $handled $a,$n]} continue
+		    # make sucessors of a sucessor optional argument my sucessors, once
+		    dict set handled $a,$n .
+		    set changed 1
+		    foreach c [dict get $next $n] {
+			dict lappend next $a $c
+		    }
+		}
+	    }
+	} ; #my SCG $start $next closure
+
+	# Convert the graph into a list of states, i.e. sets of
+	# arguments (note that the underlying structure is still
+	# essentially linear, which the DFA from the NFA now exposes
+	# again).
+
+	set mycchain {}
+	foreach a [linsert $myargs 0 $start] {
+	    # Tweaks: Ensure state uniqueness, and a canoninical order.
+	    set state [lsort -unique [lsort -dict [dict get $next $a]]]
+	    # Remove the end state
+	    set pos [lsearch -exact $state $end]
+	    if {$pos >= 0} { set state [lreplace $state $pos $pos] }
+
+	    # Loop state, list argument last.
+	    if {([llength $state] == 1) && $a eq [lindex $state 0]} {
+		set state ... ; # marker for stepper in complete-words.
+	    }
+	    lappend mycchain $state
+	}
+
+	#puts stderr \t[join $mycchain \n\t]
+	return
+    }
+
+    method SCG {start next label} {
+	puts stderr \n/$label
+	foreach a [linsert $myargs 0 $start] {
+	    puts stderr "\t($a) => [dict get $next $a]"
+	}
 	return
     }
 
@@ -255,6 +359,200 @@ oo::class create ::xo::config {
 	if {![dict exists $mymap $name]} return
 	return -code error -errorcode {XO CONFIG KNOWN} \
 	    "Duplicate parameter $name, already specified."
+    }
+
+    # # ## ### ##### ######## #############
+    ## Command completion. This is the entry point for recursion from
+    ## the higher level officers, delegated to config from xo::private
+
+    ## Note that command completion for the REPL of the private is
+    ## handled by the internal xo::config instance, which also manages
+    ## the REPL itself.
+
+    method complete-words {parse} {
+	dict with parse {}
+	# -> ok, at, nwords, words, line
+
+	#puts ?|$ok
+	#puts @|$at
+	#puts #|$nwords
+	#puts =|$words|
+	#puts L|$line|
+
+	# The basic idea is to scan over the words, like with 'parse',
+	# except that instead of letting the parameters taking their
+	# values we keep track of which parameters could have been
+	# set. To avoid complexities here we use the mycchain computed
+	# by CompletionGraph to know the set of possible parameters,
+	# simply stepping through.
+
+	# at = word in the command line we are at.
+	# ac = state in the completion chain we are at.
+	# st = processing state
+
+	set ac 0    ;# parameters which can be expected at this position
+	set st none ;# expect an argument word
+	set current [lindex $words $at end]
+
+	while {$at < ($nwords-1)} {
+	    if {$st eq "eov"} {
+		# Skip over the option value
+		set st none
+		incr at
+		continue
+	    }
+
+	    # We need just the text of the current word.
+	    set current [lindex $words $at end]
+
+	    if {[my IsOption $current implied]} {
+		if {!$implied} {
+		    # Expect next word to be an option value.
+		    set st eov
+		}
+	    } else {
+		# Step to the chain state for the next word.
+		# Note how we bounce back on the loop/list marker.
+		incr ac
+		if {[lindex $mycchain $ac] eq "..."} { incr ac -1 }
+	    }
+	    # Step to the next word
+	    incr at
+	}
+
+	# assert (at == (nwords-1))
+	# We are now on the last word, and the system state tells us
+	# what we can expect in terms of parameters and such.
+
+	set state [lindex $mycchain $ac]
+	dict set parse at $at
+
+	#puts '|$current|
+	#puts @|$at|
+	#puts c|$ac|
+	#puts x|$state|
+	#puts s|$st|
+
+	if {$st eq "eov"} {
+	    # The last word is an option value, possible incomplete.
+	    # The value of 'current' still points to the option name.
+	    # Determine the responsible parameter, and delegate.
+
+	    # Unknown option, unable to complete the value.
+	    if {![dict exists $myfullopt $current]} { return {} }
+
+	    # Ambiguous option name, unable to complete value.
+	    set matches [dict get $myfullopt $current]
+	    if {[llength $matches] > 1} { return {} }
+
+	    # Delegate to the now known parameter for completion.
+	    set match [lindex $matches 0]
+	    set para  [dict get $myoption $match]
+	    return [$para complete-words $parse]
+	}
+
+	# Not at option value, can be at incomplete option name, and parameters.
+	set current [lindex $words $at end]
+
+	if {$current eq {}} {
+	    # All options are possible here.
+	    set completions [my options]
+	    # And the completeable values of the possible arguments.
+	    foreach a $state {
+		lappend completions {*}[[dict get $mymap $a] complete-words $parse]
+	    }
+	    return $completions
+	}
+
+	if {[string match -* $current]} {
+	    # Can be option name, or value, if implied (special form --foo=bar).
+	    if {[set pos [string first = $current]] < 0} {
+		# Just option name to complete.
+		return [context match $parse [my options]]
+	    } else {
+		set prefix [string range $current 0 $pos]
+		set option [string range $prefix 0 end-1] ;# chop =
+
+		# Unknown option, unable to complete the value.
+		if {![dict exists $myfullopt $option]} { return {} }
+
+		# Ambiguous option name, unable to complete value.
+		set matches [dict get $myfullopt $option]
+		if {[llength $matches] > 1} { return {} }
+
+		# Delegate to the now known parameter for completion.
+		set match [lindex $matches 0]
+		set para  [dict get $myoption $match]
+		incr pos
+		set val [string range $curent $pos end]
+
+		dict lappend parse words $val
+		dict incr    parse at
+
+		set completions
+		foreach c [$para complete-words $parse] {
+		    lappend completions $prefix$c
+		}
+		return $completions
+	    }
+	}
+
+	# Only the completeable values of the possible arguments.
+	set completions {}
+	foreach a $state {
+	    lappend completions {*}[[dict get $mymap $a] complete-words $parse]
+	}
+	return $completions
+    }
+
+    # # ## ### ##### ######## #############
+
+    method IsOption {current iv} {
+	upvar 1 $iv implied at at nwords nwords words words
+	set implied 0
+
+	if {![string match -* $current]} {
+	    # Cannot be option
+	    return 0
+	}
+
+	# Is an option (even if not known).
+
+	if {[string first = $current] >= 0} {
+	    # --foo=bar special form.
+	    set implied 1
+	} else {
+	    # Try to expand the flag and look the whole option up. If
+	    # we can, check if it is boolean, and if yes, look at the
+	    # next argument, if any to determine if it belongs to the
+	    # option, or not. The latter then means the argument is
+	    # implied.
+
+	    set next [expr {$at+1}]
+	    if {$next < $nwords} {
+		# Have a following word
+		if {[dict exists $myfullopt $current]} {
+		    # Option is possibly known
+		    set matches [dict get $myfullopt $current]
+		    if {[llength $matches] == 1} {
+			# Option is unambiguously known
+			set match [lindex $matches 0]
+			set para [dict get $myoption $match]
+			if {[$para isbool]} {
+			    # option is boolean
+			    set next [lindex $words $next end]
+			    if {![string is boolean $next]} {
+				# next word is not boolean => value is implied.
+				# note that we are non-strict here.
+				# an empty word is treated as boolean to be completed, not implied.
+				set implied 1
+			    }
+			}
+		    }
+		}
+	    }
+	}
+	return 1
     }
 
     # # ## ### ##### ######## #############
@@ -364,247 +662,6 @@ oo::class create ::xo::config {
 	return
     }
 
-    method reset {} {
-	dict for {name para} $mymap {
-	    $para reset
-	}
-	return
-    }
-
-    method forget {} {
-	dict for {name para} $mymap {
-	    $para forget
-	}
-	return
-    }
-
-    method mustinteract {} {
-	return 0
-	# config has regular arguments, none are defined by the user
-	# (!mustinteract <=> no arguments specified, and config allows that).
-
-	error "REPL config NYI - test if required"
-    }
-
-    method interact {} {
-	# compare xo::officer REPL (=> method "do").
-
-	set shell [linenoise::facade new [self]]
-	set myreplexit   0 ; # Flag: Stop repl, not yet.
-	set myreplok     0 ; # Flag: We can't commit properly
-	set myreplcommit 0 ; # Flag: We are not asked to commit yet.
-
-	my ShowState
-
-	$shell history 1
-	$shell repl
-	$shell destroy
-
-	if {$myreplcommit && !$myreplok} {
-	    # Bad commit with incomplete data.
-	    return -code error \
-		-errorcode {XO CONFIG COMMIT FAIL} \
-		"Unable to perform \"[context fullname]\", incomplete arguments"
-	}
-	return
-    }
-
-    # # ## ### ##### ######## #############
-    ## Shell hook methods called by the linenoise::facade.
-
-    method prompt1   {}     { return "[context fullname]> " }
-    method prompt2   {}     { error {Continuation lines are not supported} }
-    method continued {line} { return 0 }
-    method exit      {}     { return $myreplexit }
-
-    method dispatch {cmd} {
-	if {$cmd eq ".ok"} {
-	    set myreplexit   1
-	    set myreplcommit 1
-	    return
-	} elseif {$cmd eq ".cancel"} {
-	    set myreplexit 1
-	    return
-	}
-	set words [lassign [string token shell $cmd] cmd]
-	# cmd = parameter name, words = parameter value.
-	# Note: All pseudo commands take a single argument!
-
-	set para [my lookup $cmd]
-
-	if {[llength $words] != 1} {
-	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
-		"wrong \# args: should be \"$cmd value\""
-	}
-
-	# cmd is option => Add the nessary dashes? No. Only needed for
-	# boolean special form, and direct interaction does not allow
-	# that.
-
-	$para set {*}$words
-	return
-    }
-
-    method report {what data} {
-	my ShowState
-
-	switch -exact -- $what {
-	    ok {
-		if {$data eq {}} return
-		puts stdout $data
-	    }
-	    fail {
-		puts stderr $data
-	    }
-	    default {
-		return -code error \
-		    "Internal error, bad result type \"$what\", expected ok, or fail"
-	    }
-	}
-    }
-
-    # # ## ### ##### ######## #############
-    # Shell hook method - Command line completion.
-
-    method complete {line} {
-	#puts stderr ////////$line
-	try {
-	    set completions [my complete-words [context parse-line $line]]
-	} on error {e o} {
-	    puts stderr "ERROR: $e"
-	    puts stderr $::errorInfo
-	    set completions {}
-	}
-	#puts stderr =($completions)
-	return $completions
-    }
-
-    method complete-words {parse} {
-	#puts stderr [my fullname]/[self]/$parse/
-
-	dict with parse {}
-	# -> line, words, nwords, ok, at, doexit
-
-	if {!$ok} {
-	    #puts stderr \tBAD
-	    return {}
-	}
-
-	# All arguments and options are (pseudo-)commands.
-	# The special exit commands as well.
-	set     commands [my public]
-	lappend commands .ok
-	lappend commands .cancel
-
-	set commands [lsort -unique [lsort -dict $commands]]
-
-	if {$line eq {}} {
-	    return $commands
-	}
-
-	if {$nwords == 1} {
-	    # Match among the arguments, options, and specials
-	    return [context completions $parse [context match $parse $commands]]
-	}
-
-	if {$nwords == 2} {
-	    # Locate the responsible parameter and let it complete.
-
-	    set matches [context match $parse [my public]]
-
-	    if {[llength $matches] == 1} {
-		# Proper subordinate found. Delegate. Note: Step to next
-		# word, we have processed the current one, the command.
-		dict incr parse at
-		set para [my lookup [lindex $matches 0]]
-		return [context completions $parse [$para complete-words $parse]]
-	    }
-
-	    # No completion if nothing found, or ambiguous.
-	    return {}
-	}
-
-	# No completion beyond the command and 1st argument.
-	return {}
-    }
-
-    method ShowState {} {
-	set plist [lsort -dict [my public]]
-	set labels [xo util padr $plist]
-	set blank  [string repeat { } [string length [lindex $labels 0]]]
-
-	set allok 1
-	puts -nonewline [::term::ansi::code::ctrl::clear]
-	flush stdout
-
-	puts [context fullname]:
-
-	foreach label $labels para $plist {
-	    set para [my lookup $para]
-
-	    set required [$para required]
-	    set islist   [$para list]
-	    set defined  [$para defined?]
-
-	    try {
-		set value [$para value]
-		$para forget
-	    } trap {XO PARAMETER UNDEFINED} {e o} {
-		set value {}
-	    }
-
-	    set theline {    }
-
-	    set reset 0
-	    if {$required} {
-		if {!$defined} {
-		    append theline [::term::ansi::code::ctrl::sda_fgred]
-		    set allok 0
-		    set reset 1
-		}
-	    }
-	    append theline $label
-	    if {$reset} {
-		append theline [::term::ansi::code::ctrl::sda_reset]
-	    }
-	    append theline { : }
-
-	    if {!$islist} {
-		append theline $value
-	    } else {
-		set remainder [lassign $value first]
-		append theline $first
-		foreach r $remainder {
-		    append theline "\n$blank $r"
-		}
-	    }
-
-	    puts $theline
-	}
-
-	if {$allok} {
-	    puts [::term::ansi::code::ctrl::sda_fggreen]OK[::term::ansi::code::ctrl::sda_reset]
-	    set myreplok 1
-	}
-	return
-    }
-
-    # # ## ### ##### ######## #############
-    ## API for use by the actual command run by the private, and by
-    ## the values in the config (which may request other values for
-    ## their validation, generation, etc.). Access to argument values by name.
-
-    method unknown {m args} {
-	if {![regexp {^@(.*)$} $m -> mraw]} {
-	    # Standard error message when not @name ...
-	    next $m {*}$args
-	    return
-	}
-	# @name ... => handlerof(name) ...
-	if {![llength $args]} { lappend args value }
-	return [[my lookup $mraw] {*}$args]
-    }
-
     # # ## ### ##### ######## #############
 
     method ProcessOption {} {
@@ -660,7 +717,265 @@ oo::class create ::xo::config {
     # # ## ### ##### ######## #############
 
     variable mymap mypub myoption myfullopt myargs myaq mypq \
-	myreplexit myreplok myreplcommit
+	mycchain myreplexit myreplok myreplcommit \
+	myreset myred mygreen mycyan
+
+    # # ## ### ##### ######## #############
+    ## Local shell for interactive entry of the parameters in the collection.
+
+    method mustinteract {} { error NYI
+	# We have to fall start interaction if any of the required
+	# arguments are not defined by the user.
+	foreach a $myargs {
+	    set para [dict get $mymap $a]
+	    if {![$para required]} continue
+	    if {[$para defined?]} continue
+	    return 1
+	}
+	return 0
+    }
+
+    method interact {} {
+	# compare xo::officer REPL (=> method "do").
+
+	set shell [linenoise::facade new [self]]
+	set myreplexit   0 ; # Flag: Stop repl, not yet.
+	set myreplok     0 ; # Flag: We can't commit properly
+	set myreplcommit 0 ; # Flag: We are not asked to commit yet.
+
+	my ShowState
+
+	$shell history 1
+	try {
+	    $shell repl
+	} trap {XO CONFIG INTERACT CANCEL} {e o} {
+	    return 0
+	} trap {XO CONFIG INTERACT OK} {e o} {
+	    if {!$myreplok} {
+		# Bad commit with incomplete data.
+		return -code error \
+		    -errorcode {XO CONFIG COMMIT FAIL} \
+		    "Unable to perform \"[context fullname]\", incomplete or bad arguments"
+	    }
+	    return 1
+	} finally {
+	    $shell destroy
+	}
+	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Shell hook methods called by the linenoise::facade.
+
+    method prompt1   {}     { return "[context fullname]> " }
+    method prompt2   {}     { error {Continuation lines are not supported} }
+    method continued {line} { return 0 }
+    method exit      {}     { return $myreplexit }
+
+    method dispatch {cmd} {
+	if {$cmd eq ".ok"} {
+	    set myreplexit   1
+	    set myreplcommit 1
+	    return
+	} elseif {$cmd eq ".cancel"} {
+	    set myreplexit 1
+	    return
+	}
+	set words [lassign [string token shell $cmd] cmd]
+	# cmd = parameter name, words = parameter value.
+	# Note: All pseudo commands take a single argument!
+
+	set para [my lookup $cmd]
+
+	if {[llength $words] != 1} {
+	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
+		"wrong \# args: should be \"$cmd value\""
+	}
+
+	# cmd is option => Add the nessary dashes? No. Only needed for
+	# boolean special form, and direct interaction does not allow
+	# that.
+
+	$para set {*}$words
+	return
+    }
+
+    method report {what data} {
+	if {$myreplexit} {
+	    if {$myreplcommit} {
+		return -code error -errorcode {XO CONFIG INTERACT OK} ""
+	    } else {
+		return -code error -errorcode {XO CONFIG INTERACT CANCEL} ""
+	    }
+	}
+
+	my ShowState
+	switch -exact -- $what {
+	    ok {
+		if {$data eq {}} return
+		puts stdout $data
+	    }
+	    fail {
+		puts stderr $data
+	    }
+	    default {
+		return -code error \
+		    "Internal error, bad result type \"$what\", expected ok, or fail"
+	    }
+	}
+    }
+
+    # # ## ### ##### ######## #############
+    # Shell hook method - Command line completion.
+
+    method complete {line} {
+	#puts stderr ////////$line
+	try {
+	    set completions [my complete-repl [context parse-line $line]]
+	} on error {e o} {
+	    puts stderr "ERROR: $e"
+	    puts stderr $::errorInfo
+	    set completions {}
+	}
+	#puts stderr =($completions)
+	return $completions
+    }
+
+    method complete-repl {parse} {
+	#puts stderr [my fullname]/[self]/$parse/
+
+	dict with parse {}
+	# -> line, words, nwords, ok, at, doexit
+
+	if {!$ok} {
+	    #puts stderr \tBAD
+	    return {}
+	}
+
+	# All arguments and options are (pseudo-)commands.
+	# The special exit commands as well.
+	set     commands [my public]
+	lappend commands .ok
+	lappend commands .cancel
+
+	set commands [lsort -unique [lsort -dict $commands]]
+
+	if {$line eq {}} {
+	    return $commands
+	}
+
+	if {$nwords == 1} {
+	    # Match among the arguments, options, and specials
+	    return [context completions $parse [context match $parse $commands]]
+	}
+
+	if {$nwords == 2} {
+	    # Locate the responsible parameter and let it complete.
+
+	    set matches [context match $parse [my public]]
+
+	    if {[llength $matches] == 1} {
+		# Proper subordinate found. Delegate. Note: Step to next
+		# word, we have processed the current one, the command.
+		dict incr parse at
+		set para [my lookup [lindex $matches 0]]
+		return [context completions $parse [$para complete-words $parse]]
+	    }
+
+	    # No completion if nothing found, or ambiguous.
+	    return {}
+	}
+
+	# No completion beyond the command and 1st argument.
+	return {}
+    }
+
+    method ShowState {} {
+	set plist [lsort -dict [my public]]
+	set labels [xo util padr $plist]
+	set blank  [string repeat { } [string length [lindex $labels 0]]]
+
+	# Clear cached values to force full recalculation across all
+	# the dependencies the parameters might have between them.
+	my forget
+
+	set text {}
+	set alldefined 1
+	set somebad    0
+	foreach label $labels para $plist {
+	    set para [my lookup $para]
+
+	    set label    [string totitle $label 0 0]
+	    set required [$para required]
+	    set islist   [$para list]
+	    set defined  [$para defined?]
+
+	    try {
+		set value [$para value]
+	    } trap {XO PARAMETER UNDEFINED} {e o} {
+		# Mandatory argument, without user-specified value.
+		set value "${mycyan}(undefined)$myreset"
+	    } trap {XO VALIDATE} {e o} {
+		# Any argument with a bad value.
+		set value "[$para string] ${mycyan}($e)$myreset"
+		set somebad 1
+	    }
+
+	    append text {    }
+
+	    if {$required && !$defined} {
+		set label ${myred}$label${myreset}+
+		set alldefined 0
+	    } else {
+		set label "$label "
+	    }
+
+	    append text $label
+	    append text { : }
+
+	    if {!$islist} {
+		append text $value
+	    } else {
+		set remainder [lassign $value first]
+		append text $first
+		foreach r $remainder {
+		    append text "\n$blank $r"
+		}
+	    }
+
+	    append text \n
+	}
+
+	if {$somebad} {
+	    set text "[context fullname] (${myred}BAD$myreset):\n$text"
+	} elseif {!$alldefined} {
+	    set text "[context fullname] (${myred}INCOMPLETE$myreset):\n$text"
+	} else {
+	    set text "[context fullname] (${mygreen}OK$myreset):\n$text"
+	    set myreplok 1
+	}
+
+	puts $text
+	flush stdout
+	return
+    }
+
+    # # ## ### ##### ######## #############
+
+    method Colors {} {
+	if {$::tcl_platform(platform) eq "windows"} {
+	    set myreset ""
+	    set myred   ""
+	    set mygreen ""
+	    set mycyan  ""
+	} else {
+	    set myreset [::term::ansi::code::ctrl::sda_reset]
+	    set myred   [::term::ansi::code::ctrl::sda_fgred]
+	    set mygreen [::term::ansi::code::ctrl::sda_fggreen]
+	    set mycyan  [::term::ansi::code::ctrl::sda_fgcyan]
+	}
+	return
+    }
 
     # # ## ### ##### ######## #############
 }
