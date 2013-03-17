@@ -152,6 +152,11 @@ oo::class create ::xo::actor {
     }
 
     method completions {parse cmdlist} {
+	# Quick exit if there is nothing to complete.
+	if {![llength $cmdlist]} {
+	    return $cmdlist
+	}
+
 	dict with parse {}
 	# -> line, words (ignored: ok, nwords, at, doexit)
 
@@ -183,11 +188,15 @@ oo::class create ::xo::actor {
 
     # Could possibly use 'struct::list filter', plus a lambda.
     method match {parse cmdlist} {
+	# Quick exit if nothing can match.
+	if {![llength $cmdlist]} {
+	    return $cmdlist
+	}
+
 	dict with parse {}
 	# -> words, at (ignored: ok, nwords, line, doexit)
 
-	# Extract the text of the current word. The type and offset
-	# parts are irrelevant at the moment.
+	# We need just the text of the current word.
 	set current [lindex $words $at end]
 
 	set filtered {}
@@ -196,6 +205,38 @@ oo::class create ::xo::actor {
 	    lappend filtered $cmd
 	}
 	return $filtered
+    }
+
+    method parse-line {line} {
+	set ok    1
+	set words {}
+
+	try {
+	    set words [string token shell -partial -indices $line]
+	} trap {STRING TOKEN SHELL BAD} {e o} {
+	    set ok 0
+	}
+
+	set len [string length $line]
+
+	if {$ok} {
+	    # last word, end index
+	    set lwe [lindex $words end 2]
+	    # last word ends before end of line -> trailing whitespace
+	    # add the implied empty word for the completion processing.
+	    if {$lwe < ($len-1)} {
+		lappend words [list PLAIN $len $len {}]
+	    }
+	}
+	set parse [dict create \
+		       doexit 1 \
+		       at     0 \
+		       line   $line \
+		       ok     $ok \
+		       words  $words \
+		       nwords [llength $words]]
+
+	return $parse
     }
 
     ##
