@@ -271,9 +271,10 @@ oo::class create ::xo::officer {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1  {} { return "[my fullname]> " }
-    method prompt2  {} { error {Continuation lines are not supported} }
+    method prompt1   {}     { return "[my fullname]> " }
+    method prompt2   {}     { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
+    method exit      {}     { return $myreplexit }
 
     method dispatch {cmd} {
 	if {$cmd eq "exit"} {
@@ -298,15 +299,13 @@ oo::class create ::xo::officer {
 	}
     }
 
-    method exit {} { return $myreplexit }
-
     # # ## ### ##### ######## #############
     # Shell hook method - Command line completion.
 
     method complete {line} {
 	#puts stderr ////////$line
 	try {
-	    set completions [my complete-words [my ParseLine $line]]
+	    set completions [my complete-words [my parse-line $line]]
 	} on error {e o} {
 	    puts stderr "ERROR: $e"
 	    puts stderr $::errorInfo
@@ -400,38 +399,6 @@ oo::class create ::xo::officer {
 
 	#puts stderr \tC($completions)
 	return [lsort -unique [lsort -dict $completions]]
-    }
-
-    method ParseLine {line} {
-	set ok    1
-	set words {}
-
-	try {
-	    set words [string token shell -partial -indices $line]
-	} trap {STRING TOKEN SHELL BAD} {e o} {
-	    set ok 0
-	}
-
-	set len [string length $line]
-
-	if {$ok} {
-	    # last word, end index
-	    set lwe [lindex $words end 2]
-	    # last word ends before end of line -> trailing whitespace
-	    # add the implied empty word for the completion processing.
-	    if {$lwe < ($len-1)} {
-		lappend words [list PLAIN $len $len {}]
-	    }
-	}
-	set parse [dict create \
-		       doexit 1 \
-		       at     0 \
-		       line   $line \
-		       ok     $ok \
-		       words  $words \
-		       nwords [llength $words]]
-
-	return $parse
     }
 
     method CompleteRecurse {parse} {
