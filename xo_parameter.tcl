@@ -418,7 +418,7 @@ oo::class create ::xo::parameter {
 
 	if {[string match no-* $myname]} {
 	    # The primary option has prefix 'no-', create an alias without it.
-	    dict set myflags [my Option [string range $myname 3 end]] alias
+	    dict set myflags [my Option [string range $myname 3 end]] inverted
 	} else {
 	    # The primary option is not inverted, make an alias which is.
 	    dict set myflags [my Option no-$myname] inverted
