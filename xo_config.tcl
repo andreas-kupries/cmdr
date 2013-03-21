@@ -161,7 +161,7 @@ oo::class create ::xo::config {
 	# declaration order.
 
 	foreach name $mynames {
-	    [dict get $mymap $name] value
+	    catch { [dict get $mymap $name] value }
 	}
 	return
     }
