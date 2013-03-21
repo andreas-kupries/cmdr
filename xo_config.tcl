@@ -26,16 +26,26 @@ package require xo::help
 
 oo::class create ::xo::config {
     # # ## ### ##### ######## #############
+
+    classmethod interactive {{value 1}} {
+	variable ourinteractive $value
+	return
+    }
+
+    # # ## ### ##### ######## #############
     ## Lifecycle.
 
     constructor {context spec} {
+	classvariable ourinteractive
+	if {![info exists ourinteractive]} { set ourinteractive 0 }
+
 	my Colors
 
 	# Import the context (xo::private).
 	interp alias {} [self namespace]::context {} $context
 
 	# Initialize collection state.
-	set myinteractive 0
+	set myinteractive $ourinteractive
 	set mymap     {} ;# parameter name -> object
 	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
 	set myoption  {} ;# option         -> object
