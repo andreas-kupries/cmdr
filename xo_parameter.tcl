@@ -17,6 +17,15 @@ package require oo::util 1.2    ;# link helper
 
 oo::class create ::xo::parameter {
     # # ## ### ##### ######## #############
+    ## For use in parameter callbacks (generate, validate, and
+    ## whendef). The caller has the active xo::config object available
+    ## under the fixed command name 'config'. From inside the helper
+    ## this is then two (2) levels up.
+    classmethod config {args} {
+	return [uplevel 2 [list config {*}$args]]
+    }
+
+    # # ## ### ##### ######## #############
     ## Lifecycle.
 
     constructor {theconfig order cmdline required name desc valuespec} {
@@ -36,23 +45,23 @@ oo::class create ::xo::parameter {
 	my C2_OptionIsOptional
 	my C3_StateIsRequired
 
-	set myislist      no ;# scalar vs list parameter
-
+	set myislist       no ;# scalar vs list parameter
 	set myisdocumented yes
-	set myisforced    no ;# force define value before command call
-	set myhasdefault  no ;# flag for default existence
-	set mydefault     {} ;# default value - raw
-	set mygenerate    {} ;# generator command
-	set myinteractive no ;# no interactive query of value
-	set myprompt      {} ;# no prompt for interaction
+	set myisforced     no ;# force define value before command call
+	set myhasdefault   no ;# flag for default existence
+	set mydefault      {} ;# default value - raw
+	set mygenerate     {} ;# generator command
+	set myinteractive  no ;# no interactive query of value
+	set myprompt       {} ;# no prompt for interaction
 
-	set myvalidate    {} ;# validation command
-	set mywhendef     {} ;# action-on-definition command.
+	set myvalidate     {} ;# validation command
+	set mywhendef      {} ;# action-on-definition command.
+	set mywhenset      {} ;# action-on-set(-from-parse) command.
 
-	set mythreshold   {} ;# threshold for optional arguments
-	#                    ;# empty: Undefined
-	#                    ;#    -1: No threshold, peek and validate for choice.
-	#                    ;#  else: #required arguments after this one.
+	set mythreshold    {} ;# threshold for optional arguments
+	#                     ;# empty: Undefined
+	#                     ;#    -1: No threshold, peek and validate for choice.
+	#                     ;#  else: #required arguments after this one.
 
 	my ExecuteSpecification $valuespec
 
@@ -62,6 +71,7 @@ oo::class create ::xo::parameter {
 	set mystring    {}
 	set myhasvalue  no
 	set myvalue     {}
+	set mylocker    {}
 
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
@@ -104,7 +114,6 @@ oo::class create ::xo::parameter {
     }
 
     method primary {option} {
-puts |<|$myflags|>|
 	return [expr {[dict get $myflags $option] eq "primary"}]
     }
 
@@ -127,6 +136,8 @@ puts |<|$myflags|>|
     method isbool       {} { return [expr {$myvalidate eq "::xo::validate::boolean"}] }
     method validator    {} { return $myvalidate }
     method when-defined {} { return $mywhendef }
+    method when-set     {} { return $mywhenset }
+    method locker       {} { return $mylocker }
 
     # - test mode of optional arguments (not options)
     method threshold    {} { return $mythreshold }
@@ -160,7 +171,8 @@ puts |<|$myflags|>|
 	    {test         Test} \
 	    {undocumented Undocumented} \
 	    {validate     Validate} \
-	    {when-defined WhenDefined}
+	    {when-defined WhenDefined} \
+	    {when-set     WhenSet}
 	eval $valuespec
 
 	# Postprocessing ... Fill in validation and other defaults
@@ -263,6 +275,11 @@ puts |<|$myflags|>|
 
     method WhenDefined {cmd} {
 	set mywhendef $cmd
+	return
+    }
+
+    method WhenSet {cmd} {
+	set mywhenset $cmd
 	return
     }
 
@@ -444,12 +461,18 @@ puts |<|$myflags|>|
     ## API. Support for runtime command line parsing.
     ## See "xo::config" for the main controller.
 
+    method lock {reason} {
+	set mylocker $reason
+	return
+    }
+
     method reset {{cleanup 1}} {
 	# Runtime configuration, force initial state. See also the
 	# constructor for and inlined variant without cleanup.
 
 	my forget
 
+	set mylocker    {}
 	set myhasstring no
 	set mystring    {}
 	return
@@ -485,6 +508,7 @@ puts |<|$myflags|>|
     }
 
     method setq {queue} {
+	my Locked
 	if {$myislist} {
 	    set mystring [$queue get [$queue size]]
 	} else {
@@ -493,10 +517,15 @@ puts |<|$myflags|>|
 	set myhasstring yes
 
 	my forget
+
+	if {[llength $mywhenset]} {
+	    {*}$mywhenset $mystring
+	}
 	return
     }
 
     method set {value} {
+	my Locked
 	if {$myislist} {
 	    lappend mystring $value
 	} else {
@@ -505,7 +534,18 @@ puts |<|$myflags|>|
 	set myhasstring yes
 
 	my forget
+
+	if {[llength $mywhenset]} {
+	    {*}$mywhenset $mystring
+	}
 	return
+    }
+
+    method Locked {} {
+	if {$mylocker eq {}} return
+	return -code error \
+	    -errorcode {XO PARAMETER LOCKED} \
+	    "[my name] excluded by \"$mylocker\"."
     }
 
     method process {detail queue} {
@@ -765,8 +805,9 @@ puts |<|$myflags|>|
     variable myconfig myname mydescription \
 	myisordered myiscmdline myislist myisrequired \
 	myinteractive myprompt mydefault myhasdefault \
-	myflags mywhendef mygenerate myvalidate mythreshold \
-	myhasstring mystring myhasvalue myvalue myisforced \
+	mywhendef mywhenset mygenerate myvalidate \
+	myflags mythreshold myhasstring mystring \
+	myhasvalue myvalue myisforced mylocker \
 	myisdocumented
 
     # # ## ### ##### ######## #############
