@@ -47,6 +47,7 @@ oo::class create ::xo::parameter {
 
 	set myislist       no ;# scalar vs list parameter
 	set myisdocumented yes
+	set myonlypresence no ;# options only, no argument when true.
 	set myisforced     no ;# force define value before command call
 	set myhasdefault   no ;# flag for default existence
 	set mydefault      {} ;# default value - raw
@@ -122,6 +123,7 @@ oo::class create ::xo::parameter {
     method cmdline      {} { return $myiscmdline }
     method required     {} { return $myisrequired }
     method list         {} { return $myislist }
+    method presence     {} { return $myonlypresence }
 
     # Alternate sources for the parameter value.
     method hasdefault   {} { return $myhasdefault }
@@ -167,6 +169,7 @@ oo::class create ::xo::parameter {
 	    {generate     Generate} \
 	    {interact     Interact} \
 	    {list         List} \
+	    {presence     Presence} \
 	    {optional     Optional} \
 	    {test         Test} \
 	    {undocumented Undocumented} \
@@ -201,6 +204,16 @@ oo::class create ::xo::parameter {
 
     method List {} {
 	set myislist yes
+	return
+    }
+
+    method Presence {} {
+	my Presence_Option
+	my ForbiddenPresence
+	# Implied type and default
+	my Validate boolean
+	my Default  no
+	set myonlypresence yes
 	return
     }
 
@@ -241,9 +254,10 @@ oo::class create ::xo::parameter {
     }
 
     method Default {value} {
-	# Check relevant constraint(s) after making the change. That
-	# is easier than re-casting the expressions for the proposed
-	# change.
+	my Presence_DefaultConflict
+	# Check most of the relevant constraint(s) after making the
+	# change. That is easier than re-casting the expressions for
+	# the proposed change.
 	set myhasdefault yes
 	set mydefault    $value
 	my C6_RequiredArgumentForbiddenDefault
@@ -252,9 +266,10 @@ oo::class create ::xo::parameter {
     }
 
     method Generate {cmd} {
-	# Check relevant constraint(s) after making the change. That
-	# is easier than re-casting the expressions for the proposed
-	# change.
+	my Presence_GeneratorConflict
+	# Check most of the relevant constraint(s) after making the
+	# change. That is easier than re-casting the expressions for
+	# the proposed change.
 	set mygenerate $cmd
 	my C6_RequiredArgumentForbiddenGenerator
 	my C7_DefaultGeneratorConflict
@@ -262,6 +277,7 @@ oo::class create ::xo::parameter {
     }
 
     method Validate {cmd} {
+	my Presence_ValidateConflict
 	set words [lassign $cmd cmd]
 	# Allow FOO shorthand for xo::validate::FOO
 	if {![llength [info commands $cmd]] &&
@@ -338,9 +354,31 @@ oo::class create ::xo::parameter {
     # # ## ### ##### ######## #############
     ## Internal: DSL support. Syntax constraints.
 
+    # default|generate|validate => !presence
+    # !default && !gen && !val | !presence
+    forward ForbiddenPresence \
+	my Assert {(!$myhasdefault && ![llength $mygenerate] && ![llength $myvalidate]) || !$myonlypresence} \
+	{Customized option cannot be presence-only}
+
+    forward Presence_DefaultConflict \
+	my Assert {!$myonlypresence} \
+	{Presence-only option cannot have custom default value}
+
+    forward Presence_GeneratorConflict \
+	my Assert {!$myonlypresence} \
+	{Presence-only option cannot have custom generator command}
+
+    forward Presence_ValidateConflict \
+	my Assert {!$myonlypresence} \
+	{Presence-only option cannot have custom validation type}
+
     forward Alias_Option \
 	my Assert {$myiscmdline && !$myisordered} \
 	{Non-option parameter "@" cannot have alias}
+
+    forward Presence_Option \
+	my Assert {$myiscmdline && !$myisordered} \
+	{Non-option parameter "@" cannot have presence-only}
 
     forward Optional_Option \
 	my Assert {$myisordered} \
@@ -375,6 +413,7 @@ oo::class create ::xo::parameter {
 
     method FillMissingValidation {} {
 	# Ignore when the user specified a validation type
+	# Note: 'presence' has set 'boolean'.
 	if {[llength $myvalidate]} return
 
 	# The parameter has no user-specified validation type. Deduce
@@ -410,6 +449,7 @@ oo::class create ::xo::parameter {
 	# Ignore when the user specified a default value.
 	# Ditto when the user specified a generator command.
 	# Ditto if the parameter is a required argument.
+	# Note: 'presence' has set 'no' (together ith type 'boolean').
 	if {$myhasdefault ||
 	    [llength $mygenerate] ||
 	    ($myiscmdline && $myisordered && $myisrequired)
@@ -438,13 +478,19 @@ oo::class create ::xo::parameter {
 	# XXX Consider pushing this into the validators.
 	if {$myvalidate ne "::xo::validate::boolean"} return
 
+	# A boolean option triggered on presence does not have a
+	# complementary alias. There is no reverse setting.
+	if {$myonlypresence} return
+
 	if {[string match no-* $myname]} {
 	    # The primary option has prefix 'no-', create an alias without it.
-	    dict set myflags [my Option [string range $myname 3 end]] inverted
+	    set alternate [string range $myname 3 end]
 	} else {
 	    # The primary option is not inverted, make an alias which is.
-	    dict set myflags [my Option no-$myname] inverted
+	    set alternate no-$myname
 	}
+
+	dict set myflags [my Option $alternate] inverted
 	return
     }
 
@@ -545,7 +591,7 @@ oo::class create ::xo::parameter {
 	if {$mylocker eq {}} return
 	return -code error \
 	    -errorcode {XO PARAMETER LOCKED} \
-	    "[my name] excluded by \"$mylocker\"."
+	    "You cannot use \"[my name]\" together with \"$mylocker\"."
     }
 
     method process {detail queue} {
@@ -585,6 +631,15 @@ oo::class create ::xo::parameter {
     }
 
     method ProcessOption {flag queue} {
+	if {$myonlypresence} {
+	    # See also xo::config/dispatch
+	    # Option has only presence.
+	    # Validation type is 'boolean'.
+	    # Default value is 'no', presence therefore 'yes'.
+	    my set yes
+	    return
+	}
+
 	if {[my isbool]} {
 	    # XXX Consider a way of pushing this into the validator classes.
 
@@ -808,7 +863,7 @@ oo::class create ::xo::parameter {
 	mywhendef mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue myisforced mylocker \
-	myisdocumented
+	myisdocumented myonlypresence
 
     # # ## ### ##### ######## #############
 }
