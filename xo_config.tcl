@@ -1006,7 +1006,7 @@ oo::class create ::xo::config {
 		set remainder [lassign $value first]
 		append text $first
 		foreach r $remainder {
-		    append text "\n$blank $r"
+		    append text "\n    $blank  : $r"
 		}
 	    }
 
