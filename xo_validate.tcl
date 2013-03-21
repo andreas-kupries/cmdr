@@ -17,13 +17,13 @@ namespace eval ::xo {
 
 namespace eval ::xo::validate {
     namespace export boolean integer identity \
-	Fail complete-enum
+	fail complete-enum config
     namespace ensemble create
 }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::validate::Fail {code type x} {
+proc ::xo::validate::fail {code type x} {
     return -code error -errorcode [list XO VALIDATE {*}$code] \
 	"Expected $type, got \"$x\""
 }
@@ -50,7 +50,7 @@ proc ::xo::validate::complete-enum {choices nocase buffer} {
 namespace eval ::xo::validate::boolean {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::xo::validate::Fail
+    namespace import ::xo::validate::fail
     namespace import ::xo::validate::complete-enum
 }
 
@@ -63,7 +63,7 @@ proc ::xo::validate::boolean::complete {x} {
 
 proc ::xo::validate::boolean::validate {x} {
     if {[string is boolean -strict $x]} { return $x }
-    Fail BOOLEAN "a boolean" $x
+    fail BOOLEAN "a boolean" $x
 }
 
 
@@ -72,7 +72,7 @@ proc ::xo::validate::boolean::validate {x} {
 namespace eval ::xo::validate::integer {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::xo::validate::Fail
+    namespace import ::xo::validate::fail
 }
 
 proc ::xo::validate::integer::default  {}  { return 0 }
@@ -80,7 +80,7 @@ proc ::xo::validate::integer::release  {x} { return }
 proc ::xo::validate::integer::complete {x} { return {} }
 proc ::xo::validate::integer::validate {x} {
     if {[string is integer -strict $x]} { return $x }
-    Fail INTEGER "an integer" $x
+    fail INTEGER "an integer" $x
 }
 
 # # ## ### ##### ######## ############# #####################
