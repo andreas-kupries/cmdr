@@ -138,16 +138,18 @@ oo::class create ::xo::config {
 
     method lookup {name} {
 	if {![dict exists $mymap $name]} {
+	    set names [linsert [join [lsort -dict [my names]] {, }] end-1 or]
 	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
-		"Expected parameter name, got \"$name\""
+		"Got \"$name\", expected parameter name, one of $names"
 	}
 	return [dict get $mymap $name]
     }
 
     method lookup-option {name} {
 	if {![dict exists $myoption $name]} {
+	    set names [linsert [join [lsort -dict [my options]] {, }] end-1 or]
 	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
-		"Expected option name, got \"$name\""
+		"Got \"$name\", expected option name, one of $names"
 	}
 	return [dict get $myoption $name]
     }
@@ -810,15 +812,18 @@ oo::class create ::xo::config {
 
 	set words [lassign [string token shell $cmd] cmd]
 	# cmd = parameter name, words = parameter value.
-	# Note: All pseudo commands take a single argument!
-
+	# Note: Most pseudo commands take a single argument!
+	#       Presence-only options are the exception.
 	# Note: The lookup accepts the undocumented parameters as
-	# well, despite them not shown by ShowState, nor available for
-	# completion.
+	#       well, despite them not shown by ShowState, nor
+	#       available for completion.
 
 	set para [my lookup $cmd]
 
-	if {[llength $words] != 1} {
+	if {[$para presence] && ([llength $words] != 0)} {
+	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
+		"wrong \# args: should be \"$cmd\""
+	} elseif {[llength $words] != 1} {
 	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
 		"wrong \# args: should be \"$cmd value\""
 	}
@@ -827,7 +832,12 @@ oo::class create ::xo::config {
 	# boolean special form, and direct interaction does not allow
 	# that.
 
-	$para set {*}$words
+	if {[$para presence]} {
+	    # See also xo::parameter/ProcessOption
+	    $para set yes
+	} else {
+	    $para set {*}$words
+	}
 	return
     }
 
@@ -912,6 +922,11 @@ oo::class create ::xo::config {
 		# word, we have processed the current one, the command.
 		dict incr parse at
 		set para [my lookup [lindex $matches 0]]
+
+		# Presence-only options do not have an argument to complete.
+		if {[$para presence]} {
+		    return {}
+		}
 		return [context completions $parse [$para complete-words $parse]]
 	    }
 
