@@ -50,6 +50,14 @@ oo::class create ::xo::officer {
 	set mycommands  {}       ; # Ditto
 	set myccommands exit     ; # Completion knows 'exit' command.
 	set mychildren  {}       ; # List of created subordinates.
+	set myhandler   {}
+	return
+    }
+
+    # # ## ### ##### ######## #############
+
+    method ehandler {cmd} {
+	set myhandler $cmd
 	return
     }
 
@@ -113,6 +121,7 @@ oo::class create ::xo::officer {
 	# instance methods of this class.
 
 	link \
+	    {ehandler    ehandler} \
 	    {private     Private} \
 	    {officer     Officer} \
 	    {default     Default} \
@@ -184,6 +193,9 @@ oo::class create ::xo::officer {
 
 	set handler [self namespace]::${what}_$name
 	xo::$what create $handler [self] $name {*}$args
+
+	# Propagate error handler.
+	$handler ehandler $myhandler
 
 	lappend mychildren $handler
 
@@ -451,7 +463,8 @@ oo::class create ::xo::officer {
 
     # # ## ### ##### ######## #############
 
-    variable myinit myactions mymap mycommands myccommands mychildren myreplexit
+    variable myinit myactions mymap mycommands myccommands mychildren \
+	myreplexit myhandler
 
     # # ## ### ##### ######## #############
 }
