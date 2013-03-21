@@ -55,7 +55,95 @@ test xo-help-1.1 {help structure, inverted boolean option} -body {
     x help
 } -cleanup {
     x destroy
-} -result {nail {desc workbench options {--driver {Alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} arguments {}}}
+} -result {nail {desc workbench options {--driver {Complementary alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} arguments {}}}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-help-2.0 {plain - formatting help structure} -body {
+    HelpLarge plain
+} -result {bar aloha [OPTIONS] yoyo ?jump? run...
+    hawaii
+
+    --lulu    loop
+    --no-lulu Complementary alias of --lulu.
+
+    yoyo height
+    jump gate
+    run  lane
+
+snafu aloha [OPTIONS] yoyo ?jump? run...
+    hawaii
+
+    --lulu    loop
+    --no-lulu Complementary alias of --lulu.
+
+    yoyo height
+    jump gate
+    run  lane
+
+tool hammer nail [OPTIONS] ?supply...?
+    workbench
+
+    --driver force
+    --force  Alias of --driver.
+
+    supply magazine
+
+hammer nail [OPTIONS] ?supply...?
+    workbench
+
+    --driver force
+    --force  Alias of --driver.
+
+    supply magazine
+}
+
+test xo-help-2.1 {plain formatting - help structure, inverted boolean option} -body {
+    HelpSmall plain
+} -result {nail [OPTIONS]
+    workbench
+
+    --driver    Complementary alias of
+                --no-driver.
+    --force     Alias of --no-driver.
+    --no-driver force
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-help-3.0 {short - formatting help structure} -body {
+    HelpLarge short
+} -result {bar aloha [OPTIONS] yoyo ?jump? run...
+    hawaii
+
+snafu aloha [OPTIONS] yoyo ?jump? run...
+    hawaii
+
+tool hammer nail [OPTIONS] ?supply...?
+    workbench
+
+hammer nail [OPTIONS] ?supply...?
+    workbench
+}
+
+test xo-help-3.1 {short formatting - help structure, inverted boolean option} -body {
+    HelpSmall short
+} -result {nail [OPTIONS]
+    workbench
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test xo-help-4.0 {list - formatting help structure} -body {
+    HelpLarge list
+} -result {bar aloha [OPTIONS] yoyo ?jump? run...
+snafu aloha [OPTIONS] yoyo ?jump? run...
+tool hammer nail [OPTIONS] ?supply...?
+hammer nail [OPTIONS] ?supply...?}
+
+test xo-help-4.1 {list formatting - help structure, inverted boolean option} -body {
+    HelpSmall list
+} -result {nail [OPTIONS]}
 
 # # ## ### ##### ######## ############# #####################
 return

@@ -8,6 +8,7 @@ xo create cmdline cmdline {
     private scissors {
 	state  state  XXX
 	option option YYY
+	option debug DDD { undocumented }
 	input  alpha  AAA
 	input  beta   BBB { optional }
 	input  gamma  CCC { list }
