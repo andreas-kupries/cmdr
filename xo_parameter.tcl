@@ -48,7 +48,6 @@ oo::class create ::xo::parameter {
 	set myislist       no ;# scalar vs list parameter
 	set myisdocumented yes
 	set myonlypresence no ;# options only, no argument when true.
-	set myisforced     no ;# force define value before command call
 	set myhasdefault   no ;# flag for default existence
 	set mydefault      {} ;# default value - raw
 	set mygenerate     {} ;# generator command
@@ -124,6 +123,9 @@ oo::class create ::xo::parameter {
     method required     {} { return $myisrequired }
     method list         {} { return $myislist }
     method presence     {} { return $myonlypresence }
+    method documented   {} { return $myisdocumented }
+    method isbool       {} { return [expr {$myvalidate eq "::xo::validate::boolean"}] }
+    method locker       {} { return $mylocker }
 
     # Alternate sources for the parameter value.
     method hasdefault   {} { return $myhasdefault }
@@ -132,14 +134,10 @@ oo::class create ::xo::parameter {
     method interactive  {} { return $myinteractive }
     method prompt       {} { return $myprompt }
 
-    method forced       {} { return $myisforced }
-    method documented   {} { return $myisdocumented }
-
-    method isbool       {} { return [expr {$myvalidate eq "::xo::validate::boolean"}] }
+    # Hooks for validation and side-effects at various stages.
     method validator    {} { return $myvalidate }
     method when-defined {} { return $mywhendef }
     method when-set     {} { return $mywhenset }
-    method locker       {} { return $mylocker }
 
     # - test mode of optional arguments (not options)
     method threshold    {} { return $mythreshold }
@@ -165,7 +163,6 @@ oo::class create ::xo::parameter {
 	link \
 	    {alias        Alias} \
 	    {default      Default} \
-	    {force        Force} \
 	    {generate     Generate} \
 	    {interact     Interact} \
 	    {list         List} \
@@ -208,17 +205,12 @@ oo::class create ::xo::parameter {
     }
 
     method Presence {} {
-	my Presence_Option
-	my ForbiddenPresence
+	my C8_PresenceOption
+	my C9_ForbiddenPresence
 	# Implied type and default
 	my Validate boolean
 	my Default  no
 	set myonlypresence yes
-	return
-    }
-
-    method Force {} {
-	set myisforced yes
 	return
     }
 
@@ -254,7 +246,7 @@ oo::class create ::xo::parameter {
     }
 
     method Default {value} {
-	my Presence_DefaultConflict
+	my C9_PresenceDefaultConflict
 	# Check most of the relevant constraint(s) after making the
 	# change. That is easier than re-casting the expressions for
 	# the proposed change.
@@ -266,7 +258,7 @@ oo::class create ::xo::parameter {
     }
 
     method Generate {cmd} {
-	my Presence_GeneratorConflict
+	my C9_PresenceGeneratorConflict
 	# Check most of the relevant constraint(s) after making the
 	# change. That is easier than re-casting the expressions for
 	# the proposed change.
@@ -277,7 +269,7 @@ oo::class create ::xo::parameter {
     }
 
     method Validate {cmd} {
-	my Presence_ValidateConflict
+	my C9_PresenceValidateConflict
 	set words [lassign $cmd cmd]
 	# Allow FOO shorthand for xo::validate::FOO
 	if {![llength [info commands $cmd]] &&
@@ -351,34 +343,32 @@ oo::class create ::xo::parameter {
 	my Assert {!$myhasdefault || ![llength $mygenerate]} \
 	{Default value and generator command for parameter "@" are in conflict}
 
-    # # ## ### ##### ######## #############
-    ## Internal: DSL support. Syntax constraints.
+    forward C8_PresenceOption \
+	my Assert {$myiscmdline && !$myisordered} \
+	{Non-option parameter "@" cannot have presence-only}
 
-    # default|generate|validate => !presence
-    # !default && !gen && !val | !presence
-    forward ForbiddenPresence \
+    forward C9_ForbiddenPresence \
 	my Assert {(!$myhasdefault && ![llength $mygenerate] && ![llength $myvalidate]) || !$myonlypresence} \
 	{Customized option cannot be presence-only}
 
-    forward Presence_DefaultConflict \
+    forward C9_PresenceDefaultConflict \
 	my Assert {!$myonlypresence} \
 	{Presence-only option cannot have custom default value}
 
-    forward Presence_GeneratorConflict \
+    forward C9_PresenceGeneratorConflict \
 	my Assert {!$myonlypresence} \
 	{Presence-only option cannot have custom generator command}
 
-    forward Presence_ValidateConflict \
+    forward C9_PresenceValidateConflict \
 	my Assert {!$myonlypresence} \
 	{Presence-only option cannot have custom validation type}
+
+    # # ## ### ##### ######## #############
+    ## Internal: DSL support. Syntax constraints.
 
     forward Alias_Option \
 	my Assert {$myiscmdline && !$myisordered} \
 	{Non-option parameter "@" cannot have alias}
-
-    forward Presence_Option \
-	my Assert {$myiscmdline && !$myisordered} \
-	{Non-option parameter "@" cannot have presence-only}
 
     forward Optional_Option \
 	my Assert {$myisordered} \
@@ -862,7 +852,7 @@ oo::class create ::xo::parameter {
 	myinteractive myprompt mydefault myhasdefault \
 	mywhendef mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
-	myhasvalue myvalue myisforced mylocker \
+	myhasvalue myvalue mylocker \
 	myisdocumented myonlypresence
 
     # # ## ### ##### ######## #############

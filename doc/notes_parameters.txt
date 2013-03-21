@@ -141,6 +141,53 @@ The relevant and associated constraints are:
 	parameter (value) is defined. For this each parameter has a
 	command prefix.
 
+(R17)	Sometimes it is advantageous to perform an action the moment a
+	parameter (user-string) is set. For this each parameter has a
+	command prefix.
+
+(R18)	An application command can have parameters which are not for
+	regular use, but for debugging, possibly requiring raw access.
+	Such parameters should be excluded from documentation. Modeled
+	by a boolean property.
+
+(R19)	
+	Depending on how the backend used by the framework is
+	constructed it can make sense for specific parameters to be
+	defined before the actual command is invoked. I.e. to force
+	the invokation of the when-defined callbacks and their
+	side-effects before the implementation takes over. A use case
+	would be for options to configure low-level parts of the
+	system, so that the implementations do not have to, and thus
+	not have to care about these options.
+
+	On the other hand, by putting this into the implementations we
+	can more easily handle ordering requirements between option
+	values and side-effects.
+
+	-- force -- remove --
+	-- auto-force always
+	-- in order of declaration => set order properly for dependencies
+	-- and cannot have cycles by definition
+
+
+(R20)	A special kind of option to support are those not taking an
+	argument, but simply triggering behaviour through their very
+	presence on the command line. These can be modeled with a flag
+	and are otherwise boolean options with a fixed default ('no').
+	Because of the latter such options cannot have a different
+	custom default, generator command, nor other validation type.
+
+	All in all the following contraints are raised:
+
+	(C8)	presence => cmdline && !ordered && !required
+	<=>	!presence | (cmdline && !ordered && !required)
+
+	(C9)	presence => (!default && !generate && !validate)
+	<=>	default|generate|validate => !presence
+	<=>	   (!default  | !presence)
+	        && (!generate | !presence)
+		&& (!validate | !presence)
+
 Collected parameter attributes (properties)
 ===========================================
 
@@ -164,6 +211,11 @@ Collected parameter attributes (properties)
 		---------	----	-----------
 [R15]		validate	CMD	Command to validate and transform user input
 [R16]		when-defined	CMD	Command to run when the parameter value is defined.
+[R17]		when-set	CMD	Command to run when the parameter string! is set.
+		---------	----	-----------
+[R18]		undocumented	BOOL	If true, exclude the parameter from generated help.
+[R19]
+[R20]
 		---------	----	-----------
 		flags		list(TEXT)	List of flags to recognize.
 
@@ -217,14 +269,23 @@ Property commands.
 
 	Command			Affected properties	Notes
 	-------			-------------------	-----
+	alias NAME   		flags	     		cmdline && !ordered
+	default	DATA		default (set)		[R12,13,14], [C5,6,7,8,9]
+	generate CMD		generate (set)		[R12,13,14], [C5,6,7,8,9]
+	interact ?TEXT?		interactive, prompt	[R12,13,14], [C5,6,7]
 	list			list (set)		[R11], [C4]
 	optional		required (reset)	[R7,8,9,10], [C2,3,5,6]
-	default	DATA		default (set)		[R12,13,14], [C5,6,7]
-	generate CMD		generate (set)		[R12,13,14], [C5,6,7]
-	interact ?TEXT?		interactive, prompt	[R12,13,14], [C5,6,7]
-	validate CMD		validate (set)		[R15]
+	validate CMD		validate (set)		[R15], [C8,9]
 	when-defined CMD	when-defined (set)	[R16]
-	alias NAME   		flags	     		cmdline && !ordered
+	when-set CMD		when-set (set)		[R17]
 	-------			-------------------	-----
+	test			
+	undocumented		undocumented		[R18]
+(-)	force			forced			[R19]
+	presence		onlypresence		[R20], [C8,9]
+	lock			locker
+	-------			-------------------	-----
+
+
 
 ==============================================================================
