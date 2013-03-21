@@ -3,11 +3,72 @@
 
 if 0 {tcltest::customMatch exact Seq ; proc Seq {a b} {
     if {$a ne $b} {
-	puts A|[string map [list "\n" "\\N" "\t" "\\T"] $a]|
-	puts B|[string map [list "\n" "\\N" "\t" "\\T"] $b]|
+	puts A|[string map [list "\[" "<" " " "\S" "\n" "\\N" "\t" "\\T"] $a]|
+	puts B|[string map [list "\[" "<" " " "\S" "\n" "\\N" "\t" "\\T"] $b]|
     }
     string equal $a $b
 }}
+
+# # ## ### ##### ######## ############# #####################
+## Standard help structures
+
+proc HelpLarge {format {n 50}} {
+    Help {
+	description TEST
+	officer bar {
+	    private aloha {
+		description hawaii
+		option lulu loop {}
+		input yoyo height
+		input jump gate { optional }
+		input run lane { list }
+	    } ::hula
+	}
+	default
+	alias snafu
+	officer tool {
+	    officer pliers {}
+	    officer hammer {
+		private nail {
+		    description workbench
+		    option driver force { validate adouble ; default 0 ; list ; alias force }
+		    state  context orientation
+		    input supply magazine { list ; optional }
+		} ::wall
+	    }
+	    default hammer
+	}
+	alias hammer = tool hammer
+
+	private hidden {
+	    undocumented
+	} ::missing
+
+	officer stealth {
+	    undocumented
+	    private cloak {} ::dagger
+	}
+    } $format $n
+}
+
+proc HelpSmall {format {n 50}} {
+    Help {
+	description TEST
+	private nail {
+	    description workbench
+	    option no-driver force { list ; alias force }
+	} ::wall
+    } $format $n
+}
+
+proc Help {def format n} {
+    try {
+	xo create x foo $def
+	xo help format $format $n [x help]
+    } finally {
+	x destroy
+    }
+}
 
 # # ## ### ##### ######## ############# #####################
 ## Supporting procedures for xo.test et. al.

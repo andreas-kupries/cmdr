@@ -10,6 +10,10 @@ kt require support oo::util 1.2
 kt require support struct::queue
 kt require support try
 kt require support string::token::shell
+kt require support textutil::adjust
+
+kt local   support xo::util
+kt local   support xo::help
 
 kt local   support xo::parameter
 kt local   support xo::config
@@ -31,7 +35,7 @@ kt local   testing xo
 ::kt source xo_private.tests   ; # Parameter DSL, collection
 ::kt source xo_parameter.tests ; # Parameter DSL, details
 ::kt source xo_runtime.tests   ; # Runtime command line parsing
-::kt source xo_help.tests      ; # Help structures
+::kt source xo_help.tests      ; # Help structures & formatting
 
 # TODO: keys, get (super chain)
 

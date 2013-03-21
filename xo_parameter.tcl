@@ -103,6 +103,11 @@ oo::class create ::xo::parameter {
 	return $mydescription
     }
 
+    method primary {option} {
+puts |<|$myflags|>|
+	return [expr {[dict get $myflags $option] eq "primary"}]
+    }
+
     # Core classification properties
     method ordered      {} { return $myisordered }
     method cmdline      {} { return $myiscmdline }

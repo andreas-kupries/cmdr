@@ -38,7 +38,7 @@ proc ::xo::help::query {actor words} {
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::xo::help::format {
-    namespace export plain
+    namespace export plain list short
     namespace ensemble create
 }
 
@@ -76,14 +76,18 @@ proc ::xo::help::format::Plain {width name command} {
     # }
 
     # Short line.
-    lappend lines "[join $name] [HasOptions $options][Arguments $arguments]"
+    lappend lines \
+	[string trimright \
+	     "[join $name] [HasOptions $options][Arguments $arguments]"]
 
-    # plus description
-    lappend lines [textutil::adjust::indent \
-		       [textutil::adjust::adjust $desc \
-			    -length [expr {$width - 5}] \
-			    -strictlength 1] \
-		       {    }]
+    if {$desc ne {}} {
+	# plus description
+	lappend lines [textutil::adjust::indent \
+			   [textutil::adjust::adjust $desc \
+				-length [expr {$width - 5}] \
+				-strictlength 1] \
+			   {    }]
+    }
 
     # plus per-option descriptions
     if {[dict size $options]} {
@@ -110,6 +114,90 @@ proc ::xo::help::format::Plain {width name command} {
     lappend lines ""
     return [join $lines \n]
 }
+
+# # ## ### ##### ######## ############# #####################
+
+proc ::xo::help::format::list {width help} {
+    # help = dict (name -> command)
+    dict for {cmd desc} $help {
+	lappend result [List $width $cmd $desc]
+    }
+    return [join $result \n]
+}
+
+proc ::xo::help::format::List {width name command} {
+    # command = list ('desc'      -> description
+    #                 'options'   -> options
+    #                 'arguments' -> arguments)
+
+    dict with command {} ; # -> desc, options, arguments
+
+    # options   = list (option...)
+    # option    = dict (name -> description)
+    # arguments = dict (name -> argdesc)
+    # argdesc   = dict ('code' -> code
+    #                   'desc' -> description)
+    # code in {
+    #     +		<=> required
+    #     ?		<=> optional
+    #     +*	<=> required splat
+    #     ?* 	<=> optional splat
+    # }
+
+    # Short line.
+    lappend lines \
+	[string trimright \
+	     "[join $name] [HasOptions $options][Arguments $arguments]"]
+    return [join $lines \n]
+}
+
+# # ## ### ##### ######## ############# #####################
+
+proc ::xo::help::format::short {width help} {
+    # help = dict (name -> command)
+    dict for {cmd desc} $help {
+	lappend result [Short $width $cmd $desc]
+    }
+    return [join $result \n]
+}
+
+proc ::xo::help::format::Short {width name command} {
+    # command = list ('desc'      -> description
+    #                 'options'   -> options
+    #                 'arguments' -> arguments)
+
+    dict with command {} ; # -> desc, options, arguments
+
+    # options   = list (option...)
+    # option    = dict (name -> description)
+    # arguments = dict (name -> argdesc)
+    # argdesc   = dict ('code' -> code
+    #                   'desc' -> description)
+    # code in {
+    #     +		<=> required
+    #     ?		<=> optional
+    #     +*	<=> required splat
+    #     ?* 	<=> optional splat
+    # }
+
+    # Short line.
+    lappend lines \
+	[string trimright \
+	     "[join $name] [HasOptions $options][Arguments $arguments]"]
+
+    if {$desc ne {}} {
+	# plus description
+	lappend lines [textutil::adjust::indent \
+			   [textutil::adjust::adjust $desc \
+				-length [expr {$width - 5}] \
+				-strictlength 1] \
+			   {    }]
+    }
+    lappend lines ""
+    return [join $lines \n]
+}
+
+# # ## ### ##### ######## ############# #####################
 
 proc ::xo::help::format::DefList {width labels defs} {
     upvar 1 lines lines

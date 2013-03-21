@@ -19,6 +19,7 @@ package require linenoise::facade
 package require xo::validate    ; # Core validator commands.
 package require xo::parameter   ; # Parameter to collect
 package require xo::util
+package require xo::help
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -34,6 +35,7 @@ oo::class create ::xo::config {
 	interp alias {} [self namespace]::context {} $context
 
 	# Initialize collection state.
+	set myinteractive 0
 	set mymap     {} ;# parameter name -> object
 	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
 	set myoption  {} ;# option         -> object
@@ -44,12 +46,14 @@ oo::class create ::xo::config {
 	link \
 	    {undocumented Undocumented} \
 	    {description  Description} \
-	    {use         Use} \
-	    {input       Input} \
-	    {option      Option} \
-	    {state       State}
+	    {use          Use} \
+	    {input        Input} \
+	    {interactive  Interactive} \
+	    {option       Option} \
+	    {state        State}
 
-	set splat no ;# Updated in my DefineParameter
+	# Updated in my DefineParameter, called from the $spec
+	set splat no
 
 	# Auto inherit common options, state, arguments.
 	# May not be defined.
@@ -69,7 +73,7 @@ oo::class create ::xo::config {
 	return
     }
 
-    method help {} {
+    method help {{mode public}} {
 	# command   = dict ('desc'      -> description
 	#                   'options'   -> options
 	#                   'arguments' -> arguments)
@@ -88,7 +92,15 @@ oo::class create ::xo::config {
 
 	set options {}
 	dict for {o para} $myoption {
-	    if {![$para documented]} continue
+	    # in interactive mode undocumented options can be shown in
+	    # the help if they already have a value defined for them.
+	    if {![$para documented] &&
+		(($mode ne "interact") ||
+		 ![$para defined?])} continue
+
+	    # in interactive mode we skip all the aliases.
+	    if {($mode eq "interact") &&
+		![$para primary $o]} continue
 	    dict set options $o [$para description $o]
 	}
 
@@ -107,12 +119,12 @@ oo::class create ::xo::config {
 		    arguments $arguments]
     }
 
-
-    method eoptions  {} { return $myfullopt }
-    method names     {} { return [dict keys $mymap] }
-    method public    {} { return [dict keys $mypub] }
-    method arguments {} { return $myargs }
-    method options   {} { return [dict keys $myoption] }
+    method interactive {} { return $myinteractive }
+    method eoptions    {} { return $myfullopt }
+    method names       {} { return [dict keys $mymap] }
+    method public      {} { return [dict keys $mypub] }
+    method arguments   {} { return $myargs }
+    method options     {} { return [dict keys $myoption] }
 
     method lookup {name} {
 	if {![dict exists $mymap $name]} {
@@ -312,6 +324,11 @@ oo::class create ::xo::config {
 	return
     }
 
+    method Interactive {} {
+	set myinteractive 1
+	return
+    }
+
     # Parameter definition itself.
     #       order, cmdline, required (O C R) name ?spec?
     forward Input  my DefineParameter 1 1 1
@@ -337,8 +354,9 @@ oo::class create ::xo::config {
 	# Map parameter name to handler object.
 	dict set mymap $name $para
 
-	# And a second map, cmdline visible parameters only.
-	if {[$para cmdline]} {
+	# And a second map, cmdline visible parameters only, and
+	# documented.
+	if {[$para cmdline] && [$para documented]} {
 	    dict set mypub $name $para
 	}
 
@@ -718,22 +736,10 @@ oo::class create ::xo::config {
 
     variable mymap mypub myoption myfullopt myargs myaq mypq \
 	mycchain myreplexit myreplok myreplcommit \
-	myreset myred mygreen mycyan
+	myreset myred mygreen mycyan myinteractive
 
     # # ## ### ##### ######## #############
     ## Local shell for interactive entry of the parameters in the collection.
-
-    method mustinteract {} { error NYI
-	# We have to fall start interaction if any of the required
-	# arguments are not defined by the user.
-	foreach a $myargs {
-	    set para [dict get $mymap $a]
-	    if {![$para required]} continue
-	    if {[$para defined?]} continue
-	    return 1
-	}
-	return 0
-    }
 
     method interact {} {
 	# compare xo::officer REPL (=> method "do").
@@ -773,17 +779,32 @@ oo::class create ::xo::config {
     method exit      {}     { return $myreplexit }
 
     method dispatch {cmd} {
-	if {$cmd eq ".ok"} {
-	    set myreplexit   1
-	    set myreplcommit 1
-	    return
-	} elseif {$cmd eq ".cancel"} {
-	    set myreplexit 1
-	    return
+	switch -exact -- $cmd {
+	    .ok {
+		set myreplexit   1
+		set myreplcommit 1
+		return
+	    }
+	    .cancel {
+		set myreplexit 1
+		return
+	    }
+	    .help {
+		puts [xo help format plain \
+			  [linenoise columns] \
+			  [dict create [context fullname] \
+			       [my help interact]]]
+		return
+	    }
 	}
+
 	set words [lassign [string token shell $cmd] cmd]
 	# cmd = parameter name, words = parameter value.
 	# Note: All pseudo commands take a single argument!
+
+	# Note: The lookup accepts the undocumented parameters as
+	# well, despite them not shown by ShowState, nor available for
+	# completion.
 
 	set para [my lookup $cmd]
 
@@ -854,9 +875,10 @@ oo::class create ::xo::config {
 
 	# All arguments and options are (pseudo-)commands.
 	# The special exit commands as well.
-	set     commands [my public]
+	set     commands [my Visible]
 	lappend commands .ok
 	lappend commands .cancel
+	lappend commands .help
 
 	set commands [lsort -unique [lsort -dict $commands]]
 
@@ -871,8 +893,9 @@ oo::class create ::xo::config {
 
 	if {$nwords == 2} {
 	    # Locate the responsible parameter and let it complete.
+	    # Note: Here we non-public parameters as well.
 
-	    set matches [context match $parse [my public]]
+	    set matches [context match $parse [my names]]
 
 	    if {[llength $matches] == 1} {
 		# Proper subordinate found. Delegate. Note: Step to next
@@ -890,8 +913,21 @@ oo::class create ::xo::config {
 	return {}
     }
 
+    method Visible {} {
+	set visible {}
+	foreach p [my names] {
+	    if {![dict exists $mypub $p] &&
+		![[my lookup $p] defined?]
+	    } continue
+	    # Keep public elements, and any hidden ones already having
+	    # a user definition. The user obviously knows about them.
+	    lappend visible $p
+	}
+	return $visible
+    }
+
     method ShowState {} {
-	set plist [lsort -dict [my public]]
+	set plist  [lsort -dict [my Visible]]
 	set labels [xo util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
 

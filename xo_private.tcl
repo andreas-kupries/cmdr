@@ -60,6 +60,9 @@ oo::class create ::xo::private {
 	try {
 	    config parse {*}$args
 	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
+	    if {![config interactive]} {
+		return {*}$o $e
+	    }
 	    if {![config interact]} return
 	}
 
