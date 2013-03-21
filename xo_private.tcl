@@ -35,6 +35,14 @@ oo::class create ::xo::private {
 	set myarguments $arguments
 	set mycmd       $cmdprefix
 	set myinit      0
+	set myhandler   {}
+	return
+    }
+
+    # # ## ### ##### ######## #############
+
+    method ehandler {cmd} {
+	set myhandler $cmd
 	return
     }
 
@@ -57,8 +65,20 @@ oo::class create ::xo::private {
     method do {args} {
 	my Setup
 
+	if {[llength $myhandler]} {
+	    # The handler is expected to have a try/finally construct
+	    # which captures all of interest.
+	    {*}$myhandler {
+		my Run $args
+	    }
+	} else {
+	    my Run $args
+	}
+    }
+
+    method Run {words} {
 	try {
-	    config parse {*}$args
+	    config parse {*}$words
 	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
 	    if {![config interactive]} {
 		return {*}$o $e
@@ -97,7 +117,7 @@ oo::class create ::xo::private {
 
     # # ## ### ##### ######## #############
 
-    variable myarguments mycmd myinit myconfig
+    variable myarguments mycmd myinit myconfig myhandler
 
     # # ## ### ##### ######## #############
 }
