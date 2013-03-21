@@ -49,7 +49,7 @@ oo::class create ::xo::config {
 	set mymap     {} ;# parameter name -> object
 	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
 	set myoption  {} ;# option         -> object
-	set myfullopt {} ;# option prefix  -> option
+	set myfullopt {} ;# option prefix  -> list of full options having that prefix.
 	set myargs    {} ;# List of argument names.
 
 	# Import the DSL commands.
@@ -155,11 +155,13 @@ oo::class create ::xo::config {
     }
 
     method force {} {
-	# Compute the value of all parameters forcing the issue.
-	dict for {name para} $mymap {
-	    if {[$para forced]} {
-		$para value
-	    }
+	# Define the values of all parameters.
+	# Done in order of declaration.
+	# Any dependencies between parameter can be handled by proper
+	# declaration order.
+
+	foreach name $mynames {
+	    [dict get $mymap $name] value
 	}
 	return
     }
@@ -348,8 +350,8 @@ oo::class create ::xo::config {
     forward State  my DefineParameter 0 0 1
 
     method DefineParameter {
-	    order cmdline required
-	    name desc {spec {}}
+	order cmdline required
+	name desc {spec {}}
     } {
 	upvar 1 splat splat
 	if {$splat && $order} {
@@ -366,8 +368,8 @@ oo::class create ::xo::config {
 	# Map parameter name to handler object.
 	dict set mymap $name $para
 
-	# And a second map, cmdline visible parameters only, and
-	# documented.
+	# And a second map, user-visible parameters only,
+	# i.e. available on the cmdline, and documented.
 	if {[$para cmdline] && [$para documented]} {
 	    dict set mypub $name $para
 	}
@@ -382,6 +384,10 @@ oo::class create ::xo::config {
 		dict set myoption $option $para
 	    }
 	}
+
+	# And the list of all parameters in declaration order, for use
+	# in 'force'.
+	lappend mynames $name
 	return
     }
 
@@ -746,8 +752,8 @@ oo::class create ::xo::config {
 
     # # ## ### ##### ######## #############
 
-    variable mymap mypub myoption myfullopt myargs myaq mypq \
-	mycchain myreplexit myreplok myreplcommit \
+    variable mymap mypub myoption myfullopt myargs mynames \
+	myaq mypq mycchain myreplexit myreplok myreplcommit \
 	myreset myred mygreen mycyan myinteractive
 
     # # ## ### ##### ######## #############
@@ -956,9 +962,9 @@ oo::class create ::xo::config {
 	set labels [xo util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
 
-	# Clear cached values to force full recalculation across all
-	# the dependencies the parameters might have between them.
+	# Recalculate all parameters in full.
 	my forget
+	my force
 
 	set text {}
 	set alldefined 1
