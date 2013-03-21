@@ -28,6 +28,11 @@ kt local   testing xo
 
 ::kt source support.tcl
 
+# We do not want various tests to invoke a command loop.  But
+# uncommenting the next line serves as test that the class flag is
+# properly taken, by causing exactly that.
+#xo::config interactive 1
+
 # # ## ### ##### ######## ############# #####################
 
 ::kt source xo_main.tests      ; # Entrypoints.
