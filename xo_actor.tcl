@@ -87,6 +87,13 @@ oo::class create ::xo::actor {
 	return
     }
 
+    method root {} {
+	if {$mysuper ne {}} {
+	    return [$mysuper root]
+	}
+	return [self]
+    }
+
     method keys {} {
 	my Setup
 	set result [dict keys $mystore]
@@ -95,6 +102,15 @@ oo::class create ::xo::actor {
 	    set result [lsort -unique $result]
 	}
 	return $result
+    }
+
+    method has {key} {
+	my Setup
+	set ok [dict exists $mystore $key]
+	if {!$ok && ($mysuper ne {})} {
+	    return [$mysuper has $key]
+	}
+	return $ok
     }
 
     method get {key} {
@@ -115,6 +131,11 @@ oo::class create ::xo::actor {
 
     method set {key data} {
 	dict set mystore $key $data
+	return
+    }
+
+    method unset {key} {
+	dict unset mystore $key
 	return
     }
 

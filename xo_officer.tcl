@@ -271,34 +271,45 @@ oo::class create ::xo::officer {
 
     # Internal. Actual dispatch. Shared by main entry and shell.
     method Do {args} {
-	# Empty command. Delegate to the default, if we have any.
-	# Otherwise fail.
-	if {![llength $args]} {
-	    if {[my hasdefault]} {
-		return [[my lookup [my default]] do]
+	set reset 0
+	if {![my has .command]} {
+	    my set .command $args
+	    set reset 1
+	}
+	try {
+	    # Empty command. Delegate to the default, if we have any.
+	    # Otherwise fail.
+	    if {![llength $args]} {
+		if {[my hasdefault]} {
+		    return [[my lookup [my default]] do]
+		}
+		return -code error -errorcode {XO DO EMPTY} \
+		    "No command found."
 	    }
-	    return -code error -errorcode {XO DO EMPTY} \
-		"No command found."
+
+	    # Split into command and arguments
+	    set remainder [lassign $args cmd]
+
+	    # Delegate to the handler for a known command.
+	    if {[my Known $cmd]} {
+		[my lookup $cmd] do {*}$remainder
+		return
+	    }
+
+	    # The command word is not known. Delegate the full command to
+	    # the default, if we have any. Otherwise fail.
+
+	    if {[my hasdefault]} {
+		return [[my lookup [my default]] do {*}$args]
+	    }
+
+	    return -code error -errorcode {XO DO UNKNOWN} \
+		"No command found, have \"$cmd\""
+	} finally {
+	    if {$reset} {
+		my unset .command
+	    }
 	}
-
-	# Split into command and arguments
-	set remainder [lassign $args cmd]
-
-	# Delegate to the handler for a known command.
-	if {[my Known $cmd]} {
-	    [my lookup $cmd] do {*}$remainder
-	    return
-	}
-
-	# The command word is not known. Delegate the full command to
-	# the default, if we have any. Otherwise fail.
-
-	if {[my hasdefault]} {
-	    return [[my lookup [my default]] do {*}$args]
-	}
-
-	return -code error -errorcode {XO DO UNKNOWN} \
-	    "No command found, have \"$cmd\""
     }
 
     # # ## ### ##### ######## #############
