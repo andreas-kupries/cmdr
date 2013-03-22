@@ -658,7 +658,7 @@ oo::class create ::xo::config {
 	A put {*}$myargs
 
 	#puts /[A size]|[P size]
-	while {[P size]} {
+	while {1} {
 	    # Option ... Leaves A unchanged.
 	    if {[P size]} {
 		set word [P peek]
@@ -680,6 +680,18 @@ oo::class create ::xo::config {
 	    #puts [A size]|$argname|[P size]
 	    [dict get $mymap $argname] process $argname $mypq
 	    #puts \t==>[P size]
+
+	    if {![P size]} break
+	}
+
+	# At this point P is empty. A may not be.  That is ok if the
+	# remaining A's are optional.  Simply scan them, those which
+	# are mandatory will throw the necessary error.
+
+	while {[A size]} {
+	    set argname [A get]
+	    #puts [A size]|$argname|[P size]
+	    [dict get $mymap $argname] process $argname $mypq
 	}
 
 	#puts "a[A size] p[P size]"
@@ -801,12 +813,12 @@ oo::class create ::xo::config {
 
     method dispatch {cmd} {
 	switch -exact -- $cmd {
-	    .ok {
+	    .run - .ok {
 		set myreplexit   1
 		set myreplcommit 1
 		return
 	    }
-	    .cancel {
+	    .exit - .cancel {
 		set myreplexit 1
 		return
 	    }
@@ -905,8 +917,8 @@ oo::class create ::xo::config {
 	# All arguments and options are (pseudo-)commands.
 	# The special exit commands as well.
 	set     commands [my Visible]
-	lappend commands .ok
-	lappend commands .cancel
+	lappend commands .ok     .run
+	lappend commands .cancel .exit
 	lappend commands .help
 
 	set commands [lsort -unique [lsort -dict $commands]]
