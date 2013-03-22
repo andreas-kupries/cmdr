@@ -658,7 +658,7 @@ oo::class create ::xo::config {
 	A put {*}$myargs
 
 	#puts /[A size]|[P size]
-	while {[A size]} {
+	while {[P size]} {
 	    # Option ... Leaves A unchanged.
 	    if {[P size]} {
 		set word [P peek]
@@ -667,6 +667,9 @@ oo::class create ::xo::config {
 		    continue
 		}
 	    }
+
+	    # Out of arguments, yet still getting a non-option word.
+	    if {![A size]} { my tooMany }
 
 	    # Note: The parameter instance is responsible for
 	    # retrieving its value from the parameter queue.  It may
