@@ -103,7 +103,7 @@ oo::class create ::xo::private {
 	# command = list ('desc'      -> description
 	#                 'options'   -> options
 	#                 'arguments' -> arguments)
-	if {![my documented]} { return {} }
+	#if {![my documented]} { return {} }
 	return [dict create $prefix [config help]]
     }
 

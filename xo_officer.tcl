@@ -16,6 +16,7 @@ package require string::token::shell 1.1
 package require try
 package require xo::actor
 package require xo::private
+package require xo::help
 package require linenoise::facade
 
 # # ## ### ##### ######## ############# #####################
@@ -96,6 +97,11 @@ oo::class create ::xo::officer {
 	return [dict get $mymap a,$name]
     }
 
+    method has {name} {
+	my Setup
+	return [dict exists $mymap a,$name]
+    }
+
     method children {} {
 	my Setup
 	return $mychildren
@@ -111,6 +117,9 @@ oo::class create ::xo::officer {
 	set myinit 1
 
 	my learn $myactions
+
+	if {[my has help]} return
+	xo help auto [self]
 	return
     }
 
@@ -486,11 +495,12 @@ oo::class create ::xo::officer {
 	# Same is expected from the sub-ordinates
 
 	# help = dict (name -> command)
-	if {![my documented]} { return {} }
+	#if {![my documented]} { return {} }
 	set help {}
 	foreach c [my known] {
 	    set cname [list {*}$prefix $c]
 	    set actor [my lookup $c]
+	    if {![$actor documented]} continue
 	    set help [dict merge $help [$actor help $cname]]
 	}
 	return $help
