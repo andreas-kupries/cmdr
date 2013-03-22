@@ -48,7 +48,7 @@ oo::class create ::xo::officer {
 	set myinit      no       ; # Dispatch map will be initialized lazily
 	set mymap       {}       ; # Action map starts knowing nothing
 	set mycommands  {}       ; # Ditto
-	set myccommands exit     ; # Completion knows 'exit' command.
+	set myccommands .exit    ; # Completion knows '.exit' command.
 	set mychildren  {}       ; # List of created subordinates.
 	set myhandler   {}
 	return
@@ -298,7 +298,7 @@ oo::class create ::xo::officer {
     method exit      {}     { return $myreplexit }
 
     method dispatch {cmd} {
-	if {$cmd eq "exit"} {
+	if {$cmd eq ".exit"} {
 	    set myreplexit 1 ; return
 	}
 	my Do {*}[string token shell $cmd]
@@ -366,7 +366,7 @@ oo::class create ::xo::officer {
 	}
 
 	# Empty line. All our commands are completions, plus the
-	# special 'exit' command to stop the REPL. Thus using
+	# special '.exit' command to stop the REPL. Thus using
 	# my<c>commands instead of mycommands.
 
 	if {$line eq {}} {
@@ -401,13 +401,13 @@ oo::class create ::xo::officer {
 	# matching commands from the set the officer knows and
 	# providing them as completions. One tricky thing: If we have
 	# a default we ask it as well, and merge its completions to
-	# ours. Lastly, we may have to add the 'exit' pseudo-command
+	# ours. Lastly, we may have to add the '.exit' pseudo-command
 	# as well.
 
 	#puts stderr \tMATCH\ ([lindex $words $at end])
 
 	set commands [my known]
-	if {$doexit} { lappend commands exit }
+	if {$doexit} { lappend commands .exit }
 
 	set completions \
 	    [my completions $parse \
@@ -426,7 +426,7 @@ oo::class create ::xo::officer {
 	# Inside the command line. Find the relevant subordinate based
 	# on the current word and let it handle everything.
 
-	# The 'exit' pseudo-command of the subordinate is irrelevant
+	# The '.exit' pseudo-command of the subordinate is irrelevant
 	# during recursion from the current or higher REPL, suppress
 	# it. The pseudo-command is only relevant to the officers
 	# actually in their REPL.
