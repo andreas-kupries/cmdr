@@ -8,6 +8,7 @@
 package require Tcl 8.5
 package require textutil::adjust
 package require xo::util
+package require linenoise
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -18,7 +19,7 @@ namespace eval ::xo {
 }
 
 namespace eval ::xo::help {
-    namespace export query format
+    namespace export query format auto
     namespace ensemble create
 }
 
@@ -37,8 +38,58 @@ proc ::xo::help::query {actor words} {
 
 # # ## ### ##### ######## ############# #####################
 
+proc ::xo::help::auto {actor} {
+    # Generate a standard help command for any actor, and add it dynamically.
+
+    foreach c [info commands {::xo::help::format::[a-z]*}] {
+	set format [namespace tail $c]
+	lappend formats --$format
+	lappend options [string map [list @c@ $format] {
+	    option @c@ {
+		Activate @c@ form of the help.
+	    } {
+		presence
+		when-set [lambda {x} { xo::parameter config @format set @c@ }]
+	    }}]
+    }
+
+    lappend map @formats@ [linsert [join $formats {, }] end-1 and]
+    lappend map @options@ [join $options \n]
+    lappend map @actor@   $actor
+
+    $actor learn [string map $map {private help {
+	description {
+	    Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full
+	}
+	@options@
+	state format {
+	    Format of the help to generate.
+	    This field is fed by the options @formats@.
+	} { default full }
+	input cmdname {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	} { optional ; list }
+    } {::xo::help::auto-help @actor@}}]
+    return
+}
+
+proc ::xo::help::auto-help {actor config} {
+    set width  [linenoise columns]
+    set words  [$config @cmdname]
+    set format [$config @format]
+
+    puts [format $format $width [query $actor $words]]
+    return
+}
+
+# # ## ### ##### ######## ############# #####################
+
 namespace eval ::xo::help::format {
-    namespace export plain list short
+    namespace export full list short
     namespace ensemble create
 }
 
@@ -48,16 +99,16 @@ namespace eval ::xo::help::format {
 # ... entirely different formats (json, .rst, docopts, ...)
 #
 
-proc ::xo::help::format::plain {width help} {
+proc ::xo::help::format::full {width help} {
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
-	lappend result [Plain $width $cmd $desc]
+	lappend result [Full $width $cmd $desc]
     }
     return [join $result \n]
 }
 
-proc ::xo::help::format::Plain {width name command} {
+proc ::xo::help::format::Full {width name command} {
     # command = list ('desc'      -> description
     #                 'options'   -> options
     #                 'arguments' -> arguments)
@@ -149,7 +200,7 @@ proc ::xo::help::format::List {width name command} {
     # Short line.
     lappend lines \
 	[string trimright \
-	     "[join $name] [HasOptions $options][Arguments $arguments]"]
+	     "    [join $name] [HasOptions $options][Arguments $arguments]"]
     return [join $lines \n]
 }
 
