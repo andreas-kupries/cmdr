@@ -50,6 +50,7 @@ namespace eval ::xo::help::format {
 
 proc ::xo::help::format::plain {width help} {
     # help = dict (name -> command)
+    set result {}
     dict for {cmd desc} $help {
 	lappend result [Plain $width $cmd $desc]
     }
@@ -119,6 +120,7 @@ proc ::xo::help::format::Plain {width name command} {
 
 proc ::xo::help::format::list {width help} {
     # help = dict (name -> command)
+    set result {}
     dict for {cmd desc} $help {
 	lappend result [List $width $cmd $desc]
     }
@@ -155,6 +157,7 @@ proc ::xo::help::format::List {width name command} {
 
 proc ::xo::help::format::short {width help} {
     # help = dict (name -> command)
+    set result {}
     dict for {cmd desc} $help {
 	lappend result [Short $width $cmd $desc]
     }
