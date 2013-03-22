@@ -15,8 +15,11 @@ package require xo::officer
 ## Definition
 
 namespace eval ::xo {
-    namespace export new create
+    namespace export new create interactive interactive?
     namespace ensemble create
+
+    # Generally interaction is possible.
+    variable interactive 1
 }
 
 # # ## ### ##### ######## #############
@@ -28,6 +31,19 @@ proc ::xo::new {name spec} {
 proc ::xo::create {obj name spec} {
     # Uplevel to ensure proper namespace for the 'obj'.
     return [uplevel 1 [list xo::officer create $obj {} $name $spec]]
+}
+
+# # ## ### ##### ######## ############# #####################
+## Global interactivity configuration.
+
+proc ::xo::interactive {{enable 1}} {
+    variable interactive $enable
+    return
+}
+
+proc ::xo::interactive? {} {
+    variable interactive
+    return  $interactive
 }
 
 # # ## ### ##### ######## ############# #####################

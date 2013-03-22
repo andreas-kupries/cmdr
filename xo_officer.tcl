@@ -231,8 +231,17 @@ oo::class create ::xo::officer {
     method do {args} {
 	my Setup
 
-	# No command specified.
-	if {![llength $args]} {
+	# No command specified, what should we do ?
+	# (1) If there is a default, we can go on (Do will call on it).
+	# (2) Without default we must enter an interactive shell.
+	# (3) Except if interaction is globally suppressed. Then we
+	#     fall through, again, to generate the proper error message.
+	#
+	# Result: Interact with the user if no command was specified,
+	# we have no default to punt to and interaction is globally
+	# allowed.
+
+	if {![llength $args] && ![my hasdefault] && [xo interactive?]} {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
 

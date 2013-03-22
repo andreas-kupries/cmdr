@@ -80,7 +80,10 @@ oo::class create ::xo::private {
 	try {
 	    config parse {*}$words
 	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
-	    if {![config interactive]} {
+	    # Prevent interaction if globally suppressed, or just for
+	    # this actor.
+	    if {![xo interactive?] ||
+		![config interactive]} {
 		return {*}$o $e
 	    }
 	    if {![config interact]} return
