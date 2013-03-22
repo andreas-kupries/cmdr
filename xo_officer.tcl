@@ -48,7 +48,7 @@ oo::class create ::xo::officer {
 	set myinit      no       ; # Dispatch map will be initialized lazily
 	set mymap       {}       ; # Action map starts knowing nothing
 	set mycommands  {}       ; # Ditto
-	set myccommands .exit    ; # Completion knows '.exit' command.
+	set myccommands {}       ; # Ditto, derived cache, see method CCommands.
 	set mychildren  {}       ; # List of created subordinates.
 	set myhandler   {}
 	return
@@ -132,8 +132,7 @@ oo::class create ::xo::officer {
 	eval $script
 
 	# Postprocessing.
-	set mycommands  [lsort -dict $mycommands]
-	set myccommands [lsort -unique [lsort -dict $myccommands]]
+	set mycommands [lsort -dict $mycommands]
 	return
     }
 
@@ -177,9 +176,9 @@ oo::class create ::xo::officer {
 	    }
 	}
 
-	# Essentially copy the definition of the command the alias
+	# We essentially copy the definition of the command the alias
 	# refers to.
-	dict set mymap a,$name $handler
+	my Def $name $handler
 	return
     }
 
@@ -199,11 +198,15 @@ oo::class create ::xo::officer {
 
 	lappend mychildren $handler
 
-	# ... then make it known to the dispatcher.
+	my Def $name $handler
+	return
+    }
+
+    method Def {name handler} {
+	# Make an action known to the dispatcher.
 	dict set mymap last $name
-	dict set mymap a,$name $handler
-	lappend mycommands  $name
-	lappend myccommands $name
+	dict set mymap   a,$name $handler
+	lappend mycommands $name
 	return
     }
 
@@ -371,7 +374,7 @@ oo::class create ::xo::officer {
 
 	if {$line eq {}} {
 	    #puts stderr \tALL
-	    set completions $myccommands
+	    set completions [my CCommands]
 	    if {[my hasdefault]} {
 		dict set parse doexit 0
 		lappend completions {*}[[my lookup [my default]] complete-words $parse]
@@ -406,8 +409,7 @@ oo::class create ::xo::officer {
 
 	#puts stderr \tMATCH\ ([lindex $words $at end])
 
-	set commands [my known]
-	if {$doexit} { lappend commands .exit }
+	set commands [my CCommands $doexit]
 
 	set completions \
 	    [my completions $parse \
@@ -450,6 +452,30 @@ oo::class create ::xo::officer {
 	# No default, no completions.
 	return {}
     }
+
+    # # ## ### ##### ######## #############
+
+    method CCommands {{doexit 1}} {
+	if {![llength $myccommands]} {
+	    # Fill completion command cache.
+
+	    # Standard pseudo-commands.
+	    if {$doexit} {
+		lappend myccommands .exit
+	    }
+
+	    foreach c $mycommands {
+		# Undocumented commands are not available to completion.
+		if {![[my lookup $c] documented]} continue
+		lappend myccommands $c
+	    }
+
+	    set myccommands [lsort -unique [lsort -dict $myccommands]]
+	}
+
+	return $myccommands
+    }
+
 
     # # ## ### ##### ######## #############
 
