@@ -11,6 +11,7 @@
 package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2    ;# link helper
+package require linenoise
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -803,8 +804,60 @@ oo::class create ::xo::parameter {
 	    my Value: $myvalue
 	}
 
-	if {$myinteractive} {
-	    error "REPL/PROMPT parameter NYI"
+	if {$myinteractive && [xo interactive?]} {
+	    if {$myislist} {
+		error "REPL/PROMPT parameter NYI - list"
+		# Prompt for a list of values. We loop until the user
+		# aborted. The latter aborts just the loop. Completion
+		# is done through the chosen validation type. Invalid
+		# values are reported and ignored.
+		set continue 1
+		set thelist {}
+		while {$continue} {
+		    set continue 0
+		    try {
+			set thevalue [linenoise prompt \
+					  -prompt $myprompt \
+					  -complete [list {*}$myvalidate complete]]
+		    } on error {e o} {
+			if {$e eq "aborted"} {
+			    set continue 0
+			} else {
+			    return {*}$o $e
+			}
+		    }
+		    if {!$continue} break
+		    set take 1
+		    try {
+			set thevalue [{*}$myvalidate validate $thevalue]
+		    } trap {XO VALIDATE} {e o} {
+			set take 0
+			puts "$e, ignored"
+		    }
+		    if {$take} {
+			lappend thelist $thevalue
+		    }
+		}
+		my Value: $thelist
+	    } else {
+		# Prompt for a single value. We loop until a valid
+		# value was entered, or the user aborted. The latter
+		# aborts the whole operation. Completion is done through
+		# the chosen validation type.
+		set continue 1
+		while {$continue} {
+		    set continue 0
+		    set thevalue [linenoise prompt \
+				      -prompt $myprompt \
+				      -complete [list {*}$myvalidate complete]]
+		    try {
+			set thevalue [{*}$myvalidate validate $thevalue]
+		    } trap {XO VALIDATE} {e o} {
+			set continue 1
+		    }
+		}
+		my Value: $thevalue
+	    }
 	    # TODO: prompt to enter value, or cmdloop to enter a list.
 	    # Note: ^C for prompt aborts system.
 	    #       ^C for list aborts loop, but not system.
