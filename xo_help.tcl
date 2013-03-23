@@ -9,6 +9,7 @@ package require Tcl 8.5
 package require textutil::adjust
 package require xo::util
 package require linenoise
+package require lambda
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -61,7 +62,7 @@ proc ::xo::help::auto {actor} {
 	description {
 	    Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
-	    The default format is --full
+	    The default format is --full.
 	}
 	@options@
 	state format {

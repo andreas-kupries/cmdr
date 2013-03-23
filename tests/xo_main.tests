@@ -40,22 +40,22 @@ test xo-main-1.6 {new, wrong num args, too many} -body {
 # # ## ### ##### ######## ############# #####################
 ## Basic officer, knows nothing. create/new with proper arguments.
 
-test xo-main-2.0 {new, nothing} -setup {
+test xo-main-2.0 {new, nothing but auto-help} -setup {
     set x [xo new foo {}]
 } -body {
     list [$x known] [$x hasdefault]
 } -cleanup {
     $x destroy
     unset x
-} -result {{} 0}
+} -result {help 0}
 
-test xo-main-2.1 {create, nothing} -setup {
+test xo-main-2.1 {create, nothing but auto-help} -setup {
     xo create x foo {}
 } -body {
     list [x known] [x hasdefault]
 } -cleanup {
     x destroy
-} -result {{} 0}
+} -result {help 0}
 
 # # ## ### ##### ######## ############# #####################
 return

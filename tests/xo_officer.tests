@@ -26,6 +26,7 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
         default: bar
         store (K): 'D'
         bar --> bar
+        help --> help
         pliers --> pliers
         snafu --> bar
         tool --> tool
@@ -34,6 +35,7 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
         description: ''
         no default
         store (K): 'D'
+        help --> help
     }
     foo tool = {
         description: ''
@@ -41,6 +43,7 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
         store (K): 'D'
         store (U): 'V'
         hammer --> hammer
+        help --> help
         pliers --> pliers
     }
     foo tool hammer = {
@@ -48,12 +51,14 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
         no default
         store (K): 'D'
         store (U): 'V'
+        help --> help
     }
     foo tool pliers = {
         description: ''
         no default
         store (K): 'D'
         store (U): 'V'
+        help --> help
     }
 }
 
