@@ -9,6 +9,7 @@ kt require support TclOO
 kt require support oo::util 1.2
 kt require support struct::queue
 kt require support try
+kt require support lambda
 kt require support string::token::shell
 kt require support textutil::adjust
 

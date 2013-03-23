@@ -42,7 +42,91 @@ test xo-help-1.0 {help structure} -body {
     x help
 } -cleanup {
     x destroy
-} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {tool hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}} {hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}}}
+} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {bar help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} arguments {yoyo {code + desc height} jump {code ? desc gate} run {code +* desc lane}}} {snafu help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} {tool pliers help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} {tool hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}} {tool hammer help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} {tool help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} {hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} arguments {supply {code ?* desc magazine}}} {hammer help} {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}} help {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}}}
 
 test xo-help-1.1 {help structure, inverted boolean option} -body {
     xo create x foo {
@@ -55,12 +139,24 @@ test xo-help-1.1 {help structure, inverted boolean option} -body {
     x help
 } -cleanup {
     x destroy
-} -result {nail {desc workbench options {--driver {Complementary alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} arguments {}}}
+} -result {nail {desc workbench options {--driver {Complementary alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} arguments {}} help {desc {Retrieve help for a command or command set.
+	    Without arguments help for all commands is given.
+	    The default format is --full.} options {--short {
+		Activate short form of the help.
+	    } --list {
+		Activate list form of the help.
+	    } --full {
+		Activate full form of the help.
+	    }} arguments {cmdname {code ?* desc {
+	    The entire command line, the name of the
+	    command to get help for. This can be several
+	    words.
+	}}}}}
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-help-2.0 {plain - formatting help structure} -body {
-    HelpLarge plain
+test xo-help-2.0 {full - formatting help structure} -body {
+    HelpLarge full
 } -result {bar aloha [OPTIONS] yoyo ?jump? run...
     hawaii
 
@@ -70,6 +166,19 @@ test xo-help-2.0 {plain - formatting help structure} -body {
     yoyo height
     jump gate
     run  lane
+
+bar help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
 
 snafu aloha [OPTIONS] yoyo ?jump? run...
     hawaii
@@ -81,6 +190,32 @@ snafu aloha [OPTIONS] yoyo ?jump? run...
     jump gate
     run  lane
 
+snafu help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
+
+tool pliers help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
+
 tool hammer nail [OPTIONS] ?supply...?
     workbench
 
@@ -89,6 +224,32 @@ tool hammer nail [OPTIONS] ?supply...?
 
     supply magazine
 
+tool hammer help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
+
+tool help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
+
 hammer nail [OPTIONS] ?supply...?
     workbench
 
@@ -96,10 +257,36 @@ hammer nail [OPTIONS] ?supply...?
     --force  Alias of --driver.
 
     supply magazine
+
+hammer help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
+
+help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
 }
 
-test xo-help-2.1 {plain formatting - help structure, inverted boolean option} -body {
-    HelpSmall plain
+test xo-help-2.1 {full formatting - help structure, inverted boolean option} -body {
+    HelpSmall full
 } -result {nail [OPTIONS]
     workbench
 
@@ -107,6 +294,19 @@ test xo-help-2.1 {plain formatting - help structure, inverted boolean option} -b
                 --no-driver.
     --force     Alias of --no-driver.
     --no-driver force
+
+help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+    --short Activate short form of the help.
+    --list  Activate list form of the help.
+    --full  Activate full form of the help.
+
+    cmdname The entire command line, the name of
+            the command to get help for. This can
+            be several words.
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -116,34 +316,82 @@ test xo-help-3.0 {short - formatting help structure} -body {
 } -result {bar aloha [OPTIONS] yoyo ?jump? run...
     hawaii
 
+bar help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
 snafu aloha [OPTIONS] yoyo ?jump? run...
     hawaii
+
+snafu help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+tool pliers help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
 
 tool hammer nail [OPTIONS] ?supply...?
     workbench
 
+tool hammer help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+tool help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
 hammer nail [OPTIONS] ?supply...?
     workbench
+
+hammer help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
+
+help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
 }
 
 test xo-help-3.1 {short formatting - help structure, inverted boolean option} -body {
     HelpSmall short
 } -result {nail [OPTIONS]
     workbench
+
+help [OPTIONS] ?cmdname...?
+    Retrieve help for a command or command set.
+    Without arguments help for all commands is
+    given. The default format is --full.
 }
 
 # # ## ### ##### ######## ############# #####################
 
 test xo-help-4.0 {list - formatting help structure} -body {
     HelpLarge list
-} -result {bar aloha [OPTIONS] yoyo ?jump? run...
-snafu aloha [OPTIONS] yoyo ?jump? run...
-tool hammer nail [OPTIONS] ?supply...?
-hammer nail [OPTIONS] ?supply...?}
+} -result {    bar aloha [OPTIONS] yoyo ?jump? run...
+    bar help [OPTIONS] ?cmdname...?
+    snafu aloha [OPTIONS] yoyo ?jump? run...
+    snafu help [OPTIONS] ?cmdname...?
+    tool pliers help [OPTIONS] ?cmdname...?
+    tool hammer nail [OPTIONS] ?supply...?
+    tool hammer help [OPTIONS] ?cmdname...?
+    tool help [OPTIONS] ?cmdname...?
+    hammer nail [OPTIONS] ?supply...?
+    hammer help [OPTIONS] ?cmdname...?
+    help [OPTIONS] ?cmdname...?}
 
 test xo-help-4.1 {list formatting - help structure, inverted boolean option} -body {
     HelpSmall list
-} -result {nail [OPTIONS]}
+} -result {    nail [OPTIONS]
+    help [OPTIONS] ?cmdname...?}
 
 # # ## ### ##### ######## ############# #####################
 return

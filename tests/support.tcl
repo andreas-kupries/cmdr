@@ -164,6 +164,7 @@ proc DumpOfficer {o} {
     }
     foreach item [lsort -dict -index 1 $tmp] {
 	lassign $item c _
+	if {[info object class $c] eq "::xo::private"} continue
 	lappend result {*}[DumpOfficer $c]
     }
     return $result
