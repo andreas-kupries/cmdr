@@ -784,29 +784,8 @@ oo::class create ::xo::parameter {
 	    my Value: $myvalue
 	}
 
-	if {[llength $mygenerate]} {
-	    my Value: [{*}$mygenerate]
-	}
-
-	if {$myhasdefault} {
-	    # See my FillMissingValidation on why we always have a
-	    # validator command.
-	    if {$myislist} {
-		# Treat the default value as a list and validate each
-		# element.
-		set myvalue {}
-		foreach v $mydefault {
-		    lappend myvalue [{*}$myvalidate validate $v]
-		}
-	    } else {		
-		set myvalue [{*}$myvalidate validate $mydefault]
-	    }
-	    my Value: $myvalue
-	}
-
 	if {$myinteractive && [xo interactive?]} {
 	    if {$myislist} {
-		error "REPL/PROMPT parameter NYI - list"
 		# Prompt for a list of values. We loop until the user
 		# aborted. The latter aborts just the loop. Completion
 		# is done through the chosen validation type. Invalid
@@ -818,7 +797,7 @@ oo::class create ::xo::parameter {
 		    try {
 			set thevalue [linenoise prompt \
 					  -prompt $myprompt \
-					  -complete [list {*}$myvalidate complete]]
+					  -complete [::list {*}$myvalidate complete]]
 		    } on error {e o} {
 			if {$e eq "aborted"} {
 			    set continue 0
@@ -849,7 +828,7 @@ oo::class create ::xo::parameter {
 		    set continue 0
 		    set thevalue [linenoise prompt \
 				      -prompt $myprompt \
-				      -complete [list {*}$myvalidate complete]]
+				      -complete [::list {*}$myvalidate complete]]
 		    try {
 			set thevalue [{*}$myvalidate validate $thevalue]
 		    } trap {XO VALIDATE} {e o} {
@@ -861,6 +840,26 @@ oo::class create ::xo::parameter {
 	    # TODO: prompt to enter value, or cmdloop to enter a list.
 	    # Note: ^C for prompt aborts system.
 	    #       ^C for list aborts loop, but not system.
+	}
+
+	if {[llength $mygenerate]} {
+	    my Value: [{*}$mygenerate]
+	}
+
+	if {$myhasdefault} {
+	    # See my FillMissingValidation on why we always have a
+	    # validator command.
+	    if {$myislist} {
+		# Treat the default value as a list and validate each
+		# element.
+		set myvalue {}
+		foreach v $mydefault {
+		    lappend myvalue [{*}$myvalidate validate $v]
+		}
+	    } else {		
+		set myvalue [{*}$myvalidate validate $mydefault]
+	    }
+	    my Value: $myvalue
 	}
 
 	if {!$myisrequired} {
