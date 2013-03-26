@@ -666,7 +666,7 @@ oo::class create ::xo::config {
 		    my ProcessOption
 		    continue
 		}
-	    }
+	    } else break
 
 	    # Out of arguments, yet still getting a non-option word.
 	    if {![A size]} { my tooMany }
