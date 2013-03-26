@@ -26,6 +26,17 @@ oo::class create ::xo::parameter {
 	return [uplevel 2 [list config {*}$args]]
     }
 
+    classmethod nconfig {n args} {
+	incr n 2
+	return [uplevel $n [list config {*}$args]]
+    }
+
+    classmethod undefined {name} {
+	return -code error \
+	    -errorcode {XO PARAMETER UNDEFINED} \
+	    "Undefined: $name"
+    }
+
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
