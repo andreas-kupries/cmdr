@@ -18,16 +18,19 @@ package require linenoise
 
 oo::class create ::xo::parameter {
     # # ## ### ##### ######## #############
-    ## For use in parameter callbacks (generate, validate, and
-    ## whendef). The caller has the active xo::config object available
-    ## under the fixed command name 'config'. From inside the helper
-    ## this is then two (2) levels up.
-    classmethod config {args} {
-	return [uplevel 2 [list config {*}$args]]
-    }
 
-    classmethod nconfig {n args} {
-	incr n 2
+    ## For use in parameter callbacks (generate, validate, when-set,
+    ## and when-defined). The caller has the active xo::config object
+    ## available under the fixed command name 'config'. From inside
+    ## the helper this is then two levels up. However, the helper
+    ## might be called from deeper in the stack instead of just the
+    ## toplevel code of the callback itself. So we only start a search
+    ## a that level and go up until we have a 'config' command to
+    ## invoke.
+
+    classmethod config {args} {
+	# Note: my == my of the class, not the instance.
+	set n [my LocateConfig] ; incr n -1
 	return [uplevel $n [list config {*}$args]]
     }
 
@@ -37,10 +40,36 @@ oo::class create ::xo::parameter {
 	    "Undefined: $name"
     }
 
+    classmethod LocateConfig {} {
+	set n 3
+	set max [info level]
+	while {$n < $max} {
+	    set ns [uplevel $n {namespace current}]
+	    #set o [${ns}::my xs]
+	    #set c [info object class $o]
+	    #puts |$n|$max|$ns|$o|$c||||[::info commands ${ns}::*]|\n
+	    if {[llength [::info commands ${ns}::config]]} {
+		return $n
+	    }
+	    incr n
+	}
+	return -code error -errorcode {XO PARAMETER BAD CONTEXT} \
+	    "Bad context, no config found in the stack."
+    }
+
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
     constructor {theconfig order cmdline required name desc valuespec} {
+	# Import the whole collection of parameters this one is a part
+	# of into our namespace, as the fixed command "config", for
+	# use by the various command prefixes (generate, validate,
+	# when-defined), all of which will be run in our namespace
+	# context.
+
+	set myconfig $theconfig
+	interp alias {} [self namespace]::config {} $theconfig
+
 	# The valuespec is parsed immediately.  In contrast to actors,
 	# which defer until they are required.  As arguments are
 	# required when the using private is required further delay is
@@ -85,14 +114,6 @@ oo::class create ::xo::parameter {
 	set myvalue     {}
 	set mylocker    {}
 
-	# Import the whole collection of parameters this one is a part
-	# of into our namespace, as the fixed command "config", for
-	# use by the various command prefixes (generate, validate,
-	# when-defined), all of which will be run in our namespace
-	# context.
-
-	set myconfig $theconfig
-	interp alias {} [self namespace]::config {} $theconfig
 	return
     }
 

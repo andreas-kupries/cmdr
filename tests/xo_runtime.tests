@@ -530,6 +530,7 @@ test xo-runtime-6.2 {validation, default supplication} -setup {
 	input A - {
 	    optional
 	    validate {apply {{kind args} {
+		Note names = [xo::parameter config names]
 		Note validate $kind [uplevel 1 [list namespace current]]
 		switch -glob -- $kind {
 		    validate { return [lindex $args 0] }
@@ -544,7 +545,9 @@ test xo-runtime-6.2 {validation, default supplication} -setup {
     unset ons
     StopNotes
 } -result {
+    names = {}
     validate default MATCH
+    names = A
     validate validate MATCH
     {} {    A = <undefined> v'zZzZz'} {}
 }
@@ -557,6 +560,7 @@ test xo-runtime-6.3 {generator command} -setup {
 	input A - {
 	    optional
 	    when-defined {apply {{v} {
+		Note names = [xo::parameter config names]
 		Note defined = $v
 		Note defined [uplevel 1 [list namespace current]]
 		return
@@ -568,6 +572,7 @@ test xo-runtime-6.3 {generator command} -setup {
     unset ons
     StopNotes
 } -result {
+    names = A
     defined = {}
     defined MATCH
     {} {    A = <undefined> v''} {}
