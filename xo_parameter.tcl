@@ -716,6 +716,7 @@ oo::class create ::xo::parameter {
 	    }
 	    #puts "$myname (Q[$queue size] >  T$mythreshold)? take"
 	} elseif {[$queue size]} {
+	    #puts "$myname ($myvalidate validate [$queue peek])"
 	    # Choose by peeking at and validating the front value.
 	    # Note: We may not have a front value!
 
@@ -726,13 +727,16 @@ oo::class create ::xo::parameter {
 		    [{*}$myvalidate validate \
 			 [$queue peek]]
 	    } trap {XO VALIDATE} {e o} {
+		#puts "$myname (type mismatch, pass, $e)"
 		# Type mismatch, pass.
 		return 0
 	    } ; # internal errors bubble further
 	} else {
 	    # peek+test mode, nothing to peek at, pass.
+	    #puts "$myname (no argument, pass)"
 	    return 0
 	}
+	#puts "$myname (take)"
 	return 1
     }
 

@@ -977,7 +977,9 @@ oo::class create ::xo::config {
     }
 
     method ShowState {} {
-	my PrintState [my Visible] 0
+	puts [my PrintState [my Visible] 0]
+	flush stdout
+	return
     }
 
     method PrintState {plist full} {
@@ -1030,8 +1032,11 @@ oo::class create ::xo::config {
 		append label [expr {[$para isbool]     ? "B":"-"}]
 		append label [expr {[$para hasdefault] ? "D":"-"}]
 		append label [expr {[$para defined?]   ? "!":"-"}]
+
+		append label [expr {[$para required] ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
+
 		append label ")"
-		set sfx {          }
+		set sfx {             }
 	    } else {
 		set sfx {}
 	    }
@@ -1061,9 +1066,7 @@ oo::class create ::xo::config {
 	    set myreplok 1
 	}
 
-	puts $text
-	flush stdout
-	return
+	return $text
     }
 
     # # ## ### ##### ######## #############
