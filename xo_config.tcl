@@ -253,7 +253,6 @@ oo::class create ::xo::config {
     }
 
     method CompletionGraph {} {
-
 	set next {}
 	set start .(start)
 	set end   .(end)
@@ -358,6 +357,7 @@ oo::class create ::xo::config {
 	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
 		"A splat must be the last argument in the specification"
 	}
+
 	my ValidateAsUnknown $name
 
 	# Create and initialize handler.
@@ -394,7 +394,7 @@ oo::class create ::xo::config {
     method ValidateAsUnknown {name} {
 	if {![dict exists $mymap $name]} return
 	return -code error -errorcode {XO CONFIG KNOWN} \
-	    "Duplicate parameter $name, already specified."
+	    "Duplicate parameter \"[context fullname]: $name\", already specified."
     }
 
     # # ## ### ##### ######## #############
@@ -972,8 +972,16 @@ oo::class create ::xo::config {
 	return $visible
     }
 
+    method dump {} {
+	my PrintState [my names] 1
+    }
+
     method ShowState {} {
-	set plist  [lsort -dict [my Visible]]
+	my PrintState [my Visible] 0
+    }
+
+    method PrintState {plist full} {
+	set plist  [lsort -dict $plist]
 	set labels [xo util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
 
@@ -1012,6 +1020,22 @@ oo::class create ::xo::config {
 		set label "$label "
 	    }
 
+	    if {$full} {
+		append label " ("
+		append label [expr {[$para ordered]    ? "o":"-"}]
+		append label [expr {[$para cmdline]    ? "c":"-"}]
+		append label [expr {[$para list]       ? "L":"-"}]
+		append label [expr {[$para presence]   ? "P":"-"}]
+		append label [expr {[$para documented] ? "d":"-"}]
+		append label [expr {[$para isbool]     ? "B":"-"}]
+		append label [expr {[$para hasdefault] ? "D":"-"}]
+		append label [expr {[$para defined?]   ? "!":"-"}]
+		append label ")"
+		set sfx {          }
+	    } else {
+		set sfx {}
+	    }
+
 	    append text $label
 	    append text { : }
 
@@ -1021,7 +1045,7 @@ oo::class create ::xo::config {
 		set remainder [lassign $value first]
 		append text $first
 		foreach r $remainder {
-		    append text "\n    $blank  : $r"
+		    append text "\n    $blank$sfx  : $r"
 		}
 	    }
 
