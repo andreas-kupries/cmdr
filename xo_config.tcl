@@ -51,6 +51,7 @@ oo::class create ::xo::config {
 	set myoption  {} ;# option         -> object
 	set myfullopt {} ;# option prefix  -> list of full options having that prefix.
 	set myargs    {} ;# List of argument names.
+	set myinforce no
 
 	# Import the DSL commands.
 	link \
@@ -160,9 +161,14 @@ oo::class create ::xo::config {
 	# Any dependencies between parameter can be handled by proper
 	# declaration order.
 
+	if {$myinforce} return
+	set myinforce yes
+
 	foreach name $mynames {
 	    catch { [dict get $mymap $name] value }
 	}
+
+	set myinforce no
 	return
     }
 
@@ -174,6 +180,7 @@ oo::class create ::xo::config {
     }
 
     method forget {} {
+	if {$myinforce} return
 	dict for {name para} $mymap {
 	    $para forget
 	}
@@ -769,7 +776,7 @@ oo::class create ::xo::config {
 
     variable mymap mypub myoption myfullopt myargs mynames \
 	myaq mypq mycchain myreplexit myreplok myreplcommit \
-	myreset myred mygreen mycyan myinteractive
+	myreset myred mygreen mycyan myinteractive myinforce
 
     # # ## ### ##### ######## #############
     ## Local shell for interactive entry of the parameters in the collection.
