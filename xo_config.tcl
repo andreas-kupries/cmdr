@@ -1011,6 +1011,9 @@ oo::class create ::xo::config {
 
 	    try {
 		set value [$para value]
+		if {$value eq {}} {
+		    set value ${mycyan}<<epsilon>>${myreset}
+		}
 	    } trap {XO PARAMETER UNDEFINED} {e o} {
 		# Mandatory argument, without user-specified value.
 		set value "${mycyan}(undefined)$myreset"
@@ -1043,7 +1046,7 @@ oo::class create ::xo::config {
 		append label [expr {[$para required] ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
 
 		append label ")"
-		set sfx {             }
+		set sfx {              }
 	    } else {
 		set sfx {}
 	    }
