@@ -579,4 +579,18 @@ test cmdr-runtime-6.3 {generator command} -setup {
 }
 
 # # ## ### ##### ######## ############# #####################
+
+test cmdr-runtime-7.1 {not-quite options, arguments} -body {
+    Parse {
+	input  A - { optional ; validate identity }
+	option T - { validate identity }
+    } -1 -T -3
+    # The -1 looks like an option, but is for input A.
+} -result {
+    A = '-1' v'-1'
+    T = '-3' v'-3'
+}
+
+# # ## ### ##### ######## ############# #####################
+
 return

@@ -610,6 +610,19 @@ oo::class create ::cmdr::parameter {
 	return
     }
 
+    method accept {x} {
+	try {
+	    my ValueRelease [{*}$myvalidate validate $x]
+	    # If that was ok it has to be released also!
+	    # XXX Or should we maybe immediately cache it for 'value'?
+	} trap {CMDR VALIDATE} {e o} {
+	    #puts "$myname (type mismatch, pass, $e)"
+	    # Type mismatch, pass.
+	    return 0
+	} ; # internal errors bubble further
+	return 1
+    }
+
     method Locked {} {
 	if {$mylocker eq {}} return
 	return -code error \
@@ -733,18 +746,7 @@ oo::class create ::cmdr::parameter {
 	    #puts "$myname ($myvalidate validate [$queue peek])"
 	    # Choose by peeking at and validating the front value.
 	    # Note: We may not have a front value!
-
-	    # If that was ok it has to be released also!
-	    # XXX Or should we maybe immediately cache it for 'value'?
-	    try {
-		my ValueRelease \
-		    [{*}$myvalidate validate \
-			 [$queue peek]]
-	    } trap {CMDR VALIDATE} {e o} {
-		#puts "$myname (type mismatch, pass, $e)"
-		# Type mismatch, pass.
-		return 0
-	    } ; # internal errors bubble further
+	    return [my accept [$queue peek]]
 	} else {
 	    # peek+test mode, nothing to peek at, pass.
 	    #puts "$myname (no argument, pass)"

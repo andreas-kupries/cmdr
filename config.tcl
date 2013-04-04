@@ -666,11 +666,28 @@ oo::class create ::cmdr::config {
 
 	#puts /[A size]|[P size]
 	while {1} {
+	    #puts A|[expr {[A size] ? [A peek [A size]] : ""}]|
+	    #puts P|[expr {[P size] ? [P peek [P size]] : ""}]|
+
 	    # Option ... Leaves A unchanged.
 	    if {[P size]} {
 		set word [P peek]
 		if {[string match -* $word]} {
-		    my ProcessOption
+		    try {
+			my ProcessOption
+		    } trap {CMDR CONFIG BAD OPTION} {e o} {
+			# Test if we have regular arguments left, and
+			# if the first of them is willing to accept
+			# the word. If yes, the bad option is treated
+			# as regular argument.
+			if {![A size] ||
+			    ![[dict get $mymap [A peek]] accept $word]} {
+			    return {*}$o $e
+			}
+
+			P unget $word
+			my ProcessArgument
+		    }
 		    continue
 		}
 	    } else break
@@ -678,15 +695,7 @@ oo::class create ::cmdr::config {
 	    # Out of arguments, yet still getting a non-option word.
 	    if {![A size]} { my tooMany }
 
-	    # Note: The parameter instance is responsible for
-	    # retrieving its value from the parameter queue.  It may
-	    # pass on this. This also checks if there is enough in the
-	    # P queue, aborting if not.
-
-	    set argname [A get]
-	    #puts [A size]|$argname|[P size]
-	    [dict get $mymap $argname] process $argname $mypq
-	    #puts \t==>[P size]
+	    my ProcessArgument
 
 	    if {![P size]} break
 	}
@@ -721,6 +730,19 @@ oo::class create ::cmdr::config {
     }
 
     # # ## ### ##### ######## #############
+
+    method ProcessArgument {} {
+	# Note: The parameter instance is responsible for retrieving
+	# its value from the parameter queue. It may pass on this.
+	# This also checks if there is enough in the P queue, aborting
+	# if not.
+
+	set argname [A get]
+	#puts [A size]|$argname|[P size]
+	[dict get $mymap $argname] process $argname $mypq
+	#puts \t==>[P size]
+	return
+    }
 
     method ProcessOption {} {
 	# Get option. Do special handling.
