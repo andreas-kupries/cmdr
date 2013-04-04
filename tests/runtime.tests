@@ -530,7 +530,7 @@ test xo-runtime-6.2 {validation, default supplication} -setup {
 	input A - {
 	    optional
 	    validate {apply {{kind args} {
-		Note names = [xo::parameter config names]
+		Note names = [cmdr::parameter config names]
 		Note validate $kind [uplevel 1 [list namespace current]]
 		switch -glob -- $kind {
 		    validate { return [lindex $args 0] }
@@ -560,7 +560,7 @@ test xo-runtime-6.3 {generator command} -setup {
 	input A - {
 	    optional
 	    when-defined {apply {{v} {
-		Note names = [xo::parameter config names]
+		Note names = [cmdr::parameter config names]
 		Note defined = $v
 		Note defined [uplevel 1 [list namespace current]]
 		return

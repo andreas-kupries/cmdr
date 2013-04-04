@@ -13,14 +13,14 @@
 package require Tcl 8.5
 package require TclOO
 package require oo::util 1.2 ;# link helper
-package require xo::actor
-package require xo::config
+package require cmdr::actor
+package require cmdr::config
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
 
-oo::class create ::xo::private {
-    superclass ::xo::actor
+oo::class create ::cmdr::private {
+    superclass ::cmdr::actor
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
@@ -56,7 +56,7 @@ oo::class create ::xo::private {
 	set myinit 1
 
 	# Create and fill the parameter collection
-	set myconfig [xo::config create config [self] $myarguments]
+	set myconfig [cmdr::config create config [self] $myarguments]
 	return
     }
 
@@ -82,7 +82,7 @@ oo::class create ::xo::private {
 	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
 	    # Prevent interaction if globally suppressed, or just for
 	    # this actor.
-	    if {![xo interactive?] ||
+	    if {![cmdr interactive?] ||
 		![config interactive]} {
 		return {*}$o $e
 	    }
@@ -127,4 +127,4 @@ oo::class create ::xo::private {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::private 0.1
+package provide cmdr::private 0.1

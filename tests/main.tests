@@ -3,45 +3,45 @@
 ## Basic wrong#args checks.
 
 test xo-main-1.0 {new, wrong num args, not enough} -body {
-    xo new
+    cmdr new
 } -returnCodes error \
-    -result {wrong # args: should be "xo new name spec"}
+    -result {wrong # args: should be "cmdr new name spec"}
 
 test xo-main-1.1 {new, wrong num args, too many} -body {
-    xo new NAME
+    cmdr new NAME
 } -returnCodes error \
-    -result {wrong # args: should be "xo new name spec"}
+    -result {wrong # args: should be "cmdr new name spec"}
 
 test xo-main-1.2 {new, wrong num args, too many} -body {
-    xo new NAME SPEC X
+    cmdr new NAME SPEC X
 } -returnCodes error \
-    -result {wrong # args: should be "xo new name spec"}
+    -result {wrong # args: should be "cmdr new name spec"}
 
 test xo-main-1.3 {create, wrong num args, not enough} -body {
-    xo create
+    cmdr create
 } -returnCodes error \
-    -result {wrong # args: should be "xo create obj name spec"}
+    -result {wrong # args: should be "cmdr create obj name spec"}
 
 test xo-main-1.4 {create, wrong num args, not enough} -body {
-    xo create OBJ
+    cmdr create OBJ
 } -returnCodes error \
-    -result {wrong # args: should be "xo create obj name spec"}
+    -result {wrong # args: should be "cmdr create obj name spec"}
 
 test xo-main-1.5 {create, wrong num args, not enough} -body {
-    xo create OBJ NAME
+    cmdr create OBJ NAME
 } -returnCodes error \
-    -result {wrong # args: should be "xo create obj name spec"}
+    -result {wrong # args: should be "cmdr create obj name spec"}
 
 test xo-main-1.6 {new, wrong num args, too many} -body {
-    xo create OBJ NAME SPEC X
+    cmdr create OBJ NAME SPEC X
 } -returnCodes error \
-    -result {wrong # args: should be "xo create obj name spec"}
+    -result {wrong # args: should be "cmdr create obj name spec"}
 
 # # ## ### ##### ######## ############# #####################
 ## Basic officer, knows nothing. create/new with proper arguments.
 
 test xo-main-2.0 {new, nothing but auto-help} -setup {
-    set x [xo new foo {}]
+    set x [cmdr new foo {}]
 } -body {
     list [$x known] [$x hasdefault]
 } -cleanup {
@@ -50,7 +50,7 @@ test xo-main-2.0 {new, nothing but auto-help} -setup {
 } -result {help 0}
 
 test xo-main-2.1 {create, nothing but auto-help} -setup {
-    xo create x foo {}
+    cmdr create x foo {}
 } -body {
     list [x known] [x hasdefault]
 } -cleanup {

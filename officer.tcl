@@ -14,9 +14,9 @@ package require TclOO
 package require oo::util 1.2 ;# link helper.
 package require string::token::shell 1.1
 package require try
-package require xo::actor
-package require xo::private
-package require xo::help
+package require cmdr::actor
+package require cmdr::private
+package require cmdr::help
 package require linenoise::facade
 
 # # ## ### ##### ######## ############# #####################
@@ -25,8 +25,8 @@ package require linenoise::facade
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-oo::class create ::xo::officer {
-    superclass ::xo::actor
+oo::class create ::cmdr::officer {
+    superclass ::cmdr::actor
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
@@ -119,7 +119,7 @@ oo::class create ::xo::officer {
 	my learn $myactions
 
 	if {[my has help]} return
-	xo help auto [self]
+	cmdr help auto [self]
 	return
     }
 
@@ -148,8 +148,8 @@ oo::class create ::xo::officer {
     # # ## ### ##### ######## #############
     ## Implementation of the action specification language.
 
-    # common      => set          (super xo::actor)
-    # description => description: (super xo::actor)
+    # common      => set          (super cmdr::actor)
+    # description => description: (super cmdr::actor)
 
     forward Private my DefineAction private
     forward Officer my DefineAction officer
@@ -200,7 +200,7 @@ oo::class create ::xo::officer {
 	# officer itself. No special code for cleanup required.
 
 	set handler [self namespace]::${what}_$name
-	xo::$what create $handler [self] $name {*}$args
+	cmdr::$what create $handler [self] $name {*}$args
 
 	# Propagate error handler.
 	$handler ehandler $myhandler
@@ -253,7 +253,7 @@ oo::class create ::xo::officer {
 	# we have no default to punt to and interaction is globally
 	# allowed.
 
-	if {![llength $args] && ![my hasdefault] && [xo interactive?]} {
+	if {![llength $args] && ![my hasdefault] && [cmdr interactive?]} {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
 
@@ -527,4 +527,4 @@ oo::class create ::xo::officer {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::officer 0.1
+package provide cmdr::officer 0.1

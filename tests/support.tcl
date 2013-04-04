@@ -63,8 +63,8 @@ proc HelpSmall {format {n 50}} {
 
 proc Help {def format n} {
     try {
-	xo create x foo $def
-	xo help format $format $n [x help]
+	cmdr create x foo $def
+	cmdr help format $format $n [x help]
     } finally {
 	x destroy
     }
@@ -80,7 +80,7 @@ proc Notes      {}     { Wrap $::result }
 
 proc NiceParamSpec {kind spec {name A}} {
     try {
-	xo create x foo [list private bar [list $kind $name - $spec] {}]
+	cmdr create x foo [list private bar [list $kind $name - $spec] {}]
 	ShowPrivate [x lookup bar]
     } finally {
 	x destroy
@@ -89,7 +89,7 @@ proc NiceParamSpec {kind spec {name A}} {
 
 proc BadParamSpec {kind spec} {
     try {
-	xo create x foo [list private bar [list $kind A A $spec] {}]
+	cmdr create x foo [list private bar [list $kind A A $spec] {}]
 	[x lookup bar] keys
     } finally {
 	x destroy
@@ -99,7 +99,7 @@ proc BadParamSpec {kind spec} {
 proc Parse {spec args} {
     upvar 1 ons ons
     try {
-	xo create x foo \
+	cmdr create x foo \
 	    [list private bar $spec \
 		 {::apply {{config} {}}}]
 	# Eval the spec first.
@@ -164,7 +164,7 @@ proc DumpOfficer {o} {
     }
     foreach item [lsort -dict -index 1 $tmp] {
 	lassign $item c _
-	if {[info object class $c] eq "::xo::private"} continue
+	if {[info object class $c] eq "::cmdr::private"} continue
 	lappend result {*}[DumpOfficer $c]
     }
     return $result

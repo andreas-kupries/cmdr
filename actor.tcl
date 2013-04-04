@@ -20,7 +20,7 @@ package require TclOO
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
 
-oo::class create ::xo::actor {
+oo::class create ::cmdr::actor {
     # # ## ### ##### ######## #############
     ## Lifecycle
 
@@ -266,4 +266,4 @@ oo::class create ::xo::actor {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::actor 0.1
+package provide cmdr::actor 0.1
