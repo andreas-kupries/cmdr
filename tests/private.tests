@@ -1,7 +1,7 @@
-# -*- tcl -*- Include file for xo.test.
+# -*- tcl -*- Include file for cmdr.test.
 # # ## ### ##### ######## ############# #####################
 
-test xo-private-1.0 {private basics, parameter default settings, fragment use} -body {
+test cmdr-private-1.0 {private basics, parameter default settings, fragment use} -body {
     cmdr create x foo {
 	common def {
 	    input  INPUT  INPUT-DESC
@@ -72,7 +72,7 @@ test xo-private-1.0 {private basics, parameter default settings, fragment use} -
     }
 }
 
-test xo-private-1.1 {private basics, optional arguments, thresholding} -body {
+test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
     cmdr create x foo {
 	private bar {
 	    description 6.1
@@ -147,7 +147,7 @@ test xo-private-1.1 {private basics, optional arguments, thresholding} -body {
 # # ## ### ##### ######## ############# #####################
 ## Parameter declaration commands: input, splat, option, state
 
-test xo-private-2.0 {private, input, wrong num args, not enough} -setup {
+test cmdr-private-2.0 {private, input, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { input } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -155,7 +155,7 @@ test xo-private-2.0 {private, input, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"input name desc ?spec?\""
 
-test xo-private-2.1 {private, input, wrong num args, not enough} -setup {
+test cmdr-private-2.1 {private, input, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { input A } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -163,7 +163,7 @@ test xo-private-2.1 {private, input, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"input name desc ?spec?\""
 
-test xo-private-2.2 {private, input, wrong num args, too many} -setup {
+test cmdr-private-2.2 {private, input, wrong num args, too many} -setup {
     cmdr create x foo { private bar { input A D V X } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -171,7 +171,7 @@ test xo-private-2.2 {private, input, wrong num args, too many} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"input name desc ?spec?\""
 
-test xo-private-2.3 {private, input, defaults} -setup {
+test cmdr-private-2.3 {private, input, defaults} -setup {
     cmdr create x foo { private bar { input A D } ::snafu }
 } -body {
     ShowPrivate [x lookup bar]
@@ -195,7 +195,7 @@ test xo-private-2.3 {private, input, defaults} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-private-3.0 {private, option, wrong num args, not enough} -setup {
+test cmdr-private-3.0 {private, option, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { option } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -203,7 +203,7 @@ test xo-private-3.0 {private, option, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"option name desc ?spec?\""
 
-test xo-private-3.1 {private, option, wrong num args, not enough} -setup {
+test cmdr-private-3.1 {private, option, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { option A } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -211,7 +211,7 @@ test xo-private-3.1 {private, option, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"option name desc ?spec?\""
 
-test xo-private-3.2 {private, option, wrong num args, too many} -setup {
+test cmdr-private-3.2 {private, option, wrong num args, too many} -setup {
     cmdr create x foo { private bar { option A D V X } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -219,7 +219,7 @@ test xo-private-3.2 {private, option, wrong num args, too many} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"option name desc ?spec?\""
 
-test xo-private-3.3 {private, option, defaults} -setup {
+test cmdr-private-3.3 {private, option, defaults} -setup {
     cmdr create x foo { private bar { option A D } ::snafu }
 } -body {
     ShowPrivate [x lookup bar]
@@ -249,7 +249,7 @@ test xo-private-3.3 {private, option, defaults} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-private-4.0 {private, state, wrong num args, not enough} -setup {
+test cmdr-private-4.0 {private, state, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { state } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -257,7 +257,7 @@ test xo-private-4.0 {private, state, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"state name desc ?spec?\""
 
-test xo-private-4.1 {private, state, wrong num args, not enough} -setup {
+test cmdr-private-4.1 {private, state, wrong num args, not enough} -setup {
     cmdr create x foo { private bar { state A } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -265,7 +265,7 @@ test xo-private-4.1 {private, state, wrong num args, not enough} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"state name desc ?spec?\""
 
-test xo-private-4.2 {private, state, wrong num args, too many} -setup {
+test cmdr-private-4.2 {private, state, wrong num args, too many} -setup {
     cmdr create x foo { private bar { state A D V X } ::snafu }
 } -body {
     [x lookup bar] keys
@@ -273,7 +273,7 @@ test xo-private-4.2 {private, state, wrong num args, too many} -setup {
     x destroy
 } -returnCodes error -result "wrong # args: should be \"state name desc ?spec?\""
 
-test xo-private-4.3 {private, state, defaults} -setup {
+test cmdr-private-4.3 {private, state, defaults} -setup {
     cmdr create x foo { private bar { state A D } ::snafu }
 } -body {
     ShowPrivate [x lookup bar]

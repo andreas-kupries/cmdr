@@ -71,7 +71,7 @@ proc Help {def format n} {
 }
 
 # # ## ### ##### ######## ############# #####################
-## Supporting procedures for xo.test et. al.
+## Supporting procedures for cmdr.test et. al.
 
 proc StartNotes {}     { set ::result {} ; return }
 proc Note       {args} { lappend ::result $args ; return }

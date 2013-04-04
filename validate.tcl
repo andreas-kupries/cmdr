@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Validate - Definition of core validation classes.
+## CMDR - Validate - Definition of core validation classes.
 
 # # ## ### ##### ######## ############# #####################
 ## Requisites
@@ -24,7 +24,7 @@ namespace eval ::cmdr::validate {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::validate::fail {code type x} {
-    return -code error -errorcode [list XO VALIDATE {*}$code] \
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] \
 	"Expected $type, got \"$x\""
 }
 

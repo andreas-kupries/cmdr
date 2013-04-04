@@ -1,8 +1,8 @@
-# -*- tcl -*- Include file for xo.test.
+# -*- tcl -*- Include file for cmdr.test.
 # # ## ### ##### ######## ############# #####################
 ## Help structure generation.
 
-test xo-help-1.0 {help structure} -body {
+test cmdr-help-1.0 {help structure} -body {
     cmdr create x foo {
 	description TEST
 	officer bar {
@@ -128,7 +128,7 @@ test xo-help-1.0 {help structure} -body {
 	    words.
 	}}}}}
 
-test xo-help-1.1 {help structure, inverted boolean option} -body {
+test cmdr-help-1.1 {help structure, inverted boolean option} -body {
     cmdr create x foo {
 	description TEST
 	private nail {
@@ -155,7 +155,7 @@ test xo-help-1.1 {help structure, inverted boolean option} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-help-2.0 {full - formatting help structure} -body {
+test cmdr-help-2.0 {full - formatting help structure} -body {
     HelpLarge full
 } -result {bar aloha [OPTIONS] yoyo ?jump? run...
     hawaii
@@ -285,7 +285,7 @@ help [OPTIONS] ?cmdname...?
             be several words.
 }
 
-test xo-help-2.1 {full formatting - help structure, inverted boolean option} -body {
+test cmdr-help-2.1 {full formatting - help structure, inverted boolean option} -body {
     HelpSmall full
 } -result {nail [OPTIONS]
     workbench
@@ -311,7 +311,7 @@ help [OPTIONS] ?cmdname...?
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-help-3.0 {short - formatting help structure} -body {
+test cmdr-help-3.0 {short - formatting help structure} -body {
     HelpLarge short
 } -result {bar aloha [OPTIONS] yoyo ?jump? run...
     hawaii
@@ -361,7 +361,7 @@ help [OPTIONS] ?cmdname...?
     given. The default format is --full.
 }
 
-test xo-help-3.1 {short formatting - help structure, inverted boolean option} -body {
+test cmdr-help-3.1 {short formatting - help structure, inverted boolean option} -body {
     HelpSmall short
 } -result {nail [OPTIONS]
     workbench
@@ -374,7 +374,7 @@ help [OPTIONS] ?cmdname...?
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-help-4.0 {list - formatting help structure} -body {
+test cmdr-help-4.0 {list - formatting help structure} -body {
     HelpLarge list
 } -result {    bar aloha [OPTIONS] yoyo ?jump? run...
     bar help [OPTIONS] ?cmdname...?
@@ -388,7 +388,7 @@ test xo-help-4.0 {list - formatting help structure} -body {
     hammer help [OPTIONS] ?cmdname...?
     help [OPTIONS] ?cmdname...?}
 
-test xo-help-4.1 {list formatting - help structure, inverted boolean option} -body {
+test cmdr-help-4.1 {list formatting - help structure, inverted boolean option} -body {
     HelpSmall list
 } -result {    nail [OPTIONS]
     help [OPTIONS] ?cmdname...?}

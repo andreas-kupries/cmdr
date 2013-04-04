@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Value - Definition of command parameters (for a private).
+## CMDR - Value - Definition of command parameters (for a private).
 
 ## Reference "doc/notes_parameter.txt". The Rnnn and Cnnn tags are
 ## links into this document.
@@ -36,7 +36,7 @@ oo::class create ::cmdr::parameter {
 
     classmethod undefined {name} {
 	return -code error \
-	    -errorcode {XO PARAMETER UNDEFINED} \
+	    -errorcode {CMDR PARAMETER UNDEFINED} \
 	    "Undefined: $name"
     }
 
@@ -53,7 +53,7 @@ oo::class create ::cmdr::parameter {
 	    }
 	    incr n
 	}
-	return -code error -errorcode {XO PARAMETER BAD CONTEXT} \
+	return -code error -errorcode {CMDR PARAMETER BAD CONTEXT} \
 	    "Bad context, no config found in the stack."
     }
 
@@ -430,7 +430,7 @@ oo::class create ::cmdr::parameter {
 	# Note: list is a local command, we want the builtin
 	if {[uplevel 1 [::list expr $expr]]} return
 	return -code error \
-	    -errorcode {XO PARAMETER CONSTRAINT VIOLATION} \
+	    -errorcode {CMDR PARAMETER CONSTRAINT VIOLATION} \
 	    [string map [::list @ $myname] $msg]
     }
 
@@ -613,7 +613,7 @@ oo::class create ::cmdr::parameter {
     method Locked {} {
 	if {$mylocker eq {}} return
 	return -code error \
-	    -errorcode {XO PARAMETER LOCKED} \
+	    -errorcode {CMDR PARAMETER LOCKED} \
 	    "You cannot use \"[my name]\" together with \"$mylocker\"."
     }
 
@@ -704,8 +704,22 @@ oo::class create ::cmdr::parameter {
 
 	if {$mythreshold >= 0} {
 	    # Choose by checking argument count against a threshold.
+
 	    # For this to work correctly we now have to process all
-	    # the remaining options first.
+	    # the remaining options first. Except for list
+	    # arguments. These are last, and thus will always
+	    # take whatever where is. Ok, we pass on an empty
+	    # queue.
+
+	    if {$myislist} {
+		if {[$queue size]} {
+		    #puts "$myname (list, take)"
+		    return 1
+		} else {
+		    #puts "$myname (list, pass empty)"
+		    return 0
+		}
+	    }
 
 	    config parse-options
 
@@ -726,7 +740,7 @@ oo::class create ::cmdr::parameter {
 		my ValueRelease \
 		    [{*}$myvalidate validate \
 			 [$queue peek]]
-	    } trap {XO VALIDATE} {e o} {
+	    } trap {CMDR VALIDATE} {e o} {
 		#puts "$myname (type mismatch, pass, $e)"
 		# Type mismatch, pass.
 		return 0
@@ -751,7 +765,7 @@ oo::class create ::cmdr::parameter {
     method string {} {
 	if {!$myhasstring} {
 	    return -code error \
-		-errorcode {XO PARAMETER UNDEFINED} \
+		-errorcode {CMDR PARAMETER UNDEFINED} \
 		"Undefined: $myname"
 	}
 	return $mystring
@@ -845,7 +859,7 @@ oo::class create ::cmdr::parameter {
 		    set take 1
 		    try {
 			set thevalue [{*}$myvalidate validate $thevalue]
-		    } trap {XO VALIDATE} {e o} {
+		    } trap {CMDR VALIDATE} {e o} {
 			set take 0
 			puts "$e, ignored"
 		    }
@@ -867,7 +881,7 @@ oo::class create ::cmdr::parameter {
 				      -complete [::list {*}$myvalidate complete]]
 		    try {
 			set thevalue [{*}$myvalidate validate $thevalue]
-		    } trap {XO VALIDATE} {e o} {
+		    } trap {CMDR VALIDATE} {e o} {
 			set continue 1
 		    }
 		}
@@ -903,7 +917,7 @@ oo::class create ::cmdr::parameter {
 	}
 
 	return -code error \
-	    -errorcode {XO PARAMETER UNDEFINED} \
+	    -errorcode {CMDR PARAMETER UNDEFINED} \
 	    "Undefined: $myname"
     }
 
