@@ -9,12 +9,12 @@
 
 package require Tcl 8.5
 package require TclOO
-package require xo::officer
+package require cmdr::officer
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-namespace eval ::xo {
+namespace eval ::cmdr {
     namespace export new create interactive interactive?
     namespace ensemble create
 
@@ -24,28 +24,28 @@ namespace eval ::xo {
 
 # # ## ### ##### ######## #############
 
-proc ::xo::new {name spec} {
-    return [xo::officer new {} $name $spec]
+proc ::cmdr::new {name spec} {
+    return [cmdr::officer new {} $name $spec]
 }
 
-proc ::xo::create {obj name spec} {
+proc ::cmdr::create {obj name spec} {
     # Uplevel to ensure proper namespace for the 'obj'.
-    return [uplevel 1 [list xo::officer create $obj {} $name $spec]]
+    return [uplevel 1 [list cmdr::officer create $obj {} $name $spec]]
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Global interactivity configuration.
 
-proc ::xo::interactive {{enable 1}} {
+proc ::cmdr::interactive {{enable 1}} {
     variable interactive $enable
     return
 }
 
-proc ::xo::interactive? {} {
+proc ::cmdr::interactive? {} {
     variable interactive
     return  $interactive
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo 0.1
+package provide cmdr 0.1

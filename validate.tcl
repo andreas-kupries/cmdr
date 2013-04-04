@@ -10,12 +10,12 @@ package require Tcl 8.5
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-namespace eval ::xo {
+namespace eval ::cmdr {
     namespace export validate
     namespace ensemble create
 }
 
-namespace eval ::xo::validate {
+namespace eval ::cmdr::validate {
     namespace export boolean integer identity \
 	fail complete-enum config
     namespace ensemble create
@@ -23,12 +23,12 @@ namespace eval ::xo::validate {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::validate::fail {code type x} {
+proc ::cmdr::validate::fail {code type x} {
     return -code error -errorcode [list XO VALIDATE {*}$code] \
 	"Expected $type, got \"$x\""
 }
 
-proc ::xo::validate::complete-enum {choices nocase buffer} {
+proc ::cmdr::validate::complete-enum {choices nocase buffer} {
     if {$buffer eq {}} {
 	return $choices
     }
@@ -47,21 +47,21 @@ proc ::xo::validate::complete-enum {choices nocase buffer} {
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::validate::boolean {
+namespace eval ::cmdr::validate::boolean {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::xo::validate::fail
-    namespace import ::xo::validate::complete-enum
+    namespace import ::cmdr::validate::fail
+    namespace import ::cmdr::validate::complete-enum
 }
 
-proc ::xo::validate::boolean::default  {}  { return no }
-proc ::xo::validate::boolean::release  {x} { return }
+proc ::cmdr::validate::boolean::default  {}  { return no }
+proc ::cmdr::validate::boolean::release  {x} { return }
 
-proc ::xo::validate::boolean::complete {x} {
+proc ::cmdr::validate::boolean::complete {x} {
     return [complete-enum {yes no false true on off 0 1} 1 $x]
 }
 
-proc ::xo::validate::boolean::validate {x} {
+proc ::cmdr::validate::boolean::validate {x} {
     if {[string is boolean -strict $x]} { return $x }
     fail BOOLEAN "a boolean" $x
 }
@@ -69,56 +69,56 @@ proc ::xo::validate::boolean::validate {x} {
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::validate::integer {
+namespace eval ::cmdr::validate::integer {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::xo::validate::fail
+    namespace import ::cmdr::validate::fail
 }
 
-proc ::xo::validate::integer::default  {}  { return 0 }
-proc ::xo::validate::integer::release  {x} { return }
-proc ::xo::validate::integer::complete {x} { return {} }
-proc ::xo::validate::integer::validate {x} {
+proc ::cmdr::validate::integer::default  {}  { return 0 }
+proc ::cmdr::validate::integer::release  {x} { return }
+proc ::cmdr::validate::integer::complete {x} { return {} }
+proc ::cmdr::validate::integer::validate {x} {
     if {[string is integer -strict $x]} { return $x }
     fail INTEGER "an integer" $x
 }
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::validate::identity {
+namespace eval ::cmdr::validate::identity {
     namespace export default validate complete release
     namespace ensemble create
 }
 
-proc ::xo::validate::identity::default  {}  { return {} }
-proc ::xo::validate::identity::release  {x} { return }
-proc ::xo::validate::identity::complete {x} { return {} }
-proc ::xo::validate::identity::validate {x} { return $x }
+proc ::cmdr::validate::identity::default  {}  { return {} }
+proc ::cmdr::validate::identity::release  {x} { return }
+proc ::cmdr::validate::identity::complete {x} { return {} }
+proc ::cmdr::validate::identity::validate {x} { return $x }
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::validate::pass {
+namespace eval ::cmdr::validate::pass {
     namespace export default validate complete release
     namespace ensemble create
 }
 
-proc ::xo::validate::pass::default  {}  { return {} }
-proc ::xo::validate::pass::release  {x} { return }
-proc ::xo::validate::pass::complete {x} { return {} }
-proc ::xo::validate::pass::validate {x} { return $x }
+proc ::cmdr::validate::pass::default  {}  { return {} }
+proc ::cmdr::validate::pass::release  {x} { return }
+proc ::cmdr::validate::pass::complete {x} { return {} }
+proc ::cmdr::validate::pass::validate {x} { return $x }
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::validate::str {
+namespace eval ::cmdr::validate::str {
     namespace export default validate complete release
     namespace ensemble create
 }
 
-proc ::xo::validate::str::default  {}  { return {} }
-proc ::xo::validate::str::release  {x} { return }
-proc ::xo::validate::str::complete {x} { return {} }
-proc ::xo::validate::str::validate {x} { return $x }
+proc ::cmdr::validate::str::default  {}  { return {} }
+proc ::cmdr::validate::str::release  {x} { return }
+proc ::cmdr::validate::str::complete {x} { return {} }
+proc ::cmdr::validate::str::validate {x} { return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::validate 0.1
+package provide cmdr::validate 0.1

@@ -3,7 +3,7 @@
 ## Hierarchy of actions, aliases, defaults.
 
 test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
-    xo create x foo {
+    cmdr create x foo {
 	common K D
 	description TEST
 	officer bar {}
@@ -66,7 +66,7 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
 ## Error cases of the action DSL.
 
 test xo-officer-2.0 {officer/action DSL, officer, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	officer
     }
 } -body {
@@ -77,7 +77,7 @@ test xo-officer-2.0 {officer/action DSL, officer, wrong\#args} -setup {
     -result "wrong # args: should be \"officer name ...\""
 
 test xo-officer-2.1 {officer/action DSL, officer, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	officer foo
     }
 } -body {
@@ -85,10 +85,10 @@ test xo-officer-2.1 {officer/action DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error -match glob \
-    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
+    -result "wrong # args: should be \"cmdr::officer create ::oo::*::officer_foo super name actions\""
 
 test xo-officer-2.2 {officer/action DSL, officer, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	officer foo {} x
     }
 } -body {
@@ -96,12 +96,12 @@ test xo-officer-2.2 {officer/action DSL, officer, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error -match glob \
-    -result "wrong # args: should be \"xo::officer create ::oo::*::officer_foo super name actions\""
+    -result "wrong # args: should be \"cmdr::officer create ::oo::*::officer_foo super name actions\""
 
 # # ## ### ##### ######## ############# #####################
 
 test xo-officer-3.0 {officer/action DSL, default, missing previous definition} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	default
     }
 } -body {
@@ -112,7 +112,7 @@ test xo-officer-3.0 {officer/action DSL, default, missing previous definition} -
     -result {Cannot be used as first command}
 
 test xo-officer-3.1 {officer/action DSL, default, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	default x y
     }
 } -body {
@@ -123,7 +123,7 @@ test xo-officer-3.1 {officer/action DSL, default, wrong\#args} -setup {
     -result {wrong # args: should be "default ?name?"}
 
 test xo-officer-3.2 {officer/action DSL, default, unknown action} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	default x
     }
 } -body {
@@ -136,7 +136,7 @@ test xo-officer-3.2 {officer/action DSL, default, unknown action} -setup {
 # # ## ### ##### ######## ############# #####################
 
 test xo-officer-4.0 {officer/action DSL, alias, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	alias
     }
 } -body {
@@ -147,7 +147,7 @@ test xo-officer-4.0 {officer/action DSL, alias, wrong\#args} -setup {
     -result "wrong # args: should be \"alias name ...\""
 
 test xo-officer-4.1 {officer/action DSL, alias, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	alias x =
     }
 } -body {
@@ -158,7 +158,7 @@ test xo-officer-4.1 {officer/action DSL, alias, wrong\#args} -setup {
     -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
 test xo-officer-4.2 {officer/action DSL, alias, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	alias x + a
     }
 } -body {
@@ -169,7 +169,7 @@ test xo-officer-4.2 {officer/action DSL, alias, wrong\#args} -setup {
     -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
 test xo-officer-4.3 {officer/action DSL, alias, missing previous definition} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	alias x
     }
 } -body {
@@ -180,7 +180,7 @@ test xo-officer-4.3 {officer/action DSL, alias, missing previous definition} -se
     -result {Cannot be used as first command}
 
 test xo-officer-4.4 {officer/action DSL, alias, missing definition} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	alias x = y
     }
 } -body {
@@ -193,7 +193,7 @@ test xo-officer-4.4 {officer/action DSL, alias, missing definition} -setup {
 # # ## ### ##### ######## ############# #####################
 
 test xo-officer-5.1 {officer/action DSL, description, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	description
     }
 } -body {
@@ -204,7 +204,7 @@ test xo-officer-5.1 {officer/action DSL, description, wrong\#args} -setup {
     -result "wrong # args: should be \"description text\""
 
 test xo-officer-5.2 {officer/action DSL, description, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	description a b
     }
 } -body {
@@ -217,7 +217,7 @@ test xo-officer-5.2 {officer/action DSL, description, wrong\#args} -setup {
 # # ## ### ##### ######## ############# #####################
 
 test xo-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	common
     }
 } -body {
@@ -228,7 +228,7 @@ test xo-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
     -result "wrong # args: should be \"common key data\""
 
 test xo-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	common KEY
     }
 } -body {
@@ -239,7 +239,7 @@ test xo-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
     -result "wrong # args: should be \"common key data\""
 
 test xo-officer-6.3 {officer/action DSL, common, wrong\#args} -setup {
-    xo create x foo {
+    cmdr create x foo {
 	common KEY DATA X
     }
 } -body {

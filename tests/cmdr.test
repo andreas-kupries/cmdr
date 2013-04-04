@@ -1,6 +1,6 @@
 # -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
 # # ## ### ##### ######## ############# #####################
-## xo.test:  tests for the xo package
+## cmdr.test:  tests for the cmdr package
 
 kt check Tcl     8.5
 kt check tcltest 2
@@ -13,16 +13,16 @@ kt require support lambda
 kt require support string::token::shell
 kt require support textutil::adjust
 
-kt local   support xo::util
-kt local   support xo::help
+kt local   support cmdr::util
+kt local   support cmdr::help
 
-kt local   support xo::parameter
-kt local   support xo::config
-kt local   support xo::actor
-kt local   support xo::private
-kt local   support xo::officer
+kt local   support cmdr::parameter
+kt local   support cmdr::config
+kt local   support cmdr::actor
+kt local   support cmdr::private
+kt local   support cmdr::officer
 
-kt local   testing xo
+kt local   testing cmdr
 
 # # ## ### ##### ######## ############# #####################
 ## Get the support
@@ -32,16 +32,16 @@ kt local   testing xo
 # We do not want various tests to invoke a command loop.  But
 # uncommenting the next line serves as test that the class flag is
 # properly taken, by causing exactly that.
-#xo::config interactive 1
+#cmdr::config interactive 1
 
 # # ## ### ##### ######## ############# #####################
 
-::kt source xo_main.tests      ; # Entrypoints.
-::kt source xo_officer.tests   ; # Action DSL
-::kt source xo_private.tests   ; # Parameter DSL, collection
-::kt source xo_parameter.tests ; # Parameter DSL, details
-::kt source xo_runtime.tests   ; # Runtime command line parsing
-::kt source xo_help.tests      ; # Help structures & formatting
+::kt source main.tests      ; # Entrypoints.
+::kt source officer.tests   ; # Action DSL
+::kt source private.tests   ; # Parameter DSL, collection
+::kt source parameter.tests ; # Parameter DSL, details
+::kt source runtime.tests   ; # Runtime command line parsing
+::kt source help.tests      ; # Help structures & formatting
 
 # TODO: keys, get (super chain)
 

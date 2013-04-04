@@ -16,11 +16,11 @@ package require linenoise
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-oo::class create ::xo::parameter {
+oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
 
     ## For use in parameter callbacks (generate, validate, when-set,
-    ## and when-defined). The caller has the active xo::config object
+    ## and when-defined). The caller has the active cmdr::config object
     ## available under the fixed command name 'config'. From inside
     ## the helper this is then two levels up. However, the helper
     ## might be called from deeper in the stack instead of just the
@@ -107,7 +107,7 @@ oo::class create ::xo::parameter {
 	my ExecuteSpecification $valuespec
 
 	# Start with a proper runtime state. See also method 'reset'
-	# for an exported variant with cleanup, for use by xo::config.
+	# for an exported variant with cleanup, for use by cmdr::config.
 	set myhasstring no
 	set mystring    {}
 	set myhasvalue  no
@@ -157,7 +157,7 @@ oo::class create ::xo::parameter {
     method list         {} { return $myislist }
     method presence     {} { return $myonlypresence }
     method documented   {} { return $myisdocumented }
-    method isbool       {} { return [expr {$myvalidate eq "::xo::validate::boolean"}] }
+    method isbool       {} { return [expr {$myvalidate eq "::cmdr::validate::boolean"}] }
     method locker       {} { return $mylocker }
 
     # Alternate sources for the parameter value.
@@ -304,10 +304,10 @@ oo::class create ::xo::parameter {
     method Validate {cmd} {
 	my C9_PresenceValidateConflict
 	set words [lassign $cmd cmd]
-	# Allow FOO shorthand for xo::validate::FOO
+	# Allow FOO shorthand for cmdr::validate::FOO
 	if {![llength [info commands $cmd]] &&
-	    [llength [info commands ::xo::validate::$cmd]]} {
-	    set cmd ::xo::validate::$cmd
+	    [llength [info commands ::cmdr::validate::$cmd]]} {
+	    set cmd ::cmdr::validate::$cmd
 	}
 	set cmd [::list $cmd {*}$words]
 	set myvalidate $cmd
@@ -447,23 +447,23 @@ oo::class create ::xo::parameter {
 	# that case.
 
 	if {[llength $mygenerate]} {
-	    set myvalidate ::xo::validate::identity
+	    set myvalidate ::cmdr::validate::identity
 	} elseif {!$myhasdefault} {
 	    # Without a default value base the validation type on the
 	    # kind of parameter we have here:
 	    # - input, state: identity
 	    # - option:       boolean
 	    if {$myiscmdline && !$myisordered} {
-		set myvalidate ::xo::validate::boolean
+		set myvalidate ::cmdr::validate::boolean
 	    } else {
-		set myvalidate ::xo::validate::identity
+		set myvalidate ::cmdr::validate::identity
 	    }
 	} elseif {[string is boolean -strict $mydefault]} {
-	    set myvalidate ::xo::validate::boolean
+	    set myvalidate ::cmdr::validate::boolean
 	} elseif {[string is integer -strict $mydefault]} {
-	    set myvalidate ::xo::validate::integer
+	    set myvalidate ::cmdr::validate::integer
 	} else {
-	    set myvalidate ::xo::validate::identity
+	    set myvalidate ::cmdr::validate::identity
 	}
 	return
     }
@@ -499,7 +499,7 @@ oo::class create ::xo::parameter {
 	dict set myflags [my Option $myname] primary
 	# Special flags for boolean options
 	# XXX Consider pushing this into the validators.
-	if {$myvalidate ne "::xo::validate::boolean"} return
+	if {$myvalidate ne "::cmdr::validate::boolean"} return
 
 	# A boolean option triggered on presence does not have a
 	# complementary alias. There is no reverse setting.
@@ -528,7 +528,7 @@ oo::class create ::xo::parameter {
 
     # # ## ### ##### ######## #############
     ## API. Support for runtime command line parsing.
-    ## See "xo::config" for the main controller.
+    ## See "cmdr::config" for the main controller.
 
     method lock {reason} {
 	set mylocker $reason
@@ -563,8 +563,8 @@ oo::class create ::xo::parameter {
 
     method complete-words {parse} {
 	# Entrypoint for completion, called by
-	# xo::config (complete-words|complete-repl).
-	# See xo::actor/parse-line for structure definition.
+	# cmdr::config (complete-words|complete-repl).
+	# See cmdr::actor/parse-line for structure definition.
 	dict with parse {}
 	# -> words, at (ignored: ok, nwords, line, doexit)
 
@@ -655,7 +655,7 @@ oo::class create ::xo::parameter {
 
     method ProcessOption {flag queue} {
 	if {$myonlypresence} {
-	    # See also xo::config/dispatch
+	    # See also cmdr::config/dispatch
 	    # Option has only presence.
 	    # Validation type is 'boolean'.
 	    # Default value is 'no', presence therefore 'yes'.
@@ -742,7 +742,7 @@ oo::class create ::xo::parameter {
 
     # # ## ### ##### ######## #############
     ## APIs for use in the actual command called by the private
-    ## containing the xo::config holding this value.
+    ## containing the cmdr::config holding this value.
     #
     # - retrieve user string
     # - retrieve validated value, internal representation.
@@ -820,7 +820,7 @@ oo::class create ::xo::parameter {
 	    my Value: $myvalue
 	}
 
-	if {$myinteractive && [xo interactive?]} {
+	if {$myinteractive && [cmdr interactive?]} {
 	    if {$myislist} {
 		# Prompt for a list of values. We loop until the user
 		# aborted. The latter aborts just the loop. Completion
@@ -948,4 +948,4 @@ oo::class create ::xo::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::parameter 0.1
+package provide cmdr::parameter 0.1

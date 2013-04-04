@@ -11,19 +11,19 @@ package require textutil::adjust
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-namespace eval ::xo {
+namespace eval ::cmdr {
     namespace export util
     namespace ensemble create
 }
 
-namespace eval ::xo::util {
+namespace eval ::cmdr::util {
     namespace export padr
     namespace ensemble create
 }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::util::padr {list} {
+proc ::cmdr::util::padr {list} {
     if {[llength $list] <= 1} {
 	return $list
     }
@@ -40,4 +40,4 @@ proc ::xo::util::padr {list} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::util 0.1
+package provide cmdr::util 0.1

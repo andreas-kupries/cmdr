@@ -7,26 +7,26 @@
 
 package require Tcl 8.5
 package require textutil::adjust
-package require xo::util
+package require cmdr::util
 package require linenoise
 package require lambda
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-namespace eval ::xo {
+namespace eval ::cmdr {
     namespace export help
     namespace ensemble create
 }
 
-namespace eval ::xo::help {
+namespace eval ::cmdr::help {
     namespace export query format auto
     namespace ensemble create
 }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::help::query {actor words} {
+proc ::cmdr::help::query {actor words} {
     # Resolve chain of words (command name path) to the actor
     # responsible for that command, starting from the specified actor.
     # This is very much a convenience command.
@@ -39,10 +39,10 @@ proc ::xo::help::query {actor words} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::help::auto {actor} {
+proc ::cmdr::help::auto {actor} {
     # Generate a standard help command for any actor, and add it dynamically.
 
-    foreach c [info commands {::xo::help::format::[a-z]*}] {
+    foreach c [info commands {::cmdr::help::format::[a-z]*}] {
 	set format [namespace tail $c]
 	lappend formats --$format
 	lappend options [string map [list @c@ $format] {
@@ -50,7 +50,7 @@ proc ::xo::help::auto {actor} {
 		Activate @c@ form of the help.
 	    } {
 		presence
-		when-set [lambda {x} { xo::parameter config @format set @c@ }]
+		when-set [lambda {x} { cmdr::parameter config @format set @c@ }]
 	    }}]
     }
 
@@ -74,11 +74,11 @@ proc ::xo::help::auto {actor} {
 	    command to get help for. This can be several
 	    words.
 	} { optional ; list }
-    } {::xo::help::auto-help @actor@}}]
+    } {::cmdr::help::auto-help @actor@}}]
     return
 }
 
-proc ::xo::help::auto-help {actor config} {
+proc ::cmdr::help::auto-help {actor config} {
     set width  [linenoise columns]
     set words  [$config @cmdname]
     set format [$config @format]
@@ -89,7 +89,7 @@ proc ::xo::help::auto-help {actor config} {
 
 # # ## ### ##### ######## ############# #####################
 
-namespace eval ::xo::help::format {
+namespace eval ::cmdr::help::format {
     namespace export full list short
     namespace ensemble create
 }
@@ -100,7 +100,7 @@ namespace eval ::xo::help::format {
 # ... entirely different formats (json, .rst, docopts, ...)
 #
 
-proc ::xo::help::format::full {width help} {
+proc ::cmdr::help::format::full {width help} {
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
@@ -109,7 +109,7 @@ proc ::xo::help::format::full {width help} {
     return [join $result \n]
 }
 
-proc ::xo::help::format::Full {width name command} {
+proc ::cmdr::help::format::Full {width name command} {
     # command = list ('desc'      -> description
     #                 'options'   -> options
     #                 'arguments' -> arguments)
@@ -170,7 +170,7 @@ proc ::xo::help::format::Full {width name command} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::help::format::list {width help} {
+proc ::cmdr::help::format::list {width help} {
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
@@ -179,7 +179,7 @@ proc ::xo::help::format::list {width help} {
     return [join $result \n]
 }
 
-proc ::xo::help::format::List {width name command} {
+proc ::cmdr::help::format::List {width name command} {
     # command = list ('desc'      -> description
     #                 'options'   -> options
     #                 'arguments' -> arguments)
@@ -207,7 +207,7 @@ proc ::xo::help::format::List {width name command} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::help::format::short {width help} {
+proc ::cmdr::help::format::short {width help} {
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
@@ -216,7 +216,7 @@ proc ::xo::help::format::short {width help} {
     return [join $result \n]
 }
 
-proc ::xo::help::format::Short {width name command} {
+proc ::cmdr::help::format::Short {width name command} {
     # command = list ('desc'      -> description
     #                 'options'   -> options
     #                 'arguments' -> arguments)
@@ -254,10 +254,10 @@ proc ::xo::help::format::Short {width name command} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::xo::help::format::DefList {width labels defs} {
+proc ::cmdr::help::format::DefList {width labels defs} {
     upvar 1 lines lines
 
-    set labels [xo util padr $labels]
+    set labels [cmdr util padr $labels]
 
     set  nl [string length [lindex $labels 0]]
     incr nl 5
@@ -277,7 +277,7 @@ proc ::xo::help::format::DefList {width labels defs} {
     return
 }
 
-proc ::xo::help::format::Arguments {arguments} {
+proc ::cmdr::help::format::Arguments {arguments} {
     set result {}
     foreach {a v} $arguments {
 	dict with v {} ; # -> code, desc
@@ -292,7 +292,7 @@ proc ::xo::help::format::Arguments {arguments} {
     return [join $result]
 }
 
-proc ::xo::help::format::HasOptions {options} {
+proc ::cmdr::help::format::HasOptions {options} {
     if {[dict size $options]} {
 	return "\[OPTIONS\] "
     } else {
@@ -302,4 +302,4 @@ proc ::xo::help::format::HasOptions {options} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::help 0.1
+package provide cmdr::help 0.1

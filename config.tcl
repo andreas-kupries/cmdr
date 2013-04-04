@@ -16,15 +16,15 @@ package require try
 package require struct::queue 1 ; #
 package require term::ansi::code::ctrl
 package require linenoise::facade
-package require xo::validate    ; # Core validator commands.
-package require xo::parameter   ; # Parameter to collect
-package require xo::util
-package require xo::help
+package require cmdr::validate    ; # Core validator commands.
+package require cmdr::parameter   ; # Parameter to collect
+package require cmdr::util
+package require cmdr::help
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
-oo::class create ::xo::config {
+oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
 
     classmethod interactive {{value 1}} {
@@ -41,7 +41,7 @@ oo::class create ::xo::config {
 
 	my Colors
 
-	# Import the context (xo::private).
+	# Import the context (cmdr::private).
 	interp alias {} [self namespace]::context {} $context
 
 	# Initialize collection state.
@@ -331,7 +331,7 @@ oo::class create ::xo::config {
     }
 
     # # ## ### ##### ######## #############
-    ## API for xo::private parameter specification DSL.
+    ## API for cmdr::private parameter specification DSL.
 
     # Description is for the context, i.e. the private.
     forward Description  context description:
@@ -368,7 +368,7 @@ oo::class create ::xo::config {
 	my ValidateAsUnknown $name
 
 	# Create and initialize handler.
-	set para [xo::parameter create param_$name [self] \
+	set para [cmdr::parameter create param_$name [self] \
 		      $order $cmdline $required \
 		      $name $desc $spec]
 
@@ -406,10 +406,10 @@ oo::class create ::xo::config {
 
     # # ## ### ##### ######## #############
     ## Command completion. This is the entry point for recursion from
-    ## the higher level officers, delegated to config from xo::private
+    ## the higher level officers, delegated to config from cmdr::private
 
     ## Note that command completion for the REPL of the private is
-    ## handled by the internal xo::config instance, which also manages
+    ## handled by the internal cmdr::config instance, which also manages
     ## the REPL itself.
 
     method complete-words {parse} {
@@ -599,7 +599,7 @@ oo::class create ::xo::config {
     }
 
     # # ## ### ##### ######## #############
-    ## API for xo::private use of the arguments.
+    ## API for cmdr::private use of the arguments.
     ## Runtime parsing of a command line, parameter extraction.
 
     method parse-options {} {
@@ -613,7 +613,7 @@ oo::class create ::xo::config {
 	if {![P size]} return
 
 	# Unshift the front value under consideration by
-	# 'xo::parameter Take'.
+	# 'cmdr::parameter Take'.
 
 	lappend arguments [P get]
 
@@ -724,7 +724,7 @@ oo::class create ::xo::config {
 
     method ProcessOption {} {
 	# Get option. Do special handling.
-	# Non special option gets dispatched to handler (xo::parameter instance).
+	# Non special option gets dispatched to handler (cmdr::parameter instance).
 	# The handler is responsible for retrieved the option's value.
 	set option [P get]
 
@@ -782,7 +782,7 @@ oo::class create ::xo::config {
     ## Local shell for interactive entry of the parameters in the collection.
 
     method interact {} {
-	# compare xo::officer REPL (=> method "do").
+	# compare cmdr::officer REPL (=> method "do").
 
 	set shell [linenoise::facade new [self]]
 	set myreplexit   0 ; # Flag: Stop repl, not yet.
@@ -830,7 +830,7 @@ oo::class create ::xo::config {
 		return
 	    }
 	    .help {
-		puts [xo help format plain \
+		puts [cmdr help format plain \
 			  [linenoise columns] \
 			  [dict create [context fullname] \
 			       [my help interact]]]
@@ -861,7 +861,7 @@ oo::class create ::xo::config {
 	# that.
 
 	if {[$para presence]} {
-	    # See also xo::parameter/ProcessOption
+	    # See also cmdr::parameter/ProcessOption
 	    $para set yes
 	} else {
 	    $para set {*}$words
@@ -991,7 +991,7 @@ oo::class create ::xo::config {
 
     method PrintState {plist full} {
 	set plist  [lsort -dict $plist]
-	set labels [xo util padr $plist]
+	set labels [cmdr util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
 
 	# Recalculate all parameters in full.
@@ -1101,4 +1101,4 @@ oo::class create ::xo::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide xo::config 0.1
+package provide cmdr::config 0.1
