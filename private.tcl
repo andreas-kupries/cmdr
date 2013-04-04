@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Private - Command execution. Simple case.
+## CMDR - Private - Command execution. Simple case.
 ##                An actor.
 
 ## - Privates know to do one thing, exactly, and nothing more.
@@ -79,7 +79,7 @@ oo::class create ::cmdr::private {
     method Run {words} {
 	try {
 	    config parse {*}$words
-	} trap {XO CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
+	} trap {CMDR CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
 	    # Prevent interaction if globally suppressed, or just for
 	    # this actor.
 	    if {![cmdr interactive?] ||

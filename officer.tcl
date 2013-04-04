@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Officer - Command execution. Dispatcher.
+## CMDR - Officer - Command execution. Dispatcher.
 ##                An actor.
 
 ## - Officers can learn to do many things, by delegating things to the
@@ -91,7 +91,7 @@ oo::class create ::cmdr::officer {
     method lookup {name} {
 	my Setup
 	if {![dict exists $mymap a,$name]} {
-	    return -code error -errorcode {XO ACTION UNKNOWN} \
+	    return -code error -errorcode {CMDR ACTION UNKNOWN} \
 		"Expected action name, got \"$name\""
 	}
 	return [dict get $mymap a,$name]
@@ -158,7 +158,7 @@ oo::class create ::cmdr::officer {
 	if {[llength [info level 0]] == 2} {
 	    set name [my Last]
 	} elseif {![dict exists $mymap a,$name]} {
-	    return -code error -errorcode {XO ACTION UNKNOWN} \
+	    return -code error -errorcode {CMDR ACTION UNKNOWN} \
 		"Unable to set default, expected action, got \"$name\""
 	}
 	dict set mymap default $name
@@ -221,13 +221,13 @@ oo::class create ::cmdr::officer {
 
     method ValidateAsUnknown {name} {
 	if {![dict exists $mymap a,$name]} return
-	return -code error -errorcode {XO ACTION KNOWN} \
+	return -code error -errorcode {CMDR ACTION KNOWN} \
 	    "Unable to learn $name, already specified."
     }
 
     method Last {} {
 	if {![dict exists $mymap last]} {
-	    return -code error -errorcode {XO ACTION NO-LAST} \
+	    return -code error -errorcode {CMDR ACTION NO-LAST} \
 		"Cannot be used as first command"
 	}
 	return [dict get $mymap last]
@@ -283,7 +283,7 @@ oo::class create ::cmdr::officer {
 		if {[my hasdefault]} {
 		    return [[my lookup [my default]] do]
 		}
-		return -code error -errorcode {XO DO EMPTY} \
+		return -code error -errorcode {CMDR DO EMPTY} \
 		    "No command found."
 	    }
 
@@ -303,7 +303,7 @@ oo::class create ::cmdr::officer {
 		return [[my lookup [my default]] do {*}$args]
 	    }
 
-	    return -code error -errorcode {XO DO UNKNOWN} \
+	    return -code error -errorcode {CMDR DO UNKNOWN} \
 		"No command found, have \"$cmd\""
 	} finally {
 	    if {$reset} {

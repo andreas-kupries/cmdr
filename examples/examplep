@@ -1,9 +1,9 @@
 #!/usr/bin/env tclsh
 # -*- tcl -*-
 package require Tcl 8.5
-package require xo
+package require cmdr
 
-xo create cmdline cmdline {
+cmdr create cmdline cmdline {
 
     private scissors {
 	state  state  XXX

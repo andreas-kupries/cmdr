@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Actor - Command execution. Base.
+## CMDR - Actor - Command execution. Base.
 ##              Actors know how to do something.
 
 ## Two types:
@@ -125,7 +125,7 @@ oo::class create ::cmdr::actor {
 	    return [$mysuper get $key]
 	}
 	# ... and fail if we are at the top.
-	return -code error -errorcode {XO STORE UNKNOWN} \
+	return -code error -errorcode {CMDR STORE UNKNOWN} \
 	    "Expected known key for get, got \"$key\""
     }
 

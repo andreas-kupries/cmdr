@@ -1,6 +1,6 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
-## XO - Config - Collection of argument values for a private.
+## CMDR - Config - Collection of argument values for a private.
 
 ## - The config manages the argument values, and can parse
 ##   a command line against the definition, filling values,
@@ -140,7 +140,7 @@ oo::class create ::cmdr::config {
     method lookup {name} {
 	if {![dict exists $mymap $name]} {
 	    set names [linsert [join [lsort -dict [my names]] {, }] end-1 or]
-	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
+	    return -code error -errorcode {CMDR CONFIG PARAMETER UNKNOWN} \
 		"Got \"$name\", expected parameter name, one of $names"
 	}
 	return [dict get $mymap $name]
@@ -149,7 +149,7 @@ oo::class create ::cmdr::config {
     method lookup-option {name} {
 	if {![dict exists $myoption $name]} {
 	    set names [linsert [join [lsort -dict [my options]] {, }] end-1 or]
-	    return -code error -errorcode {XO CONFIG PARAMETER UNKNOWN} \
+	    return -code error -errorcode {CMDR CONFIG PARAMETER UNKNOWN} \
 		"Got \"$name\", expected option name, one of $names"
 	}
 	return [dict get $myoption $name]
@@ -361,7 +361,7 @@ oo::class create ::cmdr::config {
     } {
 	upvar 1 splat splat
 	if {$splat && $order} {
-	    return -code error -errorcode {XO CONFIG SPLAT ORDER} \
+	    return -code error -errorcode {CMDR CONFIG SPLAT ORDER} \
 		"A splat must be the last argument in the specification"
 	}
 
@@ -400,7 +400,7 @@ oo::class create ::cmdr::config {
 
     method ValidateAsUnknown {name} {
 	if {![dict exists $mymap $name]} return
-	return -code error -errorcode {XO CONFIG KNOWN} \
+	return -code error -errorcode {CMDR CONFIG KNOWN} \
 	    "Duplicate parameter \"[context fullname]: $name\", already specified."
     }
 
@@ -740,7 +740,7 @@ oo::class create ::cmdr::config {
 	# Validate existence of the option
 	if {![dict exists $myfullopt $option]} {
 	    return -code error \
-		-errorcode {XO CONFIG BAD OPTION} \
+		-errorcode {CMDR CONFIG BAD OPTION} \
 		"Unknown option $option"
 	}
 
@@ -748,7 +748,7 @@ oo::class create ::cmdr::config {
 	set options [dict get $myfullopt $option]
 	if {[llength $options] > 1} {
 	    return -code error \
-		-errorcode {XO CONFIG AMBIGUOUS OPTION} \
+		-errorcode {CMDR CONFIG AMBIGUOUS OPTION} \
 		"Ambiguous option prefix $option, matching [join $options {, }]"
 	}
 
@@ -762,13 +762,13 @@ oo::class create ::cmdr::config {
 
     method tooMany {} {
 	return -code error \
-	    -errorcode {XO CONFIG WRONG-ARGS TOO-MANY} \
+	    -errorcode {CMDR CONFIG WRONG-ARGS TOO-MANY} \
 	    "wrong#args, too many"
     }
 
     method notEnough {} {
 	return -code error \
-	    -errorcode {XO CONFIG WRONG-ARGS NOT-ENOUGH} \
+	    -errorcode {CMDR CONFIG WRONG-ARGS NOT-ENOUGH} \
 	    "wrong#args, not enough"
     }
 
@@ -794,13 +794,13 @@ oo::class create ::cmdr::config {
 	$shell history 1
 	try {
 	    $shell repl
-	} trap {XO CONFIG INTERACT CANCEL} {e o} {
+	} trap {CMDR CONFIG INTERACT CANCEL} {e o} {
 	    return 0
-	} trap {XO CONFIG INTERACT OK} {e o} {
+	} trap {CMDR CONFIG INTERACT OK} {e o} {
 	    if {!$myreplok} {
 		# Bad commit with incomplete data.
 		return -code error \
-		    -errorcode {XO CONFIG COMMIT FAIL} \
+		    -errorcode {CMDR CONFIG COMMIT FAIL} \
 		    "Unable to perform \"[context fullname]\", incomplete or bad arguments"
 	    }
 	    return 1
@@ -849,10 +849,10 @@ oo::class create ::cmdr::config {
 	set para [my lookup $cmd]
 
 	if {[$para presence] && ([llength $words] != 0)} {
-	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
+	    return -code error -errorcode {CMDR CONFIG WRONG ARGS} \
 		"wrong \# args: should be \"$cmd\""
 	} elseif {[llength $words] != 1} {
-	    return -code error -errorcode {XO CONFIG WRONG ARGS} \
+	    return -code error -errorcode {CMDR CONFIG WRONG ARGS} \
 		"wrong \# args: should be \"$cmd value\""
 	}
 
@@ -872,9 +872,9 @@ oo::class create ::cmdr::config {
     method report {what data} {
 	if {$myreplexit} {
 	    if {$myreplcommit} {
-		return -code error -errorcode {XO CONFIG INTERACT OK} ""
+		return -code error -errorcode {CMDR CONFIG INTERACT OK} ""
 	    } else {
-		return -code error -errorcode {XO CONFIG INTERACT CANCEL} ""
+		return -code error -errorcode {CMDR CONFIG INTERACT CANCEL} ""
 	    }
 	}
 
@@ -1014,10 +1014,10 @@ oo::class create ::cmdr::config {
 		if {$value eq {}} {
 		    set value ${mycyan}<<epsilon>>${myreset}
 		}
-	    } trap {XO PARAMETER UNDEFINED} {e o} {
+	    } trap {CMDR PARAMETER UNDEFINED} {e o} {
 		# Mandatory argument, without user-specified value.
 		set value "${mycyan}(undefined)$myreset"
-	    } trap {XO VALIDATE} {e o} {
+	    } trap {CMDR VALIDATE} {e o} {
 		# Any argument with a bad value.
 		set value "[$para string] ${mycyan}($e)$myreset"
 		set somebad 1

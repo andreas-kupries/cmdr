@@ -1,8 +1,8 @@
-# -*- tcl -*- Include file for xo.test.
+# -*- tcl -*- Include file for cmdr.test.
 # # ## ### ##### ######## ############# #####################
 ## Hierarchy of actions, aliases, defaults.
 
-test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
+test cmdr-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body {
     cmdr create x foo {
 	common K D
 	description TEST
@@ -65,7 +65,7 @@ test xo-officer-1.0 {hierarchy: defaults, aliases, descriptions, commons} -body 
 # # ## ### ##### ######## ############# #####################
 ## Error cases of the action DSL.
 
-test xo-officer-2.0 {officer/action DSL, officer, wrong\#args} -setup {
+test cmdr-officer-2.0 {officer/action DSL, officer, wrong\#args} -setup {
     cmdr create x foo {
 	officer
     }
@@ -76,7 +76,7 @@ test xo-officer-2.0 {officer/action DSL, officer, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong # args: should be \"officer name ...\""
 
-test xo-officer-2.1 {officer/action DSL, officer, wrong\#args} -setup {
+test cmdr-officer-2.1 {officer/action DSL, officer, wrong\#args} -setup {
     cmdr create x foo {
 	officer foo
     }
@@ -87,7 +87,7 @@ test xo-officer-2.1 {officer/action DSL, officer, wrong\#args} -setup {
 } -returnCodes error -match glob \
     -result "wrong # args: should be \"cmdr::officer create ::oo::*::officer_foo super name actions\""
 
-test xo-officer-2.2 {officer/action DSL, officer, wrong\#args} -setup {
+test cmdr-officer-2.2 {officer/action DSL, officer, wrong\#args} -setup {
     cmdr create x foo {
 	officer foo {} x
     }
@@ -100,7 +100,7 @@ test xo-officer-2.2 {officer/action DSL, officer, wrong\#args} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-officer-3.0 {officer/action DSL, default, missing previous definition} -setup {
+test cmdr-officer-3.0 {officer/action DSL, default, missing previous definition} -setup {
     cmdr create x foo {
 	default
     }
@@ -111,7 +111,7 @@ test xo-officer-3.0 {officer/action DSL, default, missing previous definition} -
 } -returnCodes error \
     -result {Cannot be used as first command}
 
-test xo-officer-3.1 {officer/action DSL, default, wrong\#args} -setup {
+test cmdr-officer-3.1 {officer/action DSL, default, wrong\#args} -setup {
     cmdr create x foo {
 	default x y
     }
@@ -122,7 +122,7 @@ test xo-officer-3.1 {officer/action DSL, default, wrong\#args} -setup {
 } -returnCodes error \
     -result {wrong # args: should be "default ?name?"}
 
-test xo-officer-3.2 {officer/action DSL, default, unknown action} -setup {
+test cmdr-officer-3.2 {officer/action DSL, default, unknown action} -setup {
     cmdr create x foo {
 	default x
     }
@@ -135,7 +135,7 @@ test xo-officer-3.2 {officer/action DSL, default, unknown action} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-officer-4.0 {officer/action DSL, alias, wrong\#args} -setup {
+test cmdr-officer-4.0 {officer/action DSL, alias, wrong\#args} -setup {
     cmdr create x foo {
 	alias
     }
@@ -146,7 +146,7 @@ test xo-officer-4.0 {officer/action DSL, alias, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong # args: should be \"alias name ...\""
 
-test xo-officer-4.1 {officer/action DSL, alias, wrong\#args} -setup {
+test cmdr-officer-4.1 {officer/action DSL, alias, wrong\#args} -setup {
     cmdr create x foo {
 	alias x =
     }
@@ -157,7 +157,7 @@ test xo-officer-4.1 {officer/action DSL, alias, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
-test xo-officer-4.2 {officer/action DSL, alias, wrong\#args} -setup {
+test cmdr-officer-4.2 {officer/action DSL, alias, wrong\#args} -setup {
     cmdr create x foo {
 	alias x + a
     }
@@ -168,7 +168,7 @@ test xo-officer-4.2 {officer/action DSL, alias, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong#args: should be \"name ?= cmd ?word...??\""
 
-test xo-officer-4.3 {officer/action DSL, alias, missing previous definition} -setup {
+test cmdr-officer-4.3 {officer/action DSL, alias, missing previous definition} -setup {
     cmdr create x foo {
 	alias x
     }
@@ -179,7 +179,7 @@ test xo-officer-4.3 {officer/action DSL, alias, missing previous definition} -se
 } -returnCodes error \
     -result {Cannot be used as first command}
 
-test xo-officer-4.4 {officer/action DSL, alias, missing definition} -setup {
+test cmdr-officer-4.4 {officer/action DSL, alias, missing definition} -setup {
     cmdr create x foo {
 	alias x = y
     }
@@ -192,7 +192,7 @@ test xo-officer-4.4 {officer/action DSL, alias, missing definition} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-officer-5.1 {officer/action DSL, description, wrong\#args} -setup {
+test cmdr-officer-5.1 {officer/action DSL, description, wrong\#args} -setup {
     cmdr create x foo {
 	description
     }
@@ -203,7 +203,7 @@ test xo-officer-5.1 {officer/action DSL, description, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong # args: should be \"description text\""
 
-test xo-officer-5.2 {officer/action DSL, description, wrong\#args} -setup {
+test cmdr-officer-5.2 {officer/action DSL, description, wrong\#args} -setup {
     cmdr create x foo {
 	description a b
     }
@@ -216,7 +216,7 @@ test xo-officer-5.2 {officer/action DSL, description, wrong\#args} -setup {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
+test cmdr-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
     cmdr create x foo {
 	common
     }
@@ -227,7 +227,7 @@ test xo-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong # args: should be \"common key data\""
 
-test xo-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
+test cmdr-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
     cmdr create x foo {
 	common KEY
     }
@@ -238,7 +238,7 @@ test xo-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
 } -returnCodes error \
     -result "wrong # args: should be \"common key data\""
 
-test xo-officer-6.3 {officer/action DSL, common, wrong\#args} -setup {
+test cmdr-officer-6.3 {officer/action DSL, common, wrong\#args} -setup {
     cmdr create x foo {
 	common KEY DATA X
     }

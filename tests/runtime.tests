@@ -1,4 +1,4 @@
-# -*- tcl -*- Include file for xo.test.
+# -*- tcl -*- Include file for cmdr.test.
 # # ## ### ##### ######## ############# #####################
 
 ## Runtime parsing of a command line based on the argument spec.
@@ -24,7 +24,7 @@
 ## Group I: 5 parameters, required and optional alternating. Called
 ## with zero to six arguments.
 
-test xo-runtime-1.0 {required + optional arguments, not enough} -body {
+test cmdr-runtime-1.0 {required + optional arguments, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -35,7 +35,7 @@ test xo-runtime-1.0 {required + optional arguments, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-1.1 {required + optional arguments, not enough} -body {
+test cmdr-runtime-1.1 {required + optional arguments, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -46,7 +46,7 @@ test xo-runtime-1.1 {required + optional arguments, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-1.2 {required + optional arguments, not enough} -body {
+test cmdr-runtime-1.2 {required + optional arguments, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -57,7 +57,7 @@ test xo-runtime-1.2 {required + optional arguments, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-1.3 {required + optional arguments, assignment under thresholding} -body {
+test cmdr-runtime-1.3 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -73,7 +73,7 @@ test xo-runtime-1.3 {required + optional arguments, assignment under thresholdin
     E = '3'         v'3'
 }
 
-test xo-runtime-1.4 {required + optional arguments, assignment under thresholding} -body {
+test cmdr-runtime-1.4 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -89,7 +89,7 @@ test xo-runtime-1.4 {required + optional arguments, assignment under thresholdin
     E = '4'         v'4'
 }
 
-test xo-runtime-1.5 {required + optional arguments, assignment under thresholding} -body {
+test cmdr-runtime-1.5 {required + optional arguments, assignment under thresholding} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -105,7 +105,7 @@ test xo-runtime-1.5 {required + optional arguments, assignment under thresholdin
     E = '5' v'5'
 }
 
-test xo-runtime-1.6 {required + optional arguments, too many} -body {
+test cmdr-runtime-1.6 {required + optional arguments, too many} -body {
     Parse {
 	input A - { validate integer }
 	input B - { validate integer; optional ; default 0 }
@@ -119,7 +119,7 @@ test xo-runtime-1.6 {required + optional arguments, too many} -body {
 # # ## ### ##### ######## ############# #####################
 ## Group II: Splat arguments, required and optional
 
-test xo-runtime-2.0 {required + required splat, not enough} -body {
+test cmdr-runtime-2.0 {required + required splat, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; validate integer }
@@ -127,7 +127,7 @@ test xo-runtime-2.0 {required + required splat, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-2.1 {required + required splat, not enough} -body {
+test cmdr-runtime-2.1 {required + required splat, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; validate integer }
@@ -135,7 +135,7 @@ test xo-runtime-2.1 {required + required splat, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-2.2 {required + required splat} -body {
+test cmdr-runtime-2.2 {required + required splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; validate integer }
@@ -145,7 +145,7 @@ test xo-runtime-2.2 {required + required splat} -body {
     B = '2' v'2'
 }
 
-test xo-runtime-2.3 {required + required splat} -body {
+test cmdr-runtime-2.3 {required + required splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; validate integer }
@@ -155,7 +155,7 @@ test xo-runtime-2.3 {required + required splat} -body {
     B = '2 3' v'2 3'
 }
 
-test xo-runtime-2.4 {required + required splat} -body {
+test cmdr-runtime-2.4 {required + required splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; validate integer }
@@ -167,7 +167,7 @@ test xo-runtime-2.4 {required + required splat} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-2.5 {required + optional splat, not enough} -body {
+test cmdr-runtime-2.5 {required + optional splat, not enough} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; optional ; validate integer }
@@ -175,7 +175,7 @@ test xo-runtime-2.5 {required + optional splat, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-2.6 {required + optional splat, empty} -body {
+test cmdr-runtime-2.6 {required + optional splat, empty} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; optional ; validate integer }
@@ -185,7 +185,7 @@ test xo-runtime-2.6 {required + optional splat, empty} -body {
     B = <undefined> v''
 }
 
-test xo-runtime-2.7 {required + optional splat} -body {
+test cmdr-runtime-2.7 {required + optional splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; optional ; validate integer }
@@ -195,7 +195,7 @@ test xo-runtime-2.7 {required + optional splat} -body {
     B = '2' v'2'
 }
 
-test xo-runtime-2.8 {required + optional splat} -body {
+test cmdr-runtime-2.8 {required + optional splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; optional ; validate integer }
@@ -205,7 +205,7 @@ test xo-runtime-2.8 {required + optional splat} -body {
     B = '2 3' v'2 3'
 }
 
-test xo-runtime-2.9 {required + optional splat} -body {
+test cmdr-runtime-2.9 {required + optional splat} -body {
     Parse {
 	input A - { validate integer }
 	input B - { list ; optional ; validate integer }
@@ -217,7 +217,7 @@ test xo-runtime-2.9 {required + optional splat} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-2.10 {optional + required splat, not enough} -body {
+test cmdr-runtime-2.10 {optional + required splat, not enough} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; validate integer }
@@ -225,7 +225,7 @@ test xo-runtime-2.10 {optional + required splat, not enough} -body {
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-2.11 {optional + required splat, not enough} -body {
+test cmdr-runtime-2.11 {optional + required splat, not enough} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; validate integer }
@@ -234,7 +234,7 @@ test xo-runtime-2.11 {optional + required splat, not enough} -body {
     A = <undefined> v'0'
     B = '1'         v'1'
 }
-test xo-runtime-2.12 {optional + required splat} -body {
+test cmdr-runtime-2.12 {optional + required splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; validate integer }
@@ -244,7 +244,7 @@ test xo-runtime-2.12 {optional + required splat} -body {
     B = '2' v'2'
 }
 
-test xo-runtime-2.13 {optional + required splat} -body {
+test cmdr-runtime-2.13 {optional + required splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; validate integer }
@@ -254,7 +254,7 @@ test xo-runtime-2.13 {optional + required splat} -body {
     B = '2 3' v'2 3'
 }
 
-test xo-runtime-2.14 {optional + required splat} -body {
+test cmdr-runtime-2.14 {optional + required splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; validate integer }
@@ -266,7 +266,7 @@ test xo-runtime-2.14 {optional + required splat} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-2.15 {optional + optional splat, not enough} -body {
+test cmdr-runtime-2.15 {optional + optional splat, not enough} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; optional ; validate integer }
@@ -276,7 +276,7 @@ test xo-runtime-2.15 {optional + optional splat, not enough} -body {
     B = <undefined> v''
 }
 
-test xo-runtime-2.16 {optional + optional splat, empty} -body {
+test cmdr-runtime-2.16 {optional + optional splat, empty} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; optional ; validate integer }
@@ -286,7 +286,7 @@ test xo-runtime-2.16 {optional + optional splat, empty} -body {
     B = <undefined> v''
 }
 
-test xo-runtime-2.17 {optional + optional splat} -body {
+test cmdr-runtime-2.17 {optional + optional splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; optional ; validate integer }
@@ -296,7 +296,7 @@ test xo-runtime-2.17 {optional + optional splat} -body {
     B = '2' v'2'
 }
 
-test xo-runtime-2.18 {optional + optional splat} -body {
+test cmdr-runtime-2.18 {optional + optional splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; optional ; validate integer }
@@ -306,7 +306,7 @@ test xo-runtime-2.18 {optional + optional splat} -body {
     B = '2 3' v'2 3'
 }
 
-test xo-runtime-2.19 {optional + optional splat} -body {
+test cmdr-runtime-2.19 {optional + optional splat} -body {
     Parse {
 	input A - { optional ; validate integer }
 	input B - { list ; optional ; validate integer }
@@ -319,7 +319,7 @@ test xo-runtime-2.19 {optional + optional splat} -body {
 # # ## ### ##### ######## ############# #####################
 ## Group III: Options.
 
-test xo-runtime-3.0 {options, simple, boolean} -body {
+test cmdr-runtime-3.0 {options, simple, boolean} -body {
     Parse {
 	option A -
     }
@@ -327,7 +327,7 @@ test xo-runtime-3.0 {options, simple, boolean} -body {
     A = <undefined> v'no'
 }
 
-test xo-runtime-3.1 {options, simple, boolean} -body {
+test cmdr-runtime-3.1 {options, simple, boolean} -body {
     Parse {
 	option A -
     } -A 1
@@ -335,7 +335,7 @@ test xo-runtime-3.1 {options, simple, boolean} -body {
     A = '1' v'1'
 }
 
-test xo-runtime-3.2 {options, simple, boolean} -body {
+test cmdr-runtime-3.2 {options, simple, boolean} -body {
     Parse {
 	option A -
     } -A 0
@@ -343,7 +343,7 @@ test xo-runtime-3.2 {options, simple, boolean} -body {
     A = '0' v'0'
 }
 
-test xo-runtime-3.2 {options, simple, boolean, multiple use} -body {
+test cmdr-runtime-3.2 {options, simple, boolean, multiple use} -body {
     Parse {
 	option A -
     } -A 0 -A 1
@@ -351,7 +351,7 @@ test xo-runtime-3.2 {options, simple, boolean, multiple use} -body {
     A = '1' v'1'
 }
 
-test xo-runtime-3.3 {options, simple, boolean, special forms} -body {
+test cmdr-runtime-3.3 {options, simple, boolean, special forms} -body {
     Parse {
 	option A -
 	option B -
@@ -373,7 +373,7 @@ test xo-runtime-3.3 {options, simple, boolean, special forms} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-3.4 {options, list, string} -body {
+test cmdr-runtime-3.4 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     }
@@ -381,14 +381,14 @@ test xo-runtime-3.4 {options, list, string} -body {
     A = <undefined> v''
 }
 
-test xo-runtime-3.5 {options, list, string, missing value} -body {
+test cmdr-runtime-3.5 {options, list, string, missing value} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A
 } -returnCodes error \
     -result "wrong\#args, not enough"
 
-test xo-runtime-3.6 {options, list, string} -body {
+test cmdr-runtime-3.6 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A X
@@ -396,7 +396,7 @@ test xo-runtime-3.6 {options, list, string} -body {
     A = 'X' v'X'
 }
 
-test xo-runtime-3.7 {options, list, string} -body {
+test cmdr-runtime-3.7 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A X -A Y
@@ -406,7 +406,7 @@ test xo-runtime-3.7 {options, list, string} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-3.8 {options, aliases} -body {
+test cmdr-runtime-3.8 {options, aliases} -body {
     Parse {
 	option A - { validate identity ; alias Z }
     } -A X -Z Y
@@ -414,7 +414,7 @@ test xo-runtime-3.8 {options, aliases} -body {
     A = 'Y' v'Y'
 }
 
-test xo-runtime-3.9 {options, aliases, list} -body {
+test cmdr-runtime-3.9 {options, aliases, list} -body {
     Parse {
 	option A - { list ; validate identity ; alias Z }
     } -A X -Z Y
@@ -424,7 +424,7 @@ test xo-runtime-3.9 {options, aliases, list} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-3.10 {options, long names} -body {
+test cmdr-runtime-3.10 {options, long names} -body {
     Parse {
 	option ALPHA - { list ; validate identity }
     } --ALPHA Z
@@ -432,7 +432,7 @@ test xo-runtime-3.10 {options, long names} -body {
     ALPHA = 'Z' v'Z'
 }
 
-test xo-runtime-3.11 {options, unique prefix expansion} -body {
+test cmdr-runtime-3.11 {options, unique prefix expansion} -body {
     Parse {
 	option ALPHA - { list ; validate identity }
     } --AL Z
@@ -442,14 +442,14 @@ test xo-runtime-3.11 {options, unique prefix expansion} -body {
 
 # # ## ### ##### ######## ############# #####################
 
-test xo-runtime-3.12 {options, unknown option} -body {
+test cmdr-runtime-3.12 {options, unknown option} -body {
     Parse {
 	option A - { validate identity }
     } -B Z
 } -returnCodes error \
     -result {Unknown option -B}
 
-test xo-runtime-3.13 {options, ambiguous prefix} -body {
+test cmdr-runtime-3.13 {options, ambiguous prefix} -body {
     Parse {
 	option ALPHA - { validate identity }
 	option ALNUM - { validate identity }
@@ -460,7 +460,7 @@ test xo-runtime-3.13 {options, ambiguous prefix} -body {
 # # ## ### ##### ######## ############# #####################
 ## Group IV: Mix options and arguments.
 
-test xo-runtime-4.1 {options, arguments, and splat} -body {
+test cmdr-runtime-4.1 {options, arguments, and splat} -body {
     Parse {
 	input  A - { optional ; validate identity }
 	input  C - { optional ; validate identity ; list }
@@ -478,7 +478,7 @@ test xo-runtime-4.1 {options, arguments, and splat} -body {
 # # ## ### ##### ######## ############# #####################
 ## Group V: Optional arguments, via peek+validate
 
-test xo-runtime-5.1 {options, arguments, and splat, peek} -body {
+test cmdr-runtime-5.1 {options, arguments, and splat, peek} -body {
     Parse {
 	input  A - { optional ; validate identity ; test }
 	input  C - { optional ; validate identity ; test ; list }
@@ -500,7 +500,7 @@ test xo-runtime-5.1 {options, arguments, and splat, peek} -body {
 ##           when-defined command prefixes. Ensure that they are
 ##           called and work.
 
-test xo-runtime-6.1 {generator command} -setup {
+test cmdr-runtime-6.1 {generator command} -setup {
     StartNotes
     set ons A ; # Trigger parse to save the parameter object namespace.
 } -body {
@@ -522,7 +522,7 @@ test xo-runtime-6.1 {generator command} -setup {
     {} {    A = <undefined> v'G'} {}
 }
 
-test xo-runtime-6.2 {validation, default supplication} -setup {
+test cmdr-runtime-6.2 {validation, default supplication} -setup {
     StartNotes
     set ons A ; # Trigger parse to save the object namespace.
 } -body {
@@ -552,7 +552,7 @@ test xo-runtime-6.2 {validation, default supplication} -setup {
     {} {    A = <undefined> v'zZzZz'} {}
 }
 
-test xo-runtime-6.3 {generator command} -setup {
+test cmdr-runtime-6.3 {generator command} -setup {
     StartNotes
     set ons A ; # Trigger parse to save the parameter object namespace.
 } -body {
