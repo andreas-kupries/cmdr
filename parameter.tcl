@@ -9,9 +9,23 @@
 ## Requisites
 
 package require Tcl 8.5
+package require debug
+package require debug::caller
 package require TclOO
 package require oo::util 1.2    ;# link helper
 package require linenoise
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/parameter
+debug level  cmdr/parameter
+debug prefix cmdr/parameter {[string map [::list [self] "([config context fullname])@$myname" my "    @$myname"] [debug caller]] | }
+# In the above prefix we massage the object reference into a better
+# name for navigation into a command hierarchy.
+
+debug define cmdr/parameter/class
+debug level  cmdr/parameter/class
+debug prefix cmdr/parameter/class {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -29,18 +43,21 @@ oo::class create ::cmdr::parameter {
     ## invoke.
 
     classmethod config {args} {
+	debug.cmdr/parameter/class {}
 	# Note: my == my of the class, not the instance.
 	set n [my LocateConfig] ; incr n -1
 	return [uplevel $n [list config {*}$args]]
     }
 
     classmethod undefined {name} {
+	debug.cmdr/parameter/class {}
 	return -code error \
 	    -errorcode {CMDR PARAMETER UNDEFINED} \
 	    "Undefined: $name"
     }
 
     classmethod LocateConfig {} {
+	debug.cmdr/parameter/class {} 10
 	set n 3
 	set max [info level]
 	while {$n < $max} {
@@ -49,6 +66,7 @@ oo::class create ::cmdr::parameter {
 	    #set c [info object class $o]
 	    #puts |$n|$max|$ns|$o|$c||||[::info commands ${ns}::*]|\n
 	    if {[llength [::info commands ${ns}::config]]} {
+		debug.cmdr/parameter/class {= $n} 10
 		return $n
 	    }
 	    incr n
@@ -61,6 +79,8 @@ oo::class create ::cmdr::parameter {
     ## Lifecycle.
 
     constructor {theconfig order cmdline required name desc valuespec} {
+	set myname $name		; # [R1]
+
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
 	# use by the various command prefixes (generate, validate,
@@ -70,12 +90,16 @@ oo::class create ::cmdr::parameter {
 	set myconfig $theconfig
 	interp alias {} [self namespace]::config {} $theconfig
 
+	# Note ordering!
+	# We set up the pieces required by the narrator first, above.
+
+	debug.cmdr/parameter {}
+
 	# The valuespec is parsed immediately.  In contrast to actors,
 	# which defer until they are required.  As arguments are
 	# required when the using private is required further delay is
 	# nonsense.
 
-	set myname        $name		; # [R1]
 	set mydescription $desc		; # [R2]
 
 	set myisordered   $order	; # [R3,4,5,6]
@@ -177,6 +201,7 @@ oo::class create ::cmdr::parameter {
     method threshold: {n} {
 	# Ignore when parameter is required, or already set to mode peek+test
 	if {$myisrequired || ($mythreshold ne {})} return
+	debug.cmdr/parameter {}
 	set mythreshold $n
 	return
     }
@@ -185,6 +210,7 @@ oo::class create ::cmdr::parameter {
     ## Internal: Parameter DSL implementation + support.
 
     method ExecuteSpecification {valuespec} {
+	debug.cmdr/parameter {}
 	# Dictionary of flags to recognize for an option.
 	# The value indicates if the flag is primary or alias, or
 	# inverted alias. This is used by 'description' to return
@@ -435,6 +461,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method FillMissingValidation {} {
+	debug.cmdr/parameter {}
 	# Ignore when the user specified a validation type
 	# Note: 'presence' has set 'boolean'.
 	if {[llength $myvalidate]} return
@@ -469,6 +496,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method FillMissingDefault {} {
+	debug.cmdr/parameter {}
 	# Ignore when the user specified a default value.
 	# Ditto when the user specified a generator command.
 	# Ditto if the parameter is a required argument.
@@ -491,6 +519,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method DefineStandardFlags {} {
+	debug.cmdr/parameter {}
 	# Only options have flags, arguments and state don't.
 	# NOTE: Arguments may change in the future (--ask-FOO)
 	if {!$myiscmdline || $myisordered} return
@@ -531,11 +560,13 @@ oo::class create ::cmdr::parameter {
     ## See "cmdr::config" for the main controller.
 
     method lock {reason} {
+	debug.cmdr/parameter {}
 	set mylocker $reason
 	return
     }
 
     method reset {{cleanup 1}} {
+	debug.cmdr/parameter {}
 	# Runtime configuration, force initial state. See also the
 	# constructor for and inlined variant without cleanup.
 
@@ -548,6 +579,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method forget {} {
+	debug.cmdr/parameter {}
 	# Clear a cached value.
 
 	if {$myhasvalue} {
@@ -562,6 +594,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method complete-words {parse} {
+	debug.cmdr/parameter {} 10
 	# Entrypoint for completion, called by
 	# cmdr::config (complete-words|complete-repl).
 	# See cmdr::actor/parse-line for structure definition.
@@ -577,6 +610,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method setq {queue} {
+	debug.cmdr/parameter {}
 	my Locked
 	if {$myislist} {
 	    set mystring [$queue get [$queue size]]
@@ -594,6 +628,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method set {value} {
+	debug.cmdr/parameter {}
 	my Locked
 	if {$myislist} {
 	    lappend mystring $value
@@ -611,6 +646,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method accept {x} {
+	debug.cmdr/parameter {}
 	try {
 	    my ValueRelease [{*}$myvalidate validate $x]
 	    # If that was ok it has to be released also!
@@ -625,12 +661,14 @@ oo::class create ::cmdr::parameter {
 
     method Locked {} {
 	if {$mylocker eq {}} return
+	debug.cmdr/parameter {}
 	return -code error \
 	    -errorcode {CMDR PARAMETER LOCKED} \
 	    "You cannot use \"[my name]\" together with \"$mylocker\"."
     }
 
     method process {detail queue} {
+	debug.cmdr/parameter {}
 	# detail = actual flag (option)
 	#        = parameter name (argument)
 
@@ -647,6 +685,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method ProcessArgument {queue} {
+	debug.cmdr/parameter {}
 	# Arguments.
 
 	if {$myisrequired} {
@@ -667,6 +706,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method ProcessOption {flag queue} {
+	debug.cmdr/parameter {}
 	if {$myonlypresence} {
 	    # See also cmdr::config/dispatch
 	    # Option has only presence.
@@ -713,7 +753,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method Take {queue} {
-	#puts "$myname take $mythreshold"
+	debug.cmdr/parameter {threshold $mythreshold}
 
 	if {$mythreshold >= 0} {
 	    # Choose by checking argument count against a threshold.
@@ -726,10 +766,10 @@ oo::class create ::cmdr::parameter {
 
 	    if {$myislist} {
 		if {[$queue size]} {
-		    #puts "$myname (list, take)"
+		    debug.cmdr/parameter {list, taken}
 		    return 1
 		} else {
-		    #puts "$myname (list, pass empty)"
+		    debug.cmdr/parameter {list, empty, pass}
 		    return 0
 		}
 	    }
@@ -737,23 +777,26 @@ oo::class create ::cmdr::parameter {
 	    config parse-options
 
 	    if {[$queue size] <= $mythreshold} {
-		#puts "$myname (Q[$queue size] <=  T$mythreshold)? pass"
+		debug.cmdr/parameter {Q[$queue size] <= T$mythreshold: pass}
 		# Not enough values left, pass.
 		return 0
 	    }
-	    #puts "$myname (Q[$queue size] >  T$mythreshold)? take"
+	    debug.cmdr/parameter {Q[$queue size] >  T$mythreshold: taken}
 	} elseif {[$queue size]} {
-	    #puts "$myname ($myvalidate validate [$queue peek])"
+	    debug.cmdr/parameter {validate [$queue peek]}
 	    # Choose by peeking at and validating the front value.
 	    # Note: We may not have a front value!
-	    return [my accept [$queue peek]]
+	    set take [my accept [$queue peek]]
+	    debug.cmdr/parameter {= [expr {$take ? "taken" : "pass"}]}
+	    return $take
 	} else {
 	    # peek+test mode, nothing to peek at, pass.
-	    #puts "$myname (no argument, pass)"
+	    debug.cmdr/parameter {no argument, pass}
 	    return 0
 	}
-	#puts "$myname (take)"
-	return 1
+	debug.cmdr/parameter {should not be reached}
+	return -code error -errorcode {CMDR PARAMETER INTERNAL} \
+	    "Should not be reached"
     }
 
     # # ## ### ##### ######## #############
@@ -778,6 +821,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method value {} {
+	debug.cmdr/parameter {}
 	# compute argument value if any, cache result.
 
 	# Calculate value, from most prefered to least
@@ -926,6 +970,7 @@ oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
 
     method Value: {v} {
+	debug.cmdr/parameter {}
 	if {[llength $mywhendef]} {
 	    {*}$mywhendef $v
 	}
@@ -935,6 +980,7 @@ oo::class create ::cmdr::parameter {
     }
 
     method ValueRelease {value} {
+	debug.cmdr/parameter {}
 	# The validation type knows how to fully clean up the
 	# value it returned during validation (See methods
 	# 'value' and 'Take' (mode peek+test)).

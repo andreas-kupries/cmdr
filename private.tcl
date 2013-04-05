@@ -1,7 +1,7 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Private - Command execution. Simple case.
-##                An actor.
+##                  An actor.
 
 ## - Privates know to do one thing, exactly, and nothing more.
 ##   They can process their command line to extract/validate
@@ -11,10 +11,18 @@
 ## Requisites
 
 package require Tcl 8.5
+package require debug
+package require debug::caller
 package require TclOO
 package require oo::util 1.2 ;# link helper
 package require cmdr::actor
 package require cmdr::config
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/private
+debug level  cmdr/private
+debug prefix cmdr/private {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
@@ -27,6 +35,7 @@ oo::class create ::cmdr::private {
     # argument specification + callback performing the action.
     # callback takes dictionary containing the actual arguments
     constructor {super name arguments cmdprefix} {
+	debug.cmdr/private {}
 	next
 
 	my super: $super
@@ -42,6 +51,7 @@ oo::class create ::cmdr::private {
     # # ## ### ##### ######## #############
 
     method ehandler {cmd} {
+	debug.cmdr/private {}
 	set myhandler $cmd
 	return
     }
@@ -53,6 +63,7 @@ oo::class create ::cmdr::private {
     method Setup {} {
 	# Process myarguments only once.
 	if {$myinit} return
+	debug.cmdr/private {}
 	set myinit 1
 
 	# Create and fill the parameter collection
@@ -63,6 +74,7 @@ oo::class create ::cmdr::private {
     # # ## ### ##### ######## #############
 
     method do {args} {
+	debug.cmdr/private {}
 	my Setup
 
 	if {[llength $myhandler]} {
@@ -77,6 +89,7 @@ oo::class create ::cmdr::private {
     }
 
     method Run {words} {
+	debug.cmdr/private {}
 	try {
 	    config parse {*}$words
 	} trap {CMDR CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
@@ -93,11 +106,13 @@ oo::class create ::cmdr::private {
 	# the values, etc.
 	config force
 
+	debug.cmdr/private {}
 	# Call actual command, hand it the filled configuration.
 	{*}$mycmd $myconfig 
     }
 
     method help {{prefix {}}} {
+	debug.cmdr/private {}
 	my Setup
 	# help    = dict (name -> command)
 	# command = list ('desc'      -> description
@@ -108,12 +123,14 @@ oo::class create ::cmdr::private {
     }
 
     method complete-words {parse} {
+	debug.cmdr/private {} 10
 	my Setup
 	return [my completions $parse [config complete-words $parse]]
     }
 
     # Redirect anything not known to the parameter collection.
     method unknown {m args} {
+	debug.cmdr/private {}
 	my Setup
 	config $m {*}$args
     }

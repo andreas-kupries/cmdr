@@ -7,6 +7,8 @@
 
 package require Tcl 8.5
 package require textutil::adjust
+package require debug
+package require debug::caller
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -23,7 +25,14 @@ namespace eval ::cmdr::util {
 
 # # ## ### ##### ######## ############# #####################
 
+debug define cmdr/util
+debug level  cmdr/util
+debug prefix cmdr/util {[debug caller] | }
+
+# # ## ### ##### ######## ############# #####################
+
 proc ::cmdr::util::padr {list} {
+    debug.cmdr/util {}
     if {[llength $list] <= 1} {
 	return $list
     }

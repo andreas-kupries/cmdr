@@ -6,6 +6,8 @@
 ## Requisites
 
 package require Tcl 8.5
+package require debug
+package require debug::caller
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -23,12 +25,24 @@ namespace eval ::cmdr::validate {
 
 # # ## ### ##### ######## ############# #####################
 
+debug define cmdr/validate
+debug level  cmdr/validate
+debug prefix cmdr/validate {[debug caller] | }
+
+# # ## ### ##### ######## ############# #####################
+
 proc ::cmdr::validate::fail {code type x} {
+    debug.cmdr/validate {}
     return -code error -errorcode [list CMDR VALIDATE {*}$code] \
 	"Expected $type, got \"$x\""
 }
 
 proc ::cmdr::validate::complete-enum {choices nocase buffer} {
+    # As a helper function for command completion printing anything
+    # here would mix with the output of linenoise. Do that only on
+    # explicit request (level 10).
+    debug.cmdr/validate {} 10
+
     if {$buffer eq {}} {
 	return $choices
     }
@@ -42,6 +56,8 @@ proc ::cmdr::validate::complete-enum {choices nocase buffer} {
 	if {![string match ${buffer}* $c]} continue
 	lappend candidates $c
     }
+
+    debug.cmdr/validate {= [join $candidates "\n= "]} 10
     return $candidates
 }
 
@@ -54,14 +70,19 @@ namespace eval ::cmdr::validate::boolean {
     namespace import ::cmdr::validate::complete-enum
 }
 
-proc ::cmdr::validate::boolean::default  {}  { return no }
 proc ::cmdr::validate::boolean::release  {x} { return }
+proc ::cmdr::validate::boolean::default  {}  {
+    debug.cmdr/validate {}
+    return no
+}
 
 proc ::cmdr::validate::boolean::complete {x} {
+    debug.cmdr/validate {} 10
     return [complete-enum {yes no false true on off 0 1} 1 $x]
 }
 
 proc ::cmdr::validate::boolean::validate {x} {
+    debug.cmdr/validate {}
     if {[string is boolean -strict $x]} { return $x }
     fail BOOLEAN "a boolean" $x
 }
@@ -75,10 +96,17 @@ namespace eval ::cmdr::validate::integer {
     namespace import ::cmdr::validate::fail
 }
 
-proc ::cmdr::validate::integer::default  {}  { return 0 }
 proc ::cmdr::validate::integer::release  {x} { return }
-proc ::cmdr::validate::integer::complete {x} { return {} }
+proc ::cmdr::validate::integer::default  {}  {
+    debug.cmdr/validate {}
+    return 0
+}
+proc ::cmdr::validate::integer::complete {x} {
+    debug.cmdr/validate {} 10
+    return {}
+}
 proc ::cmdr::validate::integer::validate {x} {
+    debug.cmdr/validate {}
     if {[string is integer -strict $x]} { return $x }
     fail INTEGER "an integer" $x
 }
@@ -90,10 +118,10 @@ namespace eval ::cmdr::validate::identity {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::identity::default  {}  { return {} }
 proc ::cmdr::validate::identity::release  {x} { return }
-proc ::cmdr::validate::identity::complete {x} { return {} }
-proc ::cmdr::validate::identity::validate {x} { return $x }
+proc ::cmdr::validate::identity::default  {}  { debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::identity::complete {x} { debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::identity::validate {x} { debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 
@@ -102,10 +130,10 @@ namespace eval ::cmdr::validate::pass {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::pass::default  {}  { return {} }
 proc ::cmdr::validate::pass::release  {x} { return }
-proc ::cmdr::validate::pass::complete {x} { return {} }
-proc ::cmdr::validate::pass::validate {x} { return $x }
+proc ::cmdr::validate::pass::default  {}  {debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::pass::complete {x} {debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::pass::validate {x} {debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 
@@ -114,11 +142,12 @@ namespace eval ::cmdr::validate::str {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::str::default  {}  { return {} }
 proc ::cmdr::validate::str::release  {x} { return }
-proc ::cmdr::validate::str::complete {x} { return {} }
-proc ::cmdr::validate::str::validate {x} { return $x }
+proc ::cmdr::validate::str::default  {}  { debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::str::complete {x} { debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::str::validate {x} { debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
 package provide cmdr::validate 0.1
+return

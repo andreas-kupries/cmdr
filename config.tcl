@@ -10,16 +10,24 @@
 ## Requisites
 
 package require Tcl 8.5
-package require TclOO
-package require oo::util 1.2    ;# link helper
-package require try
+package require debug
+package require debug::caller
+package require linenoise::facade
 package require struct::queue 1 ; #
 package require term::ansi::code::ctrl
-package require linenoise::facade
-package require cmdr::validate    ; # Core validator commands.
+package require try
+package require TclOO
+package require oo::util 1.2      ; # link helper
+package require cmdr::help
 package require cmdr::parameter   ; # Parameter to collect
 package require cmdr::util
-package require cmdr::help
+package require cmdr::validate    ; # Core validation types.
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/config
+debug level  cmdr/config
+debug prefix cmdr/config {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -35,7 +43,11 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
+    forward context context
+
     constructor {context spec} {
+	debug.cmdr/config {}
+
 	classvariable ourinteractive
 	if {![info exists ourinteractive]} { set ourinteractive 0 }
 
@@ -85,6 +97,7 @@ oo::class create ::cmdr::config {
     }
 
     method help {{mode public}} {
+	debug.cmdr/config {}
 	# command   = dict ('desc'      -> description
 	#                   'options'   -> options
 	#                   'arguments' -> arguments)
@@ -138,6 +151,7 @@ oo::class create ::cmdr::config {
     method options     {} { return [dict keys $myoption] }
 
     method lookup {name} {
+	debug.cmdr/config {}
 	if {![dict exists $mymap $name]} {
 	    set names [linsert [join [lsort -dict [my names]] {, }] end-1 or]
 	    return -code error -errorcode {CMDR CONFIG PARAMETER UNKNOWN} \
@@ -147,6 +161,7 @@ oo::class create ::cmdr::config {
     }
 
     method lookup-option {name} {
+	debug.cmdr/config {}
 	if {![dict exists $myoption $name]} {
 	    set names [linsert [join [lsort -dict [my options]] {, }] end-1 or]
 	    return -code error -errorcode {CMDR CONFIG PARAMETER UNKNOWN} \
@@ -156,6 +171,7 @@ oo::class create ::cmdr::config {
     }
 
     method force {} {
+	debug.cmdr/config {}
 	# Define the values of all parameters.
 	# Done in order of declaration.
 	# Any dependencies between parameter can be handled by proper
@@ -173,6 +189,7 @@ oo::class create ::cmdr::config {
     }
 
     method reset {} {
+	debug.cmdr/config {}
 	dict for {name para} $mymap {
 	    $para reset
 	}
@@ -180,6 +197,7 @@ oo::class create ::cmdr::config {
     }
 
     method forget {} {
+	debug.cmdr/config {}
 	if {$myinforce} return
 	dict for {name para} $mymap {
 	    $para forget
@@ -193,6 +211,7 @@ oo::class create ::cmdr::config {
     ## their validation, generation, etc.). Access to argument values by name.
 
     method unknown {m args} {
+	debug.cmdr/config {}
 	if {![regexp {^@(.*)$} $m -> mraw]} {
 	    # Standard error message when not @name ...
 	    next $m {*}$args
@@ -206,6 +225,7 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
 
     method SetThresholds {} {
+	debug.cmdr/config {}
 	# Compute the threshold needed by optional arguments to decide
 	# when they can take an argument.
 
@@ -235,6 +255,7 @@ oo::class create ::cmdr::config {
     }
 
     method UniquePrefixes {} {
+	debug.cmdr/config {}
 	dict for {k v} $myoption {
 	    set prefix ""
 	    foreach c [split $k {}] {
@@ -260,6 +281,7 @@ oo::class create ::cmdr::config {
     }
 
     method CompletionGraph {} {
+	debug.cmdr/config {}
 	set next {}
 	set start .(start)
 	set end   .(end)
@@ -279,7 +301,7 @@ oo::class create ::cmdr::config {
 
 	set changed 1
 	set handled {} ;# Track processed epsilon links to not follow
-			# them again.
+	# them again.
 
 	while {$changed} {
 	    set changed 0
@@ -339,12 +361,14 @@ oo::class create ::cmdr::config {
 
     # Bespoke 'source' command for common specification fragments.
     method Use {name} {
+	debug.cmdr/config {}
 	# Pull code fragment out of the data store and run.
 	uplevel 1 [context get $name]
 	return
     }
 
     method Interactive {} {
+	debug.cmdr/config {}
 	set myinteractive 1
 	return
     }
@@ -356,9 +380,11 @@ oo::class create ::cmdr::config {
     forward State  my DefineParameter 0 0 1
 
     method DefineParameter {
-	order cmdline required
-	name desc {spec {}}
-    } {
+			    order cmdline required
+			    name desc {spec {}}
+			} {
+	debug.cmdr/config {}
+
 	upvar 1 splat splat
 	if {$splat && $order} {
 	    return -code error -errorcode {CMDR CONFIG SPLAT ORDER} \
@@ -399,6 +425,7 @@ oo::class create ::cmdr::config {
     }
 
     method ValidateAsUnknown {name} {
+	debug.cmdr/config {}
 	if {![dict exists $mymap $name]} return
 	return -code error -errorcode {CMDR CONFIG KNOWN} \
 	    "Duplicate parameter \"[context fullname]: $name\", already specified."
@@ -413,6 +440,8 @@ oo::class create ::cmdr::config {
     ## the REPL itself.
 
     method complete-words {parse} {
+	debug.cmdr/config {} 10
+
 	dict with parse {}
 	# -> ok, at, nwords, words, line
 
@@ -551,6 +580,8 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
 
     method IsOption {current iv} {
+	debug.cmdr/config {} 10
+
 	upvar 1 $iv implied at at nwords nwords words words
 	set implied 0
 
@@ -603,6 +634,8 @@ oo::class create ::cmdr::config {
     ## Runtime parsing of a command line, parameter extraction.
 
     method parse-options {} {
+	debug.cmdr/config {}
+
 	# The P queue contains a mix of options and arguments.  An
 	# optional argument was encountered and has called on this to
 	# now process all options so that it can decode wether to take
@@ -635,6 +668,8 @@ oo::class create ::cmdr::config {
     }
 
     method parse {args} {
+	debug.cmdr/config {}
+
 	# - Reset the state values (we might be in an interactive shell, multiple commands).
 	# - Stash the parameters into a queue for processing.
 	# - Stash the (ordered) arguments into a second queue.
@@ -646,10 +681,12 @@ oo::class create ::cmdr::config {
 	if {[llength $args]} { P put {*}$args }
 
 	if {![llength $myargs]} {
+	    debug.cmdr/config {options only}
 	    # The command has no arguments. It may accept options.
 
 	    while {[P size]} {
 		set word [P peek]
+		debug.cmdr/config {[P size] ? $word}
 		if {![string match -* $word]} {
 		    # Error. No regular arguments to accept.
 		    my tooMany
@@ -664,14 +701,15 @@ oo::class create ::cmdr::config {
 	A clear
 	A put {*}$myargs
 
-	#puts /[A size]|[P size]
+	debug.cmdr/config {a[A size] p[P size]}
 	while {1} {
-	    #puts A|[expr {[A size] ? [A peek [A size]] : ""}]|
-	    #puts P|[expr {[P size] ? [P peek [P size]] : ""}]|
+	    debug.cmdr/config {a|[expr {[A size] ? [A peek [A size]] : ""}]|}
+	    debug.cmdr/config {p|[expr {[P size] ? [P peek [P size]] : ""}]|}
 
 	    # Option ... Leaves A unchanged.
 	    if {[P size]} {
 		set word [P peek]
+		debug.cmdr/config {[P size] ? $word}
 		if {[string match -* $word]} {
 		    try {
 			my ProcessOption
@@ -685,6 +723,7 @@ oo::class create ::cmdr::config {
 			    return {*}$o $e
 			}
 
+			debug.cmdr/config {as argument}
 			P unget $word
 			my ProcessArgument
 		    }
@@ -704,12 +743,14 @@ oo::class create ::cmdr::config {
 	# remaining A's are optional.  Simply scan them, those which
 	# are mandatory will throw the necessary error.
 
+	debug.cmdr/config {remainder: [A size]}
 	while {[A size]} {
 	    set argname [A get]
-	    #puts [A size]|$argname|[P size]
+	    debug.cmdr/config {$argname, a[A size] p[P size]}
 	    [dict get $mymap $argname] process $argname $mypq
 	}
 
+	debug.cmdr/validate {done}
 	#puts "a[A size] p[P size]"
 
 	# End conditions:
@@ -732,6 +773,7 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
 
     method ProcessArgument {} {
+	debug.cmdr/config {}
 	# Note: The parameter instance is responsible for retrieving
 	# its value from the parameter queue. It may pass on this.
 	# This also checks if there is enough in the P queue, aborting
@@ -745,6 +787,7 @@ oo::class create ::cmdr::config {
     }
 
     method ProcessOption {} {
+	debug.cmdr/config {}
 	# Get option. Do special handling.
 	# Non special option gets dispatched to handler (cmdr::parameter instance).
 	# The handler is responsible for retrieved the option's value.
@@ -804,6 +847,7 @@ oo::class create ::cmdr::config {
     ## Local shell for interactive entry of the parameters in the collection.
 
     method interact {} {
+	debug.cmdr/config {}
 	# compare cmdr::officer REPL (=> method "do").
 
 	set shell [linenoise::facade new [self]]
@@ -841,6 +885,7 @@ oo::class create ::cmdr::config {
     method exit      {}     { return $myreplexit }
 
     method dispatch {cmd} {
+	debug.cmdr/config {}
 	switch -exact -- $cmd {
 	    .run - .ok {
 		set myreplexit   1
@@ -892,6 +937,7 @@ oo::class create ::cmdr::config {
     }
 
     method report {what data} {
+	debug.cmdr/config {}
 	if {$myreplexit} {
 	    if {$myreplcommit} {
 		return -code error -errorcode {CMDR CONFIG INTERACT OK} ""
@@ -920,6 +966,7 @@ oo::class create ::cmdr::config {
     # Shell hook method - Command line completion.
 
     method complete {line} {
+	debug.cmdr/config {} 10
 	#puts stderr ////////$line
 	try {
 	    set completions [my complete-repl [context parse-line $line]]
@@ -933,6 +980,7 @@ oo::class create ::cmdr::config {
     }
 
     method complete-repl {parse} {
+	debug.cmdr/config {} 10
 	#puts stderr [my fullname]/[self]/$parse/
 
 	dict with parse {}
