@@ -1,7 +1,7 @@
 ## -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Actor - Command execution. Base.
-##              Actors know how to do something.
+##                Actors know how to do something.
 
 ## Two types:
 ## - Privates know to do one thing, exactly, and nothing more.
@@ -15,7 +15,15 @@
 ## Requisites
 
 package require Tcl 8.5
+package require debug
+package require debug::caller
 package require TclOO
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/actor
+debug level  cmdr/actor
+debug prefix cmdr/actor {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
@@ -25,6 +33,7 @@ oo::class create ::cmdr::actor {
     ## Lifecycle
 
     constructor {} {
+	debug.cmdr/actor {}
 	set myname        {}
 	set mydescription {}
 	set mydocumented  yes
@@ -54,6 +63,7 @@ oo::class create ::cmdr::actor {
     }
 
     method name: {thename} {
+	debug.cmdr/actor {}
 	set myname $thename
 	return
     }
@@ -64,16 +74,19 @@ oo::class create ::cmdr::actor {
     }
 
     method description: {text} {
+	debug.cmdr/actor {}
 	set mydescription [string trim $text]
 	return
     }
 
     method documented {} {
+	debug.cmdr/actor {}
 	my Setup ; # Calls into the derived class
 	return $mydocumented
     }
 
     method undocumented {} {
+	debug.cmdr/actor {}
 	set mydocumented no
 	return
     }
@@ -95,6 +108,7 @@ oo::class create ::cmdr::actor {
     }
 
     method keys {} {
+	debug.cmdr/actor {}
 	my Setup
 	set result [dict keys $mystore]
 	if {$mysuper ne {}} {
@@ -105,6 +119,7 @@ oo::class create ::cmdr::actor {
     }
 
     method has {key} {
+	debug.cmdr/actor {}
 	my Setup
 	set ok [dict exists $mystore $key]
 	if {!$ok && ($mysuper ne {})} {
@@ -114,6 +129,7 @@ oo::class create ::cmdr::actor {
     }
 
     method get {key} {
+	debug.cmdr/actor {}
 	my Setup ; # Call into derived class.
 
 	# Satisfy from local store first ...
@@ -130,11 +146,13 @@ oo::class create ::cmdr::actor {
     }
 
     method set {key data} {
+	debug.cmdr/actor {}
 	dict set mystore $key $data
 	return
     }
 
     method unset {key} {
+	debug.cmdr/actor {}
 	dict unset mystore $key
 	return
     }
@@ -173,6 +191,7 @@ oo::class create ::cmdr::actor {
     }
 
     method completions {parse cmdlist} {
+	debug.cmdr/actor {} 10
 	# Quick exit if there is nothing to complete.
 	if {![llength $cmdlist]} {
 	    return $cmdlist
@@ -209,6 +228,7 @@ oo::class create ::cmdr::actor {
 
     # Could possibly use 'struct::list filter', plus a lambda.
     method match {parse cmdlist} {
+	debug.cmdr/actor {} 10
 	# Quick exit if nothing can match.
 	if {![llength $cmdlist]} {
 	    return $cmdlist
@@ -229,6 +249,7 @@ oo::class create ::cmdr::actor {
     }
 
     method parse-line {line} {
+	debug.cmdr/actor {} 10
 	set ok    1
 	set words {}
 

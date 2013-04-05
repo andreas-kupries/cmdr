@@ -10,14 +10,22 @@
 ## Requisites
 
 package require Tcl 8.5
-package require TclOO
-package require oo::util 1.2 ;# link helper.
+package require debug
+package require debug::caller
+package require linenoise::facade
 package require string::token::shell 1.1
 package require try
+package require TclOO
+package require oo::util 1.2 ;# link helper.
 package require cmdr::actor
 package require cmdr::private
 package require cmdr::help
-package require linenoise::facade
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/officer
+debug level  cmdr/officer
+debug prefix cmdr/officer {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition - Single purpose command.
@@ -40,6 +48,7 @@ oo::class create ::cmdr::officer {
     # default $name                       --> default action
 
     constructor {super name actions} {
+	debug.cmdr/officer {}
 	next
 
 	my super: $super
@@ -58,6 +67,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     method ehandler {cmd} {
+	debug.cmdr/officer {}
 	set myhandler $cmd
 	return
     }
@@ -69,6 +79,7 @@ oo::class create ::cmdr::officer {
     ## - Determine handler for an action.
 
     method known {} {
+	debug.cmdr/officer {}
 	my Setup
 	set result {}
 	dict for {k v} $mymap {
@@ -79,16 +90,19 @@ oo::class create ::cmdr::officer {
     }
 
     method hasdefault {} {
+	debug.cmdr/officer {} 10
 	my Setup
 	return [dict exists $mymap default]
     }
 
     method default {} {
+	debug.cmdr/officer {} 10
 	my Setup
 	return [dict get $mymap default]
     }
 
     method lookup {name} {
+	debug.cmdr/officer {}
 	my Setup
 	if {![dict exists $mymap a,$name]} {
 	    return -code error -errorcode {CMDR ACTION UNKNOWN} \
@@ -98,11 +112,13 @@ oo::class create ::cmdr::officer {
     }
 
     method has {name} {
+	debug.cmdr/officer {}
 	my Setup
 	return [dict exists $mymap a,$name]
     }
 
     method children {} {
+	debug.cmdr/officer {}
 	my Setup
 	return $mychildren
     }
@@ -115,6 +131,7 @@ oo::class create ::cmdr::officer {
 	# Process the action specification only once.
 	if {$myinit} return
 	set myinit 1
+	debug.cmdr/officer {}
 
 	my learn $myactions
 
@@ -124,6 +141,7 @@ oo::class create ::cmdr::officer {
     }
 
     method learn {script} {
+	debug.cmdr/officer {}
 	# Make the DSL commands directly available. Note that
 	# "description:" and "common" are superclass methods, and
 	# renamed to their DSL counterparts. The others are unexported
@@ -220,6 +238,7 @@ oo::class create ::cmdr::officer {
     }
 
     method ValidateAsUnknown {name} {
+	debug.cmdr/officer {}
 	if {![dict exists $mymap a,$name]} return
 	return -code error -errorcode {CMDR ACTION KNOWN} \
 	    "Unable to learn $name, already specified."
@@ -241,6 +260,7 @@ oo::class create ::cmdr::officer {
     ## Command dispatcher. Choose the subordinate and delegate.
 
     method do {args} {
+	debug.cmdr/officer {}
 	my Setup
 
 	# No command specified, what should we do ?
@@ -271,6 +291,7 @@ oo::class create ::cmdr::officer {
 
     # Internal. Actual dispatch. Shared by main entry and shell.
     method Do {args} {
+	debug.cmdr/officer {}
 	set reset 0
 	if {![my has .command]} {
 	    my set .command $args
@@ -321,6 +342,7 @@ oo::class create ::cmdr::officer {
     method exit      {}     { return $myreplexit }
 
     method dispatch {cmd} {
+	debug.cmdr/officer {}
 	if {$cmd eq ".exit"} {
 	    set myreplexit 1 ; return
 	}
@@ -328,6 +350,7 @@ oo::class create ::cmdr::officer {
     }
 
     method report {what data} {
+	debug.cmdr/officer {}
 	switch -exact -- $what {
 	    ok {
 		if {$data eq {}} return
@@ -347,6 +370,7 @@ oo::class create ::cmdr::officer {
     # Shell hook method - Command line completion.
 
     method complete {line} {
+	debug.cmdr/officer {} 10
 	#puts stderr ////////$line
 	try {
 	    set completions [my complete-words [my parse-line $line]]
@@ -360,6 +384,7 @@ oo::class create ::cmdr::officer {
     }
 
     method complete-words {parse} {
+	debug.cmdr/officer {} 10
 	#puts stderr [my fullname]/[self]/$parse/
 	# Note: This method has to entry-points.
 	# (1) Above in 'complete', for command completion from self's REPL.
@@ -445,6 +470,7 @@ oo::class create ::cmdr::officer {
     }
 
     method CompleteRecurse {parse} {
+	debug.cmdr/officer {} 10
 	# Inside the command line. Find the relevant subordinate based
 	# on the current word and let it handle everything.
 
@@ -476,6 +502,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     method CCommands {{doexit 1}} {
+	debug.cmdr/officer {} 10
 	if {![llength $myccommands]} {
 	    # Fill completion command cache.
 
@@ -500,6 +527,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     method help {{prefix {}}} {
+	debug.cmdr/officer {}
 	my Setup
 	# Query each subordinate for their help and use it to piece ours together.
 	# Note: Result is not finally formatted text, but nested dict structure.

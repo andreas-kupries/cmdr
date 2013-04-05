@@ -6,10 +6,18 @@
 ## Requisites
 
 package require Tcl 8.5
+package require debug
+package require debug::caller
+package require lambda
+package require linenoise
 package require textutil::adjust
 package require cmdr::util
-package require linenoise
-package require lambda
+
+# # ## ### ##### ######## ############# #####################
+
+debug define cmdr/help
+debug level  cmdr/help
+debug prefix cmdr/help {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -27,6 +35,7 @@ namespace eval ::cmdr::help {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::help::query {actor words} {
+    debug.cmdr/help {}
     # Resolve chain of words (command name path) to the actor
     # responsible for that command, starting from the specified actor.
     # This is very much a convenience command.
@@ -40,6 +49,7 @@ proc ::cmdr::help::query {actor words} {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::help::auto {actor} {
+    debug.cmdr/help {}
     # Generate a standard help command for any actor, and add it dynamically.
 
     foreach c [info commands {::cmdr::help::format::[a-z]*}] {
@@ -79,6 +89,8 @@ proc ::cmdr::help::auto {actor} {
 }
 
 proc ::cmdr::help::auto-help {actor config} {
+    debug.cmdr/help {}
+
     set width  [linenoise columns]
     set words  [$config @cmdname]
     set format [$config @format]
