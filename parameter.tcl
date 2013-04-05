@@ -782,6 +782,7 @@ oo::class create ::cmdr::parameter {
 		return 0
 	    }
 	    debug.cmdr/parameter {Q[$queue size] >  T$mythreshold: taken}
+	    return 1
 	} elseif {[$queue size]} {
 	    debug.cmdr/parameter {validate [$queue peek]}
 	    # Choose by peeking at and validating the front value.
