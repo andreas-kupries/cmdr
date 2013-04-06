@@ -897,7 +897,7 @@ oo::class create ::cmdr::config {
 		return
 	    }
 	    .help {
-		puts [cmdr help format plain \
+		puts [cmdr help format full \
 			  [linenoise columns] \
 			  [dict create [context fullname] \
 			       [my help interact]]]
