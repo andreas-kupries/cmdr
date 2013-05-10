@@ -181,7 +181,13 @@ oo::class create ::cmdr::config {
 	set myinforce yes
 
 	foreach name $mynames {
-	    [dict get $mymap $name] value
+	    try {
+		[dict get $mymap $name] value
+	    } trap {CMDR PARAMETER UNDEFINED} {e o} {
+		# Ignore when a parameter was not defined.
+		# Note that this is transparent to validation
+		# errors.
+	    }
 	}
 
 	set myinforce no
