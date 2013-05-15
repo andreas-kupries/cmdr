@@ -591,6 +591,14 @@ test cmdr-runtime-7.1 {not-quite options, arguments} -body {
     T = '-3' v'-3'
 }
 
+test cmdr-runtime-7.2 {validation errors} -body {
+    ParseFailParse {
+	input A - { validate integer }
+	input B - { validate integer }
+    } 1 X
+} -returnCodes error \
+    -result {Expected an integer, got "X"}
+
 # # ## ### ##### ######## ############# #####################
 
 return
