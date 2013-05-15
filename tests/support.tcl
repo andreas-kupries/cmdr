@@ -116,6 +116,25 @@ proc Parse {spec args} {
     }
 }
 
+proc ParseFailParse {spec args} {
+    upvar 1 ons ons
+    try {
+	cmdr create x foo \
+	    [list private bar $spec \
+		 {::apply {{config} {}}}]
+	# Eval the spec first.
+	[x lookup bar] keys
+	if {[info exists ons]} {
+	    # x = officer, bar = private, ons = parameter
+	    set ons [info object namespace [[x lookup bar] lookup $ons]]
+	}
+	# Now the runtime args processing.
+	[x lookup bar] do {*}$args
+    } finally {
+	x destroy
+    }
+}
+
 # # ## ### ##### ######## ############# #####################
 
 proc ShowOfficer {o} { Wrap [DumpOfficer $o] }
