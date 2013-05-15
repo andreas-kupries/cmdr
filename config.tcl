@@ -171,7 +171,7 @@ oo::class create ::cmdr::config {
     }
 
     method force {} {
-	debug.cmdr/config {}
+	debug.cmdr/config {recursive=$myinforce}
 	# Define the values of all parameters.
 	# Done in order of declaration.
 	# Any dependencies between parameter can be handled by proper
@@ -181,7 +181,13 @@ oo::class create ::cmdr::config {
 	set myinforce yes
 
 	foreach name $mynames {
-	    catch { [dict get $mymap $name] value }
+	    try {
+		[dict get $mymap $name] value
+	    } trap {CMDR PARAMETER UNDEFINED} {e o} {
+		# Ignore when a parameter was not defined.
+		# Note that this is transparent to validation
+		# errors.
+	    }
 	}
 
 	set myinforce no
