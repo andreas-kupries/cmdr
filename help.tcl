@@ -112,8 +112,16 @@ proc ::cmdr::help::auto-help {actor config} {
     set words  [$config @cmdname]
     set format [$config @format]
 
-    puts [format $format $width [query $actor $words]]
+    puts [format $format $width [DictSort [query $actor $words]]]
     return
+}
+
+proc ::cmdr::help::DictSort {dict} {
+    set r {}
+    foreach k [lsort -dict [dict keys $dict]] {
+	lappend r $k [dict get $dict $k]
+    }
+    return $r
 }
 
 # # ## ### ##### ######## ############# #####################
