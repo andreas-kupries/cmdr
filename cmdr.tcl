@@ -6,6 +6,8 @@
 
 # @@ Meta Begin
 # Package cmdr 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary Main entry point to the commander framework.
 # Meta description A framework for the specification and

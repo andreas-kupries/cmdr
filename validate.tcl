@@ -4,6 +4,8 @@
 
 # @@ Meta Begin
 # Package cmdr::validate 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary     Standard validation types for parameters.
 # Meta description Standard validation types for parameters.

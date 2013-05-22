@@ -8,6 +8,8 @@
 
 # @@ Meta Begin
 # Package cmdr::officer 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary Aggregation of multiple commands for dispatch.
 # Meta description 'cmdr::officer's can learn to do many things,

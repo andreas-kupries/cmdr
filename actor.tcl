@@ -5,6 +5,8 @@
 
 # @@ Meta Begin
 # Package cmdr::actor 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary     Internal. Base class for officers and privates.
 # Meta description Internal. Base class for officers and privates.

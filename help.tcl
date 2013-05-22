@@ -4,6 +4,8 @@
 
 # @@ Meta Begin
 # Package cmdr::help 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary     Internal. Utilities for help text formatting and setup.
 # Meta description Internal. Utilities for help text formatting and setup.
