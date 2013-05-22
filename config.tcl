@@ -2,6 +2,28 @@
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Config - Collection of argument values for a private.
 
+# @@ Meta Begin
+# Package cmdr::config 0
+# Meta platform tcl
+# Meta summary     Internal. Collection of parameters for cmd::private instances.
+# Meta description Internal. Collection of parameters for cmd::private instances.
+# Meta subject {command line}
+# Meta require TclOO
+# Meta require cmdr::help
+# Meta require cmdr::parameter
+# Meta require cmdr::util
+# Meta require cmdr::validate
+# Meta require debug
+# Meta require debug::caller
+# Meta require linenoise::facade
+# Meta require term::ansi::code::ctrl
+# Meta require try
+# Meta require {Tcl 8.5-}
+# Meta require {oo::util 1.2}
+# Meta require {struct::queue 1}
+
+# @@ Meta End
+
 ## - The config manages the argument values, and can parse
 ##   a command line against the definition, filling values,
 ##   issuing errors on mismatches, etc.

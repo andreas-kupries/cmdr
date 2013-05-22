@@ -2,6 +2,18 @@
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Util - General utilities
 
+# @@ Meta Begin
+# Package cmdr::util 0
+# Meta platform tcl
+# Meta summary     Internal. General utilities.
+# Meta description Internal. General utilities.
+# Meta subject {command line}
+# Meta require {Tcl 8.5-}
+# Meta require textutil::adjust
+# Meta require debug
+# Meta require debug::caller
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 

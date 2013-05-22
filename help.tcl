@@ -2,6 +2,21 @@
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Help - Help support.
 
+# @@ Meta Begin
+# Package cmdr::help 0
+# Meta platform tcl
+# Meta summary     Internal. Utilities for help text formatting and setup.
+# Meta description Internal. Utilities for help text formatting and setup.
+# Meta subject {command line}
+# Meta require {Tcl 8.5-}
+# Meta require debug
+# Meta require debug::caller
+# Meta require lambda
+# Meta require linenoise
+# Meta require textutil::adjust
+# Meta require cmdr::util
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 

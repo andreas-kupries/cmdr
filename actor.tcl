@@ -3,6 +3,18 @@
 ## CMDR - Actor - Command execution. Base.
 ##                Actors know how to do something.
 
+# @@ Meta Begin
+# Package cmdr::actor 0
+# Meta platform tcl
+# Meta summary     Internal. Base class for officers and privates.
+# Meta description Internal. Base class for officers and privates.
+# Meta subject {command line}
+# Meta require {Tcl 8.5-}
+# Meta require debug
+# Meta require debug::caller
+# Meta require TclOO
+# @@ Meta End
+
 ## Two types:
 ## - Privates know to do one thing, exactly, and nothing more.
 ##   They can process their command line to extract/validate
