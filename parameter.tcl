@@ -4,6 +4,8 @@
 
 # @@ Meta Begin
 # Package cmdr::parameter 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary     Internal. Command parameters.
 # Meta description Internal. Arguments, options, and other

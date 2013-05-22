@@ -4,6 +4,8 @@
 
 # @@ Meta Begin
 # Package cmdr::config 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary     Internal. Collection of parameters for cmd::private instances.
 # Meta description Internal. Collection of parameters for cmd::private instances.

@@ -9,6 +9,8 @@
 
 # @@ Meta Begin
 # Package cmdr::private 0
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
 # Meta summary Single command handling, options, and arguments.
 # Meta description 'cmdr::private's know to do one thing, exactly,
