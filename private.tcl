@@ -7,6 +7,24 @@
 ##   They can process their command line to extract/validate
 ##   the inputs they need for their action from the arguments.
 
+# @@ Meta Begin
+# Package cmdr::private 0
+# Meta platform tcl
+# Meta summary Single command handling, options, and arguments.
+# Meta description 'cmdr::private's know to do one thing, exactly,
+# Meta description and nothing more. They can process their command
+# Meta description line to extract/validate the inputs they need
+# Meta description for their action from the arguments.
+# Meta subject {command line} arguments options
+# Meta require TclOO
+# Meta require cmdr::actor
+# Meta require cmdr::config
+# Meta require debug
+# Meta require debug::caller
+# Meta require {Tcl 8.5-}
+# Meta require {oo::util 1.2}
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 

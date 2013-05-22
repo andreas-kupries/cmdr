@@ -2,6 +2,17 @@
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Validate - Definition of core validation classes.
 
+# @@ Meta Begin
+# Package cmdr::validate 0
+# Meta platform tcl
+# Meta summary     Standard validation types for parameters.
+# Meta description Standard validation types for parameters.
+# Meta subject {command line}
+# Meta require {Tcl 8.5-}
+# Meta require debug
+# Meta require debug::caller
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 

@@ -4,6 +4,20 @@
 ## Knows about officers and privates.
 ## Encapsulates the creation of command hierachies.
 
+# @@ Meta Begin
+# Package cmdr 0
+# Meta platform tcl
+# Meta summary Main entry point to the commander framework.
+# Meta description A framework for the specification and
+# Meta description use of complex command line processing.
+# Meta subject {command line} delegation dispatch options arguments
+# Meta require TclOO
+# Meta require cmdr::officer
+# Meta require debug
+# Meta require debug::caller
+# Meta require {Tcl 8.5-}
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 

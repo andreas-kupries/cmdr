@@ -2,6 +2,21 @@
 # # ## ### ##### ######## ############# #####################
 ## CMDR - Value - Definition of command parameters (for a private).
 
+# @@ Meta Begin
+# Package cmdr::parameter 0
+# Meta platform tcl
+# Meta summary     Internal. Command parameters.
+# Meta description Internal. Arguments, options, and other
+# Meta description parameters to privates (commands).
+# Meta subject {command line}
+# Meta require {Tcl 8.5-}
+# Meta require debug
+# Meta require debug::caller
+# Meta require TclOO
+# Meta require oo::util 1.2    ;# link helper
+# Meta require linenoise
+# @@ Meta End
+
 ## Reference "doc/notes_parameter.txt". The Rnnn and Cnnn tags are
 ## links into this document.
 

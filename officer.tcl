@@ -6,6 +6,27 @@
 ## - Officers can learn to do many things, by delegating things to the
 ##   privates actually able to perform it.
 
+# @@ Meta Begin
+# Package cmdr::officer 0
+# Meta platform tcl
+# Meta summary Aggregation of multiple commands for dispatch.
+# Meta description 'cmdr::officer's can learn to do many things,
+# Meta description by delegating things to the 'cmdr::private's
+# Meta description actually able to perform it.
+# Meta subject {command line} delegation dispatch
+# Meta require TclOO
+# Meta require cmdr::actor
+# Meta require cmdr::help
+# Meta require cmdr::private
+# Meta require debug
+# Meta require debug::caller
+# Meta require linenoise::facade
+# Meta require try
+# Meta require {Tcl 8.5-}
+# Meta require {oo::util 1.2}
+# Meta require {string::token::shell 1.1}
+# @@ Meta End
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
