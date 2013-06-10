@@ -82,6 +82,7 @@ oo::class create ::cmdr::config {
 
 	# Initialize collection state.
 	set myinteractive $ourinteractive
+	set mynames   {} ;# list of parameter names
 	set mymap     {} ;# parameter name -> object
 	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
 	set myoption  {} ;# option         -> object
