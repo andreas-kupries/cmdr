@@ -15,7 +15,7 @@
 # Meta require debug
 # Meta require debug::caller
 # Meta require TclOO
-# Meta require oo::util 1.2    ;# link helper
+# Meta require {oo::util 1.2}    ;# link helper
 # Meta require linenoise
 # @@ Meta End
 
