@@ -128,7 +128,8 @@ oo::class create ::cmdr::officer {
 	debug.cmdr/officer {}
 	my Setup
 	if {![dict exists $mymap a,$name]} {
-	    return -code error -errorcode {CMDR ACTION UNKNOWN} \
+	    return -code error \
+		-errorcode [list CMDR ACTION UNKNOWN $name] \
 		"Expected action name, got \"$name\""
 	}
 	return [dict get $mymap a,$name]
@@ -199,7 +200,8 @@ oo::class create ::cmdr::officer {
 	if {[llength [info level 0]] == 2} {
 	    set name [my Last]
 	} elseif {![dict exists $mymap a,$name]} {
-	    return -code error -errorcode {CMDR ACTION UNKNOWN} \
+	    return -code error \
+		-errorcode [list CMDR ACTION UNKNOWN $name] \
 		"Unable to set default, expected action, got \"$name\""
 	}
 	dict set mymap default $name
@@ -336,6 +338,7 @@ oo::class create ::cmdr::officer {
 
 	    # Delegate to the handler for a known command.
 	    if {[my Known $cmd]} {
+		my lappend .prefix $cmd
 		[my lookup $cmd] do {*}$remainder
 		return
 	    }
@@ -344,15 +347,21 @@ oo::class create ::cmdr::officer {
 	    # the default, if we have any. Otherwise fail.
 
 	    if {[my hasdefault]} {
+		# prefix left as is.
 		return [[my lookup [my default]] do {*}$args]
 	    }
 
-	    return -code error -errorcode {CMDR DO UNKNOWN} \
-		"No command found, have \"$cmd\""
+	    if {[catch {
+		set prefix " [my get .prefix] "
+	    }]} { set prefix "" }
+	    return -code error \
+		-errorcode [list CMDR DO UNKNOWN $cmd] \
+		"Unknown command \"[string trimleft $prefix]$cmd\". Please use 'help[string trimright $prefix]' to see the list of available commands."
 	} finally {
 	    if {$reset} {
 		my unset .command
 	    }
+	    my unset .prefix
 	}
     }
 

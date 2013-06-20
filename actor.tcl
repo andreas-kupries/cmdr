@@ -165,6 +165,14 @@ oo::class create ::cmdr::actor {
 	return
     }
 
+    method lappend {key data} {
+	debug.cmdr/actor {}
+	catch { set value [my get $key] }
+	lappend value $data
+	dict set mystore $key $data
+	return
+    }
+
     method unset {key} {
 	debug.cmdr/actor {}
 	dict unset mystore $key
