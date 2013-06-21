@@ -316,7 +316,7 @@ oo::class create ::cmdr::parameter {
 	# change.
 	set myinteractive yes
 	my C6_RequiredArgumentForbiddenInteract
-	if {$prompt eq {}} { set prompt "Enter ${myname}:" }
+	if {$prompt eq {}} { set prompt "Enter ${myname}: " }
 	set myprompt $prompt
 	return
     }
