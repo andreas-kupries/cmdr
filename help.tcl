@@ -57,8 +57,20 @@ proc ::cmdr::help::query {actor words} {
     # responsible for that command, starting from the specified actor.
     # This is very much a convenience command.
 
+    set n -1
     foreach word $words {
+	if {[info object class $actor] ne "::cmdr::officer"} {
+	    # Privates do not have subordinates to look up.
+	    # We now have a bad command name argument to help.
+
+	    set prefix [lrange $words 0 $n]
+	    return -code error \
+		-errorcode [list CMDR ACTION BAD $word] \
+		"The command \"$prefix\" has no sub-commands, unexpected word \"$word\""
+	}
+
 	set actor [$actor lookup $word]
+	incr n
     }
     return [$actor help $words]
 }
