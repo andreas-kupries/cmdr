@@ -37,7 +37,7 @@ namespace eval ::cmdr::validate {
 }
 
 namespace eval ::cmdr::validate::common {
-    namespace export fail complete-enum config
+    namespace export fail complete-enum complete-glob
     namespace ensemble create
 }
 
@@ -73,6 +73,23 @@ proc ::cmdr::validate::common::complete-enum {choices nocase buffer} {
     foreach c $choices {
 	if {![string match ${buffer}* $c]} continue
 	lappend candidates $c
+    }
+
+    debug.cmdr/validate/common {= [join $candidates "\n= "]} 10
+    return $candidates
+}
+
+proc ::cmdr::validate::common::complete-glob {filter buffer} {
+    debug.cmdr/validate/common {} 10
+
+    # Treat everything in the buffer as literal prefix.
+    # Disable all glob special characters.
+    regsub -all {(.)} $buffer {\\\1} buffer
+
+    set candidates {}
+    foreach path [glob -nocomplain ${buffer}*] {
+	if {![{*}$filter $path]} continue
+	lappend candidates $path
     }
 
     debug.cmdr/validate/common {= [join $candidates "\n= "]} 10
