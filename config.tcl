@@ -64,6 +64,19 @@ oo::class create ::cmdr::config {
 	return
     }
 
+    classmethod display {cmdprefix} {
+	variable ourdisplay $cmdprefix
+	return
+    }
+
+    method display {{plist {}}} {
+	if {![llength $plist]} {
+	    set plist [my Visible]
+	}
+	set plist [lsort -dict $plist]
+	return [{*}$mydisplay $plist]
+    }
+
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
@@ -74,6 +87,13 @@ oo::class create ::cmdr::config {
 
 	classvariable ourinteractive
 	if {![info exists ourinteractive]} { set ourinteractive 0 }
+
+	classvariable ourdisplay
+	if {[info exists ourdisplay]} {
+	    set mydisplay $ourdisplay
+	} else {
+	    set mydisplay [mymethod PrintState]
+	}
 
 	my Colors
 
@@ -872,7 +892,8 @@ oo::class create ::cmdr::config {
 
     variable mymap mypub myoption myfullopt myargs mynames \
 	myaq mypq mycchain myreplexit myreplok myreplcommit \
-	myreset myred mygreen mycyan myinteractive myinforce
+	myreset myred mygreen mycyan myinteractive myinforce \
+	mydisplay myreplskip
 
     # # ## ### ##### ######## #############
     ## Local shell for interactive entry of the parameters in the collection.
@@ -885,6 +906,7 @@ oo::class create ::cmdr::config {
 	set myreplexit   0 ; # Flag: Stop repl, not yet.
 	set myreplok     0 ; # Flag: We can't commit properly
 	set myreplcommit 0 ; # Flag: We are not asked to commit yet.
+	set myreplskip   0 ; # Flag: Do not report.
 
 	my ShowState
 
@@ -917,6 +939,13 @@ oo::class create ::cmdr::config {
 
     method dispatch {cmd} {
 	debug.cmdr/config {}
+
+	if {$cmd eq {}} {
+	    # No command, do nothing.
+	    set myreplskip 1
+	    return
+	}
+
 	switch -exact -- $cmd {
 	    .run - .ok {
 		set myreplexit   1
@@ -969,6 +998,12 @@ oo::class create ::cmdr::config {
 
     method report {what data} {
 	debug.cmdr/config {}
+
+	if {$myreplskip} {
+	    set myreplskip 0
+	    return
+	}
+
 	if {$myreplexit} {
 	    if {$myreplcommit} {
 		return -code error -errorcode {CMDR CONFIG INTERACT OK} ""
@@ -1085,12 +1120,12 @@ oo::class create ::cmdr::config {
     }
 
     method ShowState {} {
-	puts [my PrintState [my Visible] 0]
+	puts [my display]
 	flush stdout
 	return
     }
 
-    method PrintState {plist full} {
+    method PrintState {plist {full 0}} {
 	set plist  [lsort -dict $plist]
 	set labels [cmdr util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
