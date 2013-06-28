@@ -375,6 +375,12 @@ oo::class create ::cmdr::officer {
 
     method dispatch {cmd} {
 	debug.cmdr/officer {}
+
+	if {$cmd eq {}} {
+	    # No command, do nothing.
+	    return
+	}
+
 	if {$cmd eq ".exit"} {
 	    set myreplexit 1 ; return
 	}
