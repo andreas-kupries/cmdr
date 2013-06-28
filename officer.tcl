@@ -368,7 +368,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1   {}     { return "[my fullname]> " }
+    method prompt1   {}     { return "[my fullname] > " }
     method prompt2   {}     { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
     method exit      {}     { return $myreplexit }
