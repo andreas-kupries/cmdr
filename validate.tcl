@@ -256,6 +256,66 @@ proc ::cmdr::validate::rwdirectory::Ok {path} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## Any path, existing and readable.
+
+namespace eval ::cmdr::validate::rpath {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::rpath::default  {}  { error {No default} }
+proc ::cmdr::validate::rpath::release  {x} { return }
+proc ::cmdr::validate::rpath::complete {x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::rpath::Ok $x
+}
+
+proc ::cmdr::validate::rpath::validate {x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return $x }
+    fail RPATH "an existing readable path" $x
+}
+
+proc ::cmdr::validate::rpath::Ok {path} {
+    if {![file exists      $path]} {return 0}
+    if {![file isdirectory $path]} {return 0}
+    if {![file readable    $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
+## Any path, existing and read/writable.
+
+namespace eval ::cmdr::validate::rwpath {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::rwpath::default  {}  { error {No default} }
+proc ::cmdr::validate::rwpath::release  {x} { return }
+proc ::cmdr::validate::rwpath::complete {x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::rwpath::Ok $x
+}
+
+proc ::cmdr::validate::rwpath::validate {x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return $x }
+    fail RWPATH "an existing read/writeable path" $x
+}
+
+proc ::cmdr::validate::rwpath::Ok {path} {
+    if {![file exists      $path]} {return 0}
+    if {![file readable    $path]} {return 0}
+    if {![file writable    $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
 ## Ready
 package provide cmdr::validate 0.1
 return
