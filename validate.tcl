@@ -19,6 +19,7 @@
 ## Requisites
 
 package require Tcl 8.5
+package require cmdr::validate::common
 package require debug
 package require debug::caller
 
@@ -31,9 +32,12 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::validate {
-    namespace export boolean integer identity \
-	fail complete-enum config
-    namespace ensemble create
+    namespace export boolean integer identity
+    #namespace ensemble create
+
+    # For external v-types relying on them here.
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-enum
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -44,43 +48,11 @@ debug prefix cmdr/validate {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::validate::fail {code type x} {
-    debug.cmdr/validate {}
-    return -code error -errorcode [list CMDR VALIDATE {*}$code] \
-	"Expected $type, got \"$x\""
-}
-
-proc ::cmdr::validate::complete-enum {choices nocase buffer} {
-    # As a helper function for command completion printing anything
-    # here would mix with the output of linenoise. Do that only on
-    # explicit request (level 10).
-    debug.cmdr/validate {} 10
-
-    if {$buffer eq {}} {
-	return $choices
-    }
-
-    if {$nocase} {
-	set buffer [string tolower $buffer]
-    }
-
-    set candidates {}
-    foreach c $choices {
-	if {![string match ${buffer}* $c]} continue
-	lappend candidates $c
-    }
-
-    debug.cmdr/validate {= [join $candidates "\n= "]} 10
-    return $candidates
-}
-
-# # ## ### ##### ######## ############# #####################
-
 namespace eval ::cmdr::validate::boolean {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::cmdr::validate::fail
-    namespace import ::cmdr::validate::complete-enum
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-enum
 }
 
 proc ::cmdr::validate::boolean::release  {x} { return }
@@ -100,13 +72,12 @@ proc ::cmdr::validate::boolean::validate {x} {
     fail BOOLEAN "a boolean" $x
 }
 
-
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::cmdr::validate::integer {
     namespace export default validate complete release
     namespace ensemble create
-    namespace import ::cmdr::validate::fail
+    namespace import ::cmdr::validate::common::fail
 }
 
 proc ::cmdr::validate::integer::release  {x} { return }

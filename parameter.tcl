@@ -344,16 +344,19 @@ oo::class create ::cmdr::parameter {
 	return
     }
 
-    method Validate {cmd} {
+    method Validate {cmdprefix} {
 	my C9_PresenceValidateConflict
-	set words [lassign $cmd cmd]
+
+	# Extract primary command.
+	set cmd [lindex $cmdprefix 1]
+
 	# Allow FOO shorthand for cmdr::validate::FOO
 	if {![llength [info commands $cmd]] &&
 	    [llength [info commands ::cmdr::validate::$cmd]]} {
 	    set cmd ::cmdr::validate::$cmd
 	}
-	set cmd [::list $cmd {*}$words]
-	set myvalidate $cmd
+
+	set myvalidate $cmdprefix
 	return
     }
 
