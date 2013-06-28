@@ -187,6 +187,29 @@ oo::class create ::cmdr::officer {
 	return
     }
 
+    # Convenience method for dynamically creating a command hierarchy.
+    # Command specified as path, intermediate officers are generated
+    # automatically as needed.
+
+    method extend {path arguments action} {
+	if {[llength $path] == 1} {
+	    # Reached the bottom of the recursion.
+	    # Generate the private handling arguments and action.
+	    set cmd [lindex $path 0]
+	    Private $cmd $arguments $action
+	    return
+	}
+
+	# Recurse, creating the intermediate officers as needed.
+	set path [lassign $path cmd]
+	if {![has $cmd]} {
+	    Officer $cmd {}
+	}
+
+	[my lookup $cmd] extend $path $arguments $action
+	return
+    }
+
     # # ## ### ##### ######## #############
     ## Implementation of the action specification language.
 
