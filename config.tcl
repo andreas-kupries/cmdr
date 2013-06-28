@@ -910,7 +910,7 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1   {}     { return "[context fullname]> " }
+    method prompt1   {}     { return "[context fullname] > " }
     method prompt2   {}     { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
     method exit      {}     { return $myreplexit }
