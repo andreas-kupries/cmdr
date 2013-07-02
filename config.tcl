@@ -1237,4 +1237,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.1
+package provide cmdr::config 0.2

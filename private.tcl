@@ -164,4 +164,4 @@ oo::class create ::cmdr::private {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::private 0.1
+package provide cmdr::private 0.2
