@@ -348,12 +348,12 @@ oo::class create ::cmdr::parameter {
 	my C9_PresenceValidateConflict
 
 	# Extract primary command.
-	set cmd [lindex $cmdprefix 1]
+	set cmd [lindex $cmdprefix 0]
 
 	# Allow FOO shorthand for cmdr::validate::FOO
 	if {![llength [info commands $cmd]] &&
 	    [llength [info commands ::cmdr::validate::$cmd]]} {
-	    set cmd ::cmdr::validate::$cmd
+	    set cmdprefix [lreplace $cmdprefix 0 0 ::cmdr::validate::$cmd]
 	}
 
 	set myvalidate $cmdprefix

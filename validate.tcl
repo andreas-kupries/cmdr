@@ -32,7 +32,7 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::validate {
-    namespace export boolean integer identity
+    namespace export boolean integer identity pass str
     #namespace ensemble create
 
     # For external v-types relying on them here.
