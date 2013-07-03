@@ -955,12 +955,15 @@ oo::class create ::cmdr::parameter {
 	    set thestringlist {}
 	    set thevaluelist {}
 
+	    puts $prompt
+	    flush stdout
+
 	    while {$continue} {
 		debug.cmdr/parameter {/enter}
 		#set continue 0
 		try {
 		    set thestring [linenoise prompt \
-				      -prompt "(List element) $prompt" \
+				       -prompt "  Item [llength $thevaluelist]> " \
 				      -complete [::list {*}$myvalidate complete]]
 		} on error {e o} {
 		    debug.cmdr/parameter {trapped $e}
