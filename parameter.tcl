@@ -951,13 +951,16 @@ oo::class create ::cmdr::parameter {
 	    # is done through the chosen validation type. Invalid
 	    # values are reported and ignored.
 	    set continue 1
-	    set thelist {}
+
+	    set thestringlist {}
+	    set thevaluelist {}
+
 	    while {$continue} {
 		debug.cmdr/parameter {/enter}
 		#set continue 0
 		try {
-		    set thevalue [linenoise prompt \
-				      -prompt "(List) $prompt" \
+		    set thestring [linenoise prompt \
+				      -prompt "(List element) $prompt" \
 				      -complete [::list {*}$myvalidate complete]]
 		} on error {e o} {
 		    debug.cmdr/parameter {trapped $e}
@@ -974,7 +977,7 @@ oo::class create ::cmdr::parameter {
 		    break
 		}
 
-		if {$thevalue eq {}} {
+		if {$thestring eq {}} {
 		    debug.cmdr/parameter {/break on empty input}
 		    # Plain enter. Nothing entered. Treat as abort.
 		    break
@@ -982,17 +985,24 @@ oo::class create ::cmdr::parameter {
 
 		set take 1
 		try {
-		    set thevalue [{*}$myvalidate validate $thevalue]
+		    set thevalue [{*}$myvalidate validate $thestring]
 		} trap {CMDR VALIDATE} {e o} {
 		    set take 0
 		    puts "$e, ignored"
 		}
 		if {$take} {
 		    debug.cmdr/parameter {/keep $thevalue}
-		    lappend thelist $thevalue
+		    lappend thestringlist $thestring
+		    lappend thevaluelist  $thevalue
 		}
 	    }
-	    my Value: $thelist
+
+	    # Inlined 'set' and 'Value:'. Modified to suit.
+	    set     myhasstring yes
+	    lappend mystring    {*}$thestringlist
+	    set     myhasvalue  yes
+	    lappend myvalue     {*}$thevaluelist
+
 	} else {
 	    debug.cmdr/parameter {/single}
 	    # Prompt for a single value. We loop until a valid
@@ -1002,15 +1012,22 @@ oo::class create ::cmdr::parameter {
 	    set continue 1
 	    while {$continue} {
 		set continue 0
-		set thevalue [linenoise prompt \
+		set thestring [linenoise prompt \
 				  -prompt $prompt \
 				  -complete [::list {*}$myvalidate complete]]
 		try {
-		    set thevalue [{*}$myvalidate validate $thevalue]
+		    set thevalue [{*}$myvalidate validate $thestring]
 		} trap {CMDR VALIDATE} {e o} {
 		    set continue 1
 		}
 	    }
+
+	    # Inlined 'set'. Modified to suit. No locking, nor lock
+	    # check, nor forgetting, except release of a previous value.
+
+	    set myhasstring yes
+	    set mystring    $thestring
+	    if {$myhasvalue} { my ValueRelease $myvalue }
 	    my Value: $thevalue
 	}
 	return
