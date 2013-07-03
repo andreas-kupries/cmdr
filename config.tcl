@@ -932,7 +932,7 @@ oo::class create ::cmdr::config {
     # # ## ### ##### ######## #############
     ## Shell hook methods called by the linenoise::facade.
 
-    method prompt1   {}     { return "[context fullname] > " }
+    method prompt1   {}     { return "[context dname] > " }
     method prompt2   {}     { error {Continuation lines are not supported} }
     method continued {line} { return 0 }
     method exit      {}     { return $myreplexit }
@@ -959,7 +959,7 @@ oo::class create ::cmdr::config {
 	    .help {
 		puts [cmdr help format full \
 			  [linenoise columns] \
-			  [dict create [context fullname] \
+			  [dict create [context dname] \
 			       [my help interact]]]
 		return
 	    }
@@ -978,7 +978,12 @@ oo::class create ::cmdr::config {
 	if {[$para presence] && ([llength $words] != 0)} {
 	    return -code error -errorcode {CMDR CONFIG WRONG ARGS} \
 		"wrong \# args: should be \"$cmd\""
-	} elseif {[llength $words] != 1} {
+	}
+	if {[llength $words] < 1} {
+	    $para interact
+	    return
+	}
+	if {![$para list] && [llength $words] > 1} {
 	    return -code error -errorcode {CMDR CONFIG WRONG ARGS} \
 		"wrong \# args: should be \"$cmd value\""
 	}
@@ -990,6 +995,8 @@ oo::class create ::cmdr::config {
 	if {[$para presence]} {
 	    # See also cmdr::parameter/ProcessOption
 	    $para set yes
+	} elseif {[$para list]} {
+	    foreach w $words { $para set $w }
 	} else {
 	    $para set {*}$words
 	}
@@ -1126,6 +1133,8 @@ oo::class create ::cmdr::config {
     }
 
     method PrintState {plist {full 0}} {
+	set header [context dname]
+
 	set plist  [lsort -dict $plist]
 	set labels [cmdr util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
@@ -1162,10 +1171,10 @@ oo::class create ::cmdr::config {
 	    append text {    }
 
 	    if {$required && !$defined} {
-		set label ${myred}$label${myreset}+
+		set label ${myred}$label${myreset}
 		set alldefined 0
 	    } else {
-		set label "$label "
+		#set label "$label "
 	    }
 
 	    if {$full} {
@@ -1184,7 +1193,8 @@ oo::class create ::cmdr::config {
 		append label ")"
 		set sfx {              }
 	    } else {
-		set sfx {}
+		append label [expr {[$para list]       ? " L":"  "}]
+		set sfx {  }
 	    }
 
 	    append text $label
@@ -1204,11 +1214,11 @@ oo::class create ::cmdr::config {
 	}
 
 	if {$somebad} {
-	    set text "[context fullname] (${myred}BAD$myreset):\n$text"
+	    set text "$header (${myred}BAD$myreset):\n$text"
 	} elseif {!$alldefined} {
-	    set text "[context fullname] (${myred}INCOMPLETE$myreset):\n$text"
+	    set text "$header (${myred}INCOMPLETE$myreset):\n$text"
 	} else {
-	    set text "[context fullname] (${mygreen}OK$myreset):\n$text"
+	    set text "$header (${mygreen}OK$myreset):\n$text"
 	    set myreplok 1
 	}
 

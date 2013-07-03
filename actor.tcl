@@ -67,6 +67,10 @@ oo::class create ::cmdr::actor {
 	return $myname
     }
 
+    method dname {} {
+	::list {*}[my get .prefix] $myname
+    }
+
     method fullname {} {
 	set result {}
 	if {$mysuper ne {}} {
