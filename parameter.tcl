@@ -134,7 +134,7 @@ oo::class create ::cmdr::parameter {
 	set mydefault      {} ;# default value - raw
 	set mygenerate     {} ;# generator command
 	set myinteractive  no ;# no interactive query of value
-	set myprompt       {} ;# no prompt for interaction
+	set myprompt       "Enter ${name}: " ;# standard prompt for interaction
 
 	set myvalidate     {} ;# validation command
 	set mywhendef      {} ;# action-on-definition command.
@@ -316,7 +316,7 @@ oo::class create ::cmdr::parameter {
 	# change.
 	set myinteractive yes
 	my C6_RequiredArgumentForbiddenInteract
-	if {$prompt eq {}} { set prompt "Enter ${myname}: " }
+	if {$prompt eq {}} return ; # keep standard prompt
 	set myprompt $prompt
 	return
     }
@@ -902,61 +902,7 @@ oo::class create ::cmdr::parameter {
 	}
 
 	if {$myinteractive && [cmdr interactive?]} {
-	    if {$myislist} {
-		# Prompt for a list of values. We loop until the user
-		# aborted. The latter aborts just the loop. Completion
-		# is done through the chosen validation type. Invalid
-		# values are reported and ignored.
-		set continue 1
-		set thelist {}
-		while {$continue} {
-		    set continue 0
-		    try {
-			set thevalue [linenoise prompt \
-					  -prompt $myprompt \
-					  -complete [::list {*}$myvalidate complete]]
-		    } on error {e o} {
-			if {$e eq "aborted"} {
-			    set continue 0
-			} else {
-			    return {*}$o $e
-			}
-		    }
-		    if {!$continue} break
-		    set take 1
-		    try {
-			set thevalue [{*}$myvalidate validate $thevalue]
-		    } trap {CMDR VALIDATE} {e o} {
-			set take 0
-			puts "$e, ignored"
-		    }
-		    if {$take} {
-			lappend thelist $thevalue
-		    }
-		}
-		my Value: $thelist
-	    } else {
-		# Prompt for a single value. We loop until a valid
-		# value was entered, or the user aborted. The latter
-		# aborts the whole operation. Completion is done through
-		# the chosen validation type.
-		set continue 1
-		while {$continue} {
-		    set continue 0
-		    set thevalue [linenoise prompt \
-				      -prompt $myprompt \
-				      -complete [::list {*}$myvalidate complete]]
-		    try {
-			set thevalue [{*}$myvalidate validate $thevalue]
-		    } trap {CMDR VALIDATE} {e o} {
-			set continue 1
-		    }
-		}
-		my Value: $thevalue
-	    }
-	    # TODO: prompt to enter value, or cmdloop to enter a list.
-	    # Note: ^C for prompt aborts system.
-	    #       ^C for list aborts loop, but not system.
+	    my interact
 	}
 
 	if {[llength $mygenerate]} {
@@ -986,6 +932,88 @@ oo::class create ::cmdr::parameter {
 	return -code error \
 	    -errorcode {CMDR PARAMETER UNDEFINED} \
 	    "Undefined: $myname"
+    }
+
+    method interact {{prompt {}}} {
+	debug.cmdr/parameter {}
+	# Note: ^C for prompt aborts system.
+	#       ^C for list aborts loop, but not system.
+	# Details below.
+
+	if {$prompt eq {}} {
+	    set prompt $myprompt
+	}
+
+	if {$myislist} {
+	    debug.cmdr/parameter {/list}
+	    # Prompt for a list of values. We loop until the user
+	    # aborted. The latter aborts just the loop. Completion
+	    # is done through the chosen validation type. Invalid
+	    # values are reported and ignored.
+	    set continue 1
+	    set thelist {}
+	    while {$continue} {
+		debug.cmdr/parameter {/enter}
+		#set continue 0
+		try {
+		    set thevalue [linenoise prompt \
+				      -prompt "(List) $prompt" \
+				      -complete [::list {*}$myvalidate complete]]
+		} on error {e o} {
+		    debug.cmdr/parameter {trapped $e}
+		    debug.cmdr/parameter {options $o}
+
+		    if {$e eq "aborted"} {
+			set continue 0
+		    } else {
+			return {*}$o $e
+		    }
+		}
+		if {!$continue} {
+		    debug.cmdr/parameter {/break on ^C}
+		    break
+		}
+
+		if {$thevalue eq {}} {
+		    debug.cmdr/parameter {/break on empty input}
+		    # Plain enter. Nothing entered. Treat as abort.
+		    break
+		}
+
+		set take 1
+		try {
+		    set thevalue [{*}$myvalidate validate $thevalue]
+		} trap {CMDR VALIDATE} {e o} {
+		    set take 0
+		    puts "$e, ignored"
+		}
+		if {$take} {
+		    debug.cmdr/parameter {/keep $thevalue}
+		    lappend thelist $thevalue
+		}
+	    }
+	    my Value: $thelist
+	} else {
+	    debug.cmdr/parameter {/single}
+	    # Prompt for a single value. We loop until a valid
+	    # value was entered, or the user aborted. The latter
+	    # aborts the whole operation. Completion is done through
+	    # the chosen validation type.
+	    set continue 1
+	    while {$continue} {
+		set continue 0
+		set thevalue [linenoise prompt \
+				  -prompt $prompt \
+				  -complete [::list {*}$myvalidate complete]]
+		try {
+		    set thevalue [{*}$myvalidate validate $thevalue]
+		} trap {CMDR VALIDATE} {e o} {
+		    set continue 1
+		}
+	    }
+	    my Value: $thevalue
+	}
+	return
     }
 
     # # ## ### ##### ######## #############
