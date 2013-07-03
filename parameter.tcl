@@ -903,6 +903,7 @@ oo::class create ::cmdr::parameter {
 
 	if {$myinteractive && [cmdr interactive?]} {
 	    my interact
+	    return $myvalue
 	}
 
 	if {[llength $mygenerate]} {
