@@ -127,6 +127,7 @@ oo::class create ::cmdr::parameter {
 	my C2_OptionIsOptional
 	my C3_StateIsRequired
 
+	set mystopinteraction no ;# specified interaction is not suppressed.
 	set myislist       no ;# scalar vs list parameter
 	set myisdocumented yes
 	set myonlypresence no ;# options only, no argument when true.
@@ -220,6 +221,12 @@ oo::class create ::cmdr::parameter {
 	if {$myisrequired || ($mythreshold ne {})} return
 	debug.cmdr/parameter {}
 	set mythreshold $n
+	return
+    }
+
+    # One shot disabling of interaction, if any.
+    method dontinteract {} {
+	set mystopinteraction yes
 	return
     }
 
@@ -843,6 +850,12 @@ oo::class create ::cmdr::parameter {
 
     method value {} {
 	debug.cmdr/parameter {}
+
+	# Pull interaction suppression into the scope, and reset for
+	# future calls. Suppression is a one-shot thing.
+	set stopinteraction $mystopinteraction
+	set mystopinteraction no
+
 	# compute argument value if any, cache result.
 
 	# Calculate value, from most prefered to least
@@ -901,7 +914,7 @@ oo::class create ::cmdr::parameter {
 	    my Value: $myvalue
 	}
 
-	if {$myinteractive && [cmdr interactive?]} {
+	if {!$stopinteraction && $myinteractive && [cmdr interactive?]} {
 	    my interact
 	    return $myvalue
 	}
@@ -1072,7 +1085,7 @@ oo::class create ::cmdr::parameter {
 	myinteractive myprompt mydefault myhasdefault \
 	mywhendef mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
-	myhasvalue myvalue mylocker \
+	myhasvalue myvalue mylocker mystopinteraction \
 	myisdocumented myonlypresence
 
     # # ## ### ##### ######## #############
