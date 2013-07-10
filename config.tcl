@@ -694,7 +694,10 @@ oo::class create ::cmdr::config {
 	# definitely not an option.
 
 	# Nothing to process.
-	if {![P size]} return
+	if {![P size]} {
+	    debug.cmdr/config {no parameters to process}
+	    return
+	}
 
 	# Unshift the front value under consideration by
 	# 'cmdr::parameter Take'.
@@ -713,8 +716,13 @@ oo::class create ::cmdr::config {
 
 	# Refill the queue with the arguments which remained after
 	# option processing.
-	if {![llength $arguments]} return
+	if {![llength $arguments]} {
+	    debug.cmdr/config {no arguments to return}
+	    return
+	}
 	P put {*}$arguments
+
+	debug.cmdr/config {done}
 	return
     }
 
@@ -797,11 +805,13 @@ oo::class create ::cmdr::config {
 	debug.cmdr/config {remainder: [A size]}
 	while {[A size]} {
 	    set argname [A get]
+	    debug.cmdr/config {@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@}
 	    debug.cmdr/config {$argname, a[A size] p[P size]}
 	    [dict get $mymap $argname] process $argname $mypq
+	    debug.cmdr/config {/////////////////////////////////}
 	}
 
-	debug.cmdr/validate {done}
+	debug.cmdr/validate {done remainder}
 	#puts "a[A size] p[P size]"
 
 	# End conditions:
@@ -818,6 +828,8 @@ oo::class create ::cmdr::config {
 	# XXX Go through the regular arguments and validate them?
 	# XXX Or can we assume that things will work simply through
 	# XXX access by the command ?
+
+	debug.cmdr/config {/done all}
 	return
     }
 

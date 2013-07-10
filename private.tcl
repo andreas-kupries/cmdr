@@ -110,6 +110,7 @@ oo::class create ::cmdr::private {
 
     method Run {words} {
 	debug.cmdr/private {}
+	debug.cmdr/private {parse}
 	try {
 	    config parse {*}$words
 	} trap {CMDR CONFIG WRONG-ARGS NOT-ENOUGH} {e o} {
@@ -122,11 +123,13 @@ oo::class create ::cmdr::private {
 	    if {![config interact]} return
 	}
 
+	debug.cmdr/private {complete values}
+
 	# Define all parameters now, resolving defaults, validating
 	# the values, etc.
 	config force
 
-	debug.cmdr/private {}
+	debug.cmdr/private {execute}
 	# Call actual command, hand it the filled configuration.
 	{*}$mycmd $myconfig 
     }
