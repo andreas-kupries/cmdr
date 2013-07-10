@@ -215,7 +215,7 @@ oo::class create ::cmdr::config {
 	return [dict get $myoption $name]
     }
 
-    method force {} {
+    method force {{allowinteract 1}} {
 	debug.cmdr/config {recursive=$myinforce}
 	# Define the values of all parameters.
 	# Done in order of declaration.
@@ -226,8 +226,12 @@ oo::class create ::cmdr::config {
 	set myinforce yes
 
 	foreach name $mynames {
+	    set para [dict get $mymap $name]
+	    if {!$allowinteract} {
+		$para dontinteract
+	    }
 	    try {
-		[dict get $mymap $name] value
+		$para value
 	    } trap {CMDR PARAMETER UNDEFINED} {e o} {
 		# Ignore when a parameter was not defined.
 		# Note that this is transparent to validation
@@ -1151,9 +1155,11 @@ oo::class create ::cmdr::config {
 	set labels [cmdr util padr $plist]
 	set blank  [string repeat { } [string length [lindex $labels 0]]]
 
-	# Recalculate all parameters in full.
-	my forget
-	my force
+	# Recalculate the value of changed parameters. (They have
+	# 'forgotten' their value due to 'set'). We disallow interaction
+	# for parameters who would normally do this to gather information
+	# from the user.
+	my force 0
 
 	set text {}
 	set alldefined 1
