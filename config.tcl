@@ -904,6 +904,12 @@ oo::class create ::cmdr::config {
 	    "wrong#args, not enough"
     }
 
+    method missingOptionValue {name} {
+	return -code error \
+	    -errorcode {CMDR CONFIG WRONG-ARGS OPTION NOT-ENOUGH} \
+	    "wrong#args, missing value for option '$name'"
+    }
+
     # # ## ### ##### ######## #############
 
     variable mymap mypub myoption myfullopt myargs mynames \
@@ -942,7 +948,9 @@ oo::class create ::cmdr::config {
 	} finally {
 	    $shell destroy
 	}
-	return
+
+	# Regular return indicates abort (^D), treat as cancellation.
+	return 0
     }
 
     # # ## ### ##### ######## #############
