@@ -770,8 +770,9 @@ oo::class create ::cmdr::parameter {
 		set value [expr {!$value}]
 	    }
 	} else {
-	    # Everything else has no special forms. Value now required.
-	    if {![$queue size]} { config notEnough }
+	    # Everything else has no special forms. The option's value
+	    # is required here.
+	    if {![$queue size]} { config missingOptionValue $flag }
 	    set value [$queue get]
 	}
 
