@@ -640,7 +640,18 @@ oo::class create ::cmdr::parameter {
 	debug.cmdr/parameter {}
 	my Locked
 	if {$myislist} {
-	    set mystring [$queue get [$queue size]]
+	    # Bug 99702. The 'get' method of queues is variable-type.
+	    # Retrieve 2 or more elements => get a list.
+	    # Retrieve one element => get that element (NOT a list of one element).
+	    # So, if our splat argument consists of just one element we have to
+	    # undo 'get's stripping of list-ness, mystring must always be a list.
+
+	    set n [$queue size]
+	    set mystring [$queue get $n]
+
+	    if {$n == 1} {
+		set mystring [::list $mystring]
+	    }
 	} else {
 	    set mystring [$queue get]
 	}
@@ -812,7 +823,7 @@ oo::class create ::cmdr::parameter {
 	    debug.cmdr/parameter {Q[$queue size] >  T$mythreshold: taken}
 	    return 1
 	} elseif {[$queue size]} {
-	    debug.cmdr/parameter {validate [$queue peek]}
+	    debug.cmdr/parameter {validate ([$queue peek])}
 	    # Choose by peeking at and validating the front value.
 	    # Note: We may not have a front value!
 	    set take [my accept [$queue peek]]
