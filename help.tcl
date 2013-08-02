@@ -161,28 +161,15 @@ proc ::cmdr::help::format::full {width help} {
 }
 
 proc ::cmdr::help::format::Full {width name command} {
-    # command = list ('desc'      -> description
-    #                 'options'   -> options
-    #                 'arguments' -> arguments)
+    # Data structure: see config.tcl,  method 'help'.
+    # Data structure: see private.tcl, method 'help'.
 
-    dict with command {} ; # -> desc, options, arguments
-
-    # options   = list (option...)
-    # option    = dict (name -> description)
-    # arguments = dict (name -> argdesc)
-    # argdesc   = dict ('code' -> code
-    #                   'desc' -> description)
-    # code in {
-    #     +		<=> required
-    #     ?		<=> optional
-    #     +*	<=> required splat
-    #     ?* 	<=> optional splat
-    # }
+    dict with command {} ; # -> desc, options, arguments, parameters
 
     # Short line.
     lappend lines \
 	[string trimright \
-	     "[join $name] [HasOptions $options][Arguments $arguments]"]
+	     "[join $name] [HasOptions $options][Arguments $arguments $parameters]"]
 
     if {$desc ne {}} {
 	# plus description
@@ -196,22 +183,23 @@ proc ::cmdr::help::format::Full {width name command} {
     # plus per-option descriptions
     if {[dict size $options]} {
 	set onames {}
-	set odefs {}
-	dict for {oname ohelp} $options {
+	set odefs  {}
+	foreach {oname ohelp} $options {
 	    lappend onames $oname
-	    lappend odefs $ohelp
+	    lappend odefs  $ohelp
 	}
 	DefList $width $onames $odefs
     }
 
     # plus per-argument descriptions
-    if {[dict size $arguments]} {
+    if {[llength $arguments]} {
 	set anames {}
 	set adefs  {}
-	dict for {aname v} $arguments {
-	    dict with v {} ; # -> code, desc
+	foreach aname $arguments {
+	    set v [dict get $parameters $aname]
+	    dict with v {} ; # -> code, description
 	    lappend anames $aname
-	    lappend adefs  $desc
+	    lappend adefs  $description
 	}
 	DefList $width $anames $adefs
     }
@@ -233,28 +221,15 @@ proc ::cmdr::help::format::list {width help} {
 }
 
 proc ::cmdr::help::format::List {width name command} {
-    # command = list ('desc'      -> description
-    #                 'options'   -> options
-    #                 'arguments' -> arguments)
+    # Data structure: see config.tcl,  method 'help'.
+    # Data structure: see private.tcl, method 'help'.
 
-    dict with command {} ; # -> desc, options, arguments
-
-    # options   = list (option...)
-    # option    = dict (name -> description)
-    # arguments = dict (name -> argdesc)
-    # argdesc   = dict ('code' -> code
-    #                   'desc' -> description)
-    # code in {
-    #     +		<=> required
-    #     ?		<=> optional
-    #     +*	<=> required splat
-    #     ?* 	<=> optional splat
-    # }
+    dict with command {} ; # -> desc, options, arguments, parameters
 
     # Short line.
     lappend lines \
 	[string trimright \
-	     "    [join $name] [HasOptions $options][Arguments $arguments]"]
+	     "    [join $name] [HasOptions $options][Arguments $arguments $parameters]"]
     return [join $lines \n]
 }
 
@@ -272,28 +247,15 @@ proc ::cmdr::help::format::short {width help} {
 }
 
 proc ::cmdr::help::format::Short {width name command} {
-    # command = list ('desc'      -> description
-    #                 'options'   -> options
-    #                 'arguments' -> arguments)
+    # Data structure: see config.tcl,  method 'help'.
+    # Data structure: see private.tcl, method 'help'.
 
-    dict with command {} ; # -> desc, options, arguments
-
-    # options   = list (option...)
-    # option    = dict (name -> description)
-    # arguments = dict (name -> argdesc)
-    # argdesc   = dict ('code' -> code
-    #                   'desc' -> description)
-    # code in {
-    #     +		<=> required
-    #     ?		<=> optional
-    #     +*	<=> required splat
-    #     ?* 	<=> optional splat
-    # }
+    dict with command {} ; # -> desc, options, arguments, parameters
 
     # Short line.
     lappend lines \
 	[string trimright \
-	     "[join $name] [HasOptions $options][Arguments $arguments]"]
+	     "[join $name] [HasOptions $options][Arguments $arguments $parameters]"]
 
     if {$desc ne {}} {
 	# plus description
@@ -332,9 +294,10 @@ proc ::cmdr::help::format::DefList {width labels defs} {
     return
 }
 
-proc ::cmdr::help::format::Arguments {arguments} {
+proc ::cmdr::help::format::Arguments {arguments parameters} {
     set result {}
-    foreach {a v} $arguments {
+    foreach a $arguments {
+	set v [dict get $parameters $a]
 	dict with v {} ; # -> code, desc
 	switch -exact -- $code {
 	    +  { set text "$a" }

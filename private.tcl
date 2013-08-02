@@ -139,11 +139,12 @@ oo::class create ::cmdr::private {
 	debug.cmdr/private {}
 	my Setup
 	# help    = dict (name -> command)
-	# command = list ('desc'      -> description
-	#                 'options'   -> options
-	#                 'arguments' -> arguments)
+	# command = dict ('action'    -> cmdprefix
+	#                 ... see config help ...)
 	#if {![my documented]} { return {} }
-	return [dict create $prefix [config help]]
+
+	set help [linsert [config help] end action $mycmd]
+	return [dict create $prefix $help]
     }
 
     method complete-words {parse} {

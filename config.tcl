@@ -143,21 +143,22 @@ oo::class create ::cmdr::config {
 
     method help {{mode public}} {
 	debug.cmdr/config {}
-	# command   = dict ('desc'      -> description
-	#                   'options'   -> options
-	#                   'arguments' -> arguments)
-	# options   = list (option...)
-	# option    = dict (name -> description)
-	# arguments = list (argument...)
-	# argument  = dict (name -> argdesc)
-	# argdesc   = dict ('code' -> code
-	#                   'desc' -> description)
+	# command   = dict ('desc'       -> description
+	#                   'options'    -> options
+	#                   'arguments'  -> arguments
+	#                   'parameters' -> parameters)
+	# options   = list (name -> desc)   // name -> index into parameters
+	# arguments = list (argument-name...) // name -> index into parameters
 	# code in {
 	#     +		<=> required
 	#     ?		<=> optional
 	#     +*	<=> required splat
 	#     ?* 	<=> optional splat
 	# }
+	# parameters = dict (name -> param-def)
+	# param-def  = dict (key -> value) // include code
+	#
+	# Option aliases are listed in options, but not in parameters.
 
 	set options {}
 	dict for {o para} $myoption {
@@ -173,19 +174,22 @@ oo::class create ::cmdr::config {
 	    dict set options $o [$para description $o]
 	}
 
-	set arguments {}
-	foreach a $myargs {
-	    set para [dict get $mymap $a]
-	    dict set arguments $a \
-		[dict create \
-		     code [$para code] \
-		     desc [$para description]]
+	set arguments $myargs
+
+	# Full dump of the parameter definitions. Unusual formats
+	# (SQL, json) may wish to have acess to all of a parameter,
+	# not just bits and pieces.
+
+	foreach p $mynames {
+	    set para [dict get $mymap $p]
+	    dict set parameters $p [$para help]
 	}
 
 	return [dict create \
-		    desc      [context description] \
-		    options   $options \
-		    arguments $arguments]
+		    desc       [context description] \
+		    options    $options \
+		    arguments  $arguments \
+		    parameters $parameters]
     }
 
     method interactive {} { return $myinteractive }
@@ -444,6 +448,7 @@ oo::class create ::cmdr::config {
     forward Input     my DefineParameter 1 1 1 0
     forward Option    my DefineParameter 0 1 0 0
     forward State     my DefineParameter 0 0 1 1
+    # O+C+R specify the parameter type. D may vary.
 
     method DefineParameter {
 	order cmdline required defered
