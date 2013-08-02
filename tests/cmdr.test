@@ -10,8 +10,14 @@ kt require support oo::util 1.2
 kt require support struct::queue
 kt require support try
 kt require support lambda
-kt require support string::token::shell
+kt require support linenoise
+kt require support linenoise::repl
+kt require support linenoise::facade
+kt require support string::token::shell 1.1
 kt require support textutil::adjust
+kt require support term::ansi::code::ctrl
+kt require support debug
+kt require support debug::caller
 
 kt local   support cmdr::util
 kt local   support cmdr::help

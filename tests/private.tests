@@ -44,7 +44,7 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
         map --OPTION --> (--OPTION)
         para (INPUT) {
             description: 'INPUT-DESC'
-            ordered, cmdline, !splat, required, !interact
+            ordered, cmdline, single, required, silent, immediate
             no default
             flags []
             ge ()
@@ -53,7 +53,7 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
         }
         para (OPTION) {
             description: 'OPTION-DESC'
-            !ordered, cmdline, !splat, !required, !interact
+            unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-OPTION --OPTION]
             ge ()
@@ -62,7 +62,7 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
         }
         para (STATE) {
             description: 'STATE-DESC'
-            !ordered, !cmdline, !splat, required, !interact
+            unordered, hidden, single, required, silent, defered
             default: ''
             flags []
             ge ()
@@ -96,7 +96,7 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         argument (E)
         para (A) {
             description: '-'
-            ordered, cmdline, !splat, required, !interact
+            ordered, cmdline, single, required, silent, immediate
             no default
             flags []
             ge ()
@@ -105,7 +105,7 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         }
         para (B) {
             description: '-'
-            ordered, cmdline, !splat, !required, !interact
+            ordered, cmdline, single, optional, silent, immediate
             default: ''
             mode=threshold 2
             flags []
@@ -115,7 +115,7 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         }
         para (C) {
             description: '-'
-            ordered, cmdline, !splat, required, !interact
+            ordered, cmdline, single, required, silent, immediate
             no default
             flags []
             ge ()
@@ -124,7 +124,7 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         }
         para (D) {
             description: '-'
-            ordered, cmdline, !splat, !required, !interact
+            ordered, cmdline, single, optional, silent, immediate
             default: ''
             mode=threshold 1
             flags []
@@ -134,7 +134,7 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         }
         para (E) {
             description: '-'
-            ordered, cmdline, !splat, required, !interact
+            ordered, cmdline, single, required, silent, immediate
             no default
             flags []
             ge ()
@@ -183,7 +183,7 @@ test cmdr-private-2.3 {private, input, defaults} -setup {
         argument (A)
         para (A) {
             description: 'D'
-            ordered, cmdline, !splat, required, !interact
+            ordered, cmdline, single, required, silent, immediate
             no default
             flags []
             ge ()
@@ -237,7 +237,7 @@ test cmdr-private-3.3 {private, option, defaults} -setup {
         map -A --> (-A)
         para (A) {
             description: 'D'
-            !ordered, cmdline, !splat, !required, !interact
+            unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-A -A]
             ge ()
@@ -284,7 +284,7 @@ test cmdr-private-4.3 {private, state, defaults} -setup {
         description: ''
         para (A) {
             description: 'D'
-            !ordered, !cmdline, !splat, required, !interact
+            unordered, hidden, single, required, silent, defered
             default: ''
             flags []
             ge ()

@@ -126,7 +126,8 @@ oo::class create ::cmdr::private {
 	debug.cmdr/private {complete values}
 
 	# Define all parameters now, resolving defaults, validating
-	# the values, etc.
+	# the values, etc. Except for the 'defered' parameters. By
+	# default this are only the 'state' parameters.
 	config force
 
 	debug.cmdr/private {execute}
@@ -167,4 +168,4 @@ oo::class create ::cmdr::private {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::private 0.2
+package provide cmdr::private 0.3
