@@ -317,5 +317,5 @@ proc ::cmdr::validate::rwpath::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 0.2
+package provide cmdr::validate 0.3
 return

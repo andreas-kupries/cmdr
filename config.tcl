@@ -215,7 +215,13 @@ oo::class create ::cmdr::config {
 	return [dict get $myoption $name]
     }
 
-    method force {{allowinteract 1}} {
+    method force {{allowinteract yes} {forcedefered no}} {
+	debug.cmdr/config {}
+	my Force $allowinteract $forcedefered
+	return
+    }
+
+    method Force {allowinteract forcedefered} {
 	debug.cmdr/config {recursive=$myinforce}
 	# Define the values of all parameters.
 	# Done in order of declaration.
@@ -227,6 +233,11 @@ oo::class create ::cmdr::config {
 
 	foreach name $mynames {
 	    set para [dict get $mymap $name]
+
+	    # Ignore parameters which defer value generation until
+	    # actual use, except if we are forced to compute them.
+	    if {!$forcedefered && [$para defered]} continue
+
 	    if {!$allowinteract} {
 		$para dontinteract
 	    }
@@ -429,15 +440,15 @@ oo::class create ::cmdr::config {
     }
 
     # Parameter definition itself.
-    #       order, cmdline, required (O C R) name ?spec?
-    forward Input  my DefineParameter 1 1 1
-    forward Option my DefineParameter 0 1 0
-    forward State  my DefineParameter 0 0 1
+    # order, cmdline, required, defered (O C R D) name ?spec?
+    forward Input     my DefineParameter 1 1 1 0
+    forward Option    my DefineParameter 0 1 0 0
+    forward State     my DefineParameter 0 0 1 1
 
     method DefineParameter {
-			    order cmdline required
-			    name desc {spec {}}
-			} {
+	order cmdline required defered
+	name desc {spec {}}
+    } {
 	debug.cmdr/config {}
 
 	upvar 1 splat splat
@@ -450,7 +461,7 @@ oo::class create ::cmdr::config {
 
 	# Create and initialize handler.
 	set para [cmdr::parameter create param_$name [self] \
-		      $order $cmdline $required \
+		      $order $cmdline $required $defered \
 		      $name $desc $spec]
 
 	# Map parameter name to handler object.
@@ -1167,7 +1178,7 @@ oo::class create ::cmdr::config {
 	# 'forgotten' their value due to 'set'). We disallow interaction
 	# for parameters who would normally do this to gather information
 	# from the user.
-	my force 0
+	my Force 0 0
 
 	set text {}
 	set alldefined 1
@@ -1213,6 +1224,7 @@ oo::class create ::cmdr::config {
 		append label [expr {[$para isbool]     ? "B":"-"}]
 		append label [expr {[$para hasdefault] ? "D":"-"}]
 		append label [expr {[$para defined?]   ? "!":"-"}]
+		append label [expr {[$para defered]    ? ">":"-"}]
 
 		append label [expr {[$para required] ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
 
@@ -1273,4 +1285,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.2
+package provide cmdr::config 0.3

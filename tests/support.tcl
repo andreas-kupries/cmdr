@@ -226,11 +226,12 @@ proc DumpPrivate {o} {
 	lappend result "        description: '[$c description]'"
 
 	set state {}
-	if {[$c ordered]}     { lappend state ordered  } else { lappend state !ordered  }
-	if {[$c cmdline]}     { lappend state cmdline  } else { lappend state !cmdline  }
-	if {[$c list]}        { lappend state splat    } else { lappend state !splat    }
-	if {[$c required]}    { lappend state required } else { lappend state !required }
-	if {[$c interactive]} { lappend state interact } else { lappend state !interact }
+	if {[$c ordered]}     { lappend state ordered  } else { lappend state unordered }
+	if {[$c cmdline]}     { lappend state cmdline  } else { lappend state hidden    }
+	if {[$c list]}        { lappend state splat    } else { lappend state single    }
+	if {[$c required]}    { lappend state required } else { lappend state optional  }
+	if {[$c interactive]} { lappend state interact } else { lappend state silent    }
+	if {[$c defered]}     { lappend state defered  } else { lappend state immediate }
 	lappend result "        [join $state {, }]"
 
 	if {[$c hasdefault]}  {

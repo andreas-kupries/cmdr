@@ -95,7 +95,7 @@ oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
-    constructor {theconfig order cmdline required name desc valuespec} {
+    constructor {theconfig order cmdline required defered name desc valuespec} {
 	set myname $name		; # [R1]
 
 	# Import the whole collection of parameters this one is a part
@@ -122,6 +122,7 @@ oo::class create ::cmdr::parameter {
 	set myisordered   $order	; # [R3,4,5,6]
 	set myiscmdline   $cmdline	; # [R3,4,5,6]
 	set myisrequired  $required	; # [R7,8,9,10]
+	set myisdefered   $defered      ; # [R ???]
 
 	my C1_StateIsUnordered
 	my C2_OptionIsOptional
@@ -196,6 +197,8 @@ oo::class create ::cmdr::parameter {
     method ordered      {} { return $myisordered }
     method cmdline      {} { return $myiscmdline }
     method required     {} { return $myisrequired }
+    method defered      {} { return $myisdefered }
+
     method list         {} { return $myislist }
     method presence     {} { return $myonlypresence }
     method documented   {} { return $myisdocumented }
@@ -246,8 +249,10 @@ oo::class create ::cmdr::parameter {
 	link \
 	    {alias        Alias} \
 	    {default      Default} \
+	    {defered      Defered} \
 	    {generate     Generate} \
 	    {interact     Interact} \
+	    {immediate    Immediate} \
 	    {list         List} \
 	    {presence     Presence} \
 	    {optional     Optional} \
@@ -325,6 +330,20 @@ oo::class create ::cmdr::parameter {
 	my C6_RequiredArgumentForbiddenInteract
 	if {$prompt eq {}} return ; # keep standard prompt
 	set myprompt $prompt
+	return
+    }
+
+    method Defered {} {
+	# Consider adding checks against current state, prevent use
+	# of calls not making an actual change.
+	set myisdefered yes
+	return
+    }
+
+    method Immediate {} {
+	# Consider adding checks against current state, prevent use
+	# of calls not making an actual change.
+	set myisdefered no
 	return
     }
 
@@ -1098,11 +1117,11 @@ oo::class create ::cmdr::parameter {
 	mywhendef mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue mylocker mystopinteraction \
-	myisdocumented myonlypresence
+	myisdocumented myonlypresence myisdefered
 
     # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 0.2
+package provide cmdr::parameter 0.3

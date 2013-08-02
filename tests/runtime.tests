@@ -386,7 +386,7 @@ test cmdr-runtime-3.5 {options, list, string, missing value} -body {
 	option A - { list ; validate identity }
     } -A
 } -returnCodes error \
-    -result "wrong\#args, not enough"
+    -result "wrong\#args, missing value for option '-A'"
 
 test cmdr-runtime-3.6 {options, list, string} -body {
     Parse {
