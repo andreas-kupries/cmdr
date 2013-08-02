@@ -150,6 +150,8 @@ namespace eval ::cmdr::help::format {
 #
 
 proc ::cmdr::help::format::full {width help} {
+    debug.cmdr/help {}
+
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
@@ -220,6 +222,8 @@ proc ::cmdr::help::format::Full {width name command} {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::help::format::list {width help} {
+    debug.cmdr/help {}
+
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
@@ -257,6 +261,8 @@ proc ::cmdr::help::format::List {width name command} {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::help::format::short {width help} {
+    debug.cmdr/help {}
+
     # help = dict (name -> command)
     set result {}
     dict for {cmd desc} $help {
