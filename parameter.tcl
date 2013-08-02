@@ -176,6 +176,12 @@ oo::class create ::cmdr::parameter {
 	return $code
     }
 
+    method type {} {
+	if {$myisordered} { return "input" }
+	if {$myiscmdline} { return "option" }
+	return "state"
+    }
+
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
     method description {{detail {}}} {
@@ -225,6 +231,36 @@ oo::class create ::cmdr::parameter {
 	debug.cmdr/parameter {}
 	set mythreshold $n
 	return
+    }
+
+
+    method help {} {
+	# Generate a dictionary describing the parameter configuration.
+	if {[catch {
+	    my code
+	} thecode]} {
+	    set thecode {}
+	}
+	return [dict create \
+		    cmdline     $myiscmdline    \
+		    code        $thecode        \
+		    default     $mydefault      \
+		    defered     $myisdefered    \
+		    description $mydescription  \
+		    documented  $myisdocumented \
+		    flags       $myflags        \
+		    generator   $mygenerate     \
+		    interactive $myinteractive  \
+		    isbool      [my isbool]     \
+		    list        $myislist       \
+		    ordered     $myisordered    \
+		    presence    $myonlypresence \
+		    prompt      $myprompt       \
+		    required    $myisrequired   \
+		    threshold   $mythreshold    \
+		    type        [my type]       \
+		    validator   $myvalidate     \
+		]
     }
 
     # One shot disabling of interaction, if any.

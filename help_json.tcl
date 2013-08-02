@@ -62,45 +62,66 @@ proc ::cmdr::help::format::json {width help} {
 namespace eval ::cmdr::help::format::JSON {}
 
 proc ::cmdr::help::format::JSON {command} {
-    # command = list ('desc'      -> description
-    #                 'options'   -> options
-    #                 'arguments' -> arguments)
+    # Data structure: see config.tcl,  method 'help'.
+    # Data structure: see private.tcl, method 'help'.
 
-    dict with command {} ; # -> desc, options, arguments
+    dict with command {} ; # -> action, desc, options, arguments, parameters
 
-    # options   = list (option...)
-    # option    = dict (name -> description)
-    # arguments = dict (name -> argdesc)
-    # argdesc   = dict ('code' -> code
-    #                   'desc' -> description)
-    # code in {
-    #     +		<=> required
-    #     ?		<=> optional
-    #     +*	<=> required splat
-    #     ?* 	<=> optional splat
-    # }
-
-    lappend dict arguments   [JSON::arguments $arguments]
-    lappend dict description [json::write string [JSON::astring $desc]]
-    lappend dict options     [JSON::options   $options]
+    lappend dict action      [JSON::alist      $action]
+    lappend dict arguments   [JSON::alist      $arguments]
+    lappend dict description [JSON::astring    $desc]
+    lappend dict options     [JSON::adict      $options]
+    lappend dict parameters  [JSON::parameters $parameters]
     
     return [json::write object {*}$dict]
 }
 
-proc ::cmdr::help::format::JSON::options {options} {
+proc ::cmdr::help::format::JSON::parameters {parameters} {
     set dict {}
-    foreach {name description} [::cmdr::help::DictSort $options] {
-	lappend dict $name [json::write string [astring $description]]
-    }
-    return [json::write object {*}$dict]
-}
-
-proc ::cmdr::help::format::JSON::arguments {arguments} {
-    set dict {}
-    foreach {name def} [::cmdr::help::DictSort $arguments] {
+    foreach {name def} [::cmdr::help::DictSort $parameters] {
 	set tmp {}
 	foreach {xname xdef} [::cmdr::help::DictSort $def] {
-	    lappend tmp $xname [json::write string [astring $xdef]]
+	    switch -glob -- $xname {
+		cmdline -
+		defered -
+		documented -
+		interactive -
+		isbool -
+		list -
+		ordered -
+		presence -
+		required -
+		@bool {
+		    # normalize to boolean
+		    set value [expr {!!$xdef}]
+		}
+		threshold {
+		    # null|integer
+		    set value [expr {($xdef eq {}) ? "null" : $xdef}]
+		}
+		code -
+		default -
+		description -
+		prompt -
+		type -
+		@string {
+		    set value [astring $xdef]
+		}
+		generator -
+		validator -
+		@cmdprefix { 
+		    set value [alist $xdef]
+		}
+		flags -
+		@dict {
+		    set value [adict $xdef]
+		}
+		* {
+		    error "Unknown key \"$xname\", do not know how format"
+		    #lappend tmp $xname [astring $xdef]
+		}
+	    }
+	    lappend tmp $xname $value
 	}
 	lappend dict $name [json::write object {*}$tmp]
     }
@@ -109,9 +130,25 @@ proc ::cmdr::help::format::JSON::arguments {arguments} {
 
 # # ## ### ##### ######## ############# #####################
 
+proc ::cmdr::help::format::JSON::alist {thelist} {
+    set tmp {}
+    foreach w $thelist {
+	lappend tmp [json::write string $w]
+    }
+    return [json::write array {*}$tmp]
+}
+
+proc ::cmdr::help::format::JSON::adict {thedict} {
+    set tmp {}
+    foreach {k v} [::cmdr::help::DictSort $thedict] {
+	lappend tmp $k [json::write string $v]
+    }
+    return [json::write object {*}$tmp]
+}
+
 proc ::cmdr::help::format::JSON::astring {string} {
     regsub -all -- {[ \n\t]+} $string { } string
-    string trim $string
+    return [json::write string [string trim $string]]
 }
 
 # # ## ### ##### ######## ############# #####################
