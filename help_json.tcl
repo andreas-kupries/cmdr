@@ -27,7 +27,6 @@ package require debug
 package require debug::caller
 package require cmdr::help
 package require json::write
-package require dictutil
 
 # # ## ### ##### ######## ############# #####################
 
@@ -65,12 +64,14 @@ proc ::cmdr::help::format::JSON {command} {
     # Data structure: see config.tcl,  method 'help'.
     # Data structure: see private.tcl, method 'help'.
 
-    dict with command {} ; # -> action, desc, options, arguments, parameters
+    dict with command {}
+    # -> action, desc, options, arguments, parameters, states
 
+    lappend dict description [JSON::astring    $desc]
     lappend dict action      [JSON::alist      $action]
     lappend dict arguments   [JSON::alist      $arguments]
-    lappend dict description [JSON::astring    $desc]
     lappend dict options     [JSON::adict      $options]
+    lappend dict states      [JSON::alist      $states]
     lappend dict parameters  [JSON::parameters $parameters]
     
     return [json::write object {*}$dict]

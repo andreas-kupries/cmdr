@@ -176,6 +176,10 @@ oo::class create ::cmdr::parameter {
 	return $code
     }
 
+    method is {type} {
+	string equal $type [my type]
+    }
+
     method type {} {
 	if {$myisordered} { return "input" }
 	if {$myiscmdline} { return "option" }

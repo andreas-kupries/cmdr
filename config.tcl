@@ -180,15 +180,20 @@ oo::class create ::cmdr::config {
 	# (SQL, json) may wish to have acess to all of a parameter,
 	# not just bits and pieces.
 
+	set states {}
 	foreach p $mynames {
 	    set para [dict get $mymap $p]
 	    dict set parameters $p [$para help]
+
+	    if {![$para is state]} continue
+	    lappend states $p
 	}
 
 	return [dict create \
 		    desc       [context description] \
 		    options    $options \
 		    arguments  $arguments \
+		    states     $states \
 		    parameters $parameters]
     }
 
