@@ -336,8 +336,13 @@ oo::class create ::cmdr::config {
 	    foreach c [split $k {}] {
 		append prefix $c
 		if {$prefix in {- --}} continue
-		if {[dict exists $myoption $prefix]} {
-		    dict set myfullopt $prefix [list $k]
+		if {[dict exists $myfullopt $prefix]} {
+		    set old [dict get $myfullopt $prefix]
+		    if {[string length $old] > [string length $k]} {
+			# The existing entry maps to a longer option
+			# We have precedence.
+			dict set myfullopt $prefix [list $k]
+		    }
 		} else {
 		    dict lappend myfullopt $prefix $k
 		}
