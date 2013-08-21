@@ -40,23 +40,10 @@ debug prefix cmdr/parameter {[string map [::list [self] "([config context fullna
 # In the above prefix we massage the object reference into a better
 # name for navigation into a command hierarchy.
 
-debug define cmdr/parameter/class
-debug level  cmdr/parameter/class
-debug prefix cmdr/parameter/class {[debug caller] | }
-
 # # ## ### ##### ######## ############# #####################
 ## Definition
 
 oo::class create ::cmdr::parameter {
-    # # ## ### ##### ######## #############
-
-    classmethod undefined {name} {
-	debug.cmdr/parameter/class {}
-	return -code error \
-	    -errorcode {CMDR PARAMETER UNDEFINED} \
-	    "Undefined: $name"
-    }
-
     # # ## ### ##### ######## #############
     ## Lifecycle.
 
@@ -130,6 +117,9 @@ oo::class create ::cmdr::parameter {
     # Make container accessible, and through it all other parameters
     # of a command.
     forward config config
+
+    # Make self accessible.
+    method self {} { self }
 
     method code {} {
 	# code in {
@@ -876,9 +866,7 @@ oo::class create ::cmdr::parameter {
 
     method string {} {
 	if {!$myhasstring} {
-	    return -code error \
-		-errorcode {CMDR PARAMETER UNDEFINED} \
-		"Undefined: $myname"
+	    my undefined!
 	}
 	return $mystring
     }
@@ -978,9 +966,7 @@ oo::class create ::cmdr::parameter {
 	    my Value: {}
 	}
 
-	return -code error \
-	    -errorcode {CMDR PARAMETER UNDEFINED} \
-	    "Undefined: $myname"
+	my undefined!
     }
 
     method interact {{prompt {}}} {
@@ -1086,6 +1072,13 @@ oo::class create ::cmdr::parameter {
     }
 
     # # ## ### ##### ######## #############
+
+    method undefined! {} {
+	debug.cmdr/parameter {}
+	return -code error \
+	    -errorcode {CMDR PARAMETER UNDEFINED} \
+	    "Undefined: $myname"
+    }
 
     method Value: {v} {
 	debug.cmdr/parameter {}
