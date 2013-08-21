@@ -2,7 +2,7 @@ xo::parameter
 
 	// command implementation view
 
-	defined?	bool	has user-specifed information
+	set?	bool	has user-specified information
 	string		string	the user-specified information
 	value		any	actual value, user-specified
 				transformed, or default ...
@@ -21,7 +21,7 @@ xo::parameter
 	interactive 
 	prompt      
 	validator
-	when-defined
+	when-complete
 
 xo::config
 
@@ -65,5 +65,5 @@ Command prefixes in parameters:
 	generator
 		<G>
 
-	when-defined
+	when-complete
 		<W> X

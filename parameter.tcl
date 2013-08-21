@@ -50,46 +50,11 @@ debug prefix cmdr/parameter/class {[debug caller] | }
 oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
 
-    ## For use in parameter callbacks (generate, validate, when-set,
-    ## and when-defined). The caller has the active cmdr::config object
-    ## available under the fixed command name 'config'. From inside
-    ## the helper this is then two levels up. However, the helper
-    ## might be called from deeper in the stack instead of just the
-    ## toplevel code of the callback itself. So we only start a search
-    ## a that level and go up until we have a 'config' command to
-    ## invoke.
-
-    classmethod config {args} {
-	debug.cmdr/parameter/class {}
-	# Note: my == my of the class, not the instance.
-	set n [my LocateConfig] ; incr n -1
-	return [uplevel $n [list config {*}$args]]
-    }
-
     classmethod undefined {name} {
 	debug.cmdr/parameter/class {}
 	return -code error \
 	    -errorcode {CMDR PARAMETER UNDEFINED} \
 	    "Undefined: $name"
-    }
-
-    classmethod LocateConfig {} {
-	debug.cmdr/parameter/class {} 10
-	set n 3
-	set max [info level]
-	while {$n < $max} {
-	    set ns [uplevel $n {namespace current}]
-	    #set o [${ns}::my xs]
-	    #set c [info object class $o]
-	    #puts |$n|$max|$ns|$o|$c||||[::info commands ${ns}::*]|\n
-	    if {[llength [::info commands ${ns}::config]]} {
-		debug.cmdr/parameter/class {= $n} 10
-		return $n
-	    }
-	    incr n
-	}
-	return -code error -errorcode {CMDR PARAMETER BAD CONTEXT} \
-	    "Bad context, no config found in the stack."
     }
 
     # # ## ### ##### ######## #############
@@ -101,10 +66,9 @@ oo::class create ::cmdr::parameter {
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
 	# use by the various command prefixes (generate, validate,
-	# when-defined), all of which will be run in our namespace
+	# when-complete), all of which will be run in our namespace
 	# context.
 
-	set myconfig $theconfig
 	interp alias {} [self namespace]::config {} $theconfig
 
 	# Note ordering!
@@ -139,7 +103,7 @@ oo::class create ::cmdr::parameter {
 	set myprompt       "Enter ${name}: " ;# standard prompt for interaction
 
 	set myvalidate     {} ;# validation command
-	set mywhendef      {} ;# action-on-definition command.
+	set mywhencomplete {} ;# action-on-int-rep-creation command.
 	set mywhenset      {} ;# action-on-set(-from-parse) command.
 
 	set mythreshold    {} ;# threshold for optional arguments
@@ -162,6 +126,10 @@ oo::class create ::cmdr::parameter {
 
     # # ## ### ##### ######## #############
     ## API: Property accessors...
+
+    # Make container accessible, and through it all other parameters
+    # of a command.
+    forward config config
 
     method code {} {
 	# code in {
@@ -223,9 +191,9 @@ oo::class create ::cmdr::parameter {
     method prompt       {} { return $myprompt }
 
     # Hooks for validation and side-effects at various stages.
-    method validator    {} { return $myvalidate }
-    method when-defined {} { return $mywhendef }
-    method when-set     {} { return $mywhenset }
+    method validator     {} { return $myvalidate }
+    method when-complete {} { return $mywhencomplete }
+    method when-set      {} { return $mywhenset }
 
     # - test mode of optional arguments (not options)
     method threshold    {} { return $mythreshold }
@@ -287,20 +255,20 @@ oo::class create ::cmdr::parameter {
 
 	# Import the DSL commands to translate the specification.
 	link \
-	    {alias        Alias} \
-	    {default      Default} \
-	    {defered      Defered} \
-	    {generate     Generate} \
-	    {interact     Interact} \
-	    {immediate    Immediate} \
-	    {list         List} \
-	    {presence     Presence} \
-	    {optional     Optional} \
-	    {test         Test} \
-	    {undocumented Undocumented} \
-	    {validate     Validate} \
-	    {when-defined WhenDefined} \
-	    {when-set     WhenSet}
+	    {alias         Alias} \
+	    {default       Default} \
+	    {defered       Defered} \
+	    {generate      Generate} \
+	    {interact      Interact} \
+	    {immediate     Immediate} \
+	    {list          List} \
+	    {presence      Presence} \
+	    {optional      Optional} \
+	    {test          Test} \
+	    {undocumented  Undocumented} \
+	    {validate      Validate} \
+	    {when-complete WhenComplete} \
+	    {when-set      WhenSet}
 	eval $valuespec
 
 	# Postprocessing ... Fill in validation and other defaults
@@ -426,8 +394,8 @@ oo::class create ::cmdr::parameter {
 	return
     }
 
-    method WhenDefined {cmd} {
-	set mywhendef $cmd
+    method WhenComplete {cmd} {
+	set mywhencomplete $cmd
 	return
     }
 
@@ -597,9 +565,9 @@ oo::class create ::cmdr::parameter {
 	    # regardless of the validation type.
 	    my Default {}
 	} else {
-	    # For non-list parameters ask the chosen validation type
+	    # For a scalar parameter ask the chosen validation type
 	    # for a default value.
-	    my Default [{*}$myvalidate default]
+	    my Default [{*}$myvalidate default [self]]
 	}
 	return
     }
@@ -692,7 +660,7 @@ oo::class create ::cmdr::parameter {
 
 	# Actual completion is delegated to the validation type of the
 	# parameter.
-	return [{*}$myvalidate complete $current]
+	return [{*}$myvalidate complete [self] $current]
     }
 
     method setq {queue} {
@@ -719,7 +687,7 @@ oo::class create ::cmdr::parameter {
 	my forget
 
 	if {[llength $mywhenset]} {
-	    {*}$mywhenset $mystring
+	    {*}$mywhenset [self] $mystring
 	}
 	return
     }
@@ -737,7 +705,7 @@ oo::class create ::cmdr::parameter {
 	my forget
 
 	if {[llength $mywhenset]} {
-	    {*}$mywhenset $mystring
+	    {*}$mywhenset [self] $mystring
 	}
 	return
     }
@@ -745,7 +713,7 @@ oo::class create ::cmdr::parameter {
     method accept {x} {
 	debug.cmdr/parameter {}
 	try {
-	    my ValueRelease [{*}$myvalidate validate $x]
+	    my ValueRelease [{*}$myvalidate validate [self] $x]
 	    # If that was ok it has to be released also!
 	    # XXX Or should we maybe immediately cache it for 'value'?
 	} trap {CMDR VALIDATE} {e o} {
@@ -915,7 +883,7 @@ oo::class create ::cmdr::parameter {
 	return $mystring
     }
 
-    method defined? {} {
+    method set? {} {
 	return $myhasstring
     }
 
@@ -935,16 +903,16 @@ oo::class create ::cmdr::parameter {
 	#     => Return
 	#
 	# (1) User entered value ?
-	#     => Validate, transforms.
+	#     => Is string rep. Validate and transform to int. rep.
 	#
 	# (2) Generation command ?
-	#     => Run
+	#     => Run, result is the int. rep. No validation, nor transform.
 	#
 	# (3) Default value ?
-	#     => Validate, transforms
+	#     => Take. It is int. rep. No validation, nor transform.
 	#
 	# (4) Interactive entry possible ? (general config, plus per value)
-	#     Enter, validate, transforms
+	#     Enter (string rep): validate and transform
 	#     - mini shell - ^C abort
 	#     - completion => Validator API
 	#
@@ -969,7 +937,10 @@ oo::class create ::cmdr::parameter {
 	# code.
 
 	if {$myhasstring} {
-	    # See my FillMissingValidation on why we always have a
+	    # Specified on command line, string rep. Validate and
+	    # transform to the int. rep.
+	    #
+	    # See "FillMissingValidation" on why we always have a
 	    # validator command.
 
 	    if {$myislist} {
@@ -977,40 +948,33 @@ oo::class create ::cmdr::parameter {
 		# element.
 		set myvalue {}
 		foreach v $mystring {
-		    lappend myvalue [{*}$myvalidate validate $v]
+		    lappend myvalue [{*}$myvalidate validate [self] $v]
 		}
 	    } else {
-		set myvalue [{*}$myvalidate validate $mystring]
+		set myvalue [{*}$myvalidate validate [self] $mystring]
 	    }
 	    my Value: $myvalue
 	}
 
 	if {!$stopinteraction && $myinteractive && [cmdr interactive?]} {
+	    # Interaction.
 	    my interact
 	    return $myvalue
 	}
 
 	if {[llength $mygenerate]} {
-	    my Value: [{*}$mygenerate]
+	    # Generation callback. Result is int. rep.
+	    my Value: [{*}$mygenerate [self]]
 	}
 
 	if {$myhasdefault} {
-	    # See my FillMissingValidation on why we always have a
-	    # validator command.
-	    if {$myislist} {
-		# Treat the default value as a list and validate each
-		# element.
-		set myvalue {}
-		foreach v $mydefault {
-		    lappend myvalue [{*}$myvalidate validate $v]
-		}
-	    } else {		
-		set myvalue [{*}$myvalidate validate $mydefault]
-	    }
-	    my Value: $myvalue
+	    # A declared default value is the int. rep. No validation,
+	    # no transform. Set it directly.
+	    my Value: $mydefault
 	}
 
 	if {!$myisrequired} {
+	    # Hardwired default int. rep if all else failed.
 	    my Value: {}
 	}
 
@@ -1049,7 +1013,7 @@ oo::class create ::cmdr::parameter {
 		try {
 		    set thestring [linenoise prompt \
 				       -prompt "  Item [llength $thevaluelist]> " \
-				      -complete [::list {*}$myvalidate complete]]
+				       -complete [::list {*}$myvalidate complete [self]]]
 		} on error {e o} {
 		    debug.cmdr/parameter {trapped $e}
 		    debug.cmdr/parameter {options $o}
@@ -1073,7 +1037,7 @@ oo::class create ::cmdr::parameter {
 
 		set take 1
 		try {
-		    set thevalue [{*}$myvalidate validate $thestring]
+		    set thevalue [{*}$myvalidate validate [self] $thestring]
 		} trap {CMDR VALIDATE} {e o} {
 		    set take 0
 		    puts "$e, ignored"
@@ -1102,9 +1066,9 @@ oo::class create ::cmdr::parameter {
 		set continue 0
 		set thestring [linenoise prompt \
 				  -prompt $prompt \
-				  -complete [::list {*}$myvalidate complete]]
+				   -complete [::list {*}$myvalidate complete [self]]]
 		try {
-		    set thevalue [{*}$myvalidate validate $thestring]
+		    set thevalue [{*}$myvalidate validate [self] $thestring]
 		} trap {CMDR VALIDATE} {e o} {
 		    set continue 1
 		}
@@ -1125,11 +1089,13 @@ oo::class create ::cmdr::parameter {
 
     method Value: {v} {
 	debug.cmdr/parameter {}
-	if {[llength $mywhendef]} {
-	    {*}$mywhendef $v
+	if {[llength $mywhencomplete]} {
+	    {*}$mywhencomplete [self] $v
 	}
 	set myvalue $v
 	set myhasvalue yes
+
+	# Return value, abort caller!
 	return -code return $myvalue
     }
 
@@ -1141,20 +1107,20 @@ oo::class create ::cmdr::parameter {
 
 	if {$myislist} {
 	    foreach v $myvalue {
-		{*}$myvalidate release $v
+		{*}$myvalidate release [self] $v
 	    }
 	} else {
-	    {*}$myvalidate release $myvalue
+	    {*}$myvalidate release [self] $myvalue
 	}
 	return
     }
 
     # # ## ### ##### ######## #############
 
-    variable myconfig myname mydescription \
+    variable myname mydescription \
 	myisordered myiscmdline myislist myisrequired \
 	myinteractive myprompt mydefault myhasdefault \
-	mywhendef mywhenset mygenerate myvalidate \
+	mywhencomplete mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue mylocker mystopinteraction \
 	myisdocumented myonlypresence myisdefered
@@ -1164,4 +1130,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 0.3
+package provide cmdr::parameter 0.4

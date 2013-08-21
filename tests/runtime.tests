@@ -457,6 +457,32 @@ test cmdr-runtime-3.13 {options, ambiguous prefix} -body {
 } -returnCodes error \
     -result {Ambiguous option prefix --AL, matching --ALNUM, --ALPHA}
 
+# NOTE: Test is brittle, dependent on the internal order in which the
+# options are processed by UniquePrefixes.
+
+test cmdr-runtime-3.14 {options, semi-ambiguous prefix (other option)} -body {
+    Parse {
+	option ALPHA - { validate identity }
+	option AL    - { validate identity }
+    } --AL Z
+} -result {
+    AL    = 'Z'         v'Z'
+    ALPHA = <undefined> v''
+}
+
+# NOTE: Test is brittle, dependent on the internal order in which the
+# options are processed by UniquePrefixes.
+
+test cmdr-runtime-3.15 {options, semi-ambiguous prefix (other option)} -body {
+    Parse {
+	option AL-PHA - { validate identity }
+	option AL     - { validate identity }
+    } --AL Z --AL-PHA Y
+} -result {
+    AL     = 'Z' v'Z'
+    AL-PHA = 'Y' v'Y'
+}
+
 # # ## ### ##### ######## ############# #####################
 ## Group IV: Mix options and arguments.
 
@@ -497,7 +523,7 @@ test cmdr-runtime-5.1 {options, arguments, and splat, peek} -body {
 
 # # ## ### ##### ######## ############# #####################
 ## Group VI: Introspect on the context of the generate, validate, and
-##           when-defined command prefixes. Ensure that they are
+##           when-complete command prefixes. Ensure that they are
 ##           called and work.
 
 test cmdr-runtime-6.1 {generator command} -setup {
@@ -507,7 +533,7 @@ test cmdr-runtime-6.1 {generator command} -setup {
     Note {*}[split [Parse {
 	input A - {
 	    optional
-	    generate {apply {{} {
+	    generate {apply {{p} {
 		Note generate  [uplevel 1 [list namespace current]]
 		return G
 	    }}}
@@ -529,8 +555,8 @@ test cmdr-runtime-6.2 {validation, default supplication} -setup {
     Note {*}[split [Parse {
 	input A - {
 	    optional
-	    validate {apply {{kind args} {
-		Note names = [cmdr::parameter config names]
+	    validate {apply {{kind p args} {
+		Note names = [$p config names]
 		Note validate $kind [uplevel 1 [list namespace current]]
 		switch -glob -- $kind {
 		    validate { return [lindex $args 0] }
@@ -547,8 +573,6 @@ test cmdr-runtime-6.2 {validation, default supplication} -setup {
 } -result {
     names = {}
     validate default MATCH
-    names = A
-    validate validate MATCH
     {} {    A = <undefined> v'zZzZz'} {}
 }
 
@@ -559,8 +583,8 @@ test cmdr-runtime-6.3 {generator command} -setup {
     Note {*}[split [Parse {
 	input A - {
 	    optional
-	    when-defined {apply {{v} {
-		Note names = [cmdr::parameter config names]
+	    when-complete {apply {{p v} {
+		Note names = [$p config names]
 		Note defined = $v
 		Note defined [uplevel 1 [list namespace current]]
 		return
@@ -597,7 +621,7 @@ test cmdr-runtime-7.2 {validation errors} -body {
 	input B - { validate integer }
     } 1 X
 } -returnCodes error \
-    -result {Expected an integer, got "X"}
+    -result {Expected an integer for "B", got "X"}
 
 # # ## ### ##### ######## ############# #####################
 

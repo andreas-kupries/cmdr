@@ -21,7 +21,7 @@ state  - validate default as input
 
 
 New attribute:
-	force - Force value (and when-defined action)
+	force - Force value (and when-complete action)
 	        before dispatching to the command prefix of
 		the actor.
 
