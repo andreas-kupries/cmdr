@@ -166,7 +166,7 @@ oo::class create ::cmdr::config {
 	    # the help if they already have a value defined for them.
 	    if {![$para documented] &&
 		(($mode ne "interact") ||
-		 ![$para defined?])} continue
+		 ![$para set?])} continue
 
 	    # in interactive mode we skip all the aliases.
 	    if {($mode eq "interact") &&
@@ -331,19 +331,37 @@ oo::class create ::cmdr::config {
 
     method UniquePrefixes {} {
 	debug.cmdr/config {}
+
 	dict for {k v} $myoption {
+
+	    # Generate all prefixes of "$k".
 	    set prefix ""
 	    foreach c [split $k {}] {
 		append prefix $c
+		# Ignore option markers as prefix.
 		if {$prefix in {- --}} continue
-		if {[dict exists $myfullopt $prefix]} {
-		    set old [dict get $myfullopt $prefix]
-		    if {[string length $old] > [string length $k]} {
-			# The existing entry maps to a longer option
-			# We have precedence.
-			dict set myfullopt $prefix [list $k]
-		    }
+
+		# Collect the prefix in fullopt, adding a mapping to
+		# the full option, i.e. "$k".
+		#
+		# Prefixes mapping to multiple options are ambigous
+		# and will cause a processing failure at runtime, i.e.
+		# if used in a command line.
+
+		# An exception are prefixes of some option A which is
+		# also the exact name of option B. These are
+		# non-ambigous and map to B. This exception is
+		# necessary to prevent option B from getting shadowed
+		# by the longer A.
+
+		if {[dict exists $myoption $prefix]} {
+		    # The prefix of the current option exists as
+		    # option itself, same or other.
+		    # Map to that option (not! "$k").
+		    dict set myfullopt $prefix [list $prefix]
 		} else {
+		    # Add the current option to the mapping for the
+		    # current prefix.
 		    dict lappend myfullopt $prefix $k
 		}
 	    }
@@ -1163,7 +1181,7 @@ oo::class create ::cmdr::config {
 	set visible {}
 	foreach p [my names] {
 	    if {![dict exists $mypub $p] &&
-		![[my lookup $p] defined?]
+		![[my lookup $p] set?]
 	    } continue
 	    # Keep public elements, and any hidden ones already having
 	    # a user definition. The user obviously knows about them.
@@ -1204,7 +1222,7 @@ oo::class create ::cmdr::config {
 	    set label    [string totitle $label 0 0]
 	    set required [$para required]
 	    set islist   [$para list]
-	    set defined  [$para defined?]
+	    set defined  [$para set?]
 
 	    try {
 		set value [$para value]
@@ -1238,7 +1256,7 @@ oo::class create ::cmdr::config {
 		append label [expr {[$para documented] ? "d":"-"}]
 		append label [expr {[$para isbool]     ? "B":"-"}]
 		append label [expr {[$para hasdefault] ? "D":"-"}]
-		append label [expr {[$para defined?]   ? "!":"-"}]
+		append label [expr {[$para set?]   ? "!":"-"}]
 		append label [expr {[$para defered]    ? ">":"-"}]
 
 		append label [expr {[$para required] ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
@@ -1300,4 +1318,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.3
+package provide cmdr::config 0.4

@@ -252,7 +252,7 @@ proc DumpPrivate {o} {
 	lappend result "        flags \[[$c options]\]"
 	lappend result "        ge ([$c generator])"
 	lappend result "        va ([$c validator])"
-	lappend result "        wd ([$c when-defined])"
+	lappend result "        wd ([$c when-complete])"
 	lappend result "    \}"
     }
 
@@ -270,7 +270,7 @@ proc DumpParsed {o} {
     # Retrieve data
     foreach name $names {
 	set c [$o lookup $name]
-	if {[$c defined?]} {
+	if {[$c set?]} {
 	    set s '[$c string]'
 	} else {
 	    set s <undefined>

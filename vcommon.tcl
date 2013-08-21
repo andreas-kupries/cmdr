@@ -49,10 +49,10 @@ debug prefix cmdr/validate/common {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::validate::common::fail {code type x} {
+proc ::cmdr::validate::common::fail {p code type x} {
     debug.cmdr/validate/common {}
     return -code error -errorcode [list CMDR VALIDATE {*}$code] \
-	"Expected $type, got \"$x\""
+	"Expected $type for \"[$p name]\", got \"$x\""
 }
 
 proc ::cmdr::validate::common::complete-enum {choices nocase buffer} {
@@ -98,5 +98,5 @@ proc ::cmdr::validate::common::complete-glob {filter buffer} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::common 0.3
+package provide cmdr::validate::common 0.4
 return

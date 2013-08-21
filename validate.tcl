@@ -55,21 +55,21 @@ namespace eval ::cmdr::validate::boolean {
     namespace import ::cmdr::validate::common::complete-enum
 }
 
-proc ::cmdr::validate::boolean::release  {x} { return }
-proc ::cmdr::validate::boolean::default  {}  {
+proc ::cmdr::validate::boolean::release  {p x} { return }
+proc ::cmdr::validate::boolean::default  {p}  {
     debug.cmdr/validate {}
     return no
 }
 
-proc ::cmdr::validate::boolean::complete {x} {
+proc ::cmdr::validate::boolean::complete {p x} {
     debug.cmdr/validate {} 10
     return [complete-enum {yes no false true on off 0 1} 1 $x]
 }
 
-proc ::cmdr::validate::boolean::validate {x} {
+proc ::cmdr::validate::boolean::validate {p x} {
     debug.cmdr/validate {}
     if {[string is boolean -strict $x]} { return $x }
-    fail BOOLEAN "a boolean" $x
+    fail $p BOOLEAN "a boolean" $x
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -81,19 +81,19 @@ namespace eval ::cmdr::validate::integer {
     namespace import ::cmdr::validate::common::fail
 }
 
-proc ::cmdr::validate::integer::release  {x} { return }
-proc ::cmdr::validate::integer::default  {}  {
+proc ::cmdr::validate::integer::release  {p x} { return }
+proc ::cmdr::validate::integer::default  {p}  {
     debug.cmdr/validate {}
     return 0
 }
-proc ::cmdr::validate::integer::complete {x} {
+proc ::cmdr::validate::integer::complete {p x} {
     debug.cmdr/validate {} 10
     return {}
 }
-proc ::cmdr::validate::integer::validate {x} {
+proc ::cmdr::validate::integer::validate {p x} {
     debug.cmdr/validate {}
     if {[string is integer -strict $x]} { return $x }
-    fail INTEGER "an integer" $x
+    fail $p INTEGER "an integer" $x
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -104,10 +104,10 @@ namespace eval ::cmdr::validate::identity {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::identity::release  {x} { return }
-proc ::cmdr::validate::identity::default  {}  { debug.cmdr/validate {}    ; return {} }
-proc ::cmdr::validate::identity::complete {x} { debug.cmdr/validate {} 10 ; return {} }
-proc ::cmdr::validate::identity::validate {x} { debug.cmdr/validate {}    ; return $x }
+proc ::cmdr::validate::identity::release  {p x} { return }
+proc ::cmdr::validate::identity::default  {p}   { debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::identity::complete {p x} { debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::identity::validate {p x} { debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## Any string, alternate name
@@ -117,10 +117,10 @@ namespace eval ::cmdr::validate::pass {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::pass::release  {x} { return }
-proc ::cmdr::validate::pass::default  {}  {debug.cmdr/validate {}    ; return {} }
-proc ::cmdr::validate::pass::complete {x} {debug.cmdr/validate {} 10 ; return {} }
-proc ::cmdr::validate::pass::validate {x} {debug.cmdr/validate {}    ; return $x }
+proc ::cmdr::validate::pass::release  {p x} { return }
+proc ::cmdr::validate::pass::default  {p}   {debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::pass::complete {p x} {debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::pass::validate {p x} {debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## Any string, alternate name, the second
@@ -130,10 +130,10 @@ namespace eval ::cmdr::validate::str {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::str::release  {x} { return }
-proc ::cmdr::validate::str::default  {}  { debug.cmdr/validate {}    ; return {} }
-proc ::cmdr::validate::str::complete {x} { debug.cmdr/validate {} 10 ; return {} }
-proc ::cmdr::validate::str::validate {x} { debug.cmdr/validate {}    ; return $x }
+proc ::cmdr::validate::str::release  {p x} { return }
+proc ::cmdr::validate::str::default  {p}   { debug.cmdr/validate {}    ; return {} }
+proc ::cmdr::validate::str::complete {p x} { debug.cmdr/validate {} 10 ; return {} }
+proc ::cmdr::validate::str::validate {p x} { debug.cmdr/validate {}    ; return $x }
 
 # # ## ### ##### ######## ############# #####################
 ## File, existing and readable
@@ -145,16 +145,16 @@ namespace eval ::cmdr::validate::rfile {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rfile::release  {x} { return }
-proc ::cmdr::validate::rfile::default  {}  { debug.cmdr/validate {} ; error {No default} }
-proc ::cmdr::validate::rfile::complete {x} {
+proc ::cmdr::validate::rfile::release  {p x} { return }
+proc ::cmdr::validate::rfile::default  {p}   { return {} }
+proc ::cmdr::validate::rfile::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rfile::Ok $x
 }
-proc ::cmdr::validate::rfile::validate {x} {
+proc ::cmdr::validate::rfile::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RFILE "an existing readable file" $x
+    fail $p RFILE "an existing readable file" $x
 }
 
 proc ::cmdr::validate::rfile::Ok {path} {
@@ -174,16 +174,16 @@ namespace eval ::cmdr::validate::rwfile {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rwfile::release  {x} { return }
-proc ::cmdr::validate::rwfile::default  {}  { debug.cmdr/validate {} ; error {No default} }
-proc ::cmdr::validate::rwfile::complete {x} {
+proc ::cmdr::validate::rwfile::release  {p x} { return }
+proc ::cmdr::validate::rwfile::default  {p}   { return {} }
+proc ::cmdr::validate::rwfile::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rwfile::Ok $x
 }
-proc ::cmdr::validate::rwfile::validate {x} {
+proc ::cmdr::validate::rwfile::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RWFILE "an existing read/writable file" $x
+    fail $p RWFILE "an existing read/writable file" $x
 }
 
 proc ::cmdr::validate::rwfile::Ok {path} {
@@ -204,17 +204,17 @@ namespace eval ::cmdr::validate::rdirectory {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rdirectory::default  {}  { error {No default} }
-proc ::cmdr::validate::rdirectory::release  {x} { return }
-proc ::cmdr::validate::rdirectory::complete {x} {
+proc ::cmdr::validate::rdirectory::release  {p x} { return }
+proc ::cmdr::validate::rdirectory::default  {p}   { return {} }
+proc ::cmdr::validate::rdirectory::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rdirectory::Ok $x
 }
 
-proc ::cmdr::validate::rdirectory::validate {x} {
+proc ::cmdr::validate::rdirectory::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RDIRECTORY "an existing readable directory" $x
+    fail $p RDIRECTORY "an existing readable directory" $x
 }
 
 proc ::cmdr::validate::rdirectory::Ok {path} {
@@ -234,17 +234,17 @@ namespace eval ::cmdr::validate::rwdirectory {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rwdirectory::default  {}  { error {No default} }
-proc ::cmdr::validate::rwdirectory::release  {x} { return }
-proc ::cmdr::validate::rwdirectory::complete {x} {
+proc ::cmdr::validate::rwdirectory::release  {p x} { return }
+proc ::cmdr::validate::rwdirectory::default  {p}   { return {} }
+proc ::cmdr::validate::rwdirectory::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rwdirectory::Ok $x
 }
 
-proc ::cmdr::validate::rwdirectory::validate {x} {
+proc ::cmdr::validate::rwdirectory::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RWDIRECTORY "an existing read/writeable directory" $x
+    fail $p RWDIRECTORY "an existing read/writeable directory" $x
 }
 
 proc ::cmdr::validate::rwdirectory::Ok {path} {
@@ -265,17 +265,17 @@ namespace eval ::cmdr::validate::rpath {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rpath::default  {}  { error {No default} }
-proc ::cmdr::validate::rpath::release  {x} { return }
-proc ::cmdr::validate::rpath::complete {x} {
+proc ::cmdr::validate::rpath::release  {p x} { return }
+proc ::cmdr::validate::rpath::default  {p}   { return {} }
+proc ::cmdr::validate::rpath::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rpath::Ok $x
 }
 
-proc ::cmdr::validate::rpath::validate {x} {
+proc ::cmdr::validate::rpath::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RPATH "an existing readable path" $x
+    fail $p RPATH "an existing readable path" $x
 }
 
 proc ::cmdr::validate::rpath::Ok {path} {
@@ -295,17 +295,17 @@ namespace eval ::cmdr::validate::rwpath {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rwpath::default  {}  { error {No default} }
-proc ::cmdr::validate::rwpath::release  {x} { return }
-proc ::cmdr::validate::rwpath::complete {x} {
+proc ::cmdr::validate::rwpath::release  {p x} { return }
+proc ::cmdr::validate::rwpath::default  {p}   { return {} }
+proc ::cmdr::validate::rwpath::complete {p x} {
     debug.cmdr/validate {} 10
     complete-glob ::cmdr::validate::rwpath::Ok $x
 }
 
-proc ::cmdr::validate::rwpath::validate {x} {
+proc ::cmdr::validate::rwpath::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail RWPATH "an existing read/writeable path" $x
+    fail $p RWPATH "an existing read/writeable path" $x
 }
 
 proc ::cmdr::validate::rwpath::Ok {path} {
@@ -317,5 +317,5 @@ proc ::cmdr::validate::rwpath::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 0.3
+package provide cmdr::validate 0.4
 return

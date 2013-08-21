@@ -9,7 +9,7 @@
 ## (6) optional
 ## (7) test
 ## (8) validate
-## (9) when-defined
+## (9) when-complete
 
 # # ## ### ##### ######## ############# #####################
 ## Parameter DSL: 'alias' across parameters (input, option, state)
@@ -755,20 +755,20 @@ test cmdr-parameter-8.7 {parameter DSL, state, validate} -body {
 }
 
 # # ## ### ##### ######## ############# #####################
-## Parameter DSL: 'when-defined' across parameters (input, option, state)
+## Parameter DSL: 'when-complete' across parameters (input, option, state)
 
-test cmdr-parameter-9.0 {parameter DSL, when-defined, wrong num args, not enough} -body {
-    BadParamSpec input { when-defined }
+test cmdr-parameter-9.0 {parameter DSL, when-complete, wrong num args, not enough} -body {
+    BadParamSpec input { when-complete }
 } -returnCodes error \
-    -result "wrong # args: should be \"when-defined cmd\""
+    -result "wrong # args: should be \"when-complete cmd\""
 
-test cmdr-parameter-9.1 {parameter DSL, when-defined, wrong num args, too many} -body {
-    BadParamSpec input { when-defined X Y }
+test cmdr-parameter-9.1 {parameter DSL, when-complete, wrong num args, too many} -body {
+    BadParamSpec input { when-complete X Y }
 } -returnCodes error \
-    -result "wrong # args: should be \"when-defined cmd\""
+    -result "wrong # args: should be \"when-complete cmd\""
 
-test cmdr-parameter-9.2 {parameter DSL, input, when-defined} -body {
-    NiceParamSpec input { when-defined X }
+test cmdr-parameter-9.2 {parameter DSL, input, when-complete} -body {
+    NiceParamSpec input { when-complete X }
 } -result {
     foo bar = {
         description: ''
@@ -785,8 +785,8 @@ test cmdr-parameter-9.2 {parameter DSL, input, when-defined} -body {
     }
 }
 
-test cmdr-parameter-9.3 {parameter DSL, option, when-defined} -body {
-    NiceParamSpec option { when-defined X }
+test cmdr-parameter-9.3 {parameter DSL, option, when-complete} -body {
+    NiceParamSpec option { when-complete X }
 } -result {
     foo bar = {
         description: ''
@@ -809,8 +809,8 @@ test cmdr-parameter-9.3 {parameter DSL, option, when-defined} -body {
     }
 }
 
-test cmdr-parameter-9.4 {parameter DSL, state, when-defined} -body {
-    NiceParamSpec state { when-defined X }
+test cmdr-parameter-9.4 {parameter DSL, state, when-complete} -body {
+    NiceParamSpec state { when-complete X }
 } -result {
     foo bar = {
         description: ''

@@ -154,7 +154,7 @@ The relevant and associated constraints are:
 	Depending on how the backend used by the framework is
 	constructed it can make sense for specific parameters to be
 	defined before the actual command is invoked. I.e. to force
-	the invokation of the when-defined callbacks and their
+	the invokation of the when-complete callbacks and their
 	side-effects before the implementation takes over. A use case
 	would be for options to configure low-level parts of the
 	system, so that the implementations do not have to, and thus
@@ -210,7 +210,7 @@ Collected parameter attributes (properties)
 [R12.3,13,14]	prompt		TEXT	Text for the interactive prompt
 		---------	----	-----------
 [R15]		validate	CMD	Command to validate and transform user input
-[R16]		when-defined	CMD	Command to run when the parameter value is defined.
+[R16]		when-complete	CMD	Command to run when the parameter value is defined.
 [R17]		when-set	CMD	Command to run when the parameter string! is set.
 		---------	----	-----------
 [R18]		undocumented	BOOL	If true, exclude the parameter from generated help.
@@ -276,7 +276,7 @@ Property commands.
 	list			list (set)		[R11], [C4]
 	optional		required (reset)	[R7,8,9,10], [C2,3,5,6]
 	validate CMD		validate (set)		[R15], [C8,9]
-	when-defined CMD	when-defined (set)	[R16]
+	when-complete CMD	when-complete (set)	[R16]
 	when-set CMD		when-set (set)		[R17]
 	-------			-------------------	-----
 	test			
