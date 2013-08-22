@@ -114,9 +114,15 @@ oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
     ## API: Property accessors...
 
-    # Make container accessible, and through it all other parameters
-    # of a command.
-    forward config config
+    # Make the container accessible, and through it also all other
+    # parameters of a private.
+    method config {args} {
+	debug.cmdr/parameter {}
+	if {![llength $args]} {
+	    return [config self]
+	}
+	config {*}$args
+    }
 
     # Make self accessible.
     method self {} { self }

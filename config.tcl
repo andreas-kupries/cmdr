@@ -82,6 +82,9 @@ oo::class create ::cmdr::config {
 
     forward context context
 
+    # Make self accessible.
+    method self {} { self }
+
     constructor {context spec} {
 	debug.cmdr/config {}
 
