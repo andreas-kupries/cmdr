@@ -217,6 +217,15 @@ oo::class create ::cmdr::config {
 	return [dict get $mymap $name]
     }
 
+    method has {name} {
+	debug.cmdr/config {}
+	# Accept foo, and @foo.
+	if {[regexp {^@(.*)$} $name -> namex]} {
+	    set name $namex
+	}
+	return [dict exists $mymap $name]
+    }
+
     method lookup-option {name} {
 	debug.cmdr/config {}
 	if {![dict exists $myoption $name]} {

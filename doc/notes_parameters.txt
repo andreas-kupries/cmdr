@@ -150,8 +150,7 @@ The relevant and associated constraints are:
 	Such parameters should be excluded from documentation. Modeled
 	by a boolean property.
 
-(R19)	
-	Depending on how the backend used by the framework is
+(R19)	Depending on how the backend used by the framework is
 	constructed it can make sense for specific parameters to be
 	defined before the actual command is invoked. I.e. to force
 	the invokation of the when-complete callbacks and their
@@ -168,7 +167,6 @@ The relevant and associated constraints are:
 	-- auto-force always
 	-- in order of declaration => set order properly for dependencies
 	-- and cannot have cycles by definition
-
 
 (R20)	A special kind of option to support are those not taking an
 	argument, but simply triggering behaviour through their very
