@@ -180,25 +180,25 @@ proc ::cmdr::help::format::Full {width name command} {
 			   {    }]
     }
 
-    # plus per-option descriptions
+    # plus per-option descriptions (sort by flag name)
     if {[dict size $options]} {
 	set onames {}
 	set odefs  {}
-	foreach {oname ohelp} $options {
+	foreach {oname ohelp} [::cmdr::help::DictSort $options] {
 	    lappend onames $oname
 	    lappend odefs  $ohelp
 	}
 	DefList $width $onames $odefs
     }
 
-    # plus per-argument descriptions
+    # plus per-argument descriptions (keep in cmdline order)
     if {[llength $arguments]} {
 	set anames {}
 	set adefs  {}
 	foreach aname $arguments {
 	    set v [dict get $parameters $aname]
-	    dict with v {} ; # -> code, description
-	    lappend anames $aname
+	    dict with v {} ; # -> code, description, label
+	    lappend anames $label
 	    lappend adefs  $description
 	}
 	DefList $width $anames $adefs
@@ -298,12 +298,12 @@ proc ::cmdr::help::format::Arguments {arguments parameters} {
     set result {}
     foreach a $arguments {
 	set v [dict get $parameters $a]
-	dict with v {} ; # -> code, desc
+	dict with v {} ; # -> code, desc, label
 	switch -exact -- $code {
-	    +  { set text "$a" }
-	    ?  { set text "?${a}?" }
-	    +* { set text "${a}..." }
-	    ?* { set text "?${a}...?" }
+	    +  { set text "$label" }
+	    ?  { set text "?${label}?" }
+	    +* { set text "${label}..." }
+	    ?* { set text "?${label}...?" }
 	}
 	lappend result $text
     }

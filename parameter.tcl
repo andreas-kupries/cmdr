@@ -48,7 +48,8 @@ oo::class create ::cmdr::parameter {
     ## Lifecycle.
 
     constructor {theconfig order cmdline required defered name desc valuespec} {
-	set myname $name		; # [R1]
+	set myname  $name		; # [R1]
+	set mylabel $name
 
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
@@ -192,7 +193,7 @@ oo::class create ::cmdr::parameter {
     method when-set      {} { return $mywhenset }
 
     # - test mode of optional arguments (not options)
-    method threshold    {} { return $mythreshold }
+    method threshold   {} { return $mythreshold }
     method threshold: {n} {
 	# Ignore when parameter is required, or already set to mode peek+test
 	if {$myisrequired || ($mythreshold ne {})} return
@@ -220,6 +221,7 @@ oo::class create ::cmdr::parameter {
 		    generator   $mygenerate     \
 		    interactive $myinteractive  \
 		    isbool      [my isbool]     \
+		    label       $mylabel        \
 		    list        $myislist       \
 		    ordered     $myisordered    \
 		    presence    $myonlypresence \
@@ -257,6 +259,7 @@ oo::class create ::cmdr::parameter {
 	    {generate      Generate} \
 	    {interact      Interact} \
 	    {immediate     Immediate} \
+	    {label         Label} \
 	    {list          List} \
 	    {presence      Presence} \
 	    {optional      Optional} \
@@ -290,6 +293,11 @@ oo::class create ::cmdr::parameter {
 
     # # ## ### ##### ######## #############
     ## Internal: Parameter DSL commands.
+
+    method Label {name} {
+	set mylabel $name
+	return
+    }
 
     method List {} {
 	set myislist yes
@@ -1116,7 +1124,7 @@ oo::class create ::cmdr::parameter {
 
     # # ## ### ##### ######## #############
 
-    variable myname mydescription \
+    variable myname mylabel mydescription \
 	myisordered myiscmdline myislist myisrequired \
 	myinteractive myprompt mydefault myhasdefault \
 	mywhencomplete mywhenset mygenerate myvalidate \

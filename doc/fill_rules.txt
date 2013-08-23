@@ -1,0 +1,21 @@
+
+Validation missing ?
+
+   Set a standard
+
+(1) has 'generate' => identity (aka str)
+(2) no default
+    (a) option => boolean
+    (b) input  => identity
+(3) default is boolean value (as Tcl understands it)
+    => boolean
+(4) default is integer value => itenger
+(5) => identity
+
+Default missing (and required) ?
+
+ (Required <=> There is no 'generate' either, and parameter is
+ optional input)
+
+(1) list => empty list
+(2) => Default value supplied by the specified validation type.
