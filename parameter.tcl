@@ -583,7 +583,7 @@ oo::class create ::cmdr::parameter {
 	if {!$myiscmdline || $myisordered} return
 
 	# Flag derived from option name.
-	dict set myflags [my Option $myname] primary
+	dict set myflags [my Option $mylabel] primary
 	# Special flags for boolean options
 	# XXX Consider pushing this into the validators.
 	if {$myvalidate ne "::cmdr::validate::boolean"} return
@@ -626,7 +626,7 @@ oo::class create ::cmdr::parameter {
     method reset {{cleanup 1}} {
 	debug.cmdr/parameter {}
 	# Runtime configuration, force initial state. See also the
-	# constructor for and inlined variant without cleanup.
+	# constructor for an inlined variant without cleanup.
 
 	my forget
 
@@ -645,6 +645,7 @@ oo::class create ::cmdr::parameter {
 	}
 	set myhasvalue  no
 	set myvalue     {}
+	return
     }
 
     method options {} { 
