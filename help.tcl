@@ -89,7 +89,7 @@ proc ::cmdr::help::auto {actor} {
 		Activate @c@ form of the help.
 	    } {
 		presence
-		when-set [lambda {x} { cmdr::parameter config @format set @c@ }]
+		when-set [lambda {p x} { $p config @format set @c@ }]
 	    }}]
     }
 
