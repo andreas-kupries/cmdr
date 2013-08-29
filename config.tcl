@@ -183,7 +183,9 @@ oo::class create ::cmdr::config {
 	# (SQL, json) may wish to have acess to all of a parameter,
 	# not just bits and pieces.
 
-	set states {}
+	set states     {}
+	set parameters {}
+
 	foreach p $mynames {
 	    set para [dict get $mymap $p]
 	    dict set parameters $p [$para help]
