@@ -929,17 +929,15 @@ oo::class create ::cmdr::config {
 
 	# Validate existence of the option
 	if {![dict exists $myfullopt $option]} {
-	    return -code error \
-		-errorcode {CMDR CONFIG BAD OPTION} \
-		"Unknown option $option"
+	    my raise "Unknown option $option" \
+		CMDR CONFIG BAD OPTION
 	}
 
 	# Map from option prefix to full option
 	set options [dict get $myfullopt $option]
 	if {[llength $options] > 1} {
-	    return -code error \
-		-errorcode {CMDR CONFIG AMBIGUOUS OPTION} \
-		"Ambiguous option prefix $option, matching [join $options {, }]"
+	    my raise "Ambiguous option prefix $option, matching [join $options {, }]" \
+		CMDR CONFIG AMBIGUOUS OPTION
 	}
 
 	# Now map the fully expanded option name to its handler and
@@ -951,21 +949,36 @@ oo::class create ::cmdr::config {
     }
 
     method tooMany {} {
-	return -code error \
-	    -errorcode {CMDR CONFIG WRONG-ARGS TOO-MANY} \
-	    "wrong#args, too many"
+	debug.cmdr/config {}
+	my raise "wrong#args, too many" \
+	    CMDR CONFIG WRONG-ARGS TOO-MANY
     }
 
     method notEnough {} {
-	return -code error \
-	    -errorcode {CMDR CONFIG WRONG-ARGS NOT-ENOUGH} \
-	    "wrong#args, not enough"
+	debug.cmdr/config {}
+	my raise "wrong#args, not enough" \
+	    CMDR CONFIG WRONG-ARGS NOT-ENOUGH
     }
 
     method missingOptionValue {name} {
-	return -code error \
-	    -errorcode {CMDR CONFIG WRONG-ARGS OPTION NOT-ENOUGH} \
-	    "wrong#args, missing value for option '$name'"
+	debug.cmdr/config {}
+	my raise "wrong#args, missing value for option '$name'" \
+	    CMDR CONFIG WRONG-ARGS OPTION NOT-ENOUGH
+    }
+
+    method Help {name {mode public}} {
+	return [cmdr help format full \
+		    [linenoise columns] \
+		    [dict create $name \
+			 [my help $mode]]]
+    }
+
+    method raise {msg args} {
+	debug.cmdr/config {}
+	if {[context exists *prefix*]} {
+	    append msg \n\n[my Help [context get *prefix*]]
+	}
+	return -code error -errorcode $args $msg
     }
 
     # # ## ### ##### ######## #############
@@ -998,9 +1011,8 @@ oo::class create ::cmdr::config {
 	} trap {CMDR CONFIG INTERACT OK} {e o} {
 	    if {!$myreplok} {
 		# Bad commit with incomplete data.
-		return -code error \
-		    -errorcode {CMDR CONFIG COMMIT FAIL} \
-		    "Unable to perform \"[context fullname]\", incomplete or bad arguments"
+		my raise "Unable to perform \"[context fullname]\", incomplete or bad arguments" \
+		    CMDR CONFIG COMMIT FAIL
 	    }
 	    return 1
 	} finally {
@@ -1039,10 +1051,7 @@ oo::class create ::cmdr::config {
 		return
 	    }
 	    .help {
-		puts [cmdr help format full \
-			  [linenoise columns] \
-			  [dict create [context dname] \
-			       [my help interact]]]
+		puts [my Help [context dname] interact]
 		return
 	    }
 	}
