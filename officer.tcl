@@ -341,8 +341,8 @@ oo::class create ::cmdr::officer {
     method Do {args} {
 	debug.cmdr/officer {}
 	set reset 0
-	if {![my has .command]} {
-	    my set .command $args
+	if {![my has *command*]} {
+	    my set *command* $args
 	    set reset 1
 	}
 	try {
@@ -361,7 +361,7 @@ oo::class create ::cmdr::officer {
 
 	    # Delegate to the handler for a known command.
 	    if {[my Known $cmd]} {
-		my lappend .prefix $cmd
+		my lappend *prefix* $cmd
 		[my lookup $cmd] do {*}$remainder
 		return
 	    }
@@ -375,16 +375,16 @@ oo::class create ::cmdr::officer {
 	    }
 
 	    if {[catch {
-		set prefix " [my get .prefix] "
+		set prefix " [my get *prefix*] "
 	    }]} { set prefix "" }
 	    return -code error \
 		-errorcode [list CMDR DO UNKNOWN $cmd] \
 		"Unknown command \"[string trimleft $prefix]$cmd\". Please use 'help[string trimright $prefix]' to see the list of available commands."
 	} finally {
 	    if {$reset} {
-		my unset .command
+		my unset *command*
 	    }
-	    my unset .prefix
+	    my unset *prefix*
 	}
     }
 

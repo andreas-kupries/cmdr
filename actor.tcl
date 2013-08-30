@@ -68,7 +68,7 @@ oo::class create ::cmdr::actor {
     }
 
     method dname {} {
-	::list {*}[my get .prefix] $myname
+	::list {*}[my get *prefix*] $myname
     }
 
     method fullname {} {
