@@ -136,12 +136,12 @@ oo::class create ::cmdr::actor {
 	return $result
     }
 
-    method has {key} {
+    method exists {key} {
 	debug.cmdr/actor {}
 	my Setup
 	set ok [dict exists $mystore $key]
 	if {!$ok && ($mysuper ne {})} {
-	    return [$mysuper has $key]
+	    return [$mysuper exists $key]
 	}
 	return $ok
     }

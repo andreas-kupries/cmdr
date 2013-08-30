@@ -341,7 +341,7 @@ oo::class create ::cmdr::officer {
     method Do {args} {
 	debug.cmdr/officer {}
 	set reset 0
-	if {![my has *command*]} {
+	if {![my exists *command*]} {
 	    my set *command* $args
 	    set reset 1
 	}
