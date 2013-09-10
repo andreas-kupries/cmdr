@@ -105,6 +105,7 @@ proc ::cmdr::help::format::JSON::parameters {parameters} {
 		description -
 		prompt -
 		type -
+		label -
 		@string {
 		    set value [astring $xdef]
 		}
@@ -118,7 +119,7 @@ proc ::cmdr::help::format::JSON::parameters {parameters} {
 		    set value [adict $xdef]
 		}
 		* {
-		    error "Unknown key \"$xname\", do not know how format"
+		    error "Unknown key \"$xname\", do not know how to format"
 		    #lappend tmp $xname [astring $xdef]
 		}
 	    }

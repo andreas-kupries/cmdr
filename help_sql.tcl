@@ -178,6 +178,7 @@ proc ::cmdr::help::format::SQL::para {def} {
 	    type -
 	    generator -
 	    validator -
+	    label -
 	    @string {
 		set value [astring $xdef]
 	    }
@@ -186,7 +187,7 @@ proc ::cmdr::help::format::SQL::para {def} {
 		continue
 	    }
 	    * {
-		error "Unknown key \"$xname\", do not know how format"
+		error "Unknown key \"$xname\", do not know how to format"
 		#lappend tmp $xname [astring $xdef]
 	    }
 	}
