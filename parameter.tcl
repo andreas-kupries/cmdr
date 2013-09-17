@@ -153,6 +153,7 @@ oo::class create ::cmdr::parameter {
 
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
+    method label       {} { return $mylabel }
     method description {{detail {}}} {
 	if {($detail ne {}) && [dict exists $myflags $detail]} {
 	    switch -exact -- [dict get $myflags $detail] {
@@ -166,6 +167,10 @@ oo::class create ::cmdr::parameter {
 
     method primary {option} {
 	return [expr {[dict get $myflags $option] eq "primary"}]
+    }
+
+    method flag {} {
+	my Option $mylabel
     }
 
     # Core classification properties
