@@ -51,8 +51,19 @@ debug prefix cmdr/validate/common {[debug caller] | }
 
 proc ::cmdr::validate::common::fail {p code type x} {
     debug.cmdr/validate/common {}
+
+    # Determine type of p: state, option, or input.  Use this to
+    # choose a proper identifying string in the generated message.
+
+    set ptype [$p type]
+
+    if {$ptype eq "option"} {
+	set name [$p flag]
+    } else {
+	set name [$p label]
+    }
     return -code error -errorcode [list CMDR VALIDATE {*}$code] \
-	"Expected $type for \"[$p name]\", got \"$x\""
+	"Expected $type for $ptype \"$name\", got \"$x\""
 }
 
 proc ::cmdr::validate::common::complete-enum {choices nocase buffer} {
