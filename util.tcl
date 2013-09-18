@@ -20,7 +20,6 @@
 ## Requisites
 
 package require Tcl 8.5
-package require textutil::adjust
 package require debug
 package require debug::caller
 

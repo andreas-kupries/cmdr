@@ -81,6 +81,7 @@ proc ::cmdr::help::auto {actor} {
     debug.cmdr/help {}
     # Generate a standard help command for any actor, and add it dynamically.
 
+    # Auto create options based on the help formats found installed
     foreach c [info commands {::cmdr::help::format::[a-z]*}] {
 	set format [namespace tail $c]
 	lappend formats --$format
@@ -93,6 +94,18 @@ proc ::cmdr::help::auto {actor} {
 	    }}]
     }
 
+    # Standard option for line width to format against.
+    lappend options {
+	option width {
+	    The line width to format the help for.
+	    Defaults to the terminal width, or 80 when
+	    no terminal is available.
+	} {
+	    alias w
+	    validate integer ;# better: integer > 0, or even > 10
+	    generate [lambda {p} { linenoise columns }]
+	}
+    }
     lappend map @formats@ [linsert [join $formats {, }] end-1 and]
     lappend map @options@ [join $options \n]
     lappend map @actor@   $actor
@@ -120,7 +133,7 @@ proc ::cmdr::help::auto {actor} {
 proc ::cmdr::help::auto-help {actor config} {
     debug.cmdr/help {}
 
-    set width  [linenoise columns]
+    set width  [$config @width]
     set words  [$config @cmdname]
     set format [$config @format]
 
@@ -173,10 +186,11 @@ proc ::cmdr::help::format::Full {width name command} {
 
     if {$desc ne {}} {
 	# plus description
+	set w [expr {$width - 5}]
+	set w [expr {$w < 1 ? 1 : $w}]
 	lappend lines [textutil::adjust::indent \
 			   [textutil::adjust::adjust $desc \
-				-length [expr {$width - 5}] \
-				-strictlength 1] \
+				-length $w -strictlength 1] \
 			   {    }]
     }
 
@@ -259,10 +273,11 @@ proc ::cmdr::help::format::Short {width name command} {
 
     if {$desc ne {}} {
 	# plus description
+	set w [expr {$width - 5}]
+	set w [expr {$w < 1 ? 1 : $w}]
 	lappend lines [textutil::adjust::indent \
 			   [textutil::adjust::adjust $desc \
-				-length [expr {$width - 5}] \
-				-strictlength 1] \
+				-length $w -strictlength 1] \
 			   {    }]
     }
     lappend lines ""
@@ -284,11 +299,11 @@ proc ::cmdr::help::format::DefList {width labels defs} {
     foreach l $labels def $defs {
 	# FUTURE: Consider paragraph breaks in $def (\n\n),
 	#         and format them separately.
-
+	set w [expr {$width - $nl}]
+	set w [expr {$w < 1 ? 1 : $w}]
 	lappend lines "    $l [textutil::adjust::indent \
 		       [textutil::adjust::adjust $def \
-			    -length [expr {$width - $nl}] \
-			    -strictlength 1] \
+			    -length $w -strictlength 1] \
 		       $blank 1]"
     }
     return
