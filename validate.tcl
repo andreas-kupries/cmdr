@@ -68,7 +68,10 @@ proc ::cmdr::validate::boolean::complete {p x} {
 
 proc ::cmdr::validate::boolean::validate {p x} {
     debug.cmdr/validate {}
-    if {[string is boolean -strict $x]} { return $x }
+    if {[string is boolean -strict $x]} {
+	# Double inverse keeps value, and makes it canonical.
+	return [expr {!!$x}]
+    }
     fail $p BOOLEAN "a boolean" $x
 }
 
