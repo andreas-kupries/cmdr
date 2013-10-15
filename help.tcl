@@ -120,7 +120,7 @@ proc ::cmdr::help::auto {actor} {
 	state format {
 	    Format of the help to generate.
 	    This field is fed by the options @formats@.
-	} { default full }
+	} { default {} }
 	input cmdname {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
@@ -136,6 +136,15 @@ proc ::cmdr::help::auto-help {actor config} {
     set width  [$config @width]
     set words  [$config @cmdname]
     set format [$config @format]
+
+    if {$format eq {}} {
+	# Default depends on the presence of additional arguments, i.e. if a specific command is asked for, or not.
+	if {[llength $words]} {
+	    set format full
+	} else {
+	    set format list
+	}
+    }
 
     puts [format $format $width [DictSort [query $actor $words]]]
     return
