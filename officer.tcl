@@ -616,4 +616,4 @@ oo::class create ::cmdr::officer {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::officer 0.4
+package provide cmdr::officer 0.5

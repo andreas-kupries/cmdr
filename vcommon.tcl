@@ -109,5 +109,5 @@ proc ::cmdr::validate::common::complete-glob {filter buffer} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::common 0.4
+package provide cmdr::validate::common 0.5
 return
