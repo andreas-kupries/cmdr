@@ -42,11 +42,13 @@ debug prefix cmdr/help/json {[debug caller] | }
 namespace eval ::cmdr::help::format {
     namespace export json
     namespace ensemble create
+
+    namespace import ::cmdr::help::query
 }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::help::format::json {width help} {
+proc ::cmdr::help::format::json {root width help} {
     debug.cmdr/help/json {}
     # help = dict (name -> command)
     set dict {}

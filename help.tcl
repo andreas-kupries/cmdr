@@ -45,13 +45,22 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::help {
-    namespace export query format auto
+    namespace export query query-actor format auto
     namespace ensemble create
 }
 
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::help::query {actor words} {
+    debug.cmdr/help {}
+    # Resolve chain of words (command name path) to the actor
+    # responsible for that command, starting from the specified actor.
+    # This is very much a convenience command.
+
+    return [[query-actor $actor $words] help $words]
+}
+
+proc ::cmdr::help::query-actor {actor words} {
     debug.cmdr/help {}
     # Resolve chain of words (command name path) to the actor
     # responsible for that command, starting from the specified actor.
@@ -72,7 +81,8 @@ proc ::cmdr::help::query {actor words} {
 	set actor [$actor lookup $word]
 	incr n
     }
-    return [$actor help $words]
+
+    return $actor
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -142,11 +152,11 @@ proc ::cmdr::help::auto-help {actor config} {
 	if {[llength $words]} {
 	    set format full
 	} else {
-	    set format list
+	    set format by-category
 	}
     }
 
-    puts [format $format $width [DictSort [query $actor $words]]]
+    puts [format $format [$actor root] $width [DictSort [query $actor $words]]]
     return
 }
 
@@ -161,17 +171,25 @@ proc ::cmdr::help::DictSort {dict} {
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::cmdr::help::format {
-    namespace export full list short
+    namespace export full list short by-category
     namespace ensemble create
+
+    namespace import ::cmdr::help::query
+    namespace import ::cmdr::help::query-actor
 }
 
 # Alternate formats:
 # List
 # Short
+# By-Category
 # ... entirely different formats (json, .rst, docopts, ...)
+# ... See help_json.tcl, and help_sql.tcl for examples.
 #
 
-proc ::cmdr::help::format::full {width help} {
+# # ## ### ##### ######## ############# #####################
+## Full list of commands, with full description (text and parameters)
+
+proc ::cmdr::help::format::full {root width help} {
     debug.cmdr/help {}
 
     # help = dict (name -> command)
@@ -231,8 +249,9 @@ proc ::cmdr::help::format::Full {width name command} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## List of commands. Nothing else.
 
-proc ::cmdr::help::format::list {width help} {
+proc ::cmdr::help::format::list {root width help} {
     debug.cmdr/help {}
 
     # help = dict (name -> command)
@@ -257,8 +276,9 @@ proc ::cmdr::help::format::List {width name command} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## List of commands with basic description. No parameter information.
 
-proc ::cmdr::help::format::short {width help} {
+proc ::cmdr::help::format::short {root width help} {
     debug.cmdr/help {}
 
     # help = dict (name -> command)
@@ -294,6 +314,139 @@ proc ::cmdr::help::format::Short {width name command} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## Show help by category/ies
+
+proc ::cmdr::help::format::by-category {root width help} {
+    debug.cmdr/help {}
+
+    # I. Extract the category information from the help structure and
+    #    generate the tree of categories with their commands.
+
+    array set subc {} ;# category path -> list (child category path)
+    array set cmds {} ;# category path -> list (cmd)
+    #                    cmd = tuple (label description)
+
+    dict for {name def} $help {
+	dict with def {} ; # -> desc, arguments, parameters, sections
+
+	if {![llength $sections]} {
+	    lappend sections Miscellaneous
+	}
+
+	append name " " [Arguments $arguments $parameters]
+	set    desc [lindex [split $desc .] 0]
+	set    cmd  [::list $name $desc]
+
+	foreach category $sections {
+	    lappend cmds($category) $cmd
+	    set parent [lreverse [lassign [lreverse $category] leaf]]
+	    lappend subc($parent) $leaf
+	}
+    }
+
+    #parray cmds
+    #parray subs
+
+    # II. Order the main categories. Allow for user influences.
+
+    # IIa. Natural order first.
+    set categories [lsort -dict -unique $subc()]
+
+    if {[$root exists *category-order*]} {
+	# Record natural order
+	set n 0
+	foreach c $categories {
+	    dict set map $c $n
+	    incr n -10
+	}
+	# Special treatment of generated category, move to end.
+	if {"Miscellaneous" in $categories} {
+	    dict set map Miscellaneous -10000
+	}
+	# Overwrite natural with custom ordering.
+	dict for {c n}  [$root get *category-order*] {
+	    if {$c ni $categories} continue
+	    dict set map $c $n
+	}
+	# Rewrite into tuples.
+	foreach {c n} $map {
+	    lappend tmp [::list $n $c]
+	}
+
+	#puts [join [lsort -decreasing -integer -index 0 $tmp] \n]
+
+	# Sort tuples into chosen order, and rewrite back to list of
+	# plain categories.
+	set categories {}
+	foreach item [lsort -decreasing -integer -index 0 $tmp] {
+	    lappend categories [lindex $item 1]
+	}
+    } else {
+	# Without bespoke ordering only the generated category gets
+	# treated specially.
+	set pos [lsearch -exact $categories Miscellaneous]
+	if {$pos >= 0} {
+	    set categories [linsert [lreplace $categories $pos $pos] end Miscellaneous]
+	}
+    }
+
+    # III. Take the category tree and do the final formatting.
+    set lines {}
+    foreach c $categories {
+	ShowCategory $width lines [::list $c] ""
+    }
+    return [join $lines \n]
+}
+
+proc ::cmdr::help::format::ShowCategory {width lv path indent} {
+    upvar 1 $lv lines cmds cmds subc subc
+
+    # Print category header
+    lappend lines "$indent[lindex $path end]"
+
+    # Indent the commands and sub-categories a bit more...
+    append indent "    "
+    set    sep    "    "
+
+    # Get the commands in the category, preliminary formatting
+    # (labels, descriptions).
+
+    foreach def [lsort -dict -unique $cmds($path)] {
+	lassign $def syntax desc
+	lappend names $syntax
+	lappend descs $desc
+    }
+    set labels [cmdr util padr $names]
+
+    # With the padding all labels are the same length. We can
+    # precompute the blank and the width to format the descriptions
+    # into.
+
+    regsub -all {[^\t]}  "$indent[lindex $labels 0]$sep" { } blank
+    set w [expr {$width - [string length $blank]}]
+
+    # Print the commands, final formatting.
+    foreach label $labels desc $descs {
+	set desc [textutil::adjust::adjust $desc \
+		      -length $w \
+		      -strictlength 1]
+	set desc [textutil::adjust::indent $desc $blank 1]
+
+	lappend lines $indent$label$sep$desc
+    }
+
+    lappend lines {}
+    if {![info exists subc($path)]} return
+
+    # Print the sub-categories, if any.
+    foreach c [lsort -dict -unique $subc($path)] {
+	ShowCategory $width lines [linsert $path end $c] $indent
+    }
+    return
+}
+
+# # ## ### ##### ######## ############# #####################
+## Common utility commands.
 
 proc ::cmdr::help::format::DefList {width labels defs} {
     upvar 1 lines lines

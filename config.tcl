@@ -105,13 +105,14 @@ oo::class create ::cmdr::config {
 
 	# Initialize collection state.
 	set myinteractive $ourinteractive
-	set mynames   {} ;# list of parameter names
-	set mymap     {} ;# parameter name -> object
-	set mypub     {} ;# parameter name -> object, non-state only, i.e. user visible
-	set myoption  {} ;# option         -> object
-	set myfullopt {} ;# option prefix  -> list of full options having that prefix.
-	set myargs    {} ;# List of argument names.
-	set myinforce no
+	set mynames    {} ;# list of parameter names
+	set mymap      {} ;# parameter name -> object
+	set mypub      {} ;# parameter name -> object, non-state only, i.e. user visible
+	set myoption   {} ;# option         -> object
+	set myfullopt  {} ;# option prefix  -> list of full options having that prefix.
+	set myargs     {} ;# List of argument names.
+	set mysections {}
+	set myinforce  no
 
 	# Import the DSL commands.
 	link \
@@ -121,7 +122,8 @@ oo::class create ::cmdr::config {
 	    {input        Input} \
 	    {interactive  Interactive} \
 	    {option       Option} \
-	    {state        State}
+	    {state        State} \
+	    {section      Section}
 
 	# Updated in my DefineParameter, called from the $spec
 	set splat no
@@ -178,6 +180,7 @@ oo::class create ::cmdr::config {
 	}
 
 	set arguments $myargs
+	set sections  $mysections
 
 	# Full dump of the parameter definitions. Unusual formats
 	# (SQL, json) may wish to have acess to all of a parameter,
@@ -199,7 +202,8 @@ oo::class create ::cmdr::config {
 		    options    $options \
 		    arguments  $arguments \
 		    states     $states \
-		    parameters $parameters]
+		    parameters $parameters \
+		    sections   $sections]
     }
 
     method interactive {} { return $myinteractive }
@@ -482,6 +486,12 @@ oo::class create ::cmdr::config {
     method Interactive {} {
 	debug.cmdr/config {}
 	set myinteractive 1
+	return
+    }
+
+    method Section {args} {
+	# Remember the help section this private is a part of.
+	lappend mysections $args
 	return
     }
 
@@ -986,7 +996,7 @@ oo::class create ::cmdr::config {
     variable mymap mypub myoption myfullopt myargs mynames \
 	myaq mypq mycchain myreplexit myreplok myreplcommit \
 	myreset myred mygreen mycyan myinteractive myinforce \
-	mydisplay myreplskip
+	mydisplay myreplskip mysections
 
     # # ## ### ##### ######## #############
     ## Local shell for interactive entry of the parameters in the collection.
