@@ -40,11 +40,13 @@ debug prefix cmdr/help/sql {[debug caller] | }
 namespace eval ::cmdr::help::format {
     namespace export sql
     namespace ensemble create
+
+    namespace import ::cmdr::help::query
 }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::help::format::sql {width help} {
+proc ::cmdr::help::format::sql {root width help} {
     debug.cmdr/help/sql {}
     # help = dict (name -> command)
 
