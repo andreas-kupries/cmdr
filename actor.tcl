@@ -173,7 +173,7 @@ oo::class create ::cmdr::actor {
 	debug.cmdr/actor {}
 	catch { set value [my get $key] }
 	lappend value $data
-	dict set mystore $key $data
+	dict set mystore $key $value
 	return
     }
 
