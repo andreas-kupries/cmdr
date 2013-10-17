@@ -477,10 +477,10 @@ proc ::cmdr::help::format::Arguments {arguments parameters} {
 	set v [dict get $parameters $a]
 	dict with v {} ; # -> code, desc, label
 	switch -exact -- $code {
-	    +  { set text "$label" }
-	    ?  { set text "?${label}?" }
-	    +* { set text "${label}..." }
-	    ?* { set text "?${label}...?" }
+	    +  { set text "<$label>" }
+	    ?  { set text "\[<${label}>\]" }
+	    +* { set text "<{label}>..." }
+	    ?* { set text "\[<${label}>...\]" }
 	}
 	lappend result $text
     }
