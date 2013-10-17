@@ -497,4 +497,4 @@ proc ::cmdr::help::format::HasOptions {options} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 0.5
+package provide cmdr::help 0.6
