@@ -978,6 +978,7 @@ oo::class create ::cmdr::config {
 
     method Help {name {mode public}} {
 	return [cmdr help format full \
+		    [context root] \
 		    [linenoise columns] \
 		    [dict create $name \
 			 [my help $mode]]]
