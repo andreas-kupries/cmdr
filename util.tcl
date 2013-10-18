@@ -62,4 +62,4 @@ proc ::cmdr::util::padr {list} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::util 0.6
+package provide cmdr::util 0.7
