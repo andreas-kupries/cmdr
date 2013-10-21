@@ -11,6 +11,6 @@ or the backup at
 and follow the instructions given at these sites to create a working
 installation. They are not repeated here. If there are problems with
 these instructions please file a bug against the Kettle project, and
-not [vset PTITLE].
+not [package [vset PTITLE]].
 
 [para]

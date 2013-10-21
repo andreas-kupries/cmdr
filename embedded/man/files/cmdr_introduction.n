@@ -244,9 +244,11 @@ Database Class:	\\fB\\$3\\fR
 .SH NAME
 cmdr_introduction \- Cmdr - Introduction to the project
 .SH DESCRIPTION
-Welcome to the Cmdr project,
-written by Andreas Kupries,
-and available from \fIhttps:/core.tcl.tk/akupries/cmdr\fR.
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR.
+.PP
 .SH "SYSTEM ARCHITECTURE"
 .SH "RELATED DOCUMENTS"
 .IP [1]

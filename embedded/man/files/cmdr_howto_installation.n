@@ -244,9 +244,11 @@ Database Class:	\\fB\\$3\\fR
 .SH NAME
 cmdr_installation \- Cmdr - The Installer's Guide
 .SH DESCRIPTION
-Welcome to the Cmdr project,
-written by Andreas Kupries,
-and available from \fIhttps:/core.tcl.tk/akupries/cmdr\fR.
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR.
+.PP
 .PP
 The audience of this document are anyone wishing to build the
 Cmdr project, for either themselves, or others.
@@ -300,8 +302,68 @@ or the backup at
 and follow the instructions given at these sites to create a working
 installation. They are not repeated here. If there are problems with
 these instructions please file a bug against the Kettle project, and
-not Cmdr.
+not \fBCmdr\fR.
 .PP
+.SS TCLLIB
+The framework requires ten packages found in Tcllib.
+These are
+.IP [1]
+\fBdebug\fR
+.IP [2]
+\fBdebug::caller\fR
+.IP [3]
+\fBjson::write\fR
+.IP [4]
+\fBlambda\fR
+.IP [5]
+\fBoo::util\fR
+.IP [6]
+\fBstring::token::shell\fR
+.IP [7]
+\fBstruct::queue\fR
+.IP [8]
+\fBterm::ansi::code::ctrl\fR
+.IP [9]
+\fBtextutil::adjust\fR
+.IP [10]
+\fBtry\fR
+.PP
+.PP
+Out of the many possibilites for getting Tcllib (OS vendor,
+os-independent vendor, building from sources) use whatever you are
+comfortable with.
+.PP
+For myself, I am most comfortable with using
+\fIActiveState's\fR [http://www.activestate.com]
+ActiveTcl distribution and TEApot.
+.PP
+See the previous section (\fBTcl\fR) for disclosure and
+information on how to get it.
+.PP
+Assuming that ActiveTcl got installed running the commands
+.CS
+
+
+    teacup install
+
+.CE
+will install them for your platform, if you have not done the more
+inclusive
+.CS
+
+
+    teacup update
+
+.CE
+to get everything and the kitchensink.
+.PP
+For those wishing to build and install Tcllib on their own, the
+relevant sources can be found at \fIhttp://core.tcl.tk/tcllib\fR
+together with the necessary instructions on how to build it.
+.PP
+If there are problems with building, installing, or using
+Tcllib and its packages please file a bug against Tcllib, or the
+vendor of your distribution, and not \fBcmdr\fR.
 .SH "BUILD & INSTALLATION"
 Cmdr uses the Kettle application and package to handle building
 and installation. It is assumed to be installed and working. Please see
