@@ -6,9 +6,11 @@
 [description]
 [include parts/welcome.inc]
 
-[comment {-- @EDIT Please edit to suit -- }]
+This document provides an overview of the changes [package [vset PROJECT]]
+underwent from version to version.
 
 [comment {--- Changes Begin ---}]
+[include parts/changes.inc]
 [comment {--- Changes End -----}]
 
 [include parts/related.inc]

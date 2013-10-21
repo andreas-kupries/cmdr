@@ -113,18 +113,42 @@
 <ul class="toc">
 <li class="section"><a href="#toc">Table Of Contents</a></li>
 <li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#section2">Related Documents</a></li>
-<li class="section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section2">Changes</a></li>
+<li class="section"><a href="#section3">Related Documents</a></li>
+<li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
 </div>
 <div id="section1" class="section"><h2><a name="section1">Description</a></h2>
-<p>Welcome to the Cmdr project,
-written by Andreas Kupries,
-and available from <a href="https:/core.tcl.tk/akupries/cmdr">https:/core.tcl.tk/akupries/cmdr</a>.</p>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document provides an overview of the changes <b class="package">cmdr</b>
+underwent from version to version.</p>
 </div>
-<div id="section2" class="section"><h2><a name="section2">Related Documents</a></h2>
+<div id="section2" class="section"><h2><a name="section2">Changes</a></h2>
+<p>This is the first release of cmdr.
+The changes therefore describe the initial features of the system.</p>
+<p>In detail:</p>
+<ol class="enumerated">
+<li><p>cmdr requires Tcl 8.5 or higher.
+       Tcl 8.4 or less is not supported.</p></li>
+<li><p>The framework provides a DSL for the declaration of a hierarchy
+       of commands and their parameters (named options, positional
+       arguments, hidden state), with help texts, type information, and
+       various callbacks (command actions, parameter definition,
+       parameter completion, type validation, command completion, etc.)</p></li>
+<li><p>At runtime the framework provides parsing and processing of command
+       lines per specifications written in that DSL, determining the command
+       to run, and the mapping from command line words to its parameters.</p></li>
+<li><p>The framework also provides shells for the interactive entry of
+	commands and parameters, with command line completion.</p></li>
+<li><p>Last, but not least is the automatic generation of command line
+       help for commands and parameters, based on the information provided
+       in a specification.</p></li>
+</ol>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Related Documents</a></h2>
 <ol class="enumerated">
 <li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
@@ -134,7 +158,7 @@ and available from <a href="https:/core.tcl.tk/akupries/cmdr">https:/core.tcl.tk
 <li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
 </ol>
 </div>
-<div id="section3" class="section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at

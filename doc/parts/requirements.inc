@@ -1,3 +1,7 @@
 [comment {--- Project requirements --}]
 [include rq_tcl85.inc]
 [include rq_kettle.inc]
+[include rq_tcllib.inc]
+[comment {-- [include rq_tcloo.inc] --}]
+[comment {-- [include rq_linenoise.inc] --}]
+[comment {-- [include rq_linenoiseutils.inc] --}]

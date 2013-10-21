@@ -244,9 +244,39 @@ Database Class:	\\fB\\$3\\fR
 .SH NAME
 cmdr_changes \- Cmdr - Log of Changes
 .SH DESCRIPTION
-Welcome to the Cmdr project,
-written by Andreas Kupries,
-and available from \fIhttps:/core.tcl.tk/akupries/cmdr\fR.
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR.
+.PP
+This document provides an overview of the changes \fBcmdr\fR
+underwent from version to version.
+.SH CHANGES
+This is the first release of cmdr.
+The changes therefore describe the initial features of the system.
+.PP
+In detail:
+.IP [1]
+cmdr requires Tcl 8.5 or higher.
+Tcl 8.4 or less is not supported.
+.IP [2]
+The framework provides a DSL for the declaration of a hierarchy
+of commands and their parameters (named options, positional
+arguments, hidden state), with help texts, type information, and
+various callbacks (command actions, parameter definition,
+parameter completion, type validation, command completion, etc.)
+.IP [3]
+At runtime the framework provides parsing and processing of command
+lines per specifications written in that DSL, determining the command
+to run, and the mapping from command line words to its parameters.
+.IP [4]
+The framework also provides shells for the interactive entry of
+commands and parameters, with command line completion.
+.IP [5]
+Last, but not least is the automatic generation of command line
+help for commands and parameters, based on the information provided
+in a specification.
+.PP
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
