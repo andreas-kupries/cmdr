@@ -292,18 +292,50 @@ The sources of all versions can be found at
 Tcl
 \fIhttp://core.tcl.tk/tcl/\fR
 .PP
-.SS KETTLE
-This project uses the Kettle application and package as its build system.
+.SS TCLOO
+The framework uses the \fBTclOO\fR package in its implementation.
+This package requires Tcl 8.5 or higher.
 .PP
-Please go to either the main repository at
-\fIhttp://core.tcl.tk/akupries/kettle\fR
-or the backup at
-\fIhttp://chiselapp.com/andreas_kupries/repositories/Kettle\fR
-and follow the instructions given at these sites to create a working
-installation. They are not repeated here. If there are problems with
-these instructions please file a bug against the Kettle project, and
-not \fBCmdr\fR.
+In Tcl 8.6 the package is part of the core itself, without
+requiring a separate installation.
 .PP
+For Tcl 8.5 it has to be installed separately.
+.PP
+Out of the many possibilites for getting TclOO (OS vendor,
+os-independent vendor, building from sources) use whatever you are
+comfortable with.
+.PP
+For myself, I am most comfortable with using
+\fIActiveState's\fR [http://www.activestate.com]
+ActiveTcl distribution and TEApot.
+.PP
+See the previous section (\fBTcl\fR) for disclosure and
+information on how to get it.
+.PP
+Assuming that ActiveTcl got installed running the command
+.CS
+
+
+    teacup install TclOO
+
+.CE
+will install the package for your platform, if you have not done the
+more inclusive
+.CS
+
+
+    teacup update
+
+.CE
+to get everything and the kitchensink.
+.PP
+For those wishing to build and install TclOO on their own, the
+relevant sources can be found at \fIhttp://core.tcl.tk/tcloo\fR
+together with the necessary instructions on how to build it.
+.PP
+If there are problems with building, installing, or using TclOO
+and its packages please file a bug against TclOO, or the vendor of
+your distribution, and not \fBcmdr\fR.
 .SS TCLLIB
 The framework requires ten packages found in Tcllib.
 These are
@@ -344,7 +376,16 @@ Assuming that ActiveTcl got installed running the commands
 .CS
 
 
-    teacup install
+    teacup install debug
+    teacup install debug::caller
+    teacup install json::write
+    teacup install lambda
+    teacup install oo::util
+    teacup install string::token::shell
+    teacup install struct::queue
+    teacup install term::ansi::code::ctrl
+    teacup install textutil::adjust
+    teacup install try
 
 .CE
 will install them for your platform, if you have not done the more
@@ -364,6 +405,58 @@ together with the necessary instructions on how to build it.
 If there are problems with building, installing, or using
 Tcllib and its packages please file a bug against Tcllib, or the
 vendor of your distribution, and not \fBcmdr\fR.
+.SS LINENOISE
+The framework uses the \fBlinenoise\fR package in its implementation.
+This package requires Tcl 8.5 or higher.
+.PP
+Out of the many possibilites for getting Linenoise (OS vendor,
+os-independent vendor, building from sources) use whatever you are
+comfortable with.
+.PP
+For myself, I am most comfortable with using
+\fIActiveState's\fR [http://www.activestate.com]
+ActiveTcl distribution and TEApot.
+.PP
+See the previous section (\fBTcl\fR) for disclosure and
+information on how to get it.
+.PP
+Assuming that ActiveTcl got installed running the command
+.CS
+
+
+    teacup install linenoise
+
+.CE
+will install the package for your platform, if you have not done the
+more inclusive
+.CS
+
+
+    teacup update
+
+.CE
+to get everything and the kitchensink.
+.PP
+For those wishing to build and install Linenoise on their own,
+the relevant sources can be found at
+\fIhttp://github.com/andreas-kupries/tcl-linenoise\fR together with
+the necessary instructions on how to build it.
+.PP
+If there are problems with building, installing, or using
+linenoise please file a bug against Linenoise, or the vendor
+of your distribution, and not \fBcmdr\fR.
+.SS KETTLE
+This project uses the Kettle application and package as its build system.
+.PP
+Please go to either the main repository at
+\fIhttp://core.tcl.tk/akupries/kettle\fR
+or the backup at
+\fIhttp://chiselapp.com/andreas_kupries/repositories/Kettle\fR
+and follow the instructions given at these sites to create a working
+installation. They are not repeated here. If there are problems with
+these instructions please file a bug against the Kettle project, and
+not \fBCmdr\fR.
+.PP
 .SH "BUILD & INSTALLATION"
 Cmdr uses the Kettle application and package to handle building
 and installation. It is assumed to be installed and working. Please see

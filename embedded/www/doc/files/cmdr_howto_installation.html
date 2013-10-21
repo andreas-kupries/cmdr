@@ -116,8 +116,10 @@
 <li class="section"><a href="#section2">Requisites</a>
 <ul>
 <li class="subsection"><a href="#subsection1">Tcl</a></li>
-<li class="subsection"><a href="#subsection2">Kettle</a></li>
+<li class="subsection"><a href="#subsection2">TclOO</a></li>
 <li class="subsection"><a href="#subsection3">Tcllib</a></li>
+<li class="subsection"><a href="#subsection4">Linenoise</a></li>
+<li class="subsection"><a href="#subsection5">Kettle</a></li>
 </ul>
 </li>
 <li class="section"><a href="#section3">Build &amp; Installation</a></li>
@@ -164,16 +166,36 @@ The sources of all versions can be found at</p>
 <dd><p><a href="http://core.tcl.tk/tcl/">http://core.tcl.tk/tcl/</a></p></dd>
 </dl>
 </div>
-<div id="subsection2" class="subsection"><h3><a name="subsection2">Kettle</a></h3>
-<p>This project uses the Kettle application and package as its build system.</p>
-<p>Please go to either the main repository at
-<a href="http://core.tcl.tk/akupries/kettle">http://core.tcl.tk/akupries/kettle</a>
-or the backup at
-<a href="http://chiselapp.com/andreas_kupries/repositories/Kettle">http://chiselapp.com/andreas_kupries/repositories/Kettle</a>
-and follow the instructions given at these sites to create a working
-installation. They are not repeated here. If there are problems with
-these instructions please file a bug against the Kettle project, and
-not <b class="package">Cmdr</b>.</p>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">TclOO</a></h3>
+<p>The framework uses the <b class="package">TclOO</b> package in its implementation.
+This package requires Tcl 8.5 or higher.</p>
+<p>In Tcl 8.6 the package is part of the core itself, without
+requiring a separate installation.</p>
+<p>For Tcl 8.5 it has to be installed separately.</p>
+<p>Out of the many possibilites for getting TclOO (OS vendor,
+os-independent vendor, building from sources) use whatever you are
+comfortable with.</p>
+<p>For myself, I am most comfortable with using
+<a href="http://www.activestate.com">ActiveState's</a>
+ActiveTcl distribution and TEApot.</p>
+<p>See the previous section (<span class="sectref"><a href="#subsection1">Tcl</a></span>) for disclosure and
+information on how to get it.</p>
+<p>Assuming that ActiveTcl got installed running the command</p>
+<pre class="example">
+    teacup install TclOO
+</pre>
+<p>will install the package for your platform, if you have not done the
+more inclusive</p>
+<pre class="example">
+    teacup update
+</pre>
+<p>to get everything and the kitchensink.</p>
+<p>For those wishing to build and install TclOO on their own, the
+relevant sources can be found at <a href="http://core.tcl.tk/tcloo">http://core.tcl.tk/tcloo</a>
+together with the necessary instructions on how to build it.</p>
+<p>If there are problems with building, installing, or using TclOO
+and its packages please file a bug against TclOO, or the vendor of
+your distribution, and not <b class="package">cmdr</b>.</p>
 </div>
 <div id="subsection3" class="subsection"><h3><a name="subsection3">Tcllib</a></h3>
 <p>The framework requires ten packages found in Tcllib.
@@ -200,7 +222,16 @@ ActiveTcl distribution and TEApot.</p>
 information on how to get it.</p>
 <p>Assuming that ActiveTcl got installed running the commands</p>
 <pre class="example">
-    teacup install
+    teacup install debug
+    teacup install debug::caller
+    teacup install json::write
+    teacup install lambda
+    teacup install oo::util
+    teacup install string::token::shell
+    teacup install struct::queue
+    teacup install term::ansi::code::ctrl
+    teacup install textutil::adjust
+    teacup install try
 </pre>
 <p>will install them for your platform, if you have not done the more
 inclusive</p>
@@ -215,11 +246,51 @@ together with the necessary instructions on how to build it.</p>
 Tcllib and its packages please file a bug against Tcllib, or the
 vendor of your distribution, and not <b class="package">cmdr</b>.</p>
 </div>
+<div id="subsection4" class="subsection"><h3><a name="subsection4">Linenoise</a></h3>
+<p>The framework uses the <b class="package">linenoise</b> package in its implementation.
+This package requires Tcl 8.5 or higher.</p>
+<p>Out of the many possibilites for getting Linenoise (OS vendor,
+os-independent vendor, building from sources) use whatever you are
+comfortable with.</p>
+<p>For myself, I am most comfortable with using
+<a href="http://www.activestate.com">ActiveState's</a>
+ActiveTcl distribution and TEApot.</p>
+<p>See the previous section (<span class="sectref"><a href="#subsection1">Tcl</a></span>) for disclosure and
+information on how to get it.</p>
+<p>Assuming that ActiveTcl got installed running the command</p>
+<pre class="example">
+    teacup install linenoise
+</pre>
+<p>will install the package for your platform, if you have not done the
+more inclusive</p>
+<pre class="example">
+    teacup update
+</pre>
+<p>to get everything and the kitchensink.</p>
+<p>For those wishing to build and install Linenoise on their own,
+the relevant sources can be found at
+<a href="http://github.com/andreas-kupries/tcl-linenoise">http://github.com/andreas-kupries/tcl-linenoise</a> together with
+the necessary instructions on how to build it.</p>
+<p>If there are problems with building, installing, or using
+linenoise please file a bug against Linenoise, or the vendor
+of your distribution, and not <b class="package">cmdr</b>.</p>
+</div>
+<div id="subsection5" class="subsection"><h3><a name="subsection5">Kettle</a></h3>
+<p>This project uses the Kettle application and package as its build system.</p>
+<p>Please go to either the main repository at
+<a href="http://core.tcl.tk/akupries/kettle">http://core.tcl.tk/akupries/kettle</a>
+or the backup at
+<a href="http://chiselapp.com/andreas_kupries/repositories/Kettle">http://chiselapp.com/andreas_kupries/repositories/Kettle</a>
+and follow the instructions given at these sites to create a working
+installation. They are not repeated here. If there are problems with
+these instructions please file a bug against the Kettle project, and
+not <b class="package">Cmdr</b>.</p>
+</div>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Build &amp; Installation</a></h2>
 <p>Cmdr uses the Kettle application and package to handle building
 and installation. It is assumed to be installed and working. Please see
-section <span class="sectref"><a href="#subsection2">Kettle</a></span> in <span class="sectref"><a href="#section2">Requisites</a></span> for more information.</p>
+section <span class="sectref"><a href="#subsection5">Kettle</a></span> in <span class="sectref"><a href="#section2">Requisites</a></span> for more information.</p>
 <p>Note that all access to Kettle is mediated by the &quot;<b class="file">build.tcl</b>&quot;
 script, found in the top-level directory of the project.</p>
 <p>For the most basic installation of Cmdr run</p>
