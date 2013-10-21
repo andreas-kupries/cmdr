@@ -31,7 +31,16 @@ information on how to get it.
 [para] Assuming that ActiveTcl got installed running the commands
 
 [example {
-    teacup install
+    teacup install debug
+    teacup install debug::caller
+    teacup install json::write
+    teacup install lambda
+    teacup install oo::util
+    teacup install string::token::shell
+    teacup install struct::queue
+    teacup install term::ansi::code::ctrl
+    teacup install textutil::adjust
+    teacup install try
 }]
 
 will install them for your platform, if you have not done the more
