@@ -1,0 +1,88 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_validate_common [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::validate::common]
+[titledesc {Utilities for Validation Types}]
+[description]
+[include parts/welcome.inc]
+
+This package publicly exports three commands for use in the
+implementation of validation types.
+
+The standard validation types defined in package
+[package cmdr::validate] make use of these commands.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::validate::common] [method fail] [arg p] [arg code] [arg type] [arg x]]
+
+When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+The [package cmdr::parameter] instance whose validation failed. The
+error message will contain this parameter's type and label (flag in
+case of an option).
+
+[arg_def list code]
+A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error.
+
+[arg_def string type]
+A string providing the human-readable name of the validation type
+triggering the error.
+
+[arg_def string x]
+The string value failing the validation.
+[list_end]
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::validate::common] [method complete-enum] [arg choices] [arg nocase] [arg buffer]]
+
+When invoked this command returns a list of strings containing just
+the elements of [arg choices] the value of [arg buffer] is a prefix
+of. When [arg nocase] is set the command will ignore letter case and
+treat the string in [arg buffer] as all-lowercase.
+
+[list_begin arguments]
+[arg_def list choices]
+The list of values which can complete the data in [arg buffer].
+
+[arg_def boolean nocase]
+A boolean flag specifying if the completion is done ignoring
+letter-case ([const true]), or not ([const false])).
+
+[arg_def string buffer]
+The string to complete via the list of [arg choices].
+
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::validate::common] [method complete-glob] [arg filter] [arg buffer]]
+
+When invoked this command returns a list of strings, the paths in the
+filesystem the value of [arg buffer] is a prefix of, and not rejected
+by the [arg filter] command (prefix).
+
+[para] Note that when the value of [arg buffer] is a relative path the
+current working directory is used to locate matches.
+
+[list_begin arguments]
+[arg_def cmd-prefix filter]
+A command prefix taking a single argument, the candidate path, and
+returning a boolean value indicating (non-)acceptance of the path. A
+result of [const true] accepts the candidate, [const false] rejects
+it.
+
+[arg_def string buffer]
+The string, a partial path, to complete.
+[list_end]
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]

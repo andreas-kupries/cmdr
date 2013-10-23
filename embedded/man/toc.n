@@ -243,19 +243,34 @@ doc
 .RS
 .TP
 \fBcmdr_changes\fR
-\fIfiles/cmdr_changes.n\fR: Cmdr - Log of Changes
+\fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
 .TP
 \fBcmdr_development\fR
-\fIfiles/cmdr_howto_development.n\fR: Cmdr - The Developer's Guide
+\fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
+.TP
+\fBcmdr_help\fR
+\fIfiles/help\&.n\fR: Utilities for help text formatting and setup - Internal
+.TP
+\fBcmdr_help_json\fR
+\fIfiles/help_json\&.n\fR: Formatting help as JSON object
+.TP
+\fBcmdr_help_sql\fR
+\fIfiles/help_sql\&.n\fR: Formatting help as series of SQL commands
 .TP
 \fBcmdr_howto_get_sources\fR
-\fIfiles/cmdr_howto_get_sources.n\fR: Cmdr - How To Get The Sources
+\fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
 .TP
 \fBcmdr_installation\fR
-\fIfiles/cmdr_howto_installation.n\fR: Cmdr - The Installer's Guide
+\fIfiles/cmdr_howto_installation\&.n\fR: Cmdr - The Installer's Guide
 .TP
 \fBcmdr_introduction\fR
-\fIfiles/cmdr_introduction.n\fR: Cmdr - Introduction to the project
+\fIfiles/cmdr_introduction\&.n\fR: Cmdr - Introduction to the project
 .TP
 \fBcmdr_license\fR
-\fIfiles/cmdr_license.n\fR: Cmdr - License
+\fIfiles/cmdr_license\&.n\fR: Cmdr - License
+.TP
+\fBcmdr_util\fR
+\fIfiles/util\&.n\fR: General Utilities - Internal
+.TP
+\fBcmdr_validate_common\fR
+\fIfiles/vcommon\&.n\fR: Utilities for Validation Types

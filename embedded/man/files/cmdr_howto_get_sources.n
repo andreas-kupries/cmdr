@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file '/net/nas/data/andreask/Dev/Cmdr/dev/embedded/man/files/cmdr_howto_get_sources.n' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_howto_get_sources\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -245,49 +245,49 @@ Database Class:	\\fB\\$3\\fR
 cmdr_howto_get_sources \- Cmdr - How To Get The Sources
 .SH DESCRIPTION
 .PP
-Welcome to the Cmdr project, written by Andreas Kupries.
+Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
-For availability please read \fICmdr - How To Get The Sources\fR.
+For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 .PP
 The audience of this document are anyone wishing to either have just a
 look at Cmdr's sources, or to build the project, or to extend
-and modify it. The list of \fBRelated Documents\fR provides
-references to information for the latter two.
+and modify it\&. The list of \fBRelated Documents\fR provides
+references to information for the latter two\&.
 .SH LOCATION
-The official repository of the project is at \fIhttps:/core.tcl.tk/akupries/cmdr\fR.
+The official repository of the project is at \fIhttps:/core\&.tcl\&.tk/akupries/cmdr\fR\&.
 A mirror has been set up at
-\fIhttp://chiselapp.com/user/andreas_kupries/repository/Kettle\fR,
-in case of trouble with the main location.
+\fIhttp://chiselapp\&.com/user/andreas_kupries/repository/Kettle\fR,
+in case of trouble with the main location\&.
 .SH RETRIEVAL
 Assuming that you simply wish to look at the sources of the project,
 or build a specific revision, the easiest way of retrieving the
 sources is to:
 .IP [1]
-Log as "anonymous" into the repository (see \fBLocation\fR).
-Use the semi-random password in the captcha.
+Log as "anonymous" into the repository (see \fBLocation\fR)\&.
+Use the semi-random password in the captcha\&.
 .IP [2]
-Go to the "Timeline".
+Go to the "Timeline"\&.
 .IP [3]
 Choose the revision you wish to have and
 .IP [4]
-follow its link to its detailed information page.
+follow its link to its detailed information page\&.
 .IP [5]
 On that page, choose either the "ZIP" or "Tarball" link to get
-a copy of this revision in the format of your choice.
+a copy of this revision in the format of your choice\&.
 .PP
 .SH "SOURCE CODE MANAGEMENT"
 For the curious (or a developer-to-be), the sources of this project
-are managed by the \fIFossil SCM\fR [http://www.fossil-scm.org].
+are managed by the \fIFossil SCM\fR [http://www\&.fossil-scm\&.org]\&.
 Binaries for popular platforms can be found directly at its
-\fIdownload page\fR [http://www.fossil-scm.org/download.html].
+\fIdownload page\fR [http://www\&.fossil-scm\&.org/download\&.html]\&.
 .PP
 With that tool available the full history of our project can be
 retrieved via:
 .CS
 
 
-fossil clone https:/core.tcl.tk/akupries/cmdr cmdr.fossil
+fossil clone https:/core\&.tcl\&.tk/akupries/cmdr cmdr\&.fossil
 
 .CE
 followed by
@@ -296,10 +296,10 @@ followed by
 
 mkdir cmdr
 cd    cmdr
-fossil open ../cmdr.fossil
+fossil open \&.\&./cmdr\&.fossil
 
 .CE
-to get a checkout of the head of the trunk.
+to get a checkout of the head of the trunk\&.
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
@@ -316,12 +316,12 @@ to get a checkout of the head of the trunk.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
-bugs and other problems.
+bugs and other problems\&.
 Please report such at
-\fICmdr Tickets\fR [https:/core.tcl.tk/akupries/cmdr].
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
 .PP
 Please also report any ideas you may have for enhancements of
-either package(s) and/or documentation.
+either package(s) and/or documentation\&.
 .SH KEYWORDS
 arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
 .SH COPYRIGHT

@@ -1,0 +1,19 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_help_sql [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::help::sql]
+[titledesc {Formatting help as series of SQL commands}]
+[description]
+[include parts/welcome.inc]
+
+This package provides a single command implementing the help format
+[const sql]. This format generates help as a series of SQL commands
+filling a simple database with the command hierarchy.
+
+[para] To activate the format simply [example {
+    package require cmdr::help::sql
+}] it. Nothing more is needed.
+
+[include parts/feedback.inc]
+[manpage_end]
