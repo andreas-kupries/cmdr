@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file '/net/nas/data/andreask/Dev/Cmdr/dev/embedded/man/files/cmdr_introduction.n' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_introduction\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -245,9 +245,9 @@ Database Class:	\\fB\\$3\\fR
 cmdr_introduction \- Cmdr - Introduction to the project
 .SH DESCRIPTION
 .PP
-Welcome to the Cmdr project, written by Andreas Kupries.
+Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
-For availability please read \fICmdr - How To Get The Sources\fR.
+For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 .SH "SYSTEM ARCHITECTURE"
 .SH "RELATED DOCUMENTS"
@@ -266,12 +266,12 @@ For availability please read \fICmdr - How To Get The Sources\fR.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
-bugs and other problems.
+bugs and other problems\&.
 Please report such at
-\fICmdr Tickets\fR [https:/core.tcl.tk/akupries/cmdr].
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
 .PP
 Please also report any ideas you may have for enhancements of
-either package(s) and/or documentation.
+either package(s) and/or documentation\&.
 .SH KEYWORDS
 arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
 .SH COPYRIGHT

@@ -1,0 +1,32 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_util [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc {General Utilities - Internal}]
+[description]
+[include parts/welcome.inc]
+
+This internal package provides a single utility command.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::util] [method padr] [arg list]]
+
+When invoked this command pads all elements of the specified
+[arg list] at their end with space (ASCII 32 decimal) characters to
+make them all the same length, the length of the longest element in
+the list.
+
+[para] The modified list is returned as the result of the command.
+
+[list_begin arguments]
+[arg_def list list]
+A list of strings to normalize in length by appending space characters
+as needed.
+[list_end]
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]

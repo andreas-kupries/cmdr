@@ -1,0 +1,67 @@
+# -*- tcl -*- tcl.tk//DSL diagram//EN//1.0
+## ====================================================================
+## DSL for dependency diagram. Default parameters.
+
+#source [file join [file dirname [file normalize [info script]]] dsl_dependencies.inc]
+
+## ====================================================================
+## Dependencies, bottom-up, one procedure per class.
+
+proc entity {args} { box color blue {*}$args }
+
+proc officer   {} { entity officer   }
+proc private   {} { entity private   }
+proc config    {} { entity config    }
+proc parameter {} { entity parameter }
+proc actor     {} { entity actor }
+
+proc link {a b c} {
+    circle radius [1 mm] fillcolor black
+    arrow ->
+    group { text text $a with sw at [last arrow start] }
+    group { text text $b with se at [last arrow end]   }
+    group { text text $c with n at [last arrow center]   }
+    circle radius [1 mm] fillcolor white
+}
+
+proc vlink {a b c} {
+    circle radius [1 mm] fillcolor black
+    arrow ->
+    group { text text $a with se at [last arrow start] }
+    group { text text $b with ne at [last arrow end]   }
+    group { text text $c with w at [last arrow center]   }
+    circle radius [1 mm] fillcolor white
+}
+
+officer
+group {
+    south
+    circle radius [1 mm] fillcolor black at [0.75 between [last box sw] [last box se]]
+    arrow -> then south then west [1 cm] then north
+    group { text text 1   with nw at [last arrow start] }
+    group { text text 0:n with ne at [last arrow end]   }
+    group { text text has with n at [last arrow center]   }
+    circle radius [1 mm] fillcolor white
+}
+
+link 1 0:n has
+private
+group {
+    north
+    vlink 1 1 is-a
+    actor
+}
+group {
+    ne
+    circle radius [1 mm] fillcolor black with sw at [3rd last box ne]
+    circle radius [1 mm] fillcolor white with ne at [last box sw]
+    arrow -> from [2nd last circle ne] to [last circle sw]
+    group { text text 1    with se at [last arrow start] }
+    group { text text 1    with se at [last arrow end]   }
+    group { text text is-a with nw at [last arrow center]   }
+}
+
+link 1 1 has
+config
+link 1 0:n has
+parameter

@@ -1,0 +1,43 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_help [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::help]
+[titledesc {Utilities for help text formatting and setup - Internal}]
+[description]
+[include parts/welcome.inc]
+
+This internal package implements the four standard help formats
+[const full], [const short], [const list], and [const by-category].
+
+[para] It provides a single utility command used by the other parts of
+the framework to add a [syscmd help] command to any
+[package cmdr::actor] requiring such.
+
+
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::help] [method auto] [arg actor]]
+
+When invoked this command extends the [arg actor] with a [const help]
+command. The result of the command is the empty string.
+
+[para] The inserted command will accept all known format names as
+options, enabling the user to choose the form of the help. By default
+the format [const by-category] will be used, except if a command name
+was given to [syscmd help], then the default will be [const full].
+
+[para] An additional option accepted by [syscmd help] is
+[const --width], giving the user control over the length of lines
+in the help. By default help will be formatted to the width of the
+terminal.
+
+[list_begin arguments]
+[arg_def [package cmdr::actor] actor]
+The [package cmdr::actor] instance to be extended with [syscmd help].
+[list_end]
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]

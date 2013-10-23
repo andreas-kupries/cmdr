@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file '/net/nas/data/andreask/Dev/Cmdr/dev/embedded/man/files/cmdr_howto_development.n' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_howto_development\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -245,15 +245,15 @@ Database Class:	\\fB\\$3\\fR
 cmdr_development \- Cmdr - The Developer's Guide
 .SH DESCRIPTION
 .PP
-Welcome to the Cmdr project, written by Andreas Kupries.
+Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
-For availability please read \fICmdr - How To Get The Sources\fR.
+For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 .PP
 The audience of this document are anyone wishing to modify
-Cmdr in any way, shape, or form. This can be a maintainer
+Cmdr in any way, shape, or form\&. This can be a maintainer
 fixing bugs, a developer adding functionality, or patching it to
-accommodate local cicumstances, etc.
+accommodate local cicumstances, etc\&.
 .PP
 Please read
 .IP [1]
@@ -261,30 +261,30 @@ Please read
 .IP [2]
 \fICmdr - The Installer's Guide\fR
 .PP
-first, if that was not done already. Here we assume that the sources
+first, if that was not done already\&. Here we assume that the sources
 are already available in a directory of your choice, that it is known
 how to build and install the project, and that all the necessary
-requisites are available.
+requisites are available\&.
 .SH "DEVELOPMENT TOOLS"
 Cmdr (currently) does not require tools beyond those needed for
-build and installation.
+build and installation\&.
 .SH "DEMONSTRATION/EXAMPLE APPLICATIONS"
-Cmdr (currently) does not have demonstrations, nor examples.
+Cmdr (currently) does not have demonstrations, nor examples\&.
 .SH "DIRECTORY STRUCTURE"
-Explain the physical layout (directory structure).
+Explain the physical layout (directory structure)\&.
 .SH "ARCHITECTURE & CONCEPTS"
 .IP [1]
-Explain the internal architecture.
+Explain the internal architecture\&.
 .IP [2]
-Explain file dependencies, if any.
+Explain file dependencies, if any\&.
 .IP [3]
-Explain package dependencies, if any.
+Explain package dependencies, if any\&.
 .IP [4]
-Explain the internal data structures, if any.
+Explain the internal data structures, if any\&.
 .IP [5]
-Explain entity relationships (UML ERD), if any.
+Explain entity relationships (UML ERD), if any\&.
 .IP [6]
-Explain important operation sequences (UML SD), if any.
+Explain important operation sequences (UML SD), if any\&.
 .PP
 .SH "RELATED DOCUMENTS"
 .IP [1]
@@ -302,12 +302,12 @@ Explain important operation sequences (UML SD), if any.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
-bugs and other problems.
+bugs and other problems\&.
 Please report such at
-\fICmdr Tickets\fR [https:/core.tcl.tk/akupries/cmdr].
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
 .PP
 Please also report any ideas you may have for enhancements of
-either package(s) and/or documentation.
+either package(s) and/or documentation\&.
 .SH KEYWORDS
 arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
 .SH COPYRIGHT

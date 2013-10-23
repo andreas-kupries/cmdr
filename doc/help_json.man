@@ -1,0 +1,20 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_help_json [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::help::json]
+[titledesc {Formatting help as JSON object}]
+[description]
+[include parts/welcome.inc]
+
+This package provides a single command implementing the help format
+[const json]. This format generates help in the form of a nested JSON
+object containing all details of the command hierarchy, including
+internals.
+
+[para] To activate the format simply [example {
+    package require cmdr::help::json
+}] it. Nothing more is needed.
+
+[include parts/feedback.inc]
+[manpage_end]
