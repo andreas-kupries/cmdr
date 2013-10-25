@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_validate [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::validate]
-[titledesc {Standard validation types for parameters}]
+[titledesc [vset TITLE_VALIDATE]]
 [description]
 [include parts/welcome.inc]
 

@@ -1,0 +1,229 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_vtypes [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::validate]
+[titledesc [vset TITLE_DEV_VT]]
+[description]
+[include parts/welcome.inc]
+
+This document describes the API expected of validation types to make
+them usable within the [vset PTITLE] framework, and how to write a
+custom validation type.
+
+[para] Readers interested in the standard validation types of the
+framework should read [term [vset TITLE_VALIDATE]].
+
+[section Background]
+
+Validation types are [vset PTITLE]'s answer to the necessity of moving
+between the string and internal representations of
+[package cmdr::parameter] instances.
+
+Given a string representation they either return the associated
+internal representation or raise an error, signaling that the input
+was illegal. This part of their work, the verification of the legality
+of the input string gave them their name.
+
+[para] Because of the same necessity all parameters must have a
+validation type assigned to them, and the framework will choose which,
+if the user did not. This choice is made per the six rules below and
+always returns one of the builtins described in [term [vset TITLE_VALIDATE]].
+
+[list_begin enumerated]
+[enum] Use [const identity] if a  [cmd generate] callback is specified.
+[enum] Use [const boolean]  if no [cmd default] is specified and the parameter is an option.
+[enum] Use [const identity] if no [cmd default] is specified and the parameter is an input.
+[enum] Use [const boolean]  if the specified [cmd default] value is a Tcl boolean.
+[enum] Use [const integer]  if the specified [cmd default] value is a Tcl integer.
+[enum] Use [const identity] as fallback of last resort.
+[list_end]
+
+[para] The general concept of validation types was taken from package
+[package snit], and modified to suit [vset PTITLE]. Where snit's types
+expect only a single method to validate the input we expect all types
+to support an ensemble of [emph four] methods. One for the basic
+validation and transformation of the input, another for the release of
+any internal representation so generated, plus two more for delivery
+of a default representation and support for command line completion.
+The details (method names, signatures, etc.) can be found in section
+[sectref API] below.
+
+[para] As an example the implementation of the standard boolean
+validation type is shown in section [sectref Example].
+
+[para] It should be noted that while snit's validation types in
+principle allow for the transformation of input into a disparate
+internal representation, they never went so far as to allow complex
+representations which might require the release of resources after
+use.
+
+[para] The [cmd validate] and [cmd release] methods are primarily used
+during either completion or execution phases, depending on the chosen
+deferal state. They may also be used during parsing, for optional
+inputs under the [cmd test]-regime].
+
+[para] The [cmd complete] method will be used whereever the system
+activates an interactive command line shell where arguments may be
+assigned to parameters.
+
+[para] The [cmd default] method on the other hand can expect to be
+invoked during dispatch, as part of the system's declaration
+processing, if not preempted by [cmd default] and [cmd generate]
+declarations for the parameter. Note here that the [cmd default]
+method has the same signature as a [cmd generate] callback and can be
+used as such. This is actually needed and useful when the default
+internal representation for a validation type cannot be expressed as a
+fixed value and its creation while parsing the specification itself is
+too early. We can still use the validation type for its generation, by
+hooking it explicitly into [cmd generate] to change the timing of its
+invokation.
+
+[section API]
+
+In the descriptions below the [cmd cmd] is a placeholder for the
+actual command prefix, most often a main command, of the validation
+type.
+
+[list_begin definitions]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd cmd] [method complete] [arg p] [arg x]]
+
+This method is invoked during command completion done by the framework.
+
+[para] It has to return the list of legal string representations for
+the type and parameter instance [arg p] which have the incomplete word
+[arg x] as their prefix.
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+
+The [package cmdr::parameter] instance governing the completion
+process.  While the standard validation types do not make use of it a
+custom type may have need for access to the context of the completion.
+
+[arg_def string x]
+The string value to complete.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd cmd] [method default] [arg p]]
+
+This method is invoked when the framework has to determine the
+internal representation of a parameter which has no user-specified
+string representation.
+
+[para] It has to return the default internal representation for
+the type and parameter instance [arg p].
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+
+The [package cmdr::parameter] instance whose default internal
+representation is to be computed. While the standard validation types
+do not make use of it a custom type may have need for access to the
+context.
+
+[arg_def string x]
+The string value to complete.
+[list_end]
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd cmd] [method release] [arg p] [arg x]]
+
+This method is invoked when the framework has to get rid of an
+internal representation for a parameter.
+
+[para] It has to release any resources associated with the internal
+representation [arg x] of parameter instance [arg p].
+
+[para] Note that the result of this method, if there is any, is
+ignored by the framework.
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+
+The [package cmdr::parameter] instance holding the internal
+representation to release. While the standard validation types do not
+make use of it a custom type may have need for access to the context
+of the completion.
+
+[arg_def string x]
+The internal representation to release.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd cmd] [method validate] [arg p] [arg x]]
+
+This method is invoked during to validate and convert a string
+representation.
+
+[para] It has to verify that [arg x] is a legal string representation
+for the parameter instance [arg p], and return the associated internal
+representation.
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+
+The [package cmdr::parameter] instance governing the validation
+process. The standard validation types make use of it in case of a
+validation failure to generate a proper error message.
+
+See also [term {Utilities for Validation Types}] for commands helping
+with keeping validation error messages uniform.
+
+[arg_def string x]
+The string value to validate cand convert.
+[list_end]
+
+[list_end]
+
+[section Example]
+
+As an example the implementation of the standard boolean validation
+type is shown here.
+
+[para] Note that while this example uses a [cmd {namespace ensemble}]
+other methods are possible too, i.e. all the various object systems
+for Tcl would be suitable as well.
+
+[example {
+package require cmdr::validate::common
+
+namespace eval ::cmdr::validate::boolean {
+    namespace export default validate complete release
+    namespace ensemble create
+
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-enum
+}
+
+proc ::cmdr::validate::boolean::release {p x} {
+    # Simple internal representation. Nothing to release.
+    return
+}
+
+proc ::cmdr::validate::boolean::default {p}  {
+    return no
+}
+
+proc ::cmdr::validate::boolean::complete {p x} {
+    # x is string representation. Result as well.
+    return [complete-enum {
+	yes no false true on off 0 1
+    } 1 $x]
+}
+
+proc ::cmdr::validate::boolean::validate {p x} {
+    # x is string representation. Result is internal representation.
+    if {[string is boolean -strict $x]} {
+	return $x
+    }
+    fail $p BOOLEAN "a boolean" $x
+}
+}]
+
+[include parts/feedback.inc]
+[manpage_end]
