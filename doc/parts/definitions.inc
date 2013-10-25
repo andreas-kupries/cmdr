@@ -7,3 +7,4 @@
 [vset TITLE_DEV     "[vset PTITLE] - The Developer's Guide"	 ]
 [comment {- Custom documents & titles - - -- --- ----- --------}]
 [vset TITLE_DEV_VT  "[vset PTITLE] - Writing custom validation types"]
+[vset TITLE_VALIDATE {Standard validation types for parameters}]
