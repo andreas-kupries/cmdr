@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_util [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::util]
-[titledesc {General Utilities - Internal}]
+[titledesc [vset TITLE_UTIL]]
 [description]
 [include parts/welcome.inc]
 

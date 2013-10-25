@@ -1,0 +1,148 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_private [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_PRIVATE]]
+[description]
+[include parts/welcome.inc]
+
+This package implements [emph privates], the leaves of command
+hierarchies.  While each private can execute only a single option they
+have parameters, i.e. arguments and options with which to configure
+the behaviour of their action.
+
+[section {Class API}]
+
+The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+private instances.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::private] [method new] [arg super] [arg name] [arg arguments] [arg action]]
+
+Create an auto-named instance of [class cmdr::private].
+[para] [emph {Not used}].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::private] [method create] [arg obj] [arg super] [arg name] [arg arguments] [arg action]]
+
+Create a new instance of [class cmdr::private], named [arg obj].
+Used by the DSL processing parts of the framework to instantiate privates.
+
+[list_begin arguments]
+[arg_def object super]
+The instance command of the actor (officer actually) which contain the private.
+
+[arg_def string name]
+The user-visible name of the command.
+
+[arg_def script arguments]
+The specification of the private's parameters.
+Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+
+[arg_def cmd-prefix action]
+The command prefix to invoke when this private is selected for
+execution.  It takes a single argument, the instance command of the
+hidden [package cmdr::config] container holding the private's
+parameters. The result of the action, if there is any, is ignored by
+the framework.
+
+[list_end][comment arguments]
+[list_end][comment definitions]
+
+[section {Instance API}]
+
+The instance API is not public. It is used internally by the framework
+when during the processing of a command line at runtime
+
+parsing a command hierarchy specification to create the necessary
+private instances.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it, although they have indirect access through
+parameters and their container.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd private] [method complete-words] [arg parse]]
+
+This command is given the completion state [arg parse] of a partial
+command line and returns a list of strings which are the vaid
+completions at this point.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+
+[para] -- TODO -- Describe the state fields and their meaning.
+
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd private] [method do] [opt [arg word]...]]
+
+This method parses the [arg word]s of the command line, matching them
+to the parameters of the private, be they arguments, or options. When
+done without error it invokes the action of the private with the
+filled container of parameters.
+
+[list_begin arguments]
+[arg_def string word]
+The words of the command line to parse and match to parameters.
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd private] [method ehandler] [arg cmd]]
+
+This method specifies a command prefix to wrap around the parsing of
+the command line for the private, and the execution of its action.
+
+[list_begin arguments]
+[arg_def cmd-prefix cmd]
+A command prefix taking a single argument, a script. The command
+prefix has to execute this script in its caller's context. The script
+will parse words for the private,m and perform its action. The command
+prefix then has the responsbility to perform any custom cleanup action
+required by the application using the framework to prevent leakage of
+data between multiple commands executed one after the other (i.e. in
+an interactive shell run by the framework).
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd private] [method help] [opt [arg prefix]]]
+
+This method returns the help information for the private and its
+parameters. The [arg prefix], if specified provides the name of the
+private within the help data. It defaults to the empty string.
+
+[para] -- TODO -- describe help structure --> custom help formats
+
+[list_begin arguments]
+[arg_def string prefix]
+The name to use for the private within the generated help.
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd private] [method unknown] [arg m] [opt [arg word]...]]
+
+This method overrides the standard behaviour for unknown methods.
+Instead of throwing an error they are routed to the hidden container
+of the private's parameters, of class [package cmdr::config].
+
+[list_begin arguments]
+[arg_def string m]    The name of the unknown method.
+[arg_def string word] The argument (one or more) of the unknown method.
+[list_end][comment arguments]
+
+[list_end][comment definitions]
+
+[include parts/feedback.inc]
+[manpage_end]
