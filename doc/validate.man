@@ -1,0 +1,20 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_validate [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::validate]
+[titledesc {Standard validation types for parameters}]
+[description]
+[include parts/welcome.inc]
+
+This internal package implements the twelve standard validation types
+shown below. The [cmd validate] command of the parameter declaration
+DSL can use these by name. Non-standard types have to provide a proper
+command prefix instead.
+
+[para] Readers interested in writing their own custom validation types
+should read [term [vset TITLE_DEV_VT]].
+
+[include parts/vtypes_std.inc]
+[include parts/feedback.inc]
+[manpage_end]
