@@ -177,6 +177,7 @@ oo::class create ::cmdr::config {
 	    if {($mode eq "interact") &&
 		![$para primary $o]} continue
 	    dict set options $o [$para description $o]
+	    dict set optpara $o [$para name]
 	}
 
 	set arguments $myargs
@@ -200,6 +201,7 @@ oo::class create ::cmdr::config {
 	return [dict create \
 		    desc       [context description] \
 		    options    $options \
+		    opt2para   $optpara \
 		    arguments  $arguments \
 		    states     $states \
 		    parameters $parameters \
