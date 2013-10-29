@@ -1,6 +1,6 @@
 
 <html><head>
-<title>cmdr_util - &lt;&lt;unknown&gt;&gt;</title>
+<title>cmdr_validate_common - &lt;&lt;unknown&gt;&gt;</title>
 <style type="text/css"><!--
     HTML {
 	background: 	#FFFFFF;
@@ -92,11 +92,11 @@
     }
 --></style>
 </head>
-<! -- Generated from file 'util.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'cmdr_vcommon.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
    -->
-<! -- CVS: $Id$ cmdr_util.n
+<! -- CVS: $Id$ cmdr_validate_common.n
    -->
 <body><div class="doctools">
 <hr> [
@@ -105,9 +105,9 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr_util(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
+<h1 class="title">cmdr_validate_common(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>cmdr_util - General Utilities - Internal</p>
+<p>cmdr_validate_common - Utilities for Validation Types</p>
 </div>
 <div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
 <ul class="toc">
@@ -123,30 +123,71 @@
 <div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
 <div class="synopsis">
 <ul class="requirements">
-<li>package require <b class="pkgname">cmdr::util</b></li>
+<li>package require <b class="pkgname">cmdr::validate::common</b></li>
 </ul>
 <ul class="syntax">
-<li><a href="#1"><b class="cmd">::cmdr::util</b> <b class="method">padr</b> <i class="arg">list</i></a></li>
+<li><a href="#1"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></li>
+<li><a href="#3"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></li>
 </ul>
 </div>
 </div>
 <div id="section1" class="section"><h2><a name="section1">Description</a></h2>
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
-<p>This internal package provides a single utility command.</p>
+<p>This package publicly exports three commands for use in the
+implementation of validation types.
+The standard validation types defined in package
+<b class="package">cmdr::validate</b> make use of these commands.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">API</a></h2>
 <dl class="definitions">
-<dt><a name="1"><b class="cmd">::cmdr::util</b> <b class="method">padr</b> <i class="arg">list</i></a></dt>
-<dd><p>When invoked this command pads all elements of the specified
-<i class="arg">list</i> at their end with space (ASCII 32 decimal) characters to
-make them all the same length, the length of the longest element in
-the list.</p>
-<p>The modified list is returned as the result of the command.</p>
+<dt><a name="1"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i></a></dt>
+<dd><p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
 <dl class="arguments">
-<dt>list <i class="arg">list</i></dt>
-<dd><p>A list of strings to normalize in length by appending space characters
-as needed.</p></dd>
+<dt><b class="package">cmdr::parameter</b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package">cmdr::parameter</b> instance whose validation failed. The
+error message will contain this parameter's type and label (flag in
+case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string providing the human-readable name of the validation type
+triggering the error.</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value failing the validation.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></dt>
+<dd><p>When invoked this command returns a list of strings containing just
+the elements of <i class="arg">choices</i> the value of <i class="arg">buffer</i> is a prefix
+of. When <i class="arg">nocase</i> is set the command will ignore letter case and
+treat the string in <i class="arg">buffer</i> as all-lowercase.</p>
+<dl class="arguments">
+<dt>list <i class="arg">choices</i></dt>
+<dd><p>The list of values which can complete the data in <i class="arg">buffer</i>.</p></dd>
+<dt>boolean <i class="arg">nocase</i></dt>
+<dd><p>A boolean flag specifying if the completion is done ignoring
+letter-case (<b class="const">true</b>), or not (<b class="const">false</b>)).</p></dd>
+<dt>string <i class="arg">buffer</i></dt>
+<dd><p>The string to complete via the list of <i class="arg">choices</i>.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></dt>
+<dd><p>When invoked this command returns a list of strings, the paths in the
+filesystem the value of <i class="arg">buffer</i> is a prefix of, and not rejected
+by the <i class="arg">filter</i> command (prefix).</p>
+<p>Note that when the value of <i class="arg">buffer</i> is a relative path the
+current working directory is used to locate matches.</p>
+<dl class="arguments">
+<dt>cmd-prefix <i class="arg">filter</i></dt>
+<dd><p>A command prefix taking a single argument, the candidate path, and
+returning a boolean value indicating (non-)acceptance of the path. A
+result of <b class="const">true</b> accepts the candidate, <b class="const">false</b> rejects
+it.</p></dd>
+<dt>string <i class="arg">buffer</i></dt>
+<dd><p>The string, a partial path, to complete.</p></dd>
 </dl></dd>
 </dl>
 </div>

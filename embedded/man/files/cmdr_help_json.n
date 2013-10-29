@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'help\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_help_json\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,14 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_help" n 0 doc "<<unknown>>"
+.TH "cmdr_help_json" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_help \- Utilities for help text formatting and setup - Internal
+cmdr_help_json \- Formatting help as JSON object
 .SH SYNOPSIS
-package require \fBcmdr::help \fR
-.sp
-\fB::cmdr::help\fR \fBauto\fR \fIactor\fR
+package require \fBcmdr::help::json \fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -255,33 +253,19 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This internal package implements the four standard help formats
-\fBfull\fR, \fBshort\fR, \fBlist\fR, and \fBby-category\fR\&.
+This package provides a single command implementing the help format
+\fBjson\fR\&. This format generates help in the form of a nested JSON
+object containing all details of the command hierarchy, including
+internals\&.
 .PP
-It provides a single utility command used by the other parts of
-the framework to add a \fBhelp\fR command to any
-\fBcmdr::actor\fR requiring such\&.
-.SH API
-.TP
-\fB::cmdr::help\fR \fBauto\fR \fIactor\fR
-When invoked this command extends the \fIactor\fR with a \fBhelp\fR
-command\&. The result of the command is the empty string\&.
-.sp
-The inserted command will accept all known format names as
-options, enabling the user to choose the form of the help\&. By default
-the format \fBby-category\fR will be used, except if a command name
-was given to \fBhelp\fR, then the default will be \fBfull\fR\&.
-.sp
-An additional option accepted by \fBhelp\fR is
-\fB--width\fR, giving the user control over the length of lines
-in the help\&. By default help will be formatted to the width of the
-terminal\&.
-.RS
-.TP
-\fBcmdr::actor\fR \fIactor\fR
-The \fBcmdr::actor\fR instance to be extended with \fBhelp\fR\&.
-.RE
-.PP
+To activate the format simply
+.CS
+
+
+    package require cmdr::help::json
+
+.CE
+it\&. Nothing more is needed\&.
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems\&.
