@@ -67,7 +67,7 @@ proc ::cmdr::help::format::JSON {command} {
     # Data structure: see private.tcl, method 'help'.
 
     dict with command {}
-    # -> action, desc, options, arguments, parameters, states
+    # -> action, desc, options, arguments, parameters, states, sections
 
     lappend dict description [JSON::astring    $desc]
     lappend dict action      [JSON::alist      $action]
@@ -75,6 +75,7 @@ proc ::cmdr::help::format::JSON {command} {
     lappend dict options     [JSON::adict      $options]
     lappend dict states      [JSON::alist      $states]
     lappend dict parameters  [JSON::parameters $parameters]
+    lappend dict sections    [JSON::alist      $sections]
     
     return [json::write object {*}$dict]
 }
