@@ -73,6 +73,7 @@ proc ::cmdr::help::format::JSON {command} {
     lappend dict action      [JSON::alist      $action]
     lappend dict arguments   [JSON::alist      $arguments]
     lappend dict options     [JSON::adict      $options]
+    lappend dict opt2para    [JSON::adict      $opt2para]
     lappend dict states      [JSON::alist      $states]
     lappend dict parameters  [JSON::parameters $parameters]
     lappend dict sections    [JSON::alist      $sections]
