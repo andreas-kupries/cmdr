@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'util\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_validate\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,14 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_util" n 0 doc "<<unknown>>"
+.TH "cmdr_validate" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_util \- General Utilities - Internal
+cmdr_validate \- Cmdr - Standard validation types for parameters
 .SH SYNOPSIS
-package require \fBcmdr::util \fR
-.sp
-\fB::cmdr::util\fR \fBpadr\fR \fIlist\fR
+package require \fBcmdr::validate \fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -255,22 +253,44 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This internal package provides a single utility command\&.
-.SH API
+This internal package implements the twelve standard validation types
+shown below\&. The \fBvalidate\fR command of the parameter declaration
+DSL can use these by name\&. Non-standard types have to provide a proper
+command prefix instead\&.
+.PP
+Readers interested in writing their own custom validation types
+should read \fICmdr - Writing custom validation types\fR\&.
 .TP
-\fB::cmdr::util\fR \fBpadr\fR \fIlist\fR
-When invoked this command pads all elements of the specified
-\fIlist\fR at their end with space (ASCII 32 decimal) characters to
-make them all the same length, the length of the longest element in
-the list\&.
-.sp
-The modified list is returned as the result of the command\&.
-.RS
+boolean
+Completable\&. Accepts a Tcl boolean\&.
 .TP
-list \fIlist\fR
-A list of strings to normalize in length by appending space characters
-as needed\&.
-.RE
+identity
+.TP
+pass
+.TP
+str
+Infinite\&.    Accepts all strings\&.
+.TP
+integer
+Infinite\&.    Accepts a Tcl integer\&.
+.TP
+rdirectory
+Completable\&. Accepts a readable directory (path)\&.
+.TP
+rfile
+Completable\&. Accepts a readable file (path)\&.
+.TP
+rpath
+Completable\&. Accepts a readable path\&.
+.TP
+rwdirectory
+Completable\&. Accepts a read/writable directory (path)\&.
+.TP
+rwfile
+Completable\&. Accepts a read/writable file (path)\&.
+.TP
+rwpath
+Completable\&. Accepts a read/writable path\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
