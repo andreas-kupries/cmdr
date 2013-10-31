@@ -348,7 +348,7 @@ proc ::cmdr::help::format::ShowCategory {width lv path indent} {
     # Get the commands in the category, preliminary formatting
     # (labels, descriptions).
 
-    foreach def [lsort -dict -unique $cmds($path)] {
+    foreach def [lsort -dict -unique [dict get $cmds $path]] {
 	lassign $def syntax desc
 	lappend names $syntax
 	lappend descs $desc
@@ -373,10 +373,10 @@ proc ::cmdr::help::format::ShowCategory {width lv path indent} {
     }
 
     lappend lines {}
-    if {![info exists subc($path)]} return
+    if {![dict exists $subc $path]} return
 
     # Print the sub-categories, if any.
-    foreach c [lsort -dict -unique $subc($path)] {
+    foreach c [lsort -dict -unique [dict get $subc $path]] {
 	ShowCategory $width lines [linsert $path end $c] $indent
     }
     return
