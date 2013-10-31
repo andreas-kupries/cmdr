@@ -51,16 +51,56 @@ namespace eval ::cmdr::help::format {
 proc ::cmdr::help::format::json {root width help} {
     debug.cmdr/help/json {}
     # help = dict (name -> command)
+
+    # Step 1. Command mapping.
     set dict {}
     dict for {cmd desc} $help {
 	lappend dict $cmd [JSON $desc]
     }
-    return [json::write object {*}$dict]
+    set commands [json::write object {*}$dict]
+
+
+    # Step 2. Section Tree. This is very similar to
+    # cmdr::help::format::by-category, and re-uses its frontend helper
+    # commands.
+
+    lassign [SectionTree $help 0] subc cmds
+    foreach c [SectionOrder $root $subc] {
+	lappend sections [JSON::acategory [::list $c] $cmds $subc]
+    }
+
+    return [json::write object \
+		sections [json::write array {*}$sections] \
+		commands $commands]
 }
 
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::cmdr::help::format::JSON {}
+
+proc ::cmdr::help::format::JSON::acategory {path cmds subc} {
+    set name [lindex $path end]
+
+    # With struct::list map we could then also re-use alist.
+    set commands {}
+    foreach def [lsort -dict -unique [dict get $cmds $path]] {
+	lassign $def cname _
+	lappend commands [json::write string $cname]
+    }
+
+    set sections {}
+    if {[dict exists $subc $path]} {
+	# Add the sub-categories, if any.
+	foreach c [lsort -dict -unique [dict get $subc $path]] {
+	    lappend sections [acategory [linsert $path end $c] $cmds $subc]
+	}
+    }
+
+    return [json::write object \
+		name     [json::write string $name] \
+		commands [json::write array {*}$commands] \
+		sections [json::write array {*}$sections]]
+}
 
 proc ::cmdr::help::format::JSON {command} {
     # Data structure: see config.tcl,  method 'help'.

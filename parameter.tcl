@@ -1143,4 +1143,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 0.8
+package provide cmdr::parameter 0.9
