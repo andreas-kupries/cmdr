@@ -1,0 +1,495 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_private [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_PRIVATE]]
+[description]
+[include parts/welcome.inc]
+
+This package implements [emph parameters], collections of which (see
+[package cmdr::config]) serve as the configuration of privates (see
+[package cmdr::private]).
+
+[section {Class API}]
+
+The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+parameter instances.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::parameter] [method new] [arg config] [arg order] [arg cmdline] [arg required] [arg defered] [arg name] [arg description] [arg spec]]
+
+Create an auto-named instance of [class cmdr::parameter].
+[para] [emph {Not used}].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::parameter] [method create] [arg obj] [arg config] [arg order] [arg cmdline] [arg required] [arg defered] [arg name] [arg description] [arg spec]]
+
+Create a new instance of [class cmdr::parameter], named [arg obj].
+Used by the DSL processing parts of the framework to instantiate parameters.
+
+[list_begin arguments]
+
+[arg_def string obj]
+The (command) name of the new parameter instance.
+
+[arg_def cmdr::config config]
+The instance command of the [package cmdr::config] instance
+holding the parameter.
+
+[arg_def boolean order]
+Flag. Parameter is specified by order ([const true]: argument),
+or name ([const false]: option).
+
+[arg_def boolean cmdline]
+Flag. Parameter is visible on the command line ([const true]:
+option, or argument), or not ([const false]: state).
+
+[arg_def boolean required]
+Flag. Parameter is must be specified by the user at runtime
+([const true]), or not ([const false]).
+
+[arg_def boolean defered]
+Flag. The internal representation is computed on-demand
+([const true]), or in the completion phase ([const false]).
+
+[arg_def string name]
+Internal name of the parameter. Also the name used in the
+help, if not overridden by a [cmd label] declaration
+(in [arg spec]).
+
+[arg_def string description]
+Human-readable help text for the parameter.
+
+[arg_def script spec]
+
+Tcl-script specifying the parameter in detail. Please read
+[term [vset TITLE_DSL]], section --TODO-- for the details.
+
+[list_end][comment arguments]
+[list_end][comment definitions]
+
+[section {Instance API}]
+
+Most of the instance API is not public.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+---TODO-- mark the methods which are public -- and/or write a separate document?
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method accept] [arg x]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method cmdline] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method code]]
+
+When invoked this method ...
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method complete-words] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method config] [arg word...]]
+
+When invoked this method either returns the [package cmdr::config] instance
+containing the parameter, or the result of applying the words to that config
+instance. It is through this method that any script with access to a single
+parameter instance of a private will have access to all its parameters.
+
+[list_begin arguments]
+[arg_def string word...]
+The method and its arguments to apply to the config instance holding
+the parameter. If none are specified the method [method self] is
+implied, causing the return of the config instance itself.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method default] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method defered] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method description] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method documented] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method dontinteract] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method flag] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method forget] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method generator] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method hasdefault] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method help] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method interactive] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method interact] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method isbool] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method is] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method label] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method list] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method locker] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method lock] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method name] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method options] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method ordered] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method presence] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method primary] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method process] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method prompt] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method required] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method reset] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method self]]
+
+When invoked this method returns the parameter instance itself.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method set?] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method setq] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method set] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method string] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method threshold:] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method threshold] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method type] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method undefined!] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method validator] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method value] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method when-complete] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method when-set] [arg ...]]
+
+When invoked this method ...
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[list_end][comment {-- definitions --}]
+[include parts/feedback.inc]
+[manpage_end]
