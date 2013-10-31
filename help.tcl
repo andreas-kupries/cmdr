@@ -322,73 +322,10 @@ proc ::cmdr::help::format::by-category {root width help} {
     # I. Extract the category information from the help structure and
     #    generate the tree of categories with their commands.
 
-    array set subc {} ;# category path -> list (child category path)
-    array set cmds {} ;# category path -> list (cmd)
-    #                    cmd = tuple (label description)
-
-    dict for {name def} $help {
-	dict with def {} ; # -> desc, arguments, parameters, sections
-
-	if {![llength $sections]} {
-	    lappend sections Miscellaneous
-	}
-
-	append name " " [Arguments $arguments $parameters]
-	set    desc [lindex [split $desc .] 0]
-	set    cmd  [::list $name $desc]
-
-	foreach category $sections {
-	    lappend cmds($category) $cmd
-	    set parent [lreverse [lassign [lreverse $category] leaf]]
-	    lappend subc($parent) $leaf
-	}
-    }
-
-    #parray cmds
-    #parray subs
+    lassign [SectionTree $help] subc cmds
 
     # II. Order the main categories. Allow for user influences.
-
-    # IIa. Natural order first.
-    set categories [lsort -dict -unique $subc()]
-
-    if {[$root exists *category-order*]} {
-	# Record natural order
-	set n 0
-	foreach c $categories {
-	    dict set map $c $n
-	    incr n -10
-	}
-	# Special treatment of generated category, move to end.
-	if {"Miscellaneous" in $categories} {
-	    dict set map Miscellaneous -10000
-	}
-	# Overwrite natural with custom ordering.
-	dict for {c n}  [$root get *category-order*] {
-	    if {$c ni $categories} continue
-	    dict set map $c $n
-	}
-	# Rewrite into tuples.
-	foreach {c n} $map {
-	    lappend tmp [::list $n $c]
-	}
-
-	#puts [join [lsort -decreasing -integer -index 0 $tmp] \n]
-
-	# Sort tuples into chosen order, and rewrite back to list of
-	# plain categories.
-	set categories {}
-	foreach item [lsort -decreasing -integer -index 0 $tmp] {
-	    lappend categories [lindex $item 1]
-	}
-    } else {
-	# Without bespoke ordering only the generated category gets
-	# treated specially.
-	set pos [lsearch -exact $categories Miscellaneous]
-	if {$pos >= 0} {
-	    set categories [linsert [lreplace $categories $pos $pos] end Miscellaneous]
-	}
-    }
+    set categories [SectionOrder $root $subc]
 
     # III. Take the category tree and do the final formatting.
     set lines {}
@@ -495,6 +432,86 @@ proc ::cmdr::help::format::HasOptions {options} {
     }
 }
 
+proc ::cmdr::help::format::SectionTree {help {fmtname 1}} {
+
+    array set subc {} ;# category path -> list (child category path)
+    array set cmds {} ;# category path -> list (cmd)
+    #                    cmd = tuple (label description)
+
+    dict for {name def} $help {
+	dict with def {} ; # -> desc, arguments, parameters, sections
+
+	if {![llength $sections]} {
+	    lappend sections Miscellaneous
+	}
+
+	if {$fmtname} {
+	    append name " " [Arguments $arguments $parameters]
+	}
+	set    desc [lindex [split $desc .] 0]
+	set    cmd  [::list $name $desc]
+
+	foreach category $sections {
+	    lappend cmds($category) $cmd
+	    set parent [lreverse [lassign [lreverse $category] leaf]]
+	    lappend subc($parent) $leaf
+	}
+    }
+
+    #parray subc
+    #parray cmds
+
+    ::list [array get subc] [array get cmds]
+}
+
+proc ::cmdr::help::format::SectionOrder {root subc} {
+
+    # IIa. Natural order first.
+    set categories [lsort -dict -unique [dict get $subc {}]]
+
+    # IIb. Look for and apply user overrides.
+    if {[$root exists *category-order*]} {
+	# Record natural order
+	set n 0
+	foreach c $categories {
+	    dict set map $c $n
+	    incr n -10
+	}
+	# Special treatment of generated category, move to end.
+	if {"Miscellaneous" in $categories} {
+	    dict set map Miscellaneous -10000
+	}
+	# Overwrite natural with custom ordering.
+	dict for {c n}  [$root get *category-order*] {
+	    if {$c ni $categories} continue
+	    dict set map $c $n
+	}
+	# Rewrite into tuples.
+	foreach {c n} $map {
+	    lappend tmp [::list $n $c]
+	}
+
+	#puts [join [lsort -decreasing -integer -index 0 $tmp] \n]
+
+	# Sort tuples into chosen order, and rewrite back to list of
+	# plain categories.
+	set categories {}
+	foreach item [lsort -decreasing -integer -index 0 $tmp] {
+	    lappend categories [lindex $item 1]
+	}
+    } else {
+	# Without bespoke ordering only the generated category gets
+	# treated specially.
+	set pos [lsearch -exact $categories Miscellaneous]
+	if {$pos >= 0} {
+	    set categories [linsert [lreplace $categories $pos $pos] end Miscellaneous]
+	}
+    }
+
+    return $categories
+}
+
+
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 0.8
+package provide cmdr::help 0.9
