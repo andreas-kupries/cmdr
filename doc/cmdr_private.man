@@ -12,6 +12,7 @@ hierarchies.  While each private can execute only a single option they
 have parameters, i.e. arguments and options with which to configure
 the behaviour of their action.
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Class API}]
 
 The class API is not public. It is used internally by the framework
@@ -56,6 +57,7 @@ the framework.
 [list_end][comment arguments]
 [list_end][comment definitions]
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Instance API}]
 
 The instance API is not public. It is used internally by the framework
@@ -71,10 +73,10 @@ parameters and their container.
 
 [list_begin definitions]
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd private] [method complete-words] [arg parse]]
+[call [cmd <private>] [method complete-words] [arg parse]]
 
-This command is given the completion state [arg parse] of a partial
-command line and returns a list of strings which are the vaid
+This method is given the completion state [arg parse] of a partial
+command line and returns a list of strings which are the valid
 completions at this point.
 
 [list_begin arguments]
@@ -87,7 +89,7 @@ line.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd private] [method do] [opt [arg word]...]]
+[call [cmd <private>] [method do] [opt [arg word]...]]
 
 This method parses the [arg word]s of the command line, matching them
 to the parameters of the private, be they arguments, or options. When
@@ -100,7 +102,7 @@ The words of the command line to parse and match to parameters.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd private] [method ehandler] [arg cmd]]
+[call [cmd <private>] [method ehandler] [arg cmd]]
 
 This method specifies a command prefix to wrap around the parsing of
 the command line for the private, and the execution of its action.
@@ -117,13 +119,14 @@ an interactive shell run by the framework).
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd private] [method help] [opt [arg prefix]]]
+[call [cmd <private>] [method help] [opt [arg prefix]]]
 
 This method returns the help information for the private and its
 parameters. The [arg prefix], if specified provides the name of the
 private within the help data. It defaults to the empty string.
 
-[para] -- TODO -- describe help structure --> custom help formats
+The result of the command is a structure of the form
+described in section [sectref {Help Information}].
 
 [list_begin arguments]
 [arg_def string prefix]
@@ -131,7 +134,7 @@ The name to use for the private within the generated help.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd private] [method unknown] [arg m] [opt [arg word]...]]
+[call [cmd <private>] [method unknown] [arg m] [opt [arg word]...]]
 
 This method overrides the standard behaviour for unknown methods.
 Instead of throwing an error they are routed to the hidden container
@@ -143,6 +146,10 @@ of the private's parameters, of class [package cmdr::config].
 [list_end][comment arguments]
 
 [list_end][comment definitions]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Help Information}]
+[include parts/help_structure.inc]
 
 [include parts/feedback.inc]
 [manpage_end]
