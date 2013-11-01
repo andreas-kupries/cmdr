@@ -11,6 +11,7 @@ This package implements [emph parameters], collections of which (see
 [package cmdr::config]) serve as the configuration of privates (see
 [package cmdr::private]).
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Class API}]
 
 The class API is not public. It is used internally by the framework
@@ -75,6 +76,7 @@ Tcl-script specifying the parameter in detail. Please read
 [list_end][comment arguments]
 [list_end][comment definitions]
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Instance API}]
 
 Most of the instance API is not public.
@@ -83,45 +85,69 @@ Most of the instance API is not public.
 modifying and extending the framework itself. A user of the framework
 has no need for it.
 
----TODO-- mark the methods which are public -- and/or write a separate document?
+--TODO-- mark the methods which are public -- and/or write a separate document?
 
 [list_begin definitions]
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method accept] [arg x]]
 
-When invoked this method ...
+This method validates the string value [arg x]
+against the validation type of the parameter and returns a
+boolean value indicating success ([const true]), or not
+([const false]).
+
+The internal representation of [arg x] is not kept but
+released immediately. The parameter itself is not changed
+either.
+
+This is used during runtime by the 'test'-based processing
+of optional arguments.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string x]
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method cmdline] [arg ...]]
+[call [cmd <parameter>] [method cmdline]]
 
-When invoked this method ...
+This accessor method returns the "cmdline" flag
+set during parameter construction.
 
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+A result of [const true] indicates that the parameter is
+visible on the command line (option, or argument), and
+otherwise ([const false]) hidden (state).
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method code]]
 
-When invoked this method ...
+This method returns a string encoding the flags
+"required" and "list". The mapping is as follows:
+
+[list_begin definitions]
+[def [const +]] required, scalar
+[def [const ?]] optional, scalar
+[def [const +*]] required, list
+[def [const ?*]] optional, list.
+[list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method complete-words] [arg ...]]
+[call [cmd <parameter>] [method complete-words] [arg parse]]
 
-When invoked this method ...
+This method is given the completion state [arg parse] of a partial
+command line and returns a list of strings which are the valid
+completions at this point, for the parameter.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+[para] --TODO-- Describe the state fields and their meaning.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method config] [arg word...]]
 
-When invoked this method either returns the [package cmdr::config] instance
+This method either returns the [package cmdr::config] instance
 containing the parameter, or the result of applying the words to that config
 instance. It is through this method that any script with access to a single
 parameter instance of a private will have access to all its parameters.
@@ -135,361 +161,433 @@ implied, causing the return of the config instance itself.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method default] [arg ...]]
+[call [cmd <parameter>] [method default]]
 
-When invoked this method ...
+This method returns the default value set by
+the parameter's specification, or the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method defered]]
+
+This accessor method returns the "defered" flag
+set during parameter construction.
+
+A result of [const true] indicates that the parameter's
+internal representation is computed on-demand, and otherwise
+([const false]) during the completion phase.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method description] [opt [arg detail]]]
+
+This method returns the parameter's help text.
+If the [arg detail] is specified and the name of an automatic
+option controlled by this parameter its implicit description
+is returned instead of the description of its primary.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string detail]
+Optional. The name of a automatic option controlled by the
+parameter.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method defered] [arg ...]]
+[call [cmd <parameter>] [method documented]]
 
-When invoked this method ...
+This accessor method returns the "documented"
+flag of the parameter.
+
+A value of [const true] indicates that the parameter
+should be included in generated help, otherwise not.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method dontinteract]]
+
+This method disables interactive entry
+of the parameter's value for one time. I.e. after
+the information was used (see method [method value])
+the flag automatically resets.
+
+The result of the method is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method flag]]
+
+This method returns the text of the primary
+flag of the parameter, including leading dashes.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method forget]]
+
+This method releases the internal representation
+of the parameter's value, if it has any.
+
+See also method [method reset] for a stronger form.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method generator]]
+
+This method returns the "generate" command prefix callback,
+if it was set, and an empty list otherwise.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method hasdefault]]
+
+This method returns a boolean flag
+indicating if the parameter's specification declared
+a default value for it ([const true]), or not ([const false]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method help]]
+
+This method returns the help information for the parameter.
+
+Note that this method does [emph not] check the "documented"
+flag of the parameter. That is the responsibility of the
+caller.
+
+The result of the command is a structure of the form
+described in section [sectref {Help Information}].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method interactive]]
+
+This method returns the "interactive" flag of the parameter.
+
+A result of [const true] indicates that the parameter's
+string representation has to be queried interactively if no
+value was specified at runtime.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method interact] [opt [arg prompt]]]
+
+This method interactively queries the string representation of
+the parameter from the user.
+
+If no [arg prompt] is specified the parameter's prompt from the
+specification is used. See also method [method prompt].
+
+The interaction takes the "list"-ness of the parameter into account.
+
+Note that the entered string(s) is/are validated and invalid
+information is rejected.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string prompt]
+Optional. The prompt to use for the interaction.
+
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method description] [arg ...]]
+[call [cmd <parameter>] [method isbool]]
 
-When invoked this method ...
+This method returns a boolean value indicating if the parameter
+uses the standard validation type "boolean" ([const true]) or
+not ([const false]).
+
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for this type, or not.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method is] [arg type]]
+
+This method returns a boolean value indicating if the
+parameter is of the specified [arg type] ([const true])
+or not ([const false]).
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string type]
+The type to check the parameter against.
+Recognized values are
+[list_begin definitions]
+[def [const argument]]
+[def [const option]]
+[def [const state]]
+[list_end]
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method documented] [arg ...]]
+[call [cmd <parameter>] [method label]]
 
-When invoked this method ...
+This method returns the human-readable name of the parameter,
+for use in help. If not specifically overridden by the
+parameter's specification this is the same as the internal
+name (See method [method name]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method list]]
+
+This accessor method returns the "list" flag of the parameter.
+
+A value of [const true] indicates that the parameter's value
+is a list, otherwise a scalar.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method locker]]
+
+This accessor method returns the string set by method
+[method lock] below, or the empty string if
+[method lock] was not used.
+
+[emph Note]: This information is reset by method
+[method reset], but not by [method forget].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method lock] [arg reason]]
+
+This method locks the parameter against modification
+by the methods [method set] and [method setq], and
+remembers the [arg reason] for it. The reason is
+expected to be the name of another parameter whose
+use disallows the use of this one.
+
+[emph Note]: Such a lock is reset by method
+[method reset], but not by [method forget].
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string reason]
+The name of the parameter locking this one against further
+modification.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method dontinteract] [arg ...]]
+[call [cmd <parameter>] [method name]]
 
-When invoked this method ...
+This method returns the internal name of the parameter.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method options]]
+
+This method returns the list of option flags recognized
+by the parameter. 
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method ordered]]
+
+This accessor method returns the "order" flag
+set during parameter construction.
+
+A result of [const true] indicates that the parameter
+is specified by order at runtime (argument), and otherwise
+([const false]) by name (option).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method presence]]
+
+This method returns a boolean value indicating if
+the option parameter is set as presence-option
+([const true]) or not ([const false]).
+
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for presence, or not.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method primary] [arg option]]
+
+This method returns a boolean value indicating if the named [arg option]
+is the primary option of this parameter ([const true]), or not ([const false]).
+
+An error will be thrown if the named option is not controlled by the parameter.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string option]
+The name of the option to check.
+
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method flag] [arg ...]]
+[call [cmd <parameter>] [method process] [arg detail] [arg queue]]
 
-When invoked this method ...
+This method extracts the value of the parameter from the command line.
+
+A [method presence] option takes nothing, whereas an [method isbool] option
+takes the first value in the [arg queue], if it is a proper boolean, and
+defaults to [const true] if not. Any other argument or option takes  the
+first value in [arg queue].
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string detail]
+The name of the parameter, or the option flag referencing it.
+
+[arg_def struct::queue queue]
+The queue instance holding the words of the command line not yet
+processed by the system.
+
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method forget] [arg ...]]
+[call [cmd <parameter>] [method prompt]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method generator] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This method returns the prompt string used by the parameter for
+interactive entry. If not overridden by the parameter's specification
+this defaults to a string derived from the internal name of the
+parameter, i.e. "Enter [var name]:".
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method hasdefault] [arg ...]]
+[call [cmd <parameter>] [method required]]
 
-When invoked this method ...
+This accessor method returns the "required" flag
+set during parameter construction.
 
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method help] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+A result of [const true] indicates that the parameter
+must be specified by the user at runtime, and otherwise
+may be left unspecified ([const false]).
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method interactive] [arg ...]]
+[call [cmd <parameter>] [method reset] [opt [arg cleanup]]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method interact] [arg ...]]
-
-When invoked this method ...
+This method sets the parameter into the initial state where
+it has neither string nor internal representation, nor is
+it locked. This is a stronger form of [method forget].
 
 [list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method isbool] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method is] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method label] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method list] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method locker] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method lock] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method name] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method options] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method ordered] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method presence] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method primary] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method process] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method prompt] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method required] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method reset] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
+[arg_def boolean cleanup]
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method self]]
 
-When invoked this method returns the parameter instance itself.
+This method returns the parameter instance itself.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method set?] [arg ...]]
+[call [cmd <parameter>] [method set?]]
 
-When invoked this method ...
+This accessor method returns a boolean value indicating
+if the parameter was given a string representation at
+runtime ([const true]), or not ([const false]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method setq] [arg queue]]
+
+This method sets the first element of the [arg queue]
+as the value of the parameter.
+
+For a "list" parameter all elements of the queue are
+taken as the new value of the parameter.
+
+This is not quite analogous to method [method set] below.
+They behave the same for scalar parameters, and differ
+for "list" parameters.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def stack::queue queue]
+The queue instance holding the words of the command
+line not yet processed.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method setq] [arg ...]]
+[call [cmd <parameter>] [method set] [arg value]]
 
-When invoked this method ...
+This method sets the [arg value] as the new string
+representation of the parameter.
+
+For a "list" parameter the string representation is
+[emph extended] with the [arg value].
+
+This action triggers the execution of the "when-set" callback.
+
+A previously existing internal representation is
+forgotten (See [method forget]).
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def string value]
+The new value of the parameter, or an extension of the
+existing value.
+
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method set] [arg ...]]
+[call [cmd <parameter>] [method string]]
 
-When invoked this method ...
+This accessor method returns the string representation of
+the parameter. If such was not set an error will be thrown
+(See method [method undefined!]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method threshold:] [arg n]]
+
+This method specifies the minimum number of words needed after
+the optional argument parameter for it to accept the current
+word for itself.
+
+Parameters which are not optional arguments ignore this method.
+
+The result of the method is the empty string.
 
 [list_begin arguments]
-[arg_def list list]
+[arg_def integer n]
+The acceptance threshold for the parameter.
+
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method string] [arg ...]]
+[call [cmd <parameter>] [method threshold]]
 
-When invoked this method ...
+This method returns the threshold set on the parameter.
 
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+An empty string indicates a parameter without threshold.
 
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method threshold:] [arg ...]]
-
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+A value of -1 indicates that the optional argument accepts
+based on validation (See method [method accept]) instead
+of using a threshold.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method threshold] [arg ...]]
+[call [cmd <parameter>] [method type]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This accessor method returns the type of the parameter, one of
+[const argument], [const option], or [const state]. See also
+method [method is] for type-checking.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method type] [arg ...]]
+[call [cmd <parameter>] [method undefined!]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This method explicitly throws a "parameter undefined" error
+for this parameter.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method undefined!] [arg ...]]
+[call [cmd <parameter>] [method validator]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This method returns the "validate" command prefix callback
+(i.e. the parameter's validation type).
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method validator] [arg ...]]
+[call [cmd <parameter>] [method value]]
 
-When invoked this method ...
+This accessor method returns the internal representation of
+the parameter. If necessary the data is computed from the
+parameter's string representation, "default" value, or
+"generate" callback.
 
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+An error is thrown if the value could not be determined.
+(See method [method undefined!]).
 
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method value] [arg ...]]
+If the value is newly computed the action triggers the
+execution of the "when-complete" callback.
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+[para] --TODO-- describe generation rules and order.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method when-complete] [arg ...]]
+[call [cmd <parameter>] [method when-complete]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This method returns the "when-complete" command prefix callback,
+if it was set, and an empty list otherwise.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <parameter>] [method when-set] [arg ...]]
+[call [cmd <parameter>] [method when-set]]
 
-When invoked this method ...
-
-[list_begin arguments]
-[arg_def list list]
-[list_end][comment {--- arguments --}]
+This method returns the "when-set" command prefix callback,
+if it was set, and an empty list otherwise.
 
 [list_end][comment {-- definitions --}]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Help Information}]
+
+The help information generated for parameters is a
+dictionary containing the keys below:
+
+[include parts/help_para_structure.inc]
+
 [include parts/feedback.inc]
 [manpage_end]
