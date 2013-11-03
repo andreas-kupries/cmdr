@@ -1,0 +1,867 @@
+'\"
+'\" Generated from file 'cmdr_parameter\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_private" n 0 doc "<<unknown>>"
+.BS
+.SH NAME
+cmdr_private \- Cmdr - Single command handling, options, and arguments
+.SH SYNOPSIS
+package require \fBcmdr::util \fR
+.sp
+\fB::cmdr::parameter\fR \fBnew\fR \fIconfig\fR \fIorder\fR \fIcmdline\fR \fIrequired\fR \fIdefered\fR \fIname\fR \fIdescription\fR \fIspec\fR
+.sp
+\fB::cmdr::parameter\fR \fBcreate\fR \fIobj\fR \fIconfig\fR \fIorder\fR \fIcmdline\fR \fIrequired\fR \fIdefered\fR \fIname\fR \fIdescription\fR \fIspec\fR
+.sp
+\fB<parameter>\fR \fBaccept\fR \fIx\fR
+.sp
+\fB<parameter>\fR \fBcmdline\fR
+.sp
+\fB<parameter>\fR \fBcode\fR
+.sp
+\fB<parameter>\fR \fBcomplete-words\fR \fIparse\fR
+.sp
+\fB<parameter>\fR \fBconfig\fR \fIword\&.\&.\&.\fR
+.sp
+\fB<parameter>\fR \fBdefault\fR
+.sp
+\fB<parameter>\fR \fBdefered\fR
+.sp
+\fB<parameter>\fR \fBdescription\fR ?\fIdetail\fR?
+.sp
+\fB<parameter>\fR \fBdocumented\fR
+.sp
+\fB<parameter>\fR \fBdontinteract\fR
+.sp
+\fB<parameter>\fR \fBflag\fR
+.sp
+\fB<parameter>\fR \fBforget\fR
+.sp
+\fB<parameter>\fR \fBgenerator\fR
+.sp
+\fB<parameter>\fR \fBhasdefault\fR
+.sp
+\fB<parameter>\fR \fBhelp\fR
+.sp
+\fB<parameter>\fR \fBinteractive\fR
+.sp
+\fB<parameter>\fR \fBinteract\fR ?\fIprompt\fR?
+.sp
+\fB<parameter>\fR \fBisbool\fR
+.sp
+\fB<parameter>\fR \fBis\fR \fItype\fR
+.sp
+\fB<parameter>\fR \fBlabel\fR
+.sp
+\fB<parameter>\fR \fBlist\fR
+.sp
+\fB<parameter>\fR \fBlocker\fR
+.sp
+\fB<parameter>\fR \fBlock\fR \fIreason\fR
+.sp
+\fB<parameter>\fR \fBname\fR
+.sp
+\fB<parameter>\fR \fBoptions\fR
+.sp
+\fB<parameter>\fR \fBordered\fR
+.sp
+\fB<parameter>\fR \fBpresence\fR
+.sp
+\fB<parameter>\fR \fBprimary\fR \fIoption\fR
+.sp
+\fB<parameter>\fR \fBprocess\fR \fIdetail\fR \fIqueue\fR
+.sp
+\fB<parameter>\fR \fBprompt\fR
+.sp
+\fB<parameter>\fR \fBrequired\fR
+.sp
+\fB<parameter>\fR \fBreset\fR ?\fIcleanup\fR?
+.sp
+\fB<parameter>\fR \fBself\fR
+.sp
+\fB<parameter>\fR \fBset?\fR
+.sp
+\fB<parameter>\fR \fBsetq\fR \fIqueue\fR
+.sp
+\fB<parameter>\fR \fBset\fR \fIvalue\fR
+.sp
+\fB<parameter>\fR \fBstring\fR
+.sp
+\fB<parameter>\fR \fBthreshold:\fR \fIn\fR
+.sp
+\fB<parameter>\fR \fBthreshold\fR
+.sp
+\fB<parameter>\fR \fBtype\fR
+.sp
+\fB<parameter>\fR \fBundefined!\fR
+.sp
+\fB<parameter>\fR \fBvalidator\fR
+.sp
+\fB<parameter>\fR \fBvalue\fR
+.sp
+\fB<parameter>\fR \fBwhen-complete\fR
+.sp
+\fB<parameter>\fR \fBwhen-set\fR
+.sp
+.BE
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This package implements \fIparameters\fR, collections of which (see
+\fBcmdr::config\fR) serve as the configuration of privates (see
+\fBcmdr::private\fR)\&.
+.SH "CLASS API"
+The class API is not public\&. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+parameter instances\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+.TP
+\fB::cmdr::parameter\fR \fBnew\fR \fIconfig\fR \fIorder\fR \fIcmdline\fR \fIrequired\fR \fIdefered\fR \fIname\fR \fIdescription\fR \fIspec\fR
+Create an auto-named instance of \fBcmdr::parameter\fR\&.
+.sp
+\fINot used\fR\&.
+.TP
+\fB::cmdr::parameter\fR \fBcreate\fR \fIobj\fR \fIconfig\fR \fIorder\fR \fIcmdline\fR \fIrequired\fR \fIdefered\fR \fIname\fR \fIdescription\fR \fIspec\fR
+Create a new instance of \fBcmdr::parameter\fR, named \fIobj\fR\&.
+Used by the DSL processing parts of the framework to instantiate parameters\&.
+.RS
+.TP
+string \fIobj\fR
+The (command) name of the new parameter instance\&.
+.TP
+cmdr::config \fIconfig\fR
+The instance command of the \fBcmdr::config\fR instance
+holding the parameter\&.
+.TP
+boolean \fIorder\fR
+Flag\&. Parameter is specified by order (\fBtrue\fR: argument),
+or name (\fBfalse\fR: option)\&.
+.TP
+boolean \fIcmdline\fR
+Flag\&. Parameter is visible on the command line (\fBtrue\fR:
+option, or argument), or not (\fBfalse\fR: state)\&.
+.TP
+boolean \fIrequired\fR
+Flag\&. Parameter is must be specified by the user at runtime
+(\fBtrue\fR), or not (\fBfalse\fR)\&.
+.TP
+boolean \fIdefered\fR
+Flag\&. The internal representation is computed on-demand
+(\fBtrue\fR), or in the completion phase (\fBfalse\fR)\&.
+.TP
+string \fIname\fR
+Internal name of the parameter\&. Also the name used in the
+help, if not overridden by a \fBlabel\fR declaration
+(in \fIspec\fR)\&.
+.TP
+string \fIdescription\fR
+Human-readable help text for the parameter\&.
+.TP
+script \fIspec\fR
+Tcl-script specifying the parameter in detail\&. Please read
+\fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+.RE
+.PP
+.SH "INSTANCE API"
+Most of the instance API is not public\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+--TODO-- mark the methods which are public -- and/or write a separate document?
+.TP
+\fB<parameter>\fR \fBaccept\fR \fIx\fR
+This method validates the string value \fIx\fR
+against the validation type of the parameter and returns a
+boolean value indicating success (\fBtrue\fR), or not
+(\fBfalse\fR)\&.
+The internal representation of \fIx\fR is not kept but
+released immediately\&. The parameter itself is not changed
+either\&.
+This is used during runtime by the 'test'-based processing
+of optional arguments\&.
+.RS
+.TP
+string \fIx\fR
+.RE
+.TP
+\fB<parameter>\fR \fBcmdline\fR
+This accessor method returns the "cmdline" flag
+set during parameter construction\&.
+A result of \fBtrue\fR indicates that the parameter is
+visible on the command line (option, or argument), and
+otherwise (\fBfalse\fR) hidden (state)\&.
+.TP
+\fB<parameter>\fR \fBcode\fR
+This method returns a string encoding the flags
+"required" and "list"\&. The mapping is as follows:
+.RS
+.TP
+\fB+\fR
+required, scalar
+.TP
+\fB?\fR
+optional, scalar
+.TP
+\fB+*\fR
+required, list
+.TP
+\fB?*\fR
+optional, list\&.
+.RE
+.TP
+\fB<parameter>\fR \fBcomplete-words\fR \fIparse\fR
+This method is given the completion state \fIparse\fR of a partial
+command line and returns a list of strings which are the valid
+completions at this point, for the parameter\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
+.sp
+--TODO-- Describe the state fields and their meaning\&.
+.RE
+.TP
+\fB<parameter>\fR \fBconfig\fR \fIword\&.\&.\&.\fR
+This method either returns the \fBcmdr::config\fR instance
+containing the parameter, or the result of applying the words to that config
+instance\&. It is through this method that any script with access to a single
+parameter instance of a private will have access to all its parameters\&.
+.RS
+.TP
+string \fIword\&.\&.\&.\fR
+The method and its arguments to apply to the config instance holding
+the parameter\&. If none are specified the method \fBself\fR is
+implied, causing the return of the config instance itself\&.
+.RE
+.TP
+\fB<parameter>\fR \fBdefault\fR
+This method returns the default value set by
+the parameter's specification, or the empty string\&.
+.TP
+\fB<parameter>\fR \fBdefered\fR
+This accessor method returns the "defered" flag
+set during parameter construction\&.
+A result of \fBtrue\fR indicates that the parameter's
+internal representation is computed on-demand, and otherwise
+(\fBfalse\fR) during the completion phase\&.
+.TP
+\fB<parameter>\fR \fBdescription\fR ?\fIdetail\fR?
+This method returns the parameter's help text\&.
+If the \fIdetail\fR is specified and the name of an automatic
+option controlled by this parameter its implicit description
+is returned instead of the description of its primary\&.
+.RS
+.TP
+string \fIdetail\fR
+Optional\&. The name of a automatic option controlled by the
+parameter\&.
+.RE
+.TP
+\fB<parameter>\fR \fBdocumented\fR
+This accessor method returns the "documented"
+flag of the parameter\&.
+A value of \fBtrue\fR indicates that the parameter
+should be included in generated help, otherwise not\&.
+.TP
+\fB<parameter>\fR \fBdontinteract\fR
+This method disables interactive entry
+of the parameter's value for one time\&. I\&.e\&. after
+the information was used (see method \fBvalue\fR)
+the flag automatically resets\&.
+The result of the method is the empty string\&.
+.TP
+\fB<parameter>\fR \fBflag\fR
+This method returns the text of the primary
+flag of the parameter, including leading dashes\&.
+.TP
+\fB<parameter>\fR \fBforget\fR
+This method releases the internal representation
+of the parameter's value, if it has any\&.
+See also method \fBreset\fR for a stronger form\&.
+.TP
+\fB<parameter>\fR \fBgenerator\fR
+This method returns the "generate" command prefix callback,
+if it was set, and an empty list otherwise\&.
+.TP
+\fB<parameter>\fR \fBhasdefault\fR
+This method returns a boolean flag
+indicating if the parameter's specification declared
+a default value for it (\fBtrue\fR), or not (\fBfalse\fR)\&.
+.TP
+\fB<parameter>\fR \fBhelp\fR
+This method returns the help information for the parameter\&.
+Note that this method does \fInot\fR check the "documented"
+flag of the parameter\&. That is the responsibility of the
+caller\&.
+The result of the command is a structure of the form
+described in section \fBHelp Information\fR\&.
+.TP
+\fB<parameter>\fR \fBinteractive\fR
+This method returns the "interactive" flag of the parameter\&.
+A result of \fBtrue\fR indicates that the parameter's
+string representation has to be queried interactively if no
+value was specified at runtime\&.
+.TP
+\fB<parameter>\fR \fBinteract\fR ?\fIprompt\fR?
+This method interactively queries the string representation of
+the parameter from the user\&.
+If no \fIprompt\fR is specified the parameter's prompt from the
+specification is used\&. See also method \fBprompt\fR\&.
+The interaction takes the "list"-ness of the parameter into account\&.
+Note that the entered string(s) is/are validated and invalid
+information is rejected\&.
+.RS
+.TP
+string \fIprompt\fR
+Optional\&. The prompt to use for the interaction\&.
+.RE
+.TP
+\fB<parameter>\fR \fBisbool\fR
+This method returns a boolean value indicating if the parameter
+uses the standard validation type "boolean" (\fBtrue\fR) or
+not (\fBfalse\fR)\&.
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for this type, or not\&.
+.TP
+\fB<parameter>\fR \fBis\fR \fItype\fR
+This method returns a boolean value indicating if the
+parameter is of the specified \fItype\fR (\fBtrue\fR)
+or not (\fBfalse\fR)\&.
+.RS
+.TP
+string \fItype\fR
+The type to check the parameter against\&.
+Recognized values are
+.RS
+.TP
+\fBargument\fR
+.TP
+\fBoption\fR
+.TP
+\fBstate\fR
+.RE
+.RE
+.TP
+\fB<parameter>\fR \fBlabel\fR
+This method returns the human-readable name of the parameter,
+for use in help\&. If not specifically overridden by the
+parameter's specification this is the same as the internal
+name (See method \fBname\fR)\&.
+.TP
+\fB<parameter>\fR \fBlist\fR
+This accessor method returns the "list" flag of the parameter\&.
+A value of \fBtrue\fR indicates that the parameter's value
+is a list, otherwise a scalar\&.
+.TP
+\fB<parameter>\fR \fBlocker\fR
+This accessor method returns the string set by method
+\fBlock\fR below, or the empty string if
+\fBlock\fR was not used\&.
+\fINote\fR: This information is reset by method
+\fBreset\fR, but not by \fBforget\fR\&.
+.TP
+\fB<parameter>\fR \fBlock\fR \fIreason\fR
+This method locks the parameter against modification
+by the methods \fBset\fR and \fBsetq\fR, and
+remembers the \fIreason\fR for it\&. The reason is
+expected to be the name of another parameter whose
+use disallows the use of this one\&.
+\fINote\fR: Such a lock is reset by method
+\fBreset\fR, but not by \fBforget\fR\&.
+.RS
+.TP
+string \fIreason\fR
+The name of the parameter locking this one against further
+modification\&.
+.RE
+.TP
+\fB<parameter>\fR \fBname\fR
+This method returns the internal name of the parameter\&.
+.TP
+\fB<parameter>\fR \fBoptions\fR
+This method returns the list of option flags recognized
+by the parameter\&.
+.TP
+\fB<parameter>\fR \fBordered\fR
+This accessor method returns the "order" flag
+set during parameter construction\&.
+A result of \fBtrue\fR indicates that the parameter
+is specified by order at runtime (argument), and otherwise
+(\fBfalse\fR) by name (option)\&.
+.TP
+\fB<parameter>\fR \fBpresence\fR
+This method returns a boolean value indicating if
+the option parameter is set as presence-option
+(\fBtrue\fR) or not (\fBfalse\fR)\&.
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for presence, or not\&.
+.TP
+\fB<parameter>\fR \fBprimary\fR \fIoption\fR
+This method returns a boolean value indicating if the named \fIoption\fR
+is the primary option of this parameter (\fBtrue\fR), or not (\fBfalse\fR)\&.
+An error will be thrown if the named option is not controlled by the parameter\&.
+.RS
+.TP
+string \fIoption\fR
+The name of the option to check\&.
+.RE
+.TP
+\fB<parameter>\fR \fBprocess\fR \fIdetail\fR \fIqueue\fR
+This method extracts the value of the parameter from the command line\&.
+A \fBpresence\fR option takes nothing, whereas an \fBisbool\fR option
+takes the first value in the \fIqueue\fR, if it is a proper boolean, and
+defaults to \fBtrue\fR if not\&. Any other argument or option takes  the
+first value in \fIqueue\fR\&.
+.RS
+.TP
+string \fIdetail\fR
+The name of the parameter, or the option flag referencing it\&.
+.TP
+struct::queue \fIqueue\fR
+The queue instance holding the words of the command line not yet
+processed by the system\&.
+.RE
+.TP
+\fB<parameter>\fR \fBprompt\fR
+This method returns the prompt string used by the parameter for
+interactive entry\&. If not overridden by the parameter's specification
+this defaults to a string derived from the internal name of the
+parameter, i\&.e\&. "Enter \fBname\fR:"\&.
+.TP
+\fB<parameter>\fR \fBrequired\fR
+This accessor method returns the "required" flag
+set during parameter construction\&.
+A result of \fBtrue\fR indicates that the parameter
+must be specified by the user at runtime, and otherwise
+may be left unspecified (\fBfalse\fR)\&.
+.TP
+\fB<parameter>\fR \fBreset\fR ?\fIcleanup\fR?
+This method sets the parameter into the initial state where
+it has neither string nor internal representation, nor is
+it locked\&. This is a stronger form of \fBforget\fR\&.
+.RS
+.TP
+boolean \fIcleanup\fR
+.RE
+.TP
+\fB<parameter>\fR \fBself\fR
+This method returns the parameter instance itself\&.
+.TP
+\fB<parameter>\fR \fBset?\fR
+This accessor method returns a boolean value indicating
+if the parameter was given a string representation at
+runtime (\fBtrue\fR), or not (\fBfalse\fR)\&.
+.TP
+\fB<parameter>\fR \fBsetq\fR \fIqueue\fR
+This method sets the first element of the \fIqueue\fR
+as the value of the parameter\&.
+For a "list" parameter all elements of the queue are
+taken as the new value of the parameter\&.
+This is not quite analogous to method \fBset\fR below\&.
+They behave the same for scalar parameters, and differ
+for "list" parameters\&.
+.RS
+.TP
+stack::queue \fIqueue\fR
+The queue instance holding the words of the command
+line not yet processed\&.
+.RE
+.TP
+\fB<parameter>\fR \fBset\fR \fIvalue\fR
+This method sets the \fIvalue\fR as the new string
+representation of the parameter\&.
+For a "list" parameter the string representation is
+\fIextended\fR with the \fIvalue\fR\&.
+This action triggers the execution of the "when-set" callback\&.
+A previously existing internal representation is
+forgotten (See \fBforget\fR)\&.
+.RS
+.TP
+string \fIvalue\fR
+The new value of the parameter, or an extension of the
+existing value\&.
+.RE
+.TP
+\fB<parameter>\fR \fBstring\fR
+This accessor method returns the string representation of
+the parameter\&. If such was not set an error will be thrown
+(See method \fBundefined!\fR)\&.
+.TP
+\fB<parameter>\fR \fBthreshold:\fR \fIn\fR
+This method specifies the minimum number of words needed after
+the optional argument parameter for it to accept the current
+word for itself\&.
+Parameters which are not optional arguments ignore this method\&.
+The result of the method is the empty string\&.
+.RS
+.TP
+integer \fIn\fR
+The acceptance threshold for the parameter\&.
+.RE
+.TP
+\fB<parameter>\fR \fBthreshold\fR
+This method returns the threshold set on the parameter\&.
+An empty string indicates a parameter without threshold\&.
+A value of -1 indicates that the optional argument accepts
+based on validation (See method \fBaccept\fR) instead
+of using a threshold\&.
+.TP
+\fB<parameter>\fR \fBtype\fR
+This accessor method returns the type of the parameter, one of
+\fBargument\fR, \fBoption\fR, or \fBstate\fR\&. See also
+method \fBis\fR for type-checking\&.
+.TP
+\fB<parameter>\fR \fBundefined!\fR
+This method explicitly throws a "parameter undefined" error
+for this parameter\&.
+.TP
+\fB<parameter>\fR \fBvalidator\fR
+This method returns the "validate" command prefix callback
+(i\&.e\&. the parameter's validation type)\&.
+.TP
+\fB<parameter>\fR \fBvalue\fR
+This accessor method returns the internal representation of
+the parameter\&. If necessary the data is computed from the
+parameter's string representation, "default" value, or
+"generate" callback\&.
+An error is thrown if the value could not be determined\&.
+(See method \fBundefined!\fR)\&.
+If the value is newly computed the action triggers the
+execution of the "when-complete" callback\&.
+.sp
+--TODO-- describe generation rules and order\&.
+.TP
+\fB<parameter>\fR \fBwhen-complete\fR
+This method returns the "when-complete" command prefix callback,
+if it was set, and an empty list otherwise\&.
+.TP
+\fB<parameter>\fR \fBwhen-set\fR
+This method returns the "when-set" command prefix callback,
+if it was set, and an empty list otherwise\&.
+.PP
+.SH "HELP INFORMATION"
+The help information generated for parameters is a
+dictionary containing the keys below:
+.TP
+cmdline
+Output of method \fBcmdline\fR\&.
+.TP
+code
+Output of method \fBcode\fR\&.
+.TP
+default
+Output of method \fBdefault\fR\&.
+.TP
+defered
+Output of method \fBdefered\fR\&.
+.TP
+description
+Output of method \fBdescription\fR\&.
+.TP
+documented
+Output of method \fBdocumented\fR\&.
+.TP
+flags
+A dictionary mapping flag names to flag
+types, i\&.e\&. \fBprimary\fR, \fBalias\fR,
+or \fBinverted\fR\&.
+.TP
+generator
+Output of method \fBgenerator\fR\&.
+.TP
+interactive
+Output of method \fBinteractive\fR\&.
+.TP
+isbool
+Output of method \fBisbool\fR\&.
+.TP
+label
+Output of method \fBlabel\fR\&.
+.TP
+list
+Output of method \fBlist\fR\&.
+.TP
+ordered
+Output of method \fBordered\fR\&.
+.TP
+presence
+Output of method \fBpresence\fR\&.
+.TP
+prompt
+Output of method \fBprompt\fR\&.
+.TP
+required
+Output of method \fBrequired\fR\&.
+.TP
+threshold
+Output of method \fBthreshold\fR\&.
+.TP
+type
+Output of method \fBtype\fR\&.
+.TP
+validator
+Output of method \fBvalidator\fR\&.
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

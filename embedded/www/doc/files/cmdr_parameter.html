@@ -1,0 +1,612 @@
+
+<html><head>
+<title>cmdr_private - &lt;&lt;unknown&gt;&gt;</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_parameter.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_private.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_private(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_private - Cmdr - Single command handling, options, and arguments</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Class API</a></li>
+<li class="section"><a href="#section3">Instance API</a></li>
+<li class="section"><a href="#section4">Help Information</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::util</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::parameter</b> <b class="method">new</b> <i class="arg">config</i> <i class="arg">order</i> <i class="arg">cmdline</i> <i class="arg">required</i> <i class="arg">defered</i> <i class="arg">name</i> <i class="arg">description</i> <i class="arg">spec</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::parameter</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">config</i> <i class="arg">order</i> <i class="arg">cmdline</i> <i class="arg">required</i> <i class="arg">defered</i> <i class="arg">name</i> <i class="arg">description</i> <i class="arg">spec</i></a></li>
+<li><a href="#3"><b class="cmd">&lt;parameter&gt;</b> <b class="method">accept</b> <i class="arg">x</i></a></li>
+<li><a href="#4"><b class="cmd">&lt;parameter&gt;</b> <b class="method">cmdline</b></a></li>
+<li><a href="#5"><b class="cmd">&lt;parameter&gt;</b> <b class="method">code</b></a></li>
+<li><a href="#6"><b class="cmd">&lt;parameter&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
+<li><a href="#7"><b class="cmd">&lt;parameter&gt;</b> <b class="method">config</b> <i class="arg">word...</i></a></li>
+<li><a href="#8"><b class="cmd">&lt;parameter&gt;</b> <b class="method">default</b></a></li>
+<li><a href="#9"><b class="cmd">&lt;parameter&gt;</b> <b class="method">defered</b></a></li>
+<li><a href="#10"><b class="cmd">&lt;parameter&gt;</b> <b class="method">description</b> <span class="opt">?<i class="arg">detail</i>?</span></a></li>
+<li><a href="#11"><b class="cmd">&lt;parameter&gt;</b> <b class="method">documented</b></a></li>
+<li><a href="#12"><b class="cmd">&lt;parameter&gt;</b> <b class="method">dontinteract</b></a></li>
+<li><a href="#13"><b class="cmd">&lt;parameter&gt;</b> <b class="method">flag</b></a></li>
+<li><a href="#14"><b class="cmd">&lt;parameter&gt;</b> <b class="method">forget</b></a></li>
+<li><a href="#15"><b class="cmd">&lt;parameter&gt;</b> <b class="method">generator</b></a></li>
+<li><a href="#16"><b class="cmd">&lt;parameter&gt;</b> <b class="method">hasdefault</b></a></li>
+<li><a href="#17"><b class="cmd">&lt;parameter&gt;</b> <b class="method">help</b></a></li>
+<li><a href="#18"><b class="cmd">&lt;parameter&gt;</b> <b class="method">interactive</b></a></li>
+<li><a href="#19"><b class="cmd">&lt;parameter&gt;</b> <b class="method">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></li>
+<li><a href="#20"><b class="cmd">&lt;parameter&gt;</b> <b class="method">isbool</b></a></li>
+<li><a href="#21"><b class="cmd">&lt;parameter&gt;</b> <b class="method">is</b> <i class="arg">type</i></a></li>
+<li><a href="#22"><b class="cmd">&lt;parameter&gt;</b> <b class="method">label</b></a></li>
+<li><a href="#23"><b class="cmd">&lt;parameter&gt;</b> <b class="method">list</b></a></li>
+<li><a href="#24"><b class="cmd">&lt;parameter&gt;</b> <b class="method">locker</b></a></li>
+<li><a href="#25"><b class="cmd">&lt;parameter&gt;</b> <b class="method">lock</b> <i class="arg">reason</i></a></li>
+<li><a href="#26"><b class="cmd">&lt;parameter&gt;</b> <b class="method">name</b></a></li>
+<li><a href="#27"><b class="cmd">&lt;parameter&gt;</b> <b class="method">options</b></a></li>
+<li><a href="#28"><b class="cmd">&lt;parameter&gt;</b> <b class="method">ordered</b></a></li>
+<li><a href="#29"><b class="cmd">&lt;parameter&gt;</b> <b class="method">presence</b></a></li>
+<li><a href="#30"><b class="cmd">&lt;parameter&gt;</b> <b class="method">primary</b> <i class="arg">option</i></a></li>
+<li><a href="#31"><b class="cmd">&lt;parameter&gt;</b> <b class="method">process</b> <i class="arg">detail</i> <i class="arg">queue</i></a></li>
+<li><a href="#32"><b class="cmd">&lt;parameter&gt;</b> <b class="method">prompt</b></a></li>
+<li><a href="#33"><b class="cmd">&lt;parameter&gt;</b> <b class="method">required</b></a></li>
+<li><a href="#34"><b class="cmd">&lt;parameter&gt;</b> <b class="method">reset</b> <span class="opt">?<i class="arg">cleanup</i>?</span></a></li>
+<li><a href="#35"><b class="cmd">&lt;parameter&gt;</b> <b class="method">self</b></a></li>
+<li><a href="#36"><b class="cmd">&lt;parameter&gt;</b> <b class="method">set?</b></a></li>
+<li><a href="#37"><b class="cmd">&lt;parameter&gt;</b> <b class="method">setq</b> <i class="arg">queue</i></a></li>
+<li><a href="#38"><b class="cmd">&lt;parameter&gt;</b> <b class="method">set</b> <i class="arg">value</i></a></li>
+<li><a href="#39"><b class="cmd">&lt;parameter&gt;</b> <b class="method">string</b></a></li>
+<li><a href="#40"><b class="cmd">&lt;parameter&gt;</b> <b class="method">threshold:</b> <i class="arg">n</i></a></li>
+<li><a href="#41"><b class="cmd">&lt;parameter&gt;</b> <b class="method">threshold</b></a></li>
+<li><a href="#42"><b class="cmd">&lt;parameter&gt;</b> <b class="method">type</b></a></li>
+<li><a href="#43"><b class="cmd">&lt;parameter&gt;</b> <b class="method">undefined!</b></a></li>
+<li><a href="#44"><b class="cmd">&lt;parameter&gt;</b> <b class="method">validator</b></a></li>
+<li><a href="#45"><b class="cmd">&lt;parameter&gt;</b> <b class="method">value</b></a></li>
+<li><a href="#46"><b class="cmd">&lt;parameter&gt;</b> <b class="method">when-complete</b></a></li>
+<li><a href="#47"><b class="cmd">&lt;parameter&gt;</b> <b class="method">when-set</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This package implements <em>parameters</em>, collections of which (see
+<b class="package">cmdr::config</b>) serve as the configuration of privates (see
+<b class="package">cmdr::private</b>).</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
+<p>The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+parameter instances.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::parameter</b> <b class="method">new</b> <i class="arg">config</i> <i class="arg">order</i> <i class="arg">cmdline</i> <i class="arg">required</i> <i class="arg">defered</i> <i class="arg">name</i> <i class="arg">description</i> <i class="arg">spec</i></a></dt>
+<dd><p>Create an auto-named instance of <b class="class">cmdr::parameter</b>.</p>
+<p><em>Not used</em>.</p></dd>
+<dt><a name="2"><b class="cmd">::cmdr::parameter</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">config</i> <i class="arg">order</i> <i class="arg">cmdline</i> <i class="arg">required</i> <i class="arg">defered</i> <i class="arg">name</i> <i class="arg">description</i> <i class="arg">spec</i></a></dt>
+<dd><p>Create a new instance of <b class="class">cmdr::parameter</b>, named <i class="arg">obj</i>.
+Used by the DSL processing parts of the framework to instantiate parameters.</p>
+<dl class="arguments">
+<dt>string <i class="arg">obj</i></dt>
+<dd><p>The (command) name of the new parameter instance.</p></dd>
+<dt>cmdr::config <i class="arg">config</i></dt>
+<dd><p>The instance command of the <b class="package">cmdr::config</b> instance
+holding the parameter.</p></dd>
+<dt>boolean <i class="arg">order</i></dt>
+<dd><p>Flag. Parameter is specified by order (<b class="const">true</b>: argument),
+or name (<b class="const">false</b>: option).</p></dd>
+<dt>boolean <i class="arg">cmdline</i></dt>
+<dd><p>Flag. Parameter is visible on the command line (<b class="const">true</b>:
+option, or argument), or not (<b class="const">false</b>: state).</p></dd>
+<dt>boolean <i class="arg">required</i></dt>
+<dd><p>Flag. Parameter is must be specified by the user at runtime
+(<b class="const">true</b>), or not (<b class="const">false</b>).</p></dd>
+<dt>boolean <i class="arg">defered</i></dt>
+<dd><p>Flag. The internal representation is computed on-demand
+(<b class="const">true</b>), or in the completion phase (<b class="const">false</b>).</p></dd>
+<dt>string <i class="arg">name</i></dt>
+<dd><p>Internal name of the parameter. Also the name used in the
+help, if not overridden by a <b class="cmd">label</b> declaration
+(in <i class="arg">spec</i>).</p></dd>
+<dt>string <i class="arg">description</i></dt>
+<dd><p>Human-readable help text for the parameter.</p></dd>
+<dt>script <i class="arg">spec</i></dt>
+<dd><p>Tcl-script specifying the parameter in detail. Please read
+<i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Instance API</a></h2>
+<p>Most of the instance API is not public.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+--TODO-- mark the methods which are public -- and/or write a separate document?</p>
+<dl class="definitions">
+<dt><a name="3"><b class="cmd">&lt;parameter&gt;</b> <b class="method">accept</b> <i class="arg">x</i></a></dt>
+<dd><p>This method validates the string value <i class="arg">x</i>
+against the validation type of the parameter and returns a
+boolean value indicating success (<b class="const">true</b>), or not
+(<b class="const">false</b>).
+The internal representation of <i class="arg">x</i> is not kept but
+released immediately. The parameter itself is not changed
+either.
+This is used during runtime by the 'test'-based processing
+of optional arguments.</p>
+<dl class="arguments">
+<dt>string <i class="arg">x</i></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">&lt;parameter&gt;</b> <b class="method">cmdline</b></a></dt>
+<dd><p>This accessor method returns the &quot;cmdline&quot; flag
+set during parameter construction.
+A result of <b class="const">true</b> indicates that the parameter is
+visible on the command line (option, or argument), and
+otherwise (<b class="const">false</b>) hidden (state).</p></dd>
+<dt><a name="5"><b class="cmd">&lt;parameter&gt;</b> <b class="method">code</b></a></dt>
+<dd><p>This method returns a string encoding the flags
+&quot;required&quot; and &quot;list&quot;. The mapping is as follows:</p>
+<dl class="definitions">
+<dt><b class="const">+</b></dt>
+<dd><p>required, scalar</p></dd>
+<dt><b class="const">?</b></dt>
+<dd><p>optional, scalar</p></dd>
+<dt><b class="const">+*</b></dt>
+<dd><p>required, list</p></dd>
+<dt><b class="const">?*</b></dt>
+<dd><p>optional, list.</p></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">&lt;parameter&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
+<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
+command line and returns a list of strings which are the valid
+completions at this point, for the parameter.</p>
+<dl class="arguments">
+<dt>dict <i class="arg">parse</i></dt>
+<dd><p>A dictionary holding the current completion state of a partial command
+line.</p>
+<p>--TODO-- Describe the state fields and their meaning.</p></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">&lt;parameter&gt;</b> <b class="method">config</b> <i class="arg">word...</i></a></dt>
+<dd><p>This method either returns the <b class="package">cmdr::config</b> instance
+containing the parameter, or the result of applying the words to that config
+instance. It is through this method that any script with access to a single
+parameter instance of a private will have access to all its parameters.</p>
+<dl class="arguments">
+<dt>string <i class="arg">word...</i></dt>
+<dd><p>The method and its arguments to apply to the config instance holding
+the parameter. If none are specified the method <b class="method">self</b> is
+implied, causing the return of the config instance itself.</p></dd>
+</dl></dd>
+<dt><a name="8"><b class="cmd">&lt;parameter&gt;</b> <b class="method">default</b></a></dt>
+<dd><p>This method returns the default value set by
+the parameter's specification, or the empty string.</p></dd>
+<dt><a name="9"><b class="cmd">&lt;parameter&gt;</b> <b class="method">defered</b></a></dt>
+<dd><p>This accessor method returns the &quot;defered&quot; flag
+set during parameter construction.
+A result of <b class="const">true</b> indicates that the parameter's
+internal representation is computed on-demand, and otherwise
+(<b class="const">false</b>) during the completion phase.</p></dd>
+<dt><a name="10"><b class="cmd">&lt;parameter&gt;</b> <b class="method">description</b> <span class="opt">?<i class="arg">detail</i>?</span></a></dt>
+<dd><p>This method returns the parameter's help text.
+If the <i class="arg">detail</i> is specified and the name of an automatic
+option controlled by this parameter its implicit description
+is returned instead of the description of its primary.</p>
+<dl class="arguments">
+<dt>string <i class="arg">detail</i></dt>
+<dd><p>Optional. The name of a automatic option controlled by the
+parameter.</p></dd>
+</dl></dd>
+<dt><a name="11"><b class="cmd">&lt;parameter&gt;</b> <b class="method">documented</b></a></dt>
+<dd><p>This accessor method returns the &quot;documented&quot;
+flag of the parameter.
+A value of <b class="const">true</b> indicates that the parameter
+should be included in generated help, otherwise not.</p></dd>
+<dt><a name="12"><b class="cmd">&lt;parameter&gt;</b> <b class="method">dontinteract</b></a></dt>
+<dd><p>This method disables interactive entry
+of the parameter's value for one time. I.e. after
+the information was used (see method <b class="method">value</b>)
+the flag automatically resets.
+The result of the method is the empty string.</p></dd>
+<dt><a name="13"><b class="cmd">&lt;parameter&gt;</b> <b class="method">flag</b></a></dt>
+<dd><p>This method returns the text of the primary
+flag of the parameter, including leading dashes.</p></dd>
+<dt><a name="14"><b class="cmd">&lt;parameter&gt;</b> <b class="method">forget</b></a></dt>
+<dd><p>This method releases the internal representation
+of the parameter's value, if it has any.
+See also method <b class="method">reset</b> for a stronger form.</p></dd>
+<dt><a name="15"><b class="cmd">&lt;parameter&gt;</b> <b class="method">generator</b></a></dt>
+<dd><p>This method returns the &quot;generate&quot; command prefix callback,
+if it was set, and an empty list otherwise.</p></dd>
+<dt><a name="16"><b class="cmd">&lt;parameter&gt;</b> <b class="method">hasdefault</b></a></dt>
+<dd><p>This method returns a boolean flag
+indicating if the parameter's specification declared
+a default value for it (<b class="const">true</b>), or not (<b class="const">false</b>).</p></dd>
+<dt><a name="17"><b class="cmd">&lt;parameter&gt;</b> <b class="method">help</b></a></dt>
+<dd><p>This method returns the help information for the parameter.
+Note that this method does <em>not</em> check the &quot;documented&quot;
+flag of the parameter. That is the responsibility of the
+caller.
+The result of the command is a structure of the form
+described in section <span class="sectref"><a href="#section4">Help Information</a></span>.</p></dd>
+<dt><a name="18"><b class="cmd">&lt;parameter&gt;</b> <b class="method">interactive</b></a></dt>
+<dd><p>This method returns the &quot;interactive&quot; flag of the parameter.
+A result of <b class="const">true</b> indicates that the parameter's
+string representation has to be queried interactively if no
+value was specified at runtime.</p></dd>
+<dt><a name="19"><b class="cmd">&lt;parameter&gt;</b> <b class="method">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></dt>
+<dd><p>This method interactively queries the string representation of
+the parameter from the user.
+If no <i class="arg">prompt</i> is specified the parameter's prompt from the
+specification is used. See also method <b class="method">prompt</b>.
+The interaction takes the &quot;list&quot;-ness of the parameter into account.
+Note that the entered string(s) is/are validated and invalid
+information is rejected.</p>
+<dl class="arguments">
+<dt>string <i class="arg">prompt</i></dt>
+<dd><p>Optional. The prompt to use for the interaction.</p></dd>
+</dl></dd>
+<dt><a name="20"><b class="cmd">&lt;parameter&gt;</b> <b class="method">isbool</b></a></dt>
+<dd><p>This method returns a boolean value indicating if the parameter
+uses the standard validation type &quot;boolean&quot; (<b class="const">true</b>) or
+not (<b class="const">false</b>).
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for this type, or not.</p></dd>
+<dt><a name="21"><b class="cmd">&lt;parameter&gt;</b> <b class="method">is</b> <i class="arg">type</i></a></dt>
+<dd><p>This method returns a boolean value indicating if the
+parameter is of the specified <i class="arg">type</i> (<b class="const">true</b>)
+or not (<b class="const">false</b>).</p>
+<dl class="arguments">
+<dt>string <i class="arg">type</i></dt>
+<dd><p>The type to check the parameter against.
+Recognized values are</p>
+<dl class="definitions">
+<dt><b class="const">argument</b></dt>
+<dd></dd>
+<dt><b class="const">option</b></dt>
+<dd></dd>
+<dt><b class="const">state</b></dt>
+<dd></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="22"><b class="cmd">&lt;parameter&gt;</b> <b class="method">label</b></a></dt>
+<dd><p>This method returns the human-readable name of the parameter,
+for use in help. If not specifically overridden by the
+parameter's specification this is the same as the internal
+name (See method <b class="method">name</b>).</p></dd>
+<dt><a name="23"><b class="cmd">&lt;parameter&gt;</b> <b class="method">list</b></a></dt>
+<dd><p>This accessor method returns the &quot;list&quot; flag of the parameter.
+A value of <b class="const">true</b> indicates that the parameter's value
+is a list, otherwise a scalar.</p></dd>
+<dt><a name="24"><b class="cmd">&lt;parameter&gt;</b> <b class="method">locker</b></a></dt>
+<dd><p>This accessor method returns the string set by method
+<b class="method">lock</b> below, or the empty string if
+<b class="method">lock</b> was not used.
+<em>Note</em>: This information is reset by method
+<b class="method">reset</b>, but not by <b class="method">forget</b>.</p></dd>
+<dt><a name="25"><b class="cmd">&lt;parameter&gt;</b> <b class="method">lock</b> <i class="arg">reason</i></a></dt>
+<dd><p>This method locks the parameter against modification
+by the methods <b class="method">set</b> and <b class="method">setq</b>, and
+remembers the <i class="arg">reason</i> for it. The reason is
+expected to be the name of another parameter whose
+use disallows the use of this one.
+<em>Note</em>: Such a lock is reset by method
+<b class="method">reset</b>, but not by <b class="method">forget</b>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">reason</i></dt>
+<dd><p>The name of the parameter locking this one against further
+modification.</p></dd>
+</dl></dd>
+<dt><a name="26"><b class="cmd">&lt;parameter&gt;</b> <b class="method">name</b></a></dt>
+<dd><p>This method returns the internal name of the parameter.</p></dd>
+<dt><a name="27"><b class="cmd">&lt;parameter&gt;</b> <b class="method">options</b></a></dt>
+<dd><p>This method returns the list of option flags recognized
+by the parameter.</p></dd>
+<dt><a name="28"><b class="cmd">&lt;parameter&gt;</b> <b class="method">ordered</b></a></dt>
+<dd><p>This accessor method returns the &quot;order&quot; flag
+set during parameter construction.
+A result of <b class="const">true</b> indicates that the parameter
+is specified by order at runtime (argument), and otherwise
+(<b class="const">false</b>) by name (option).</p></dd>
+<dt><a name="29"><b class="cmd">&lt;parameter&gt;</b> <b class="method">presence</b></a></dt>
+<dd><p>This method returns a boolean value indicating if
+the option parameter is set as presence-option
+(<b class="const">true</b>) or not (<b class="const">false</b>).
+The parts of the parameter responsible for processing option
+arguments use this information to invoke the hard-wired special
+cases for presence, or not.</p></dd>
+<dt><a name="30"><b class="cmd">&lt;parameter&gt;</b> <b class="method">primary</b> <i class="arg">option</i></a></dt>
+<dd><p>This method returns a boolean value indicating if the named <i class="arg">option</i>
+is the primary option of this parameter (<b class="const">true</b>), or not (<b class="const">false</b>).
+An error will be thrown if the named option is not controlled by the parameter.</p>
+<dl class="arguments">
+<dt>string <i class="arg">option</i></dt>
+<dd><p>The name of the option to check.</p></dd>
+</dl></dd>
+<dt><a name="31"><b class="cmd">&lt;parameter&gt;</b> <b class="method">process</b> <i class="arg">detail</i> <i class="arg">queue</i></a></dt>
+<dd><p>This method extracts the value of the parameter from the command line.
+A <b class="method">presence</b> option takes nothing, whereas an <b class="method">isbool</b> option
+takes the first value in the <i class="arg">queue</i>, if it is a proper boolean, and
+defaults to <b class="const">true</b> if not. Any other argument or option takes  the
+first value in <i class="arg">queue</i>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">detail</i></dt>
+<dd><p>The name of the parameter, or the option flag referencing it.</p></dd>
+<dt>struct::queue <i class="arg">queue</i></dt>
+<dd><p>The queue instance holding the words of the command line not yet
+processed by the system.</p></dd>
+</dl></dd>
+<dt><a name="32"><b class="cmd">&lt;parameter&gt;</b> <b class="method">prompt</b></a></dt>
+<dd><p>This method returns the prompt string used by the parameter for
+interactive entry. If not overridden by the parameter's specification
+this defaults to a string derived from the internal name of the
+parameter, i.e. &quot;Enter <b class="variable">name</b>:&quot;.</p></dd>
+<dt><a name="33"><b class="cmd">&lt;parameter&gt;</b> <b class="method">required</b></a></dt>
+<dd><p>This accessor method returns the &quot;required&quot; flag
+set during parameter construction.
+A result of <b class="const">true</b> indicates that the parameter
+must be specified by the user at runtime, and otherwise
+may be left unspecified (<b class="const">false</b>).</p></dd>
+<dt><a name="34"><b class="cmd">&lt;parameter&gt;</b> <b class="method">reset</b> <span class="opt">?<i class="arg">cleanup</i>?</span></a></dt>
+<dd><p>This method sets the parameter into the initial state where
+it has neither string nor internal representation, nor is
+it locked. This is a stronger form of <b class="method">forget</b>.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">cleanup</i></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="35"><b class="cmd">&lt;parameter&gt;</b> <b class="method">self</b></a></dt>
+<dd><p>This method returns the parameter instance itself.</p></dd>
+<dt><a name="36"><b class="cmd">&lt;parameter&gt;</b> <b class="method">set?</b></a></dt>
+<dd><p>This accessor method returns a boolean value indicating
+if the parameter was given a string representation at
+runtime (<b class="const">true</b>), or not (<b class="const">false</b>).</p></dd>
+<dt><a name="37"><b class="cmd">&lt;parameter&gt;</b> <b class="method">setq</b> <i class="arg">queue</i></a></dt>
+<dd><p>This method sets the first element of the <i class="arg">queue</i>
+as the value of the parameter.
+For a &quot;list&quot; parameter all elements of the queue are
+taken as the new value of the parameter.
+This is not quite analogous to method <b class="method">set</b> below.
+They behave the same for scalar parameters, and differ
+for &quot;list&quot; parameters.</p>
+<dl class="arguments">
+<dt>stack::queue <i class="arg">queue</i></dt>
+<dd><p>The queue instance holding the words of the command
+line not yet processed.</p></dd>
+</dl></dd>
+<dt><a name="38"><b class="cmd">&lt;parameter&gt;</b> <b class="method">set</b> <i class="arg">value</i></a></dt>
+<dd><p>This method sets the <i class="arg">value</i> as the new string
+representation of the parameter.
+For a &quot;list&quot; parameter the string representation is
+<em>extended</em> with the <i class="arg">value</i>.
+This action triggers the execution of the &quot;when-set&quot; callback.
+A previously existing internal representation is
+forgotten (See <b class="method">forget</b>).</p>
+<dl class="arguments">
+<dt>string <i class="arg">value</i></dt>
+<dd><p>The new value of the parameter, or an extension of the
+existing value.</p></dd>
+</dl></dd>
+<dt><a name="39"><b class="cmd">&lt;parameter&gt;</b> <b class="method">string</b></a></dt>
+<dd><p>This accessor method returns the string representation of
+the parameter. If such was not set an error will be thrown
+(See method <b class="method">undefined!</b>).</p></dd>
+<dt><a name="40"><b class="cmd">&lt;parameter&gt;</b> <b class="method">threshold:</b> <i class="arg">n</i></a></dt>
+<dd><p>This method specifies the minimum number of words needed after
+the optional argument parameter for it to accept the current
+word for itself.
+Parameters which are not optional arguments ignore this method.
+The result of the method is the empty string.</p>
+<dl class="arguments">
+<dt>integer <i class="arg">n</i></dt>
+<dd><p>The acceptance threshold for the parameter.</p></dd>
+</dl></dd>
+<dt><a name="41"><b class="cmd">&lt;parameter&gt;</b> <b class="method">threshold</b></a></dt>
+<dd><p>This method returns the threshold set on the parameter.
+An empty string indicates a parameter without threshold.
+A value of -1 indicates that the optional argument accepts
+based on validation (See method <b class="method">accept</b>) instead
+of using a threshold.</p></dd>
+<dt><a name="42"><b class="cmd">&lt;parameter&gt;</b> <b class="method">type</b></a></dt>
+<dd><p>This accessor method returns the type of the parameter, one of
+<b class="const">argument</b>, <b class="const">option</b>, or <b class="const">state</b>. See also
+method <b class="method">is</b> for type-checking.</p></dd>
+<dt><a name="43"><b class="cmd">&lt;parameter&gt;</b> <b class="method">undefined!</b></a></dt>
+<dd><p>This method explicitly throws a &quot;parameter undefined&quot; error
+for this parameter.</p></dd>
+<dt><a name="44"><b class="cmd">&lt;parameter&gt;</b> <b class="method">validator</b></a></dt>
+<dd><p>This method returns the &quot;validate&quot; command prefix callback
+(i.e. the parameter's validation type).</p></dd>
+<dt><a name="45"><b class="cmd">&lt;parameter&gt;</b> <b class="method">value</b></a></dt>
+<dd><p>This accessor method returns the internal representation of
+the parameter. If necessary the data is computed from the
+parameter's string representation, &quot;default&quot; value, or
+&quot;generate&quot; callback.
+An error is thrown if the value could not be determined.
+(See method <b class="method">undefined!</b>).
+If the value is newly computed the action triggers the
+execution of the &quot;when-complete&quot; callback.</p>
+<p>--TODO-- describe generation rules and order.</p></dd>
+<dt><a name="46"><b class="cmd">&lt;parameter&gt;</b> <b class="method">when-complete</b></a></dt>
+<dd><p>This method returns the &quot;when-complete&quot; command prefix callback,
+if it was set, and an empty list otherwise.</p></dd>
+<dt><a name="47"><b class="cmd">&lt;parameter&gt;</b> <b class="method">when-set</b></a></dt>
+<dd><p>This method returns the &quot;when-set&quot; command prefix callback,
+if it was set, and an empty list otherwise.</p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Help Information</a></h2>
+<p>The help information generated for parameters is a
+dictionary containing the keys below:</p>
+<dl class="definitions">
+<dt>cmdline</dt>
+<dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
+<dt>code</dt>
+<dd><p>Output of method <b class="method">code</b>.</p></dd>
+<dt>default</dt>
+<dd><p>Output of method <b class="method">default</b>.</p></dd>
+<dt>defered</dt>
+<dd><p>Output of method <b class="method">defered</b>.</p></dd>
+<dt>description</dt>
+<dd><p>Output of method <b class="method">description</b>.</p></dd>
+<dt>documented</dt>
+<dd><p>Output of method <b class="method">documented</b>.</p></dd>
+<dt>flags</dt>
+<dd><p>A dictionary mapping flag names to flag
+                   types, i.e. <b class="const">primary</b>, <b class="const">alias</b>,
+                   or <b class="const">inverted</b>.</p></dd>
+<dt>generator</dt>
+<dd><p>Output of method <b class="method">generator</b>.</p></dd>
+<dt>interactive</dt>
+<dd><p>Output of method <b class="method">interactive</b>.</p></dd>
+<dt>isbool</dt>
+<dd><p>Output of method <b class="method">isbool</b>.</p></dd>
+<dt>label</dt>
+<dd><p>Output of method <b class="method">label</b>.</p></dd>
+<dt>list</dt>
+<dd><p>Output of method <b class="method">list</b>.</p></dd>
+<dt>ordered</dt>
+<dd><p>Output of method <b class="method">ordered</b>.</p></dd>
+<dt>presence</dt>
+<dd><p>Output of method <b class="method">presence</b>.</p></dd>
+<dt>prompt</dt>
+<dd><p>Output of method <b class="method">prompt</b>.</p></dd>
+<dt>required</dt>
+<dd><p>Output of method <b class="method">required</b>.</p></dd>
+<dt>threshold</dt>
+<dd><p>Output of method <b class="method">threshold</b>.</p></dd>
+<dt>type</dt>
+<dd><p>Output of method <b class="method">type</b>.</p></dd>
+<dt>validator</dt>
+<dd><p>Output of method <b class="method">validator</b>.</p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>
