@@ -116,7 +116,8 @@
 <li class="section"><a href="#section1">Description</a></li>
 <li class="section"><a href="#section2">Class API</a></li>
 <li class="section"><a href="#section3">Instance API</a></li>
-<li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section4">Help Information</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
@@ -129,11 +130,11 @@
 <ul class="syntax">
 <li><a href="#1"><b class="cmd">::cmdr::private</b> <b class="method">new</b> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">arguments</i> <i class="arg">action</i></a></li>
 <li><a href="#2"><b class="cmd">::cmdr::private</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">arguments</i> <i class="arg">action</i></a></li>
-<li><a href="#3"><b class="cmd">private</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
-<li><a href="#4"><b class="cmd">private</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
-<li><a href="#5"><b class="cmd">private</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
-<li><a href="#6"><b class="cmd">private</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
-<li><a href="#7"><b class="cmd">private</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
+<li><a href="#3"><b class="cmd">&lt;private&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
+<li><a href="#4"><b class="cmd">&lt;private&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
+<li><a href="#5"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
+<li><a href="#6"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
+<li><a href="#7"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
 </ul>
 </div>
 </div>
@@ -186,9 +187,9 @@ modifying and extending the framework itself. A user of the framework
 has no need for it, although they have indirect access through
 parameters and their container.</p>
 <dl class="definitions">
-<dt><a name="3"><b class="cmd">private</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
-<dd><p>This command is given the completion state <i class="arg">parse</i> of a partial
-command line and returns a list of strings which are the vaid
+<dt><a name="3"><b class="cmd">&lt;private&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
+<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
+command line and returns a list of strings which are the valid
 completions at this point.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
@@ -196,7 +197,7 @@ completions at this point.</p>
 line.</p>
 <p>-- TODO -- Describe the state fields and their meaning.</p></dd>
 </dl></dd>
-<dt><a name="4"><b class="cmd">private</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
+<dt><a name="4"><b class="cmd">&lt;private&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
 <dd><p>This method parses the <i class="arg">word</i>s of the command line, matching them
 to the parameters of the private, be they arguments, or options. When
 done without error it invokes the action of the private with the
@@ -205,7 +206,7 @@ filled container of parameters.</p>
 <dt>string <i class="arg">word</i></dt>
 <dd><p>The words of the command line to parse and match to parameters.</p></dd>
 </dl></dd>
-<dt><a name="5"><b class="cmd">private</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></dt>
+<dt><a name="5"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></dt>
 <dd><p>This method specifies a command prefix to wrap around the parsing of
 the command line for the private, and the execution of its action.</p>
 <dl class="arguments">
@@ -218,16 +219,17 @@ required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i.e. in
 an interactive shell run by the framework).</p></dd>
 </dl></dd>
-<dt><a name="6"><b class="cmd">private</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
+<dt><a name="6"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
 <dd><p>This method returns the help information for the private and its
 parameters. The <i class="arg">prefix</i>, if specified provides the name of the
-private within the help data. It defaults to the empty string.</p>
-<p>-- TODO -- describe help structure --&gt; custom help formats</p>
+private within the help data. It defaults to the empty string.
+The result of the command is a structure of the form
+described in section <span class="sectref"><a href="#section4">Help Information</a></span>.</p>
 <dl class="arguments">
 <dt>string <i class="arg">prefix</i></dt>
 <dd><p>The name to use for the private within the generated help.</p></dd>
 </dl></dd>
-<dt><a name="7"><b class="cmd">private</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
+<dt><a name="7"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
 <dd><p>This method overrides the standard behaviour for unknown methods.
 Instead of throwing an error they are routed to the hidden container
 of the private's parameters, of class <b class="package">cmdr::config</b>.</p>
@@ -239,7 +241,75 @@ of the private's parameters, of class <b class="package">cmdr::config</b>.</p>
 </dl></dd>
 </dl>
 </div>
-<div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<div id="section4" class="section"><h2><a name="section4">Help Information</a></h2>
+<p>The help information generated by various places of the framework
+is a dictionary containing the following keys:</p>
+<dl class="definitions">
+<dt>arguments</dt>
+<dd><p>A list of strings, the names of the command arguments, in order.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>desc</dt>
+<dd><p>The command's description, i.e. help text.</p></dd>
+<dt>opt2para</dt>
+<dd><p>A dictionary mapping option flags to option names.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>options</dt>
+<dd><p>A dictionary mapping option names to their descriptions.</p></dd>
+<dt>parameters</dt>
+<dd><p>A dictionary mapping parameter names to their definition.
+Each definition is a dictionary containing the keys below.
+See also package <b class="package">cmdr::parameter</b>.</p>
+<dl class="definitions">
+<dt>cmdline</dt>
+<dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
+<dt>code</dt>
+<dd><p>Output of method <b class="method">code</b>.</p></dd>
+<dt>default</dt>
+<dd><p>Output of method <b class="method">default</b>.</p></dd>
+<dt>defered</dt>
+<dd><p>Output of method <b class="method">defered</b>.</p></dd>
+<dt>description</dt>
+<dd><p>Output of method <b class="method">description</b>.</p></dd>
+<dt>documented</dt>
+<dd><p>Output of method <b class="method">documented</b>.</p></dd>
+<dt>flags</dt>
+<dd><p>A dictionary mapping flag names to flag
+                   types, i.e. <b class="const">primary</b>, <b class="const">alias</b>,
+                   or <b class="const">inverted</b>.</p></dd>
+<dt>generator</dt>
+<dd><p>Output of method <b class="method">generator</b>.</p></dd>
+<dt>interactive</dt>
+<dd><p>Output of method <b class="method">interactive</b>.</p></dd>
+<dt>isbool</dt>
+<dd><p>Output of method <b class="method">isbool</b>.</p></dd>
+<dt>label</dt>
+<dd><p>Output of method <b class="method">label</b>.</p></dd>
+<dt>list</dt>
+<dd><p>Output of method <b class="method">list</b>.</p></dd>
+<dt>ordered</dt>
+<dd><p>Output of method <b class="method">ordered</b>.</p></dd>
+<dt>presence</dt>
+<dd><p>Output of method <b class="method">presence</b>.</p></dd>
+<dt>prompt</dt>
+<dd><p>Output of method <b class="method">prompt</b>.</p></dd>
+<dt>required</dt>
+<dd><p>Output of method <b class="method">required</b>.</p></dd>
+<dt>threshold</dt>
+<dd><p>Output of method <b class="method">threshold</b>.</p></dd>
+<dt>type</dt>
+<dd><p>Output of method <b class="method">type</b>.</p></dd>
+<dt>validator</dt>
+<dd><p>Output of method <b class="method">validator</b>.</p></dd>
+</dl></dd>
+<dt>sections</dt>
+<dd><p>A list of sections the command belongs to.
+Each section name is a list itself, the path of the section and sub-sections.</p></dd>
+<dt>states</dt>
+<dd><p>A list of strings, the names of the command's hidden state parameters.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at

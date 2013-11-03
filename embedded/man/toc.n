@@ -272,6 +272,9 @@ doc
 \fBcmdr_private\fR
 \fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
 .TP
+\fBcmdr_private\fR
+\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Single command handling, options, and arguments
+.TP
 \fBcmdr_util\fR
 \fIfiles/cmdr_util\&.n\fR: Cmdr - General Utilities - Internal
 .TP
