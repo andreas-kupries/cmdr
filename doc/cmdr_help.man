@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_help [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::help]
-[titledesc {Utilities for help text formatting and setup - Internal}]
+[titledesc [vset TITLE_HELP]]
 [description]
 [include parts/welcome.inc]
 

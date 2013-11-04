@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_help_sql [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::help::sql]
-[titledesc {Formatting help as series of SQL commands}]
+[titledesc [vset TITLE_HELP_SQL]]
 [description]
 [include parts/welcome.inc]
 
