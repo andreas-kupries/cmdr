@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_help_json [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::help::json]
-[titledesc {Formatting help as JSON object}]
+[titledesc [vset TITLE_HELP_JSON]]
 [description]
 [include parts/welcome.inc]
 

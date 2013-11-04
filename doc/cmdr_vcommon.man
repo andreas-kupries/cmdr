@@ -3,7 +3,7 @@
 [manpage_begin [vset PROJECT]_validate_common [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::validate::common]
-[titledesc {Utilities for Validation Types}]
+[titledesc [vset TITLE_VCOMMON]]
 [description]
 [include parts/welcome.inc]
 
