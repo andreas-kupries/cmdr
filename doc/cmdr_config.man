@@ -1,0 +1,464 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_config [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_CONFIG]]
+[description]
+[include parts/welcome.inc]
+
+This package implements the collections of [package cmdr::parameters]
+serving as the configuration of privates (see [package cmdr::private]).
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Class API}]
+
+The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+configuration instances.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::config] [method new] [arg context] [arg spec]]
+
+Create an auto-named instance of [class cmdr::config].
+[para] [emph {Not used}].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::config] [method create] [arg obj] [arg context] [arg spec]]
+
+Create a new instance of [class cmdr::config], named [arg obj].
+
+
+[list_begin arguments]
+
+[arg_def string obj]
+The (command) name of the new config instance.
+
+[arg_def cmdr::config context]
+The instance command of the [package cmdr::private] instance the configuration
+will belong to.
+
+[arg_def script spec]
+
+Tcl-script specifying the parameters in detail. Please read
+[term [vset TITLE_DSL]], section --TODO-- for the details.
+
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::config] [method interactive] [opt [arg enable]]]
+
+Class method to change the global interaction default for the
+mini-shell of privates. The default is to disable this mini-shell
+for all privates, and enable it on a per-private basis, through
+the specification.
+
+[list_begin arguments]
+[arg_def boolean enable]
+Defaults to [const true], globally activating the mini-shell.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::config] [method display] [arg displaycmd]]
+
+Class method to override the standard display command used by
+the mini-shell to show the current state of all parameters.
+
+[list_begin arguments]
+[arg_def {commandprefix} displaycmd]
+
+The display command to use. The command will be called with a
+single argument, a list containing the names of the parameters
+to show. The command has to format the state of the requested
+parameters as a string and return this string as its result.
+
+[list_end][comment {--- arguments --}]
+[list_end][comment definitions]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Instance API}]
+
+Most of the instance API is not public.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method @...] [arg ...]]
+
+All parameters held by a configuration instance are accessible
+through it. To this end each parameter named [var foo] has a
+dynamically created accessor method [method @foo] taking the
+method and its arguments to apply to the parameter instance.
+
+[para] If no words are specified at all the system defaults to the
+application of instance method [method value].
+
+[para] Together with a parameter's ability to access the
+configuration holding it having access to a single parameter
+instance (like in the various callbacks) provides access to all.
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method arguments]]
+
+This method returns a list of parameter names,
+for the parameters which are arguments.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method complete] [arg line]]
+
+This hook-method for the mini-shell is responsible
+for computing the set of completions for the
+entered [arg line].
+
+[list_begin arguments]
+[arg_def string line]
+The command line to complete.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method complete-repl] [arg parse]]
+
+This internal method is used by the hook-method [method complete]
+for the mini-shell, see above. It is given the completion
+state [arg parse] of a partial command line and returns a
+list of strings which are the valid completions at this point.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+
+[para] -- TODO -- Describe the state fields and their meaning.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method complete-words] [arg parse]]
+
+This method is given the completion state [arg parse] of a partial
+command line and returns a list of strings which are the valid
+completions at this point.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+
+[para] -- TODO -- Describe the state fields and their meaning.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method continued] [arg line]]
+
+This hook-method for the mini-shell is responsible for the detection
+of a continuation-line in the entered command [arg line]. It always
+returns the boolean value [const false] as the mini-shell does not
+support continuation lines.
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method dispatch] [arg cmd]]
+
+This hook-method for the mini-shell is responsible for
+the recognition and execution of the supported commands.
+
+[list_begin arguments]
+[arg_def string cmd]
+The command line containing the command to run.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method display] [opt [arg plist]]]
+
+This method formats the chosen parameters for display and returns
+the result as a string. This invokes the chosen display callback,
+if one was set. Without an internal formatter is used instead.
+
+[list_begin arguments]
+[arg_def list plist]
+The list of parameters (by name) to format for display.
+
+If not specified the list default to the set of
+[method public] parameters plus any undocumented parameters
+already set by the user.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method dump]]
+
+This method formats all parameters for display, using the
+internal formatter, and returns the result as a string.
+
+Useful for debugging.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method eoptions]]
+
+This method returns a dictionary mapping all possible
+option prefixes to a list of full option names with
+that prefix.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method exit]]
+
+This hook-method for the mini-shell returns a boolean
+value indicating whether the mini-shell was stopped
+and has to exit ([const true]), or not ([const false]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method force] [opt [arg allowinteract]] [opt [arg forcedefered]]]
+
+This method forces the calculation of the values for all parameters
+in the configuration instance. This is the ''completion phase''.
+
+[list_begin arguments]
+[arg_def boolean allowinteract]
+If specified as [const false] parameters allowing the interactive
+entry of their value have this feature disabled for the operation.
+The default is [const true], allowing for the interaction.
+
+[arg_def boolean forcedefered]
+If specified as [const true] even parameters marked as "defered"
+are forced to generate their value. The default is [const false],
+causing the method to ignore such parameters.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method forget]]
+
+This method invokes the parameter method [method forget] on all
+parameters in the configuration.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method has] [arg name]]
+
+This method checks if the configuration instance contains
+a parameter with the specified [arg name] and returns a
+boolean value indicating whether the parameter exists
+([const true]), or not ([const false]).
+
+[list_begin arguments]
+[arg_def string name]
+The name of the parameter to check for existence
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method help] [opt [arg mode]]]
+
+This method returns the help information for the
+parameters held in the configuration. 
+
+The result of the command is a structure of the form
+described in section [sectref {Help Information}].
+
+[list_begin arguments]
+[arg_def enum mode]
+The possible modes are [const public] and [const interact].
+If not specified [const public] is the default.
+In this mode only "documented" parameters are included in the help.
+In mode "interact", used by the mini-shell undocumented parameters
+are included as well, if they are already set by the user.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method interact]]
+
+This method invokes the mini-shell for interactive parameter entry.
+It returns on exit from the shell.
+The result of the method is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method interactive]]
+
+This accessor method returns a boolean value indicating whether use
+of the mini-shell is allowed ([const true]), or not ([const false]).
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method lookup] [arg name]]
+
+This method checks if the configuration instance contains
+a parameter with the specified [arg name] and returns its
+instance. An error is thrown if the parameter is not known.
+
+[list_begin arguments]
+[arg_def string name]
+The name of the parameter to retrieve.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method lookup-option] [arg name]]
+
+This method checks if the configuration instance contains
+a parameter controlling the specified option [arg name]
+and returns its instance. An error is thrown if the option
+is not known.
+
+[list_begin arguments]
+[arg_def string name]
+The option flag to find the controlling parameter for.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method missingOptionValue] [arg name]]
+
+This method throws the standard error for when the option [arg name]
+requiring an argument value does not have one. See the
+methods [method notEnough] and [method tooMany] as well.
+
+[list_begin arguments]
+[arg_def string name]
+The flag triggering the error.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method names]]
+
+This method returns a list of parameter names, for all parameters.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method notEnough]]
+
+This method throws the standard error for when a command is found
+to be supplied with not enough arguments for its parameters. See
+the methods [method missingOptionValue] and [method tooMany] as well.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method options]]
+
+This method returns a list of the option flags recognized
+by the parameters in the configuration. This does not include
+option prefixes.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method parse] [opt [arg word...]]]
+
+This method parses the words (from the command line) and
+maps them to parameters, based on naming (options and flags),
+or position (arguments).
+
+[list_begin arguments]
+[arg_def list word]
+The words of the command specifying the parameters of the private
+holding the configuration instance.
+
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method parse-options]]
+
+This method is a helper for [method parse] above.
+Accessing the internal queue initialized by [method parse]
+it splits arguments and options, processing all the latter.
+The arguments are put back into the queue, in the order
+they were found in.
+
+This is used by parameters (optional arguments) using the
+regular threshold-regime to determine acceptance. All options
+still in the command line must be removed (and processed) to
+know the proper number of arguments words left.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method prompt1]]
+
+This hook-method for the mini-shell returns the primary
+prompt string to use.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method prompt2]]
+
+This hook-method for the mini-shell returns the secondary
+prompt string for use within a continuation. As the mini-shell
+does not support continuation lines it should not be invoked
+ever, and thus always throws an error should it be invoked.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method public]]
+
+This method a list of parameter names, for all documented
+option and argument parameters.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method raise] [arg msg] [opt [arg word...]]]
+
+This method is a helper for methods [method tooMany], [method notEnough],
+and [method missingOptionValue], doing the bulk of the work.
+
+[list_begin arguments]
+[arg_def string msg] The human-readable error message to use.
+[arg_def list word]  The machine-readable (trap-able) error code to use.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method report] [arg what] [arg data]]
+
+This hook-method for the mini-shell is responsible for the
+reporting of the command results and handles the display of
+the parameter state before a new prompt.
+
+[para] Its result is the empty string.
+
+[list_begin arguments]
+[arg_def enum what]
+The result code of the command, one of [const ok], or [const fail].
+
+[arg_def any data]
+The result of the command, or an error message in case of failure.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method reset]]
+
+This method invokes the parameter method [method reset] on all
+parameters in the configuration.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method self]]
+
+This method returns the configuration instance itself.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method tooMany]]
+
+This method throws the standard error for when a command is found
+to be supplied with too many arguments for its parameters. See the
+methods [method missingOptionValue] and [method notEnough] as well.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method unknown] [arg method] [opt [arg word...]]]
+
+This method is the hook into the TclOO method resolution for the class.
+It implements the dynamic accessor methods for the parameters held by
+the configuration instance. See method [method @...] at the top.
+
+[list_begin arguments]
+[arg_def list list]
+[list_end][comment {--- arguments --}]
+
+[list_end][comment {-- definitions --}]
+
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Help Information}]
+[include parts/help_structure.inc]
+
+[include parts/feedback.inc]
+[manpage_end]
