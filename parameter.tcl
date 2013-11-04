@@ -106,6 +106,7 @@ oo::class create ::cmdr::parameter {
 	set myhasstring no
 	set mystring    {}
 	set myhasvalue  no
+	set myisundefined no
 	set myvalue     {}
 	set mylocker    {}
 
@@ -648,6 +649,7 @@ oo::class create ::cmdr::parameter {
 	if {$myhasvalue} {
 	    my ValueRelease $myvalue
 	}
+	set myisundefined no
 	set myhasvalue  no
 	set myvalue     {}
 	return
@@ -933,7 +935,14 @@ oo::class create ::cmdr::parameter {
 	# (6) FAIL. 
 
 	if {$myhasvalue} {
+	    debug.cmdr/parameter {/cached ==> ($myvalue)}
 	    return $myvalue
+	}
+
+	# Do not run the whole value generation a second time, when
+	# the first already failed.
+	if {$myisundefined} {
+	    my undefined!
 	}
 
 	# Note that myvalidate and mygenerate are executed in this
@@ -945,6 +954,7 @@ oo::class create ::cmdr::parameter {
 	# code.
 
 	if {$myhasstring} {
+	    debug.cmdr/parameter {/user}
 	    # Specified on command line, string rep. Validate and
 	    # transform to the int. rep.
 	    #
@@ -961,31 +971,42 @@ oo::class create ::cmdr::parameter {
 	    } else {
 		set myvalue [{*}$myvalidate validate [self] $mystring]
 	    }
+
+	    debug.cmdr/parameter {/user ==> ($myvalue)}
 	    my Value: $myvalue
 	}
 
 	if {!$stopinteraction && $myinteractive && [cmdr interactive?]} {
 	    # Interaction.
+	    debug.cmdr/parameter {/interact begin}
 	    my interact
+
+	    debug.cmdr/parameter {/interact ==> ($myvalue)}
 	    return $myvalue
 	}
 
 	if {[llength $mygenerate]} {
 	    # Generation callback. Result is int. rep.
-	    my Value: [{*}$mygenerate [self]]
+	    debug.cmdr/parameter {/generate begin}
+	    set v [{*}$mygenerate [self]]
+	    debug.cmdr/parameter {/generate ==> ($v)}
+	    my Value: $v
 	}
 
 	if {$myhasdefault} {
+	    debug.cmdr/parameter {/default ==> ($mydefault)}
 	    # A declared default value is the int. rep. No validation,
 	    # no transform. Set it directly.
 	    my Value: $mydefault
 	}
 
 	if {!$myisrequired} {
+	    debug.cmdr/parameter {/optional, empty}
 	    # Hardwired default int. rep if all else failed.
 	    my Value: {}
 	}
 
+	debug.cmdr/parameter {undefined!}
 	my undefined!
     }
 
@@ -1069,13 +1090,36 @@ oo::class create ::cmdr::parameter {
 	    # the chosen validation type.
 	    set continue 1
 	    while {$continue} {
+		set abort 0
 		set continue 0
-		set thestring [linenoise prompt \
-				  -prompt $prompt \
-				   -complete [::list {*}$myvalidate complete [self]]]
+		try {
+		    set thestring [linenoise prompt \
+				       -prompt $prompt \
+				       -complete [::list {*}$myvalidate complete [self]]]
+		} on error {e o} {
+		    debug.cmdr/parameter {trapped $e}
+		    debug.cmdr/parameter {options $o}
+
+		    if {$e eq "aborted"} {
+			debug.cmdr/parameter {/abort}
+			# prevent system from taking which does not exist
+			set abort 1
+		    } else {
+			# rethrow any other error
+			return {*}$o $e
+		    }
+		}
+
+		if {$abort} {
+		    debug.cmdr/parameter {/break on ^C}
+		    my undefined!
+		}
+
 		try {
 		    set thevalue [{*}$myvalidate validate [self] $thestring]
 		} trap {CMDR VALIDATE} {e o} {
+		    debug.cmdr/parameter {trap $e}
+		    puts "$e, ignored"
 		    set continue 1
 		}
 	    }
@@ -1094,6 +1138,7 @@ oo::class create ::cmdr::parameter {
     # # ## ### ##### ######## #############
 
     method undefined! {} {
+	set myisundefined yes
 	debug.cmdr/parameter {}
 	return -code error \
 	    -errorcode {CMDR PARAMETER UNDEFINED} \
@@ -1136,11 +1181,12 @@ oo::class create ::cmdr::parameter {
 	mywhencomplete mywhenset mygenerate myvalidate \
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue mylocker mystopinteraction \
-	myisdocumented myonlypresence myisdefered
+	myisdocumented myonlypresence myisdefered \
+	myisundefined
 
     # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 0.9
+package provide cmdr::parameter 0.10
