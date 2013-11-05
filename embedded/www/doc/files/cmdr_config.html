@@ -1,0 +1,545 @@
+
+<html><head>
+<title>cmdr_config - &lt;&lt;unknown&gt;&gt;</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_config.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_config.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_config(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_config - Cmdr - Collection of parameters for privates</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Class API</a></li>
+<li class="section"><a href="#section3">Instance API</a></li>
+<li class="section"><a href="#section4">Help Information</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::util</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::config</b> <b class="method">new</b> <i class="arg">context</i> <i class="arg">spec</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::config</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">context</i> <i class="arg">spec</i></a></li>
+<li><a href="#3"><b class="cmd">::cmdr::config</b> <b class="method">interactive</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">::cmdr::config</b> <b class="method">display</b> <i class="arg">displaycmd</i></a></li>
+<li><a href="#5"><b class="cmd">&lt;config&gt;</b> <b class="method">@...</b> <i class="arg">...</i></a></li>
+<li><a href="#6"><b class="cmd">&lt;config&gt;</b> <b class="method">arguments</b></a></li>
+<li><a href="#7"><b class="cmd">&lt;config&gt;</b> <b class="method">complete</b> <i class="arg">line</i></a></li>
+<li><a href="#8"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-repl</b> <i class="arg">parse</i></a></li>
+<li><a href="#9"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
+<li><a href="#10"><b class="cmd">&lt;config&gt;</b> <b class="method">continued</b> <i class="arg">line</i></a></li>
+<li><a href="#11"><b class="cmd">&lt;config&gt;</b> <b class="method">dispatch</b> <i class="arg">cmd</i></a></li>
+<li><a href="#12"><b class="cmd">&lt;config&gt;</b> <b class="method">display</b> <span class="opt">?<i class="arg">plist</i>?</span></a></li>
+<li><a href="#13"><b class="cmd">&lt;config&gt;</b> <b class="method">dump</b></a></li>
+<li><a href="#14"><b class="cmd">&lt;config&gt;</b> <b class="method">eoptions</b></a></li>
+<li><a href="#15"><b class="cmd">&lt;config&gt;</b> <b class="method">exit</b></a></li>
+<li><a href="#16"><b class="cmd">&lt;config&gt;</b> <b class="method">force</b> <span class="opt">?<i class="arg">allowinteract</i>?</span> <span class="opt">?<i class="arg">forcedefered</i>?</span></a></li>
+<li><a href="#17"><b class="cmd">&lt;config&gt;</b> <b class="method">forget</b></a></li>
+<li><a href="#18"><b class="cmd">&lt;config&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></li>
+<li><a href="#19"><b class="cmd">&lt;config&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">mode</i>?</span></a></li>
+<li><a href="#20"><b class="cmd">&lt;config&gt;</b> <b class="method">interact</b></a></li>
+<li><a href="#21"><b class="cmd">&lt;config&gt;</b> <b class="method">interactive</b></a></li>
+<li><a href="#22"><b class="cmd">&lt;config&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></li>
+<li><a href="#23"><b class="cmd">&lt;config&gt;</b> <b class="method">lookup-option</b> <i class="arg">name</i></a></li>
+<li><a href="#24"><b class="cmd">&lt;config&gt;</b> <b class="method">missingOptionValue</b> <i class="arg">name</i></a></li>
+<li><a href="#25"><b class="cmd">&lt;config&gt;</b> <b class="method">names</b></a></li>
+<li><a href="#26"><b class="cmd">&lt;config&gt;</b> <b class="method">notEnough</b></a></li>
+<li><a href="#27"><b class="cmd">&lt;config&gt;</b> <b class="method">options</b></a></li>
+<li><a href="#28"><b class="cmd">&lt;config&gt;</b> <b class="method">parse</b> <span class="opt">?<i class="arg">word...</i>?</span></a></li>
+<li><a href="#29"><b class="cmd">&lt;config&gt;</b> <b class="method">parse-options</b></a></li>
+<li><a href="#30"><b class="cmd">&lt;config&gt;</b> <b class="method">prompt1</b></a></li>
+<li><a href="#31"><b class="cmd">&lt;config&gt;</b> <b class="method">prompt2</b></a></li>
+<li><a href="#32"><b class="cmd">&lt;config&gt;</b> <b class="method">public</b></a></li>
+<li><a href="#33"><b class="cmd">&lt;config&gt;</b> <b class="method">raise</b> <i class="arg">msg</i> <span class="opt">?<i class="arg">word...</i>?</span></a></li>
+<li><a href="#34"><b class="cmd">&lt;config&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></li>
+<li><a href="#35"><b class="cmd">&lt;config&gt;</b> <b class="method">reset</b></a></li>
+<li><a href="#36"><b class="cmd">&lt;config&gt;</b> <b class="method">self</b></a></li>
+<li><a href="#37"><b class="cmd">&lt;config&gt;</b> <b class="method">tooMany</b></a></li>
+<li><a href="#38"><b class="cmd">&lt;config&gt;</b> <b class="method">unknown</b> <i class="arg">method</i> <span class="opt">?<i class="arg">word...</i>?</span></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This package implements the collections of <b class="package">cmdr::parameters</b>
+serving as the configuration of privates (see <b class="package">cmdr::private</b>).</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
+<p>The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+configuration instances.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::config</b> <b class="method">new</b> <i class="arg">context</i> <i class="arg">spec</i></a></dt>
+<dd><p>Create an auto-named instance of <b class="class">cmdr::config</b>.</p>
+<p><em>Not used</em>.</p></dd>
+<dt><a name="2"><b class="cmd">::cmdr::config</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">context</i> <i class="arg">spec</i></a></dt>
+<dd><p>Create a new instance of <b class="class">cmdr::config</b>, named <i class="arg">obj</i>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">obj</i></dt>
+<dd><p>The (command) name of the new config instance.</p></dd>
+<dt>cmdr::config <i class="arg">context</i></dt>
+<dd><p>The instance command of the <b class="package">cmdr::private</b> instance the configuration
+will belong to.</p></dd>
+<dt>script <i class="arg">spec</i></dt>
+<dd><p>Tcl-script specifying the parameters in detail. Please read
+<i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::cmdr::config</b> <b class="method">interactive</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>Class method to change the global interaction default for the
+mini-shell of privates. The default is to disable this mini-shell
+for all privates, and enable it on a per-private basis, through
+the specification.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">enable</i></dt>
+<dd><p>Defaults to <b class="const">true</b>, globally activating the mini-shell.</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::cmdr::config</b> <b class="method">display</b> <i class="arg">displaycmd</i></a></dt>
+<dd><p>Class method to override the standard display command used by
+the mini-shell to show the current state of all parameters.</p>
+<dl class="arguments">
+<dt>commandprefix <i class="arg">displaycmd</i></dt>
+<dd><p>The display command to use. The command will be called with a
+single argument, a list containing the names of the parameters
+to show. The command has to format the state of the requested
+parameters as a string and return this string as its result.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Instance API</a></h2>
+<p>Most of the instance API is not public.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.</p>
+<dl class="definitions">
+<dt><a name="5"><b class="cmd">&lt;config&gt;</b> <b class="method">@...</b> <i class="arg">...</i></a></dt>
+<dd><p>All parameters held by a configuration instance are accessible
+through it. To this end each parameter named <b class="variable">foo</b> has a
+dynamically created accessor method <b class="method">@foo</b> taking the
+method and its arguments to apply to the parameter instance.</p>
+<p>If no words are specified at all the system defaults to the
+application of instance method <b class="method">value</b>.</p>
+<p>Together with a parameter's ability to access the
+configuration holding it having access to a single parameter
+instance (like in the various callbacks) provides access to all.</p>
+<dl class="arguments">
+<dt>list <i class="arg">list</i></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">&lt;config&gt;</b> <b class="method">arguments</b></a></dt>
+<dd><p>This method returns a list of parameter names,
+for the parameters which are arguments.</p></dd>
+<dt><a name="7"><b class="cmd">&lt;config&gt;</b> <b class="method">complete</b> <i class="arg">line</i></a></dt>
+<dd><p>This hook-method for the mini-shell is responsible
+for computing the set of completions for the
+entered <i class="arg">line</i>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">line</i></dt>
+<dd><p>The command line to complete.</p></dd>
+</dl></dd>
+<dt><a name="8"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-repl</b> <i class="arg">parse</i></a></dt>
+<dd><p>This internal method is used by the hook-method <b class="method">complete</b>
+for the mini-shell, see above. It is given the completion
+state <i class="arg">parse</i> of a partial command line and returns a
+list of strings which are the valid completions at this point.</p>
+<dl class="arguments">
+<dt>dict <i class="arg">parse</i></dt>
+<dd><p>A dictionary holding the current completion state of a partial command
+line.</p>
+<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+</dl></dd>
+<dt><a name="9"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
+<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
+command line and returns a list of strings which are the valid
+completions at this point.</p>
+<dl class="arguments">
+<dt>dict <i class="arg">parse</i></dt>
+<dd><p>A dictionary holding the current completion state of a partial command
+line.</p>
+<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+</dl></dd>
+<dt><a name="10"><b class="cmd">&lt;config&gt;</b> <b class="method">continued</b> <i class="arg">line</i></a></dt>
+<dd><p>This hook-method for the mini-shell is responsible for the detection
+of a continuation-line in the entered command <i class="arg">line</i>. It always
+returns the boolean value <b class="const">false</b> as the mini-shell does not
+support continuation lines.</p>
+<dl class="arguments">
+<dt>list <i class="arg">list</i></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="11"><b class="cmd">&lt;config&gt;</b> <b class="method">dispatch</b> <i class="arg">cmd</i></a></dt>
+<dd><p>This hook-method for the mini-shell is responsible for
+the recognition and execution of the supported commands.</p>
+<dl class="arguments">
+<dt>string <i class="arg">cmd</i></dt>
+<dd><p>The command line containing the command to run.</p></dd>
+</dl></dd>
+<dt><a name="12"><b class="cmd">&lt;config&gt;</b> <b class="method">display</b> <span class="opt">?<i class="arg">plist</i>?</span></a></dt>
+<dd><p>This method formats the chosen parameters for display and returns
+the result as a string. This invokes the chosen display callback,
+if one was set. Without an internal formatter is used instead.</p>
+<dl class="arguments">
+<dt>list <i class="arg">plist</i></dt>
+<dd><p>The list of parameters (by name) to format for display.
+If not specified the list default to the set of
+<b class="method">public</b> parameters plus any undocumented parameters
+already set by the user.</p></dd>
+</dl></dd>
+<dt><a name="13"><b class="cmd">&lt;config&gt;</b> <b class="method">dump</b></a></dt>
+<dd><p>This method formats all parameters for display, using the
+internal formatter, and returns the result as a string.
+Useful for debugging.</p></dd>
+<dt><a name="14"><b class="cmd">&lt;config&gt;</b> <b class="method">eoptions</b></a></dt>
+<dd><p>This method returns a dictionary mapping all possible
+option prefixes to a list of full option names with
+that prefix.</p></dd>
+<dt><a name="15"><b class="cmd">&lt;config&gt;</b> <b class="method">exit</b></a></dt>
+<dd><p>This hook-method for the mini-shell returns a boolean
+value indicating whether the mini-shell was stopped
+and has to exit (<b class="const">true</b>), or not (<b class="const">false</b>).</p></dd>
+<dt><a name="16"><b class="cmd">&lt;config&gt;</b> <b class="method">force</b> <span class="opt">?<i class="arg">allowinteract</i>?</span> <span class="opt">?<i class="arg">forcedefered</i>?</span></a></dt>
+<dd><p>This method forces the calculation of the values for all parameters
+in the configuration instance. This is the ''completion phase''.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">allowinteract</i></dt>
+<dd><p>If specified as <b class="const">false</b> parameters allowing the interactive
+entry of their value have this feature disabled for the operation.
+The default is <b class="const">true</b>, allowing for the interaction.</p></dd>
+<dt>boolean <i class="arg">forcedefered</i></dt>
+<dd><p>If specified as <b class="const">true</b> even parameters marked as &quot;defered&quot;
+are forced to generate their value. The default is <b class="const">false</b>,
+causing the method to ignore such parameters.</p></dd>
+</dl></dd>
+<dt><a name="17"><b class="cmd">&lt;config&gt;</b> <b class="method">forget</b></a></dt>
+<dd><p>This method invokes the parameter method <b class="method">forget</b> on all
+parameters in the configuration.</p></dd>
+<dt><a name="18"><b class="cmd">&lt;config&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></dt>
+<dd><p>This method checks if the configuration instance contains
+a parameter with the specified <i class="arg">name</i> and returns a
+boolean value indicating whether the parameter exists
+(<b class="const">true</b>), or not (<b class="const">false</b>).</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the parameter to check for existence</p></dd>
+</dl></dd>
+<dt><a name="19"><b class="cmd">&lt;config&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">mode</i>?</span></a></dt>
+<dd><p>This method returns the help information for the
+parameters held in the configuration. 
+The result of the command is a structure of the form
+described in section <span class="sectref"><a href="#section4">Help Information</a></span>.</p>
+<dl class="arguments">
+<dt>enum <i class="arg">mode</i></dt>
+<dd><p>The possible modes are <b class="const">public</b> and <b class="const">interact</b>.
+If not specified <b class="const">public</b> is the default.
+In this mode only &quot;documented&quot; parameters are included in the help.
+In mode &quot;interact&quot;, used by the mini-shell undocumented parameters
+are included as well, if they are already set by the user.</p></dd>
+</dl></dd>
+<dt><a name="20"><b class="cmd">&lt;config&gt;</b> <b class="method">interact</b></a></dt>
+<dd><p>This method invokes the mini-shell for interactive parameter entry.
+It returns on exit from the shell.
+The result of the method is the empty string.</p></dd>
+<dt><a name="21"><b class="cmd">&lt;config&gt;</b> <b class="method">interactive</b></a></dt>
+<dd><p>This accessor method returns a boolean value indicating whether use
+of the mini-shell is allowed (<b class="const">true</b>), or not (<b class="const">false</b>).</p></dd>
+<dt><a name="22"><b class="cmd">&lt;config&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></dt>
+<dd><p>This method checks if the configuration instance contains
+a parameter with the specified <i class="arg">name</i> and returns its
+instance. An error is thrown if the parameter is not known.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the parameter to retrieve.</p></dd>
+</dl></dd>
+<dt><a name="23"><b class="cmd">&lt;config&gt;</b> <b class="method">lookup-option</b> <i class="arg">name</i></a></dt>
+<dd><p>This method checks if the configuration instance contains
+a parameter controlling the specified option <i class="arg">name</i>
+and returns its instance. An error is thrown if the option
+is not known.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The option flag to find the controlling parameter for.</p></dd>
+</dl></dd>
+<dt><a name="24"><b class="cmd">&lt;config&gt;</b> <b class="method">missingOptionValue</b> <i class="arg">name</i></a></dt>
+<dd><p>This method throws the standard error for when the option <i class="arg">name</i>
+requiring an argument value does not have one. See the
+methods <b class="method">notEnough</b> and <b class="method">tooMany</b> as well.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The flag triggering the error.</p></dd>
+</dl></dd>
+<dt><a name="25"><b class="cmd">&lt;config&gt;</b> <b class="method">names</b></a></dt>
+<dd><p>This method returns a list of parameter names, for all parameters.</p></dd>
+<dt><a name="26"><b class="cmd">&lt;config&gt;</b> <b class="method">notEnough</b></a></dt>
+<dd><p>This method throws the standard error for when a command is found
+to be supplied with not enough arguments for its parameters. See
+the methods <b class="method">missingOptionValue</b> and <b class="method">tooMany</b> as well.</p></dd>
+<dt><a name="27"><b class="cmd">&lt;config&gt;</b> <b class="method">options</b></a></dt>
+<dd><p>This method returns a list of the option flags recognized
+by the parameters in the configuration. This does not include
+option prefixes.</p></dd>
+<dt><a name="28"><b class="cmd">&lt;config&gt;</b> <b class="method">parse</b> <span class="opt">?<i class="arg">word...</i>?</span></a></dt>
+<dd><p>This method parses the words (from the command line) and
+maps them to parameters, based on naming (options and flags),
+or position (arguments).</p>
+<dl class="arguments">
+<dt>list <i class="arg">word</i></dt>
+<dd><p>The words of the command specifying the parameters of the private
+holding the configuration instance.</p></dd>
+</dl></dd>
+<dt><a name="29"><b class="cmd">&lt;config&gt;</b> <b class="method">parse-options</b></a></dt>
+<dd><p>This method is a helper for <b class="method">parse</b> above.
+Accessing the internal queue initialized by <b class="method">parse</b>
+it splits arguments and options, processing all the latter.
+The arguments are put back into the queue, in the order
+they were found in.
+This is used by parameters (optional arguments) using the
+regular threshold-regime to determine acceptance. All options
+still in the command line must be removed (and processed) to
+know the proper number of arguments words left.</p></dd>
+<dt><a name="30"><b class="cmd">&lt;config&gt;</b> <b class="method">prompt1</b></a></dt>
+<dd><p>This hook-method for the mini-shell returns the primary
+prompt string to use.</p></dd>
+<dt><a name="31"><b class="cmd">&lt;config&gt;</b> <b class="method">prompt2</b></a></dt>
+<dd><p>This hook-method for the mini-shell returns the secondary
+prompt string for use within a continuation. As the mini-shell
+does not support continuation lines it should not be invoked
+ever, and thus always throws an error should it be invoked.</p></dd>
+<dt><a name="32"><b class="cmd">&lt;config&gt;</b> <b class="method">public</b></a></dt>
+<dd><p>This method a list of parameter names, for all documented
+option and argument parameters.</p></dd>
+<dt><a name="33"><b class="cmd">&lt;config&gt;</b> <b class="method">raise</b> <i class="arg">msg</i> <span class="opt">?<i class="arg">word...</i>?</span></a></dt>
+<dd><p>This method is a helper for methods <b class="method">tooMany</b>, <b class="method">notEnough</b>,
+and <b class="method">missingOptionValue</b>, doing the bulk of the work.</p>
+<dl class="arguments">
+<dt>string <i class="arg">msg</i></dt>
+<dd><p>The human-readable error message to use.</p></dd>
+<dt>list <i class="arg">word</i></dt>
+<dd><p>The machine-readable (trap-able) error code to use.</p></dd>
+</dl></dd>
+<dt><a name="34"><b class="cmd">&lt;config&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></dt>
+<dd><p>This hook-method for the mini-shell is responsible for the
+reporting of the command results and handles the display of
+the parameter state before a new prompt.</p>
+<p>Its result is the empty string.</p>
+<dl class="arguments">
+<dt>enum <i class="arg">what</i></dt>
+<dd><p>The result code of the command, one of <b class="const">ok</b>, or <b class="const">fail</b>.</p></dd>
+<dt>any <i class="arg">data</i></dt>
+<dd><p>The result of the command, or an error message in case of failure.</p></dd>
+</dl></dd>
+<dt><a name="35"><b class="cmd">&lt;config&gt;</b> <b class="method">reset</b></a></dt>
+<dd><p>This method invokes the parameter method <b class="method">reset</b> on all
+parameters in the configuration.</p></dd>
+<dt><a name="36"><b class="cmd">&lt;config&gt;</b> <b class="method">self</b></a></dt>
+<dd><p>This method returns the configuration instance itself.</p></dd>
+<dt><a name="37"><b class="cmd">&lt;config&gt;</b> <b class="method">tooMany</b></a></dt>
+<dd><p>This method throws the standard error for when a command is found
+to be supplied with too many arguments for its parameters. See the
+methods <b class="method">missingOptionValue</b> and <b class="method">notEnough</b> as well.</p></dd>
+<dt><a name="38"><b class="cmd">&lt;config&gt;</b> <b class="method">unknown</b> <i class="arg">method</i> <span class="opt">?<i class="arg">word...</i>?</span></a></dt>
+<dd><p>This method is the hook into the TclOO method resolution for the class.
+It implements the dynamic accessor methods for the parameters held by
+the configuration instance. See method <b class="method">@...</b> at the top.</p>
+<dl class="arguments">
+<dt>list <i class="arg">list</i></dt>
+<dd></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Help Information</a></h2>
+<p>The help information generated by various places of the framework
+is a dictionary containing the following keys:</p>
+<dl class="definitions">
+<dt>arguments</dt>
+<dd><p>A list of strings, the names of the command arguments, in order.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>desc</dt>
+<dd><p>The command's description, i.e. help text.</p></dd>
+<dt>opt2para</dt>
+<dd><p>A dictionary mapping option flags to option names.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>options</dt>
+<dd><p>A dictionary mapping option names to their descriptions.</p></dd>
+<dt>parameters</dt>
+<dd><p>A dictionary mapping parameter names to their definition.
+Each definition is a dictionary containing the keys below.
+See also package <b class="package">cmdr::parameter</b>.</p>
+<dl class="definitions">
+<dt>cmdline</dt>
+<dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
+<dt>code</dt>
+<dd><p>Output of method <b class="method">code</b>.</p></dd>
+<dt>default</dt>
+<dd><p>Output of method <b class="method">default</b>.</p></dd>
+<dt>defered</dt>
+<dd><p>Output of method <b class="method">defered</b>.</p></dd>
+<dt>description</dt>
+<dd><p>Output of method <b class="method">description</b>.</p></dd>
+<dt>documented</dt>
+<dd><p>Output of method <b class="method">documented</b>.</p></dd>
+<dt>flags</dt>
+<dd><p>A dictionary mapping flag names to flag
+                   types, i.e. <b class="const">primary</b>, <b class="const">alias</b>,
+                   or <b class="const">inverted</b>.</p></dd>
+<dt>generator</dt>
+<dd><p>Output of method <b class="method">generator</b>.</p></dd>
+<dt>interactive</dt>
+<dd><p>Output of method <b class="method">interactive</b>.</p></dd>
+<dt>isbool</dt>
+<dd><p>Output of method <b class="method">isbool</b>.</p></dd>
+<dt>label</dt>
+<dd><p>Output of method <b class="method">label</b>.</p></dd>
+<dt>list</dt>
+<dd><p>Output of method <b class="method">list</b>.</p></dd>
+<dt>ordered</dt>
+<dd><p>Output of method <b class="method">ordered</b>.</p></dd>
+<dt>presence</dt>
+<dd><p>Output of method <b class="method">presence</b>.</p></dd>
+<dt>prompt</dt>
+<dd><p>Output of method <b class="method">prompt</b>.</p></dd>
+<dt>required</dt>
+<dd><p>Output of method <b class="method">required</b>.</p></dd>
+<dt>threshold</dt>
+<dd><p>Output of method <b class="method">threshold</b>.</p></dd>
+<dt>type</dt>
+<dd><p>Output of method <b class="method">type</b>.</p></dd>
+<dt>validator</dt>
+<dd><p>Output of method <b class="method">validator</b>.</p></dd>
+</dl></dd>
+<dt>sections</dt>
+<dd><p>A list of sections the command belongs to.
+Each section name is a list itself, the path of the section and sub-sections.</p></dd>
+<dt>states</dt>
+<dd><p>A list of strings, the names of the command's hidden state parameters.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

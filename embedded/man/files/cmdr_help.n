@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr_help" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_help \- Utilities for help text formatting and setup - Internal
+cmdr_help \- Cmdr - Utilities for help text formatting and setup - Internal
 .SH SYNOPSIS
 package require \fBcmdr::help \fR
 .sp
