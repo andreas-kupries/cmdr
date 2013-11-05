@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_private" n 0 doc "<<unknown>>"
+.TH "cmdr_parameter" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_private \- Cmdr - Single command handling, options, and arguments
+cmdr_parameter \- Cmdr - Command parameters
 .SH SYNOPSIS
 package require \fBcmdr::util \fR
 .sp

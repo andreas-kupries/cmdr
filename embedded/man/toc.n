@@ -242,20 +242,26 @@ Database Class:	\\fB\\$3\\fR
 doc
 .RS
 .TP
+\fBcmdr_actor\fR
+\fIfiles/cmdr_actor\&.n\fR: Cmdr - Base class for officers and privates - Internal
+.TP
 \fBcmdr_changes\fR
 \fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
+.TP
+\fBcmdr_config\fR
+\fIfiles/cmdr_config\&.n\fR: Cmdr - Collection of parameters for privates
 .TP
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
 .TP
 \fBcmdr_help\fR
-\fIfiles/cmdr_help\&.n\fR: Utilities for help text formatting and setup - Internal
+\fIfiles/cmdr_help\&.n\fR: Cmdr - Utilities for help text formatting and setup - Internal
 .TP
 \fBcmdr_help_json\fR
-\fIfiles/cmdr_help_json\&.n\fR: Formatting help as JSON object
+\fIfiles/cmdr_help_json\&.n\fR: Cmdr - Formatting help as JSON object
 .TP
 \fBcmdr_help_sql\fR
-\fIfiles/cmdr_help_sql\&.n\fR: Formatting help as series of SQL commands
+\fIfiles/cmdr_help_sql\&.n\fR: Cmdr - Formatting help as series of SQL commands
 .TP
 \fBcmdr_howto_get_sources\fR
 \fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
@@ -269,11 +275,11 @@ doc
 \fBcmdr_license\fR
 \fIfiles/cmdr_license\&.n\fR: Cmdr - License
 .TP
-\fBcmdr_private\fR
-\fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
+\fBcmdr_parameter\fR
+\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Command parameters
 .TP
 \fBcmdr_private\fR
-\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Single command handling, options, and arguments
+\fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
 .TP
 \fBcmdr_util\fR
 \fIfiles/cmdr_util\&.n\fR: Cmdr - General Utilities - Internal
@@ -282,7 +288,7 @@ doc
 \fIfiles/cmdr_validate\&.n\fR: Cmdr - Standard validation types for parameters
 .TP
 \fBcmdr_validate_common\fR
-\fIfiles/cmdr_vcommon\&.n\fR: Utilities for Validation Types
+\fIfiles/cmdr_vcommon\&.n\fR: Cmdr - Utilities for Validation Types
 .TP
 \fBcmdr_vtypes\fR
 \fIfiles/cmdr_vtypes\&.n\fR: Cmdr - Writing custom validation types

@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr_help_sql" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_help_sql \- Formatting help as series of SQL commands
+cmdr_help_sql \- Cmdr - Formatting help as series of SQL commands
 .SH SYNOPSIS
 package require \fBcmdr::help::sql \fR
 .sp

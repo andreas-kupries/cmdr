@@ -1,0 +1,789 @@
+'\"
+'\" Generated from file 'cmdr_config\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_config" n 0 doc "<<unknown>>"
+.BS
+.SH NAME
+cmdr_config \- Cmdr - Collection of parameters for privates
+.SH SYNOPSIS
+package require \fBcmdr::util \fR
+.sp
+\fB::cmdr::config\fR \fBnew\fR \fIcontext\fR \fIspec\fR
+.sp
+\fB::cmdr::config\fR \fBcreate\fR \fIobj\fR \fIcontext\fR \fIspec\fR
+.sp
+\fB::cmdr::config\fR \fBinteractive\fR ?\fIenable\fR?
+.sp
+\fB::cmdr::config\fR \fBdisplay\fR \fIdisplaycmd\fR
+.sp
+\fB<config>\fR \fB@\&.\&.\&.\fR \fI\&.\&.\&.\fR
+.sp
+\fB<config>\fR \fBarguments\fR
+.sp
+\fB<config>\fR \fBcomplete\fR \fIline\fR
+.sp
+\fB<config>\fR \fBcomplete-repl\fR \fIparse\fR
+.sp
+\fB<config>\fR \fBcomplete-words\fR \fIparse\fR
+.sp
+\fB<config>\fR \fBcontinued\fR \fIline\fR
+.sp
+\fB<config>\fR \fBdispatch\fR \fIcmd\fR
+.sp
+\fB<config>\fR \fBdisplay\fR ?\fIplist\fR?
+.sp
+\fB<config>\fR \fBdump\fR
+.sp
+\fB<config>\fR \fBeoptions\fR
+.sp
+\fB<config>\fR \fBexit\fR
+.sp
+\fB<config>\fR \fBforce\fR ?\fIallowinteract\fR? ?\fIforcedefered\fR?
+.sp
+\fB<config>\fR \fBforget\fR
+.sp
+\fB<config>\fR \fBhas\fR \fIname\fR
+.sp
+\fB<config>\fR \fBhelp\fR ?\fImode\fR?
+.sp
+\fB<config>\fR \fBinteract\fR
+.sp
+\fB<config>\fR \fBinteractive\fR
+.sp
+\fB<config>\fR \fBlookup\fR \fIname\fR
+.sp
+\fB<config>\fR \fBlookup-option\fR \fIname\fR
+.sp
+\fB<config>\fR \fBmissingOptionValue\fR \fIname\fR
+.sp
+\fB<config>\fR \fBnames\fR
+.sp
+\fB<config>\fR \fBnotEnough\fR
+.sp
+\fB<config>\fR \fBoptions\fR
+.sp
+\fB<config>\fR \fBparse\fR ?\fIword\&.\&.\&.\fR?
+.sp
+\fB<config>\fR \fBparse-options\fR
+.sp
+\fB<config>\fR \fBprompt1\fR
+.sp
+\fB<config>\fR \fBprompt2\fR
+.sp
+\fB<config>\fR \fBpublic\fR
+.sp
+\fB<config>\fR \fBraise\fR \fImsg\fR ?\fIword\&.\&.\&.\fR?
+.sp
+\fB<config>\fR \fBreport\fR \fIwhat\fR \fIdata\fR
+.sp
+\fB<config>\fR \fBreset\fR
+.sp
+\fB<config>\fR \fBself\fR
+.sp
+\fB<config>\fR \fBtooMany\fR
+.sp
+\fB<config>\fR \fBunknown\fR \fImethod\fR ?\fIword\&.\&.\&.\fR?
+.sp
+.BE
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This package implements the collections of \fBcmdr::parameters\fR
+serving as the configuration of privates (see \fBcmdr::private\fR)\&.
+.SH "CLASS API"
+The class API is not public\&. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+configuration instances\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+.TP
+\fB::cmdr::config\fR \fBnew\fR \fIcontext\fR \fIspec\fR
+Create an auto-named instance of \fBcmdr::config\fR\&.
+.sp
+\fINot used\fR\&.
+.TP
+\fB::cmdr::config\fR \fBcreate\fR \fIobj\fR \fIcontext\fR \fIspec\fR
+Create a new instance of \fBcmdr::config\fR, named \fIobj\fR\&.
+.RS
+.TP
+string \fIobj\fR
+The (command) name of the new config instance\&.
+.TP
+cmdr::config \fIcontext\fR
+The instance command of the \fBcmdr::private\fR instance the configuration
+will belong to\&.
+.TP
+script \fIspec\fR
+Tcl-script specifying the parameters in detail\&. Please read
+\fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+.RE
+.TP
+\fB::cmdr::config\fR \fBinteractive\fR ?\fIenable\fR?
+Class method to change the global interaction default for the
+mini-shell of privates\&. The default is to disable this mini-shell
+for all privates, and enable it on a per-private basis, through
+the specification\&.
+.RS
+.TP
+boolean \fIenable\fR
+Defaults to \fBtrue\fR, globally activating the mini-shell\&.
+.RE
+.TP
+\fB::cmdr::config\fR \fBdisplay\fR \fIdisplaycmd\fR
+Class method to override the standard display command used by
+the mini-shell to show the current state of all parameters\&.
+.RS
+.TP
+commandprefix \fIdisplaycmd\fR
+The display command to use\&. The command will be called with a
+single argument, a list containing the names of the parameters
+to show\&. The command has to format the state of the requested
+parameters as a string and return this string as its result\&.
+.RE
+.PP
+.SH "INSTANCE API"
+Most of the instance API is not public\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+.TP
+\fB<config>\fR \fB@\&.\&.\&.\fR \fI\&.\&.\&.\fR
+All parameters held by a configuration instance are accessible
+through it\&. To this end each parameter named \fBfoo\fR has a
+dynamically created accessor method \fB@foo\fR taking the
+method and its arguments to apply to the parameter instance\&.
+.sp
+If no words are specified at all the system defaults to the
+application of instance method \fBvalue\fR\&.
+.sp
+Together with a parameter's ability to access the
+configuration holding it having access to a single parameter
+instance (like in the various callbacks) provides access to all\&.
+.RS
+.TP
+list \fIlist\fR
+.RE
+.TP
+\fB<config>\fR \fBarguments\fR
+This method returns a list of parameter names,
+for the parameters which are arguments\&.
+.TP
+\fB<config>\fR \fBcomplete\fR \fIline\fR
+This hook-method for the mini-shell is responsible
+for computing the set of completions for the
+entered \fIline\fR\&.
+.RS
+.TP
+string \fIline\fR
+The command line to complete\&.
+.RE
+.TP
+\fB<config>\fR \fBcomplete-repl\fR \fIparse\fR
+This internal method is used by the hook-method \fBcomplete\fR
+for the mini-shell, see above\&. It is given the completion
+state \fIparse\fR of a partial command line and returns a
+list of strings which are the valid completions at this point\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
+.sp
+-- TODO -- Describe the state fields and their meaning\&.
+.RE
+.TP
+\fB<config>\fR \fBcomplete-words\fR \fIparse\fR
+This method is given the completion state \fIparse\fR of a partial
+command line and returns a list of strings which are the valid
+completions at this point\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
+.sp
+-- TODO -- Describe the state fields and their meaning\&.
+.RE
+.TP
+\fB<config>\fR \fBcontinued\fR \fIline\fR
+This hook-method for the mini-shell is responsible for the detection
+of a continuation-line in the entered command \fIline\fR\&. It always
+returns the boolean value \fBfalse\fR as the mini-shell does not
+support continuation lines\&.
+.RS
+.TP
+list \fIlist\fR
+.RE
+.TP
+\fB<config>\fR \fBdispatch\fR \fIcmd\fR
+This hook-method for the mini-shell is responsible for
+the recognition and execution of the supported commands\&.
+.RS
+.TP
+string \fIcmd\fR
+The command line containing the command to run\&.
+.RE
+.TP
+\fB<config>\fR \fBdisplay\fR ?\fIplist\fR?
+This method formats the chosen parameters for display and returns
+the result as a string\&. This invokes the chosen display callback,
+if one was set\&. Without an internal formatter is used instead\&.
+.RS
+.TP
+list \fIplist\fR
+The list of parameters (by name) to format for display\&.
+If not specified the list default to the set of
+\fBpublic\fR parameters plus any undocumented parameters
+already set by the user\&.
+.RE
+.TP
+\fB<config>\fR \fBdump\fR
+This method formats all parameters for display, using the
+internal formatter, and returns the result as a string\&.
+Useful for debugging\&.
+.TP
+\fB<config>\fR \fBeoptions\fR
+This method returns a dictionary mapping all possible
+option prefixes to a list of full option names with
+that prefix\&.
+.TP
+\fB<config>\fR \fBexit\fR
+This hook-method for the mini-shell returns a boolean
+value indicating whether the mini-shell was stopped
+and has to exit (\fBtrue\fR), or not (\fBfalse\fR)\&.
+.TP
+\fB<config>\fR \fBforce\fR ?\fIallowinteract\fR? ?\fIforcedefered\fR?
+This method forces the calculation of the values for all parameters
+in the configuration instance\&. This is the ''completion phase''\&.
+.RS
+.TP
+boolean \fIallowinteract\fR
+If specified as \fBfalse\fR parameters allowing the interactive
+entry of their value have this feature disabled for the operation\&.
+The default is \fBtrue\fR, allowing for the interaction\&.
+.TP
+boolean \fIforcedefered\fR
+If specified as \fBtrue\fR even parameters marked as "defered"
+are forced to generate their value\&. The default is \fBfalse\fR,
+causing the method to ignore such parameters\&.
+.RE
+.TP
+\fB<config>\fR \fBforget\fR
+This method invokes the parameter method \fBforget\fR on all
+parameters in the configuration\&.
+.TP
+\fB<config>\fR \fBhas\fR \fIname\fR
+This method checks if the configuration instance contains
+a parameter with the specified \fIname\fR and returns a
+boolean value indicating whether the parameter exists
+(\fBtrue\fR), or not (\fBfalse\fR)\&.
+.RS
+.TP
+string \fIname\fR
+The name of the parameter to check for existence
+.RE
+.TP
+\fB<config>\fR \fBhelp\fR ?\fImode\fR?
+This method returns the help information for the
+parameters held in the configuration\&.
+The result of the command is a structure of the form
+described in section \fBHelp Information\fR\&.
+.RS
+.TP
+enum \fImode\fR
+The possible modes are \fBpublic\fR and \fBinteract\fR\&.
+If not specified \fBpublic\fR is the default\&.
+In this mode only "documented" parameters are included in the help\&.
+In mode "interact", used by the mini-shell undocumented parameters
+are included as well, if they are already set by the user\&.
+.RE
+.TP
+\fB<config>\fR \fBinteract\fR
+This method invokes the mini-shell for interactive parameter entry\&.
+It returns on exit from the shell\&.
+The result of the method is the empty string\&.
+.TP
+\fB<config>\fR \fBinteractive\fR
+This accessor method returns a boolean value indicating whether use
+of the mini-shell is allowed (\fBtrue\fR), or not (\fBfalse\fR)\&.
+.TP
+\fB<config>\fR \fBlookup\fR \fIname\fR
+This method checks if the configuration instance contains
+a parameter with the specified \fIname\fR and returns its
+instance\&. An error is thrown if the parameter is not known\&.
+.RS
+.TP
+string \fIname\fR
+The name of the parameter to retrieve\&.
+.RE
+.TP
+\fB<config>\fR \fBlookup-option\fR \fIname\fR
+This method checks if the configuration instance contains
+a parameter controlling the specified option \fIname\fR
+and returns its instance\&. An error is thrown if the option
+is not known\&.
+.RS
+.TP
+string \fIname\fR
+The option flag to find the controlling parameter for\&.
+.RE
+.TP
+\fB<config>\fR \fBmissingOptionValue\fR \fIname\fR
+This method throws the standard error for when the option \fIname\fR
+requiring an argument value does not have one\&. See the
+methods \fBnotEnough\fR and \fBtooMany\fR as well\&.
+.RS
+.TP
+string \fIname\fR
+The flag triggering the error\&.
+.RE
+.TP
+\fB<config>\fR \fBnames\fR
+This method returns a list of parameter names, for all parameters\&.
+.TP
+\fB<config>\fR \fBnotEnough\fR
+This method throws the standard error for when a command is found
+to be supplied with not enough arguments for its parameters\&. See
+the methods \fBmissingOptionValue\fR and \fBtooMany\fR as well\&.
+.TP
+\fB<config>\fR \fBoptions\fR
+This method returns a list of the option flags recognized
+by the parameters in the configuration\&. This does not include
+option prefixes\&.
+.TP
+\fB<config>\fR \fBparse\fR ?\fIword\&.\&.\&.\fR?
+This method parses the words (from the command line) and
+maps them to parameters, based on naming (options and flags),
+or position (arguments)\&.
+.RS
+.TP
+list \fIword\fR
+The words of the command specifying the parameters of the private
+holding the configuration instance\&.
+.RE
+.TP
+\fB<config>\fR \fBparse-options\fR
+This method is a helper for \fBparse\fR above\&.
+Accessing the internal queue initialized by \fBparse\fR
+it splits arguments and options, processing all the latter\&.
+The arguments are put back into the queue, in the order
+they were found in\&.
+This is used by parameters (optional arguments) using the
+regular threshold-regime to determine acceptance\&. All options
+still in the command line must be removed (and processed) to
+know the proper number of arguments words left\&.
+.TP
+\fB<config>\fR \fBprompt1\fR
+This hook-method for the mini-shell returns the primary
+prompt string to use\&.
+.TP
+\fB<config>\fR \fBprompt2\fR
+This hook-method for the mini-shell returns the secondary
+prompt string for use within a continuation\&. As the mini-shell
+does not support continuation lines it should not be invoked
+ever, and thus always throws an error should it be invoked\&.
+.TP
+\fB<config>\fR \fBpublic\fR
+This method a list of parameter names, for all documented
+option and argument parameters\&.
+.TP
+\fB<config>\fR \fBraise\fR \fImsg\fR ?\fIword\&.\&.\&.\fR?
+This method is a helper for methods \fBtooMany\fR, \fBnotEnough\fR,
+and \fBmissingOptionValue\fR, doing the bulk of the work\&.
+.RS
+.TP
+string \fImsg\fR
+The human-readable error message to use\&.
+.TP
+list \fIword\fR
+The machine-readable (trap-able) error code to use\&.
+.RE
+.TP
+\fB<config>\fR \fBreport\fR \fIwhat\fR \fIdata\fR
+This hook-method for the mini-shell is responsible for the
+reporting of the command results and handles the display of
+the parameter state before a new prompt\&.
+.sp
+Its result is the empty string\&.
+.RS
+.TP
+enum \fIwhat\fR
+The result code of the command, one of \fBok\fR, or \fBfail\fR\&.
+.TP
+any \fIdata\fR
+The result of the command, or an error message in case of failure\&.
+.RE
+.TP
+\fB<config>\fR \fBreset\fR
+This method invokes the parameter method \fBreset\fR on all
+parameters in the configuration\&.
+.TP
+\fB<config>\fR \fBself\fR
+This method returns the configuration instance itself\&.
+.TP
+\fB<config>\fR \fBtooMany\fR
+This method throws the standard error for when a command is found
+to be supplied with too many arguments for its parameters\&. See the
+methods \fBmissingOptionValue\fR and \fBnotEnough\fR as well\&.
+.TP
+\fB<config>\fR \fBunknown\fR \fImethod\fR ?\fIword\&.\&.\&.\fR?
+This method is the hook into the TclOO method resolution for the class\&.
+It implements the dynamic accessor methods for the parameters held by
+the configuration instance\&. See method \fB@\&.\&.\&.\fR at the top\&.
+.RS
+.TP
+list \fIlist\fR
+.RE
+.PP
+.SH "HELP INFORMATION"
+The help information generated by various places of the framework
+is a dictionary containing the following keys:
+.TP
+arguments
+A list of strings, the names of the command arguments, in order\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+desc
+The command's description, i\&.e\&. help text\&.
+.TP
+opt2para
+A dictionary mapping option flags to option names\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+options
+A dictionary mapping option names to their descriptions\&.
+.TP
+parameters
+A dictionary mapping parameter names to their definition\&.
+Each definition is a dictionary containing the keys below\&.
+See also package \fBcmdr::parameter\fR\&.
+.RS
+.TP
+cmdline
+Output of method \fBcmdline\fR\&.
+.TP
+code
+Output of method \fBcode\fR\&.
+.TP
+default
+Output of method \fBdefault\fR\&.
+.TP
+defered
+Output of method \fBdefered\fR\&.
+.TP
+description
+Output of method \fBdescription\fR\&.
+.TP
+documented
+Output of method \fBdocumented\fR\&.
+.TP
+flags
+A dictionary mapping flag names to flag
+types, i\&.e\&. \fBprimary\fR, \fBalias\fR,
+or \fBinverted\fR\&.
+.TP
+generator
+Output of method \fBgenerator\fR\&.
+.TP
+interactive
+Output of method \fBinteractive\fR\&.
+.TP
+isbool
+Output of method \fBisbool\fR\&.
+.TP
+label
+Output of method \fBlabel\fR\&.
+.TP
+list
+Output of method \fBlist\fR\&.
+.TP
+ordered
+Output of method \fBordered\fR\&.
+.TP
+presence
+Output of method \fBpresence\fR\&.
+.TP
+prompt
+Output of method \fBprompt\fR\&.
+.TP
+required
+Output of method \fBrequired\fR\&.
+.TP
+threshold
+Output of method \fBthreshold\fR\&.
+.TP
+type
+Output of method \fBtype\fR\&.
+.TP
+validator
+Output of method \fBvalidator\fR\&.
+.RE
+.TP
+sections
+A list of sections the command belongs to\&.
+Each section name is a list itself, the path of the section and sub-sections\&.
+.TP
+states
+A list of strings, the names of the command's hidden state parameters\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

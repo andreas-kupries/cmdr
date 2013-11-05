@@ -1,0 +1,615 @@
+'\"
+'\" Generated from file 'cmdr_actor\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_actor" n 0 doc "<<unknown>>"
+.BS
+.SH NAME
+cmdr_actor \- Cmdr - Base class for officers and privates - Internal
+.SH SYNOPSIS
+package require \fBcmdr::util \fR
+.sp
+\fB::cmdr::actor\fR \fBnew\fR
+.sp
+\fB::cmdr::actor\fR \fBcreate\fR \fIobj\fR
+.sp
+\fB<actor>\fR \fBcompletions\fR \fIparse\fR \fIcmdlist\fR
+.sp
+\fB<actor>\fR \fBdescription\fR
+.sp
+\fB<actor>\fR \fBdescription:\fR \fItext\fR
+.sp
+\fB<actor>\fR \fBdname\fR
+.sp
+\fB<actor>\fR \fBdo\fR ?\fIword\&.\&.\&.\fR?
+.sp
+\fB<actor>\fR \fBdocumented\fR
+.sp
+\fB<actor>\fR \fBexists\fR \fIkey\fR
+.sp
+\fB<actor>\fR \fBfullname\fR
+.sp
+\fB<actor>\fR \fBget\fR \fIkey\fR
+.sp
+\fB<actor>\fR \fBhelp\fR
+.sp
+\fB<actor>\fR \fBkeys\fR
+.sp
+\fB<actor>\fR \fBlappend\fR \fIkey\fR \fIdata\fR
+.sp
+\fB<actor>\fR \fBmatch\fR \fIparse\fR \fIcmdlist\fR
+.sp
+\fB<actor>\fR \fBname\fR
+.sp
+\fB<actor>\fR \fBname:\fR \fIname\fR
+.sp
+\fB<actor>\fR \fBparse-line\fR \fIline\fR
+.sp
+\fB<actor>\fR \fBroot\fR
+.sp
+\fB<actor>\fR \fBset\fR \fIkey\fR \fIdata\fR
+.sp
+\fB<actor>\fR \fBsuper\fR
+.sp
+\fB<actor>\fR \fBsuper:\fR \fIobj\fR
+.sp
+\fB<actor>\fR \fBundocumented\fR
+.sp
+\fB<actor>\fR \fBunset\fR \fIkey\fR
+.sp
+.BE
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This internal package implements the base class containing functionality
+common to \fBcmdr::officer\fR and \fBcmdr::private\fR\&.
+--TODO-- Describe the common parts (common blocks, super chain, completion support, DSL support)
+.SH "CLASS API"
+The class API is not public\&. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+command instances\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+.TP
+\fB::cmdr::actor\fR \fBnew\fR
+Create an auto-named instance of \fBcmdr::actor\fR\&.
+.sp
+\fINot used\fR\&.
+.TP
+\fB::cmdr::actor\fR \fBcreate\fR \fIobj\fR
+Create a new instance of \fBcmdr::actor\fR, named \fIobj\fR\&.
+.PP
+.SH "INSTANCE API"
+Most of the instance API is not public\&.
+.PP
+It is described here for use by developers maintaining,
+modifying and extending the framework itself\&. A user of the framework
+has no need for it\&.
+.TP
+\fB<actor>\fR \fBcompletions\fR \fIparse\fR \fIcmdlist\fR
+This method is given the completion state \fIparse\fR of a partial
+command line and a list of completions at the end of the line\&. It
+returns a list of strings which are the valid completions of the whole
+line, properly quoted\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
+.sp
+-- TODO -- Describe the state fields and their meaning\&.
+.TP
+list \fIcmdlist\fR
+List of valid completions\&.
+.RE
+.TP
+\fB<actor>\fR \fBdescription\fR
+This accessor method returns the human-readable description of the
+actor\&.
+.TP
+\fB<actor>\fR \fBdescription:\fR \fItext\fR
+This method sets the description of the actor to the \fItext\fR\&.
+.RS
+.TP
+string \fItext\fR
+The description to remember\&.
+.RE
+.TP
+\fB<actor>\fR \fBdname\fR
+This accessor method returns the display name of the actor\&.  This is
+the \fBname\fR of the actor prefixed with the contents of the
+reserved common block \fB*prefix*\fR, set during command line
+processing with the actual command path to reach the current actor\&.
+.TP
+\fB<actor>\fR \fBdo\fR ?\fIword\&.\&.\&.\fR?
+This method processes the command-line given as a list of words\&.  Here
+in the bse class it does nothing\&. It is a virtual method expecting to
+be redefined by the derived classes\&.
+.RS
+.TP
+list \fIword\fR
+.RE
+.TP
+\fB<actor>\fR \fBdocumented\fR
+This accessor method returns the "documented" flag of the actor\&.
+.TP
+\fB<actor>\fR \fBexists\fR \fIkey\fR
+This method returns a boolean value indicating whether the common
+block named by \fIkey\fR exists in the actor and its parents
+(\fBtrue\fR), or not (\fBfalse\fR)\&.
+.RS
+.TP
+string \fIkey\fR
+The name of the common block to check for\&.
+.RE
+.TP
+\fB<actor>\fR \fBfullname\fR
+This method returns the full name of the actor\&.
+This is the \fBname\fR of the actor prefixed with the path to it in
+the specification, i\&.e\&. the names of all actors in the chain of
+supers\&.
+.TP
+\fB<actor>\fR \fBget\fR \fIkey\fR
+This method returns the content of the common block named by
+\fIkey\fR\&. An error is thrown if the block is not known to the actor,
+nor its parents\&.
+.RS
+.TP
+string \fIkey\fR
+The name of the common block to retrieve\&.
+.RE
+.TP
+\fB<actor>\fR \fBhelp\fR
+This accessor method returns the empty string\&. It is a virtual method
+expecting to be redefined by the derived classes\&.
+.TP
+\fB<actor>\fR \fBkeys\fR
+This accessor method returns a list of names for the set of common
+blocks known to this actor, and all of its parents\&.
+.TP
+\fB<actor>\fR \fBlappend\fR \fIkey\fR \fIdata\fR
+This method extends the contents of the common block named
+by \fIkey\fR with \fIdata\fR\&.
+Conceptually this is a get/lappend/set operation, i\&.e\&. while the
+existing block content is taken from the actor or its parents, the new
+content is always stored in the actor\&.
+.RS
+.TP
+string \fIkey\fR
+The name of the common block to extend\&.
+.TP
+any \fIdata\fR
+The data to add to the block\&.
+.RE
+.TP
+\fB<actor>\fR \fBmatch\fR \fIparse\fR \fIcmdlist\fR
+This method is given the completion state \fIparse\fR of a partial
+command line and a list of possible completions\&. The result is a list
+of valid completions, filtered against the current word in the command
+line\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
+.sp
+-- TODO -- Describe the state fields and their meaning\&.
+.TP
+list \fIcmdlist\fR
+List of possible completions\&.
+.RE
+.TP
+\fB<actor>\fR \fBname\fR
+This accessor method returns the name of the actor\&.
+.TP
+\fB<actor>\fR \fBname:\fR \fIname\fR
+This method sets the name of the actor\&.
+.RS
+.TP
+string \fIname\fR
+The name to remember\&.
+.RE
+.TP
+\fB<actor>\fR \fBparse-line\fR \fIline\fR
+This method is the main helper to begin command completion\&. Given the
+entered command \fIline\fR it parses it into words and returns a parse
+structure as is taken by all other methods taking part in command
+completion\&.
+.RS
+.TP
+string \fIline\fR
+The command line\&.
+.RE
+.TP
+\fB<actor>\fR \fBroot\fR
+This accessor method returns the root actor instance the actor belongs
+to\&.
+.TP
+\fB<actor>\fR \fBset\fR \fIkey\fR \fIdata\fR
+This method sets the contents of the common block named by \fIkey\fR
+to \fIdata\fR\&. If the block does not exist it is created\&. Otherwise
+its existing content is written over\&.
+.RS
+.TP
+string \fIkey\fR
+The name of the common block to write\&.
+.TP
+any \fIdata\fR
+The data to store in the block\&.
+.RE
+.TP
+\fB<actor>\fR \fBsuper\fR
+This accessor method returns the parent actor instance\&.  For the root
+of the tree this is the empty string\&.
+.TP
+\fB<actor>\fR \fBsuper:\fR \fIobj\fR
+This method links the actor to its parent actor\&.
+.RS
+.TP
+cmdr::actor \fIobj\fR
+The parent actor instance to remember\&.
+.RE
+.TP
+\fB<actor>\fR \fBundocumented\fR
+This method marks the actor as undocumented\&.
+.TP
+\fB<actor>\fR \fBunset\fR \fIkey\fR
+This method removes the common block named by \fIkey\fR
+from the actor\&. Note that definitions in parents are
+not touched by this\&.
+.RS
+.TP
+string \fIkey\fR
+The name of the common block to remove\&.
+.RE
+.PP
+.SH "HELP INFORMATION"
+The help information generated by various places of the framework
+is a dictionary containing the following keys:
+.TP
+arguments
+A list of strings, the names of the command arguments, in order\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+desc
+The command's description, i\&.e\&. help text\&.
+.TP
+opt2para
+A dictionary mapping option flags to option names\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+options
+A dictionary mapping option names to their descriptions\&.
+.TP
+parameters
+A dictionary mapping parameter names to their definition\&.
+Each definition is a dictionary containing the keys below\&.
+See also package \fBcmdr::parameter\fR\&.
+.RS
+.TP
+cmdline
+Output of method \fBcmdline\fR\&.
+.TP
+code
+Output of method \fBcode\fR\&.
+.TP
+default
+Output of method \fBdefault\fR\&.
+.TP
+defered
+Output of method \fBdefered\fR\&.
+.TP
+description
+Output of method \fBdescription\fR\&.
+.TP
+documented
+Output of method \fBdocumented\fR\&.
+.TP
+flags
+A dictionary mapping flag names to flag
+types, i\&.e\&. \fBprimary\fR, \fBalias\fR,
+or \fBinverted\fR\&.
+.TP
+generator
+Output of method \fBgenerator\fR\&.
+.TP
+interactive
+Output of method \fBinteractive\fR\&.
+.TP
+isbool
+Output of method \fBisbool\fR\&.
+.TP
+label
+Output of method \fBlabel\fR\&.
+.TP
+list
+Output of method \fBlist\fR\&.
+.TP
+ordered
+Output of method \fBordered\fR\&.
+.TP
+presence
+Output of method \fBpresence\fR\&.
+.TP
+prompt
+Output of method \fBprompt\fR\&.
+.TP
+required
+Output of method \fBrequired\fR\&.
+.TP
+threshold
+Output of method \fBthreshold\fR\&.
+.TP
+type
+Output of method \fBtype\fR\&.
+.TP
+validator
+Output of method \fBvalidator\fR\&.
+.RE
+.TP
+sections
+A list of sections the command belongs to\&.
+Each section name is a list itself, the path of the section and sub-sections\&.
+.TP
+states
+A list of strings, the names of the command's hidden state parameters\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

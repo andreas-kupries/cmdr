@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr_validate_common" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_validate_common \- Utilities for Validation Types
+cmdr_validate_common \- Cmdr - Utilities for Validation Types
 .SH SYNOPSIS
 package require \fBcmdr::validate::common \fR
 .sp

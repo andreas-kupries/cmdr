@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr_help_json" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_help_json \- Formatting help as JSON object
+cmdr_help_json \- Cmdr - Formatting help as JSON object
 .SH SYNOPSIS
 package require \fBcmdr::help::json \fR
 .sp
