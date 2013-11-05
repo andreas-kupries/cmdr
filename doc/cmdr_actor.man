@@ -1,0 +1,274 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_actor [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_ACTOR]]
+[description]
+[include parts/welcome.inc]
+
+This internal package implements the base class containing functionality
+common to [package cmdr::officer] and [package cmdr::private].
+
+--TODO-- Describe the common parts (common blocks, super chain, completion support, DSL support)
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Class API}]
+
+The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+command instances.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::actor] [method new]]
+
+Create an auto-named instance of [class cmdr::actor].
+[para] [emph {Not used}].
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::actor] [method create] [arg obj]]
+
+Create a new instance of [class cmdr::actor], named [arg obj].
+
+[list_end][comment definitions]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Instance API}]
+
+Most of the instance API is not public.
+
+[para] It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method completions] [arg parse] [arg cmdlist]]
+
+This method is given the completion state [arg parse] of a partial
+command line and a list of completions at the end of the line. It
+returns a list of strings which are the valid completions of the whole
+line, properly quoted.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+
+[para] -- TODO -- Describe the state fields and their meaning.
+
+[arg_def list cmdlist]
+List of valid completions.
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method description]]
+
+This accessor method returns the human-readable description of the
+actor.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method description:] [arg text]]
+
+This method sets the description of the actor to the [arg text].
+
+[list_begin arguments]
+[arg_def string text] The description to remember.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method dname]]
+
+This accessor method returns the display name of the actor.  This is
+the [method name] of the actor prefixed with the contents of the
+reserved common block [const *prefix*], set during command line
+processing with the actual command path to reach the current actor.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method do] [opt [arg word...]]]
+
+This method processes the command-line given as a list of words.  Here
+in the bse class it does nothing. It is a virtual method expecting to
+be redefined by the derived classes.
+
+[list_begin arguments]
+[arg_def list word]
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method documented]]
+
+This accessor method returns the "documented" flag of the actor.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method exists] [arg key]]
+
+This method returns a boolean value indicating whether the common
+block named by [arg key] exists in the actor and its parents
+([const true]), or not ([const false]).
+
+[list_begin arguments]
+[arg_def string key]
+The name of the common block to check for.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method fullname]]
+
+This method returns the full name of the actor.
+
+This is the [method name] of the actor prefixed with the path to it in
+the specification, i.e. the names of all actors in the chain of
+supers.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method get] [arg key]]
+
+This method returns the content of the common block named by
+[arg key]. An error is thrown if the block is not known to the actor,
+nor its parents.
+
+[list_begin arguments]
+[arg_def string key]
+The name of the common block to retrieve.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method help]]
+
+This accessor method returns the empty string. It is a virtual method
+expecting to be redefined by the derived classes.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method keys]]
+
+This accessor method returns a list of names for the set of common
+blocks known to this actor, and all of its parents.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method lappend] [arg key] [arg data]]
+
+This method extends the contents of the common block named
+by [arg key] with [arg data].
+
+Conceptually this is a get/lappend/set operation, i.e. while the
+existing block content is taken from the actor or its parents, the new
+content is always stored in the actor.
+
+[list_begin arguments]
+[arg_def string key]  The name of the common block to extend.
+[arg_def any    data] The data to add to the block.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method match] [arg parse] [arg cmdlist]]
+
+This method is given the completion state [arg parse] of a partial
+command line and a list of possible completions. The result is a list
+of valid completions, filtered against the current word in the command
+line.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
+
+[para] -- TODO -- Describe the state fields and their meaning.
+
+[arg_def list cmdlist]
+List of possible completions.
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method name]]
+
+This accessor method returns the name of the actor.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method name:] [arg name]]
+
+This method sets the name of the actor.
+
+[list_begin arguments]
+[arg_def string name]
+The name to remember.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method parse-line] [arg line]]
+
+This method is the main helper to begin command completion. Given the
+entered command [arg line] it parses it into words and returns a parse
+structure as is taken by all other methods taking part in command
+completion.
+
+[list_begin arguments]
+[arg_def string line]
+The command line.
+[list_end][comment {--- arguments --}]
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method root]]
+
+This accessor method returns the root actor instance the actor belongs
+to.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method set] [arg key] [arg data]]
+
+This method sets the contents of the common block named by [arg key]
+to [arg data]. If the block does not exist it is created. Otherwise
+its existing content is written over.
+
+[list_begin arguments]
+[arg_def string key]  The name of the common block to write.
+[arg_def any    data] The data to store in the block.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method super]]
+
+This accessor method returns the parent actor instance.  For the root
+of the tree this is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method super:] [arg obj]]
+
+This method links the actor to its parent actor.
+
+[list_begin arguments]
+[arg_def cmdr::actor obj]
+The parent actor instance to remember.
+[list_end][comment {--- arguments --}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method undocumented]]
+
+This method marks the actor as undocumented.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <actor>] [method unset] [arg key]]
+
+This method removes the common block named by [arg key]
+from the actor. Note that definitions in parents are
+not touched by this.
+
+[list_begin arguments]
+[arg_def string key]  The name of the common block to remove.
+[list_end][comment {--- arguments --}]
+
+[list_end][comment {-- definitions --}]
+
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Help Information}]
+[include parts/help_structure.inc]
+
+[include parts/feedback.inc]
+[manpage_end]
