@@ -1,0 +1,70 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_MAIN]]
+[description]
+[include parts/welcome.inc]
+
+This is the main package of the framework, its public entry point.
+
+It provides four commands for setup and configuration of command
+hierarchies.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr] [method new] [arg name] [arg specification]]
+
+This command creates an automatically-named officer instance which is
+the root of the command hierarchy given in the [arg specification],
+and has the user-visible command [arg name].
+
+[para] The result of the command is the new instance command.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr] [method create] [arg obj] [arg name] [arg specification]]
+
+This command creates the officer instance [arg obj] which is the root
+of the command hierarchy given in the [arg specification], and has the
+user-visible command [arg name].
+
+[para] The result of the command is the new instance command.
+
+[list_begin arguments]
+[arg_def string name]
+The user-visible name of the command (hierarchy).
+
+[arg_def script actions]
+The specification of the subordinate commands. On the command line
+these are the toplevel commands of the application using the
+hierarchy.
+
+Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr] [method interactive] [opt [arg enable]]]
+
+This command globally (de)activates the interactive parts of the
+framework, as per the value of [arg enable].
+
+[para] By default (initial state) the framework allows interaction.
+
+[list_begin arguments]
+
+[arg_def boolean enable]
+If not specified defaults to [const true], globally enabling the
+interactive parts of the framework. The value [const false] globally
+disables the interactive parts of the framework
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr] [method interactive?]]
+
+This method returns the state of the global interaction flag.
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]

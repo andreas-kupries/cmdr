@@ -6,6 +6,7 @@
 [vset TITLE_INSTALL  "[vset PTITLE] - The Installer's Guide"	 ]
 [vset TITLE_DEV      "[vset PTITLE] - The Developer's Guide"	 ]
 [comment {- Custom documents & titles - - -- --- ----- --------}]
+[vset TITLE_MAIN      "[vset PTITLE] - Main package and API"]
 [vset TITLE_ACTOR     "[vset PTITLE] - Base class for officers and privates - Internal"]
 [vset TITLE_CONFIG    "[vset PTITLE] - Collection of parameters for privates"]
 [vset TITLE_DEV_HF    "[vset PTITLE] - Writing custom help formats"]
