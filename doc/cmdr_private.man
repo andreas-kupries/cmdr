@@ -8,9 +8,11 @@
 [include parts/welcome.inc]
 
 This package implements [emph privates], the leaves of command
-hierarchies.  While each private can execute only a single option they
+hierarchies.  While each private can execute only a single action they
 have parameters, i.e. arguments and options with which to configure
 the behaviour of their action.
+
+[para] This class is sub-class of [package cmdr::actor].
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Class API}]
@@ -38,11 +40,12 @@ Used by the DSL processing parts of the framework to instantiate privates.
 
 [list_begin arguments]
 [arg_def object super]
-The instance command of the actor (officer actually) which contain the private.
+The instance command of the actor (officer actually) which contains the new private.
 
 [arg_def string name]
 The user-visible name of the command.
 
+[comment {--- TODO place into text block for inclusion --- see officer - extend}]
 [arg_def script arguments]
 The specification of the private's parameters.
 Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
@@ -61,10 +64,9 @@ the framework.
 [section {Instance API}]
 
 The instance API is not public. It is used internally by the framework
-when during the processing of a command line at runtime
-
-parsing a command hierarchy specification to create the necessary
-private instances.
+during the parsing of a command hierarchy specification to configure
+the private instances, and when processing a command line at
+runtime to manage word-completion, etc.
 
 [para] It is described here for use by developers maintaining,
 modifying and extending the framework itself. A user of the framework
