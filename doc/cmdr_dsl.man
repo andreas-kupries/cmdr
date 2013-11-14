@@ -32,6 +32,10 @@ specification language. If you have skipped here on first reading,
 ignoring the examples, please go back and read them first.
 
 [comment ================================================]
+[subsection General]
+[include parts/dsl_general.inc]
+
+[comment ================================================]
 [subsection Officers]
 [include parts/dsl_officer.inc]
 
