@@ -23,6 +23,3 @@
 [vset TITLE_VCOMMON   "[vset PTITLE] - Utilities for Validation Types"]
 
 [comment {- Miscellanea ............. - - -- --- ----- --------}]
-[comment {
-	TODO - DSL introduction, examples, reference
-}]

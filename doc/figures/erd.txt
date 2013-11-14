@@ -1,0 +1,9 @@
+      is-a         is-a
+    /-1:1-> actor <-1:1-\
+   /                     \
+officer ---1:(0-n)--> private --1:1-> config --1:(0-n)-> parameter
+ |  ^      has                  has            has
+ |  |
+ \--/
+ 1:(0-n)
+ has
