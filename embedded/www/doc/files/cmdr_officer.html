@@ -1,0 +1,437 @@
+
+<html><head>
+<title>cmdr_officer - &lt;&lt;unknown&gt;&gt;</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_officer.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_officer.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_officer(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_officer - Cmdr - Aggregation of multiple commands for dispatch.</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Class API</a></li>
+<li class="section"><a href="#section3">Instance API</a></li>
+<li class="section"><a href="#section4">Help Information</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::util</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::officer</b> <b class="method">new</b> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">actions</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::officer</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">actions</i></a></li>
+<li><a href="#3"><b class="cmd">&lt;officer&gt;</b> <b class="method">children</b></a></li>
+<li><a href="#4"><b class="cmd">&lt;officer&gt;</b> <b class="method">complete</b> <i class="arg">line</i></a></li>
+<li><a href="#5"><b class="cmd">&lt;officer&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
+<li><a href="#6"><b class="cmd">&lt;officer&gt;</b> <b class="method">continued</b> <i class="arg">line</i></a></li>
+<li><a href="#7"><b class="cmd">&lt;officer&gt;</b> <b class="method">default</b></a></li>
+<li><a href="#8"><b class="cmd">&lt;officer&gt;</b> <b class="method">dispatch</b> <i class="arg">cmd</i></a></li>
+<li><a href="#9"><b class="cmd">&lt;officer&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
+<li><a href="#10"><b class="cmd">&lt;officer&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
+<li><a href="#11"><b class="cmd">&lt;officer&gt;</b> <b class="method">exit</b></a></li>
+<li><a href="#12"><b class="cmd">&lt;officer&gt;</b> <b class="method">extend</b> <i class="arg">path</i> <i class="arg">arguments</i> <i class="arg">action</i></a></li>
+<li><a href="#13"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></li>
+<li><a href="#14"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></li>
+<li><a href="#15"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
+<li><a href="#16"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></li>
+<li><a href="#17"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></li>
+<li><a href="#18"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></li>
+<li><a href="#19"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></li>
+<li><a href="#20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></li>
+<li><a href="#21"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This package implements <em>officers</em>, the inner nodes of command
+hierarchies.  Each officer can execute many actions, by delegating
+them to their sub-ordinate actors, officers and privates.</p>
+<p>This class is sub-class of <b class="package">cmdr::actor</b>.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
+<p>The class API is not public. It is used internally by the framework
+when parsing a command hierarchy specification to create the necessary
+officer instances.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::officer</b> <b class="method">new</b> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">actions</i></a></dt>
+<dd><p>Create an auto-named instance of <b class="class">cmdr::officer</b>.</p>
+<p><em>Not used</em>.</p></dd>
+<dt><a name="2"><b class="cmd">::cmdr::officer</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">actions</i></a></dt>
+<dd><p>Create a new instance of <b class="class">cmdr::officer</b>, named <i class="arg">obj</i>.
+Used by the DSL processing parts of the framework to instantiate officers.</p>
+<dl class="arguments">
+<dt>object <i class="arg">super</i></dt>
+<dd><p>The instance command of the actor (officer actually) which contains the new officer.</p></dd>
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The user-visible name of the command.</p></dd>
+<dt>script <i class="arg">actions</i></dt>
+<dd><p>The specification of the officer's subordinates.
+Please read <i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Instance API</a></h2>
+<p>The instance API is not public. It is used internally by the framework
+during the parsing of a command hierarchy specification to configure
+the officer instances, and when processing a command line at runtime
+to manage navigation of the hierarchy, word-completion, etc.</p>
+<p>It is described here for use by developers maintaining,
+modifying and extending the framework itself. A user of the framework
+has no need for it.</p>
+<dl class="definitions">
+<dt><a name="3"><b class="cmd">&lt;officer&gt;</b> <b class="method">children</b></a></dt>
+<dd><p>This method returns a list containing the instance commands of the
+subordinate actors managed by this officer.
+See also method <b class="method">known</b> which returns a list of names.</p></dd>
+<dt><a name="4"><b class="cmd">&lt;officer&gt;</b> <b class="method">complete</b> <i class="arg">line</i></a></dt>
+<dd><p>This hook-method for the main shell is responsible for computing the
+set of completions for the entered <i class="arg">line</i>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">line</i></dt>
+<dd><p>The command line to complete.</p></dd>
+</dl></dd>
+<dt><a name="5"><b class="cmd">&lt;officer&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
+<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
+command line and returns a list of strings which are the valid
+completions at this point.</p>
+<dl class="arguments">
+<dt>dict <i class="arg">parse</i></dt>
+<dd><p>A dictionary holding the current completion state of a partial command
+line.</p>
+<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">&lt;officer&gt;</b> <b class="method">continued</b> <i class="arg">line</i></a></dt>
+<dd><p>This hook-method for the main shell is responsible for the detection
+of a continuation-line in the entered command <i class="arg">line</i>. It always
+returns the boolean value <b class="const">false</b> as the main shell does not
+support continuation lines.</p>
+<dl class="arguments">
+<dt>list <i class="arg">list</i></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">&lt;officer&gt;</b> <b class="method">default</b></a></dt>
+<dd><p>This method returns the instance command of the subordinate to use
+during command line processing if the first word does not specify a
+known subordinate. An error is thrown if no such default was specified
+for this officer. See also method <b class="method">hasdefault</b>.</p></dd>
+<dt><a name="8"><b class="cmd">&lt;officer&gt;</b> <b class="method">dispatch</b> <i class="arg">cmd</i></a></dt>
+<dd><p>This hook-method for the main shell is responsible for the recognition
+and execution of the supported commands.</p>
+<dl class="arguments">
+<dt>string <i class="arg">cmd</i></dt>
+<dd><p>The command line containing the command to run.</p></dd>
+</dl></dd>
+<dt><a name="9"><b class="cmd">&lt;officer&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
+<dd><p>This method parses the <i class="arg">word</i>s of the command line, matching them
+to the sub-ordinates of the officer. When done without error it
+recursively invokes the chosen sub-ordinate to continue processing.</p>
+<p>This represents the &quot;Dispatch&quot; phase of command line processing.</p>
+<dl class="arguments">
+<dt>string <i class="arg">word</i></dt>
+<dd><p>The words of the command line to parse and match to parameters.</p></dd>
+</dl></dd>
+<dt><a name="10"><b class="cmd">&lt;officer&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></dt>
+<dd><p>This method specifies a command prefix to wrap around the parsing of
+the command line for the officer, and the execution of its action.</p>
+<dl class="arguments">
+<dt>cmd-prefix <i class="arg">cmd</i></dt>
+<dd><p>A command prefix taking a single argument, a script. The command
+prefix has to execute this script in its caller's context. The script
+will parse words for the officer,m and perform its action. The command
+prefix then has the responsbility to perform any custom cleanup action
+required by the application using the framework to prevent leakage of
+data between multiple commands executed one after the other (i.e. in
+an interactive shell run by the framework).</p></dd>
+</dl></dd>
+<dt><a name="11"><b class="cmd">&lt;officer&gt;</b> <b class="method">exit</b></a></dt>
+<dd><p>This hook-method for the main shell returns a boolean value indicating
+whether the main shell was stopped and has to exit (<b class="const">true</b>), or
+not (<b class="const">false</b>).</p></dd>
+<dt><a name="12"><b class="cmd">&lt;officer&gt;</b> <b class="method">extend</b> <i class="arg">path</i> <i class="arg">arguments</i> <i class="arg">action</i></a></dt>
+<dd><p>A convenience method to create a &quot;private&quot; command underneath this
+officer, with the command name <i class="arg">path</i> (a list of names). Any
+intermediate officers are created as needed. An error is thrown if any
+of the intermediates already exist as a (non-extensible) private, or
+if the last command already exists.</p>
+<p>The arguments after the <i class="arg">path</i> match the constructor of
+privates in number and semantics.</p>
+<dl class="arguments">
+<dt>script <i class="arg">path</i></dt>
+<dd><p>The list of names specifying the route from this officer to the new
+private. The last element is the name of the private command, while
+the preceding names specify the intermediate officers.</p></dd>
+<dt>script <i class="arg">arguments</i></dt>
+<dd><p>The specification of the private's parameters.
+Please read <i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+<dt>cmd-prefix <i class="arg">action</i></dt>
+<dd><p>The command prefix to invoke when this private is selected for
+execution.  It takes a single argument, the instance command of the
+hidden <b class="package">cmdr::config</b> container holding the private's
+parameters. The result of the action, if there is any, is ignored by
+the framework.</p></dd>
+</dl></dd>
+<dt><a name="13"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></dt>
+<dd><p>This method returns a boolean value indicating if this officer has a
+sub-ordinate of the given <i class="arg">name</i> (<b class="const">true</b>), or not
+(<b class="const">false</b>). See also method <b class="method">lookup</b>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the sub-ordinate to look for.</p></dd>
+</dl></dd>
+<dt><a name="14"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></dt>
+<dd><p>This method returns a boolean value indicating if this officer has a
+default sub-ordinate (<b class="const">true</b>), or not (<b class="const">false</b>). See also
+method <b class="method">default</b>.</p></dd>
+<dt><a name="15"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
+<dd><p>This method returns the help information for the officer and its
+subordinates. The <i class="arg">prefix</i>, if specified provides the name of the
+officer within the help data. It defaults to the empty string.
+The result of the command is a structure of the form
+described in section <span class="sectref"><a href="#section4">Help Information</a></span>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">prefix</i></dt>
+<dd><p>The name to use for the officer within the generated help.</p></dd>
+</dl></dd>
+<dt><a name="16"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></dt>
+<dd><p>This method returns a list containing the names of the subordinate
+actors managed by this officer.
+See also method <b class="method">children</b> which returns a list of instance
+commands.
+See also method <b class="method">lookup</b> to map names to instance commands.</p></dd>
+<dt><a name="17"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></dt>
+<dd><p>This method takes a regular specification script and uses it to extend
+the set of subordinates known to this officer. This is the same type
+of script as used during construction, except here we dynamically
+extend the officer.</p>
+<dl class="arguments">
+<dt>script <i class="arg">actions</i></dt>
+<dd><p>The specification of the officer's additional subordinates.
+Please read <i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+</dl></dd>
+<dt><a name="18"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></dt>
+<dd><p>This method returns the instance command of the sub-ordinate with the
+given <i class="arg">name</i>. An error is thrown if such a sub-ordinate does not
+exist. See also method <b class="method">has</b>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the sub-ordinate to look for.</p></dd>
+</dl></dd>
+<dt><a name="19"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></dt>
+<dd><p>This hook-method for the main shell returns the primary prompt string
+to use.</p></dd>
+<dt><a name="20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></dt>
+<dd><p>This hook-method for the main shell returns the secondary prompt
+string for use within a continuation. As the main shell does not
+support continuation lines it should not be invoked ever, and thus
+always throws an error should it be invoked.</p></dd>
+<dt><a name="21"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></dt>
+<dd><p>This hook-method for the main shell is responsible for the reporting
+of the command results.</p>
+<p>Its result is the empty string.</p>
+<dl class="arguments">
+<dt>enum <i class="arg">what</i></dt>
+<dd><p>The result code of the command, one of <b class="const">ok</b>, or <b class="const">fail</b>.</p></dd>
+<dt>any <i class="arg">data</i></dt>
+<dd><p>The result of the command, or an error message in case of failure.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Help Information</a></h2>
+<p>The help information generated by various places of the framework
+is a dictionary containing the following keys:</p>
+<dl class="definitions">
+<dt>arguments</dt>
+<dd><p>A list of strings, the names of the command arguments, in order.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>desc</dt>
+<dd><p>The command's description, i.e. help text.</p></dd>
+<dt>opt2para</dt>
+<dd><p>A dictionary mapping option flags to option names.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>options</dt>
+<dd><p>A dictionary mapping option names to their descriptions.</p></dd>
+<dt>parameters</dt>
+<dd><p>A dictionary mapping parameter names to their definition.
+Each definition is a dictionary containing the keys below.
+See also package <b class="package">cmdr::parameter</b>.</p>
+<dl class="definitions">
+<dt>cmdline</dt>
+<dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
+<dt>code</dt>
+<dd><p>Output of method <b class="method">code</b>.</p></dd>
+<dt>default</dt>
+<dd><p>Output of method <b class="method">default</b>.</p></dd>
+<dt>defered</dt>
+<dd><p>Output of method <b class="method">defered</b>.</p></dd>
+<dt>description</dt>
+<dd><p>Output of method <b class="method">description</b>.</p></dd>
+<dt>documented</dt>
+<dd><p>Output of method <b class="method">documented</b>.</p></dd>
+<dt>flags</dt>
+<dd><p>A dictionary mapping flag names to flag
+                   types, i.e. <b class="const">primary</b>, <b class="const">alias</b>,
+                   or <b class="const">inverted</b>.</p></dd>
+<dt>generator</dt>
+<dd><p>Output of method <b class="method">generator</b>.</p></dd>
+<dt>interactive</dt>
+<dd><p>Output of method <b class="method">interactive</b>.</p></dd>
+<dt>isbool</dt>
+<dd><p>Output of method <b class="method">isbool</b>.</p></dd>
+<dt>label</dt>
+<dd><p>Output of method <b class="method">label</b>.</p></dd>
+<dt>list</dt>
+<dd><p>Output of method <b class="method">list</b>.</p></dd>
+<dt>ordered</dt>
+<dd><p>Output of method <b class="method">ordered</b>.</p></dd>
+<dt>presence</dt>
+<dd><p>Output of method <b class="method">presence</b>.</p></dd>
+<dt>prompt</dt>
+<dd><p>Output of method <b class="method">prompt</b>.</p></dd>
+<dt>required</dt>
+<dd><p>Output of method <b class="method">required</b>.</p></dd>
+<dt>threshold</dt>
+<dd><p>Output of method <b class="method">threshold</b>.</p></dd>
+<dt>type</dt>
+<dd><p>Output of method <b class="method">type</b>.</p></dd>
+<dt>validator</dt>
+<dd><p>Output of method <b class="method">validator</b>.</p></dd>
+</dl></dd>
+<dt>sections</dt>
+<dd><p>A list of sections the command belongs to.
+Each section name is a list itself, the path of the section and sub-sections.</p></dd>
+<dt>states</dt>
+<dd><p>A list of strings, the names of the command's hidden state parameters.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

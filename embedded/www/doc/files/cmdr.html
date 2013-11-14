@@ -1,6 +1,6 @@
 
 <html><head>
-<title>cmdr_changes - &lt;&lt;unknown&gt;&gt;</title>
+<title>cmdr - &lt;&lt;unknown&gt;&gt;</title>
 <style type="text/css"><!--
     HTML {
 	background: 	#FFFFFF;
@@ -92,11 +92,11 @@
     }
 --></style>
 </head>
-<! -- Generated from file 'cmdr_changes.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'cmdr.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
    -->
-<! -- CVS: $Id$ cmdr_changes.n
+<! -- CVS: $Id$ cmdr.n
    -->
 <body><div class="doctools">
 <hr> [
@@ -105,60 +105,77 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr_changes(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
+<h1 class="title">cmdr(n) 0 doc &quot;&lt;&lt;unknown&gt;&gt;&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>cmdr_changes - Cmdr - Log of Changes</p>
+<p>cmdr - Cmdr - Main package and API</p>
 </div>
 <div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
 <ul class="toc">
 <li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
 <li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#section2">Changes</a></li>
-<li class="section"><a href="#section3">Related Documents</a></li>
-<li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section2">API</a></li>
+<li class="section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
 </div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::util</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr</b> <b class="method">new</b> <i class="arg">name</i> <i class="arg">specification</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">name</i> <i class="arg">specification</i></a></li>
+<li><a href="#3"><b class="cmd">::cmdr</b> <b class="method">interactive</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">::cmdr</b> <b class="method">interactive?</b></a></li>
+</ul>
+</div>
+</div>
 <div id="section1" class="section"><h2><a name="section1">Description</a></h2>
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
-<p>This document provides an overview of the changes <b class="package"><a href="cmdr.html">cmdr</a></b>
-underwent from version to version.</p>
+<p>This is the main package of the framework, its public entry point.
+It provides four commands for setup and configuration of command
+hierarchies.</p>
 </div>
-<div id="section2" class="section"><h2><a name="section2">Changes</a></h2>
-<p>This is the first release of cmdr.
-The changes therefore describe the initial features of the system.</p>
-<p>In detail:</p>
-<ol class="enumerated">
-<li><p>cmdr requires Tcl 8.5 or higher.
-       Tcl 8.4 or less is not supported.</p></li>
-<li><p>The framework provides a DSL for the declaration of a hierarchy
-       of commands and their parameters (named options, positional
-       arguments, hidden state), with help texts, type information, and
-       various callbacks (command actions, parameter definition,
-       parameter completion, type validation, command completion, etc.)</p></li>
-<li><p>At runtime the framework provides parsing and processing of command
-       lines per specifications written in that DSL, determining the command
-       to run, and the mapping from command line words to its parameters.</p></li>
-<li><p>The framework also provides shells for the interactive entry of
-	commands and parameters, with command line completion.</p></li>
-<li><p>Last, but not least is the automatic generation of command line
-       help for commands and parameters, based on the information provided
-       in a specification.</p></li>
-</ol>
+<div id="section2" class="section"><h2><a name="section2">API</a></h2>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr</b> <b class="method">new</b> <i class="arg">name</i> <i class="arg">specification</i></a></dt>
+<dd><p>This command creates an automatically-named officer instance which is
+the root of the command hierarchy given in the <i class="arg">specification</i>,
+and has the user-visible command <i class="arg">name</i>.</p>
+<p>The result of the command is the new instance command.</p></dd>
+<dt><a name="2"><b class="cmd">::cmdr</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">name</i> <i class="arg">specification</i></a></dt>
+<dd><p>This command creates the officer instance <i class="arg">obj</i> which is the root
+of the command hierarchy given in the <i class="arg">specification</i>, and has the
+user-visible command <i class="arg">name</i>.</p>
+<p>The result of the command is the new instance command.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The user-visible name of the command (hierarchy).</p></dd>
+<dt>script <i class="arg">actions</i></dt>
+<dd><p>The specification of the subordinate commands. On the command line
+these are the toplevel commands of the application using the
+hierarchy.
+Please read <i class="term">Cmdr - Specification Language</i>, section --TODO-- for the details.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::cmdr</b> <b class="method">interactive</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>This command globally (de)activates the interactive parts of the
+framework, as per the value of <i class="arg">enable</i>.</p>
+<p>By default (initial state) the framework allows interaction.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">enable</i></dt>
+<dd><p>If not specified defaults to <b class="const">true</b>, globally enabling the
+interactive parts of the framework. The value <b class="const">false</b> globally
+disables the interactive parts of the framework</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::cmdr</b> <b class="method">interactive?</b></a></dt>
+<dd><p>This method returns the state of the global interaction flag.</p></dd>
+</dl>
 </div>
-<div id="section3" class="section"><h2><a name="section3">Related Documents</a></h2>
-<ol class="enumerated">
-<li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
-<li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
-<li><p><i class="term">Cmdr - Log of Changes</i></p></li>
-<li><p><i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i></p></li>
-<li><p><i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i></p></li>
-<li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
-</ol>
-</div>
-<div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<div id="section3" class="section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at

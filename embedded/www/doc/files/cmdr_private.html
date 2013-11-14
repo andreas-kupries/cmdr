@@ -142,9 +142,10 @@
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
 <p>This package implements <em>privates</em>, the leaves of command
-hierarchies.  While each private can execute only a single option they
+hierarchies.  While each private can execute only a single action they
 have parameters, i.e. arguments and options with which to configure
 the behaviour of their action.</p>
+<p>This class is sub-class of <b class="package">cmdr::actor</b>.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
 <p>The class API is not public. It is used internally by the framework
@@ -162,7 +163,7 @@ has no need for it.</p>
 Used by the DSL processing parts of the framework to instantiate privates.</p>
 <dl class="arguments">
 <dt>object <i class="arg">super</i></dt>
-<dd><p>The instance command of the actor (officer actually) which contain the private.</p></dd>
+<dd><p>The instance command of the actor (officer actually) which contains the new private.</p></dd>
 <dt>string <i class="arg">name</i></dt>
 <dd><p>The user-visible name of the command.</p></dd>
 <dt>script <i class="arg">arguments</i></dt>
@@ -179,9 +180,9 @@ the framework.</p></dd>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Instance API</a></h2>
 <p>The instance API is not public. It is used internally by the framework
-when during the processing of a command line at runtime
-parsing a command hierarchy specification to create the necessary
-private instances.</p>
+during the parsing of a command hierarchy specification to configure
+the private instances, and when processing a command line at
+runtime to manage word-completion, etc.</p>
 <p>It is described here for use by developers maintaining,
 modifying and extending the framework itself. A user of the framework
 has no need for it, although they have indirect access through

@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr_private\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_officer\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,26 +239,54 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_private" n 0 doc "<<unknown>>"
+.TH "cmdr_officer" n 0 doc "<<unknown>>"
 .BS
 .SH NAME
-cmdr_private \- Cmdr - Single command handling, options, and arguments
+cmdr_officer \- Cmdr - Aggregation of multiple commands for dispatch\&.
 .SH SYNOPSIS
 package require \fBcmdr::util \fR
 .sp
-\fB::cmdr::private\fR \fBnew\fR \fIsuper\fR \fIname\fR \fIarguments\fR \fIaction\fR
+\fB::cmdr::officer\fR \fBnew\fR \fIsuper\fR \fIname\fR \fIactions\fR
 .sp
-\fB::cmdr::private\fR \fBcreate\fR \fIobj\fR \fIsuper\fR \fIname\fR \fIarguments\fR \fIaction\fR
+\fB::cmdr::officer\fR \fBcreate\fR \fIobj\fR \fIsuper\fR \fIname\fR \fIactions\fR
 .sp
-\fB<private>\fR \fBcomplete-words\fR \fIparse\fR
+\fB<officer>\fR \fBchildren\fR
 .sp
-\fB<private>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
+\fB<officer>\fR \fBcomplete\fR \fIline\fR
 .sp
-\fB<private>\fR \fBehandler\fR \fIcmd\fR
+\fB<officer>\fR \fBcomplete-words\fR \fIparse\fR
 .sp
-\fB<private>\fR \fBhelp\fR ?\fIprefix\fR?
+\fB<officer>\fR \fBcontinued\fR \fIline\fR
 .sp
-\fB<private>\fR \fBunknown\fR \fIm\fR ?\fIword\fR\&.\&.\&.?
+\fB<officer>\fR \fBdefault\fR
+.sp
+\fB<officer>\fR \fBdispatch\fR \fIcmd\fR
+.sp
+\fB<officer>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
+.sp
+\fB<officer>\fR \fBehandler\fR \fIcmd\fR
+.sp
+\fB<officer>\fR \fBexit\fR
+.sp
+\fB<officer>\fR \fBextend\fR \fIpath\fR \fIarguments\fR \fIaction\fR
+.sp
+\fB<officer>\fR \fBhas\fR \fIname\fR
+.sp
+\fB<officer>\fR \fBhasdefault\fR
+.sp
+\fB<officer>\fR \fBhelp\fR ?\fIprefix\fR?
+.sp
+\fB<officer>\fR \fBknown\fR
+.sp
+\fB<officer>\fR \fBlearn\fR \fIscript\fR
+.sp
+\fB<officer>\fR \fBlookup\fR \fIname\fR
+.sp
+\fB<officer>\fR \fBprompt1\fR
+.sp
+\fB<officer>\fR \fBprompt2\fR
+.sp
+\fB<officer>\fR \fBreport\fR \fIwhat\fR \fIdata\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -267,61 +295,66 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This package implements \fIprivates\fR, the leaves of command
-hierarchies\&.  While each private can execute only a single action they
-have parameters, i\&.e\&. arguments and options with which to configure
-the behaviour of their action\&.
+This package implements \fIofficers\fR, the inner nodes of command
+hierarchies\&.  Each officer can execute many actions, by delegating
+them to their sub-ordinate actors, officers and privates\&.
 .PP
 This class is sub-class of \fBcmdr::actor\fR\&.
 .SH "CLASS API"
 The class API is not public\&. It is used internally by the framework
 when parsing a command hierarchy specification to create the necessary
-private instances\&.
+officer instances\&.
 .PP
 It is described here for use by developers maintaining,
 modifying and extending the framework itself\&. A user of the framework
 has no need for it\&.
 .TP
-\fB::cmdr::private\fR \fBnew\fR \fIsuper\fR \fIname\fR \fIarguments\fR \fIaction\fR
-Create an auto-named instance of \fBcmdr::private\fR\&.
+\fB::cmdr::officer\fR \fBnew\fR \fIsuper\fR \fIname\fR \fIactions\fR
+Create an auto-named instance of \fBcmdr::officer\fR\&.
 .sp
 \fINot used\fR\&.
 .TP
-\fB::cmdr::private\fR \fBcreate\fR \fIobj\fR \fIsuper\fR \fIname\fR \fIarguments\fR \fIaction\fR
-Create a new instance of \fBcmdr::private\fR, named \fIobj\fR\&.
-Used by the DSL processing parts of the framework to instantiate privates\&.
+\fB::cmdr::officer\fR \fBcreate\fR \fIobj\fR \fIsuper\fR \fIname\fR \fIactions\fR
+Create a new instance of \fBcmdr::officer\fR, named \fIobj\fR\&.
+Used by the DSL processing parts of the framework to instantiate officers\&.
 .RS
 .TP
 object \fIsuper\fR
-The instance command of the actor (officer actually) which contains the new private\&.
+The instance command of the actor (officer actually) which contains the new officer\&.
 .TP
 string \fIname\fR
 The user-visible name of the command\&.
 .TP
-script \fIarguments\fR
-The specification of the private's parameters\&.
+script \fIactions\fR
+The specification of the officer's subordinates\&.
 Please read \fICmdr - Specification Language\fR, section --TODO-- for the details\&.
-.TP
-cmd-prefix \fIaction\fR
-The command prefix to invoke when this private is selected for
-execution\&.  It takes a single argument, the instance command of the
-hidden \fBcmdr::config\fR container holding the private's
-parameters\&. The result of the action, if there is any, is ignored by
-the framework\&.
 .RE
 .PP
 .SH "INSTANCE API"
 The instance API is not public\&. It is used internally by the framework
 during the parsing of a command hierarchy specification to configure
-the private instances, and when processing a command line at
-runtime to manage word-completion, etc\&.
+the officer instances, and when processing a command line at runtime
+to manage navigation of the hierarchy, word-completion, etc\&.
 .PP
 It is described here for use by developers maintaining,
 modifying and extending the framework itself\&. A user of the framework
-has no need for it, although they have indirect access through
-parameters and their container\&.
+has no need for it\&.
 .TP
-\fB<private>\fR \fBcomplete-words\fR \fIparse\fR
+\fB<officer>\fR \fBchildren\fR
+This method returns a list containing the instance commands of the
+subordinate actors managed by this officer\&.
+See also method \fBknown\fR which returns a list of names\&.
+.TP
+\fB<officer>\fR \fBcomplete\fR \fIline\fR
+This hook-method for the main shell is responsible for computing the
+set of completions for the entered \fIline\fR\&.
+.RS
+.TP
+string \fIline\fR
+The command line to complete\&.
+.RE
+.TP
+\fB<officer>\fR \fBcomplete-words\fR \fIparse\fR
 This method is given the completion state \fIparse\fR of a partial
 command line and returns a list of strings which are the valid
 completions at this point\&.
@@ -334,55 +367,169 @@ line\&.
 -- TODO -- Describe the state fields and their meaning\&.
 .RE
 .TP
-\fB<private>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
+\fB<officer>\fR \fBcontinued\fR \fIline\fR
+This hook-method for the main shell is responsible for the detection
+of a continuation-line in the entered command \fIline\fR\&. It always
+returns the boolean value \fBfalse\fR as the main shell does not
+support continuation lines\&.
+.RS
+.TP
+list \fIlist\fR
+.RE
+.TP
+\fB<officer>\fR \fBdefault\fR
+This method returns the instance command of the subordinate to use
+during command line processing if the first word does not specify a
+known subordinate\&. An error is thrown if no such default was specified
+for this officer\&. See also method \fBhasdefault\fR\&.
+.TP
+\fB<officer>\fR \fBdispatch\fR \fIcmd\fR
+This hook-method for the main shell is responsible for the recognition
+and execution of the supported commands\&.
+.RS
+.TP
+string \fIcmd\fR
+The command line containing the command to run\&.
+.RE
+.TP
+\fB<officer>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
 This method parses the \fIword\fRs of the command line, matching them
-to the parameters of the private, be they arguments, or options\&. When
-done without error it invokes the action of the private with the
-filled container of parameters\&.
+to the sub-ordinates of the officer\&. When done without error it
+recursively invokes the chosen sub-ordinate to continue processing\&.
+.sp
+This represents the "Dispatch" phase of command line processing\&.
 .RS
 .TP
 string \fIword\fR
 The words of the command line to parse and match to parameters\&.
 .RE
 .TP
-\fB<private>\fR \fBehandler\fR \fIcmd\fR
+\fB<officer>\fR \fBehandler\fR \fIcmd\fR
 This method specifies a command prefix to wrap around the parsing of
-the command line for the private, and the execution of its action\&.
+the command line for the officer, and the execution of its action\&.
 .RS
 .TP
 cmd-prefix \fIcmd\fR
 A command prefix taking a single argument, a script\&. The command
 prefix has to execute this script in its caller's context\&. The script
-will parse words for the private,m and perform its action\&. The command
+will parse words for the officer,m and perform its action\&. The command
 prefix then has the responsbility to perform any custom cleanup action
 required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i\&.e\&. in
 an interactive shell run by the framework)\&.
 .RE
 .TP
-\fB<private>\fR \fBhelp\fR ?\fIprefix\fR?
-This method returns the help information for the private and its
-parameters\&. The \fIprefix\fR, if specified provides the name of the
-private within the help data\&. It defaults to the empty string\&.
+\fB<officer>\fR \fBexit\fR
+This hook-method for the main shell returns a boolean value indicating
+whether the main shell was stopped and has to exit (\fBtrue\fR), or
+not (\fBfalse\fR)\&.
+.TP
+\fB<officer>\fR \fBextend\fR \fIpath\fR \fIarguments\fR \fIaction\fR
+A convenience method to create a "private" command underneath this
+officer, with the command name \fIpath\fR (a list of names)\&. Any
+intermediate officers are created as needed\&. An error is thrown if any
+of the intermediates already exist as a (non-extensible) private, or
+if the last command already exists\&.
+.sp
+The arguments after the \fIpath\fR match the constructor of
+privates in number and semantics\&.
+.RS
+.TP
+script \fIpath\fR
+The list of names specifying the route from this officer to the new
+private\&. The last element is the name of the private command, while
+the preceding names specify the intermediate officers\&.
+.TP
+script \fIarguments\fR
+The specification of the private's parameters\&.
+Please read \fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+.TP
+cmd-prefix \fIaction\fR
+The command prefix to invoke when this private is selected for
+execution\&.  It takes a single argument, the instance command of the
+hidden \fBcmdr::config\fR container holding the private's
+parameters\&. The result of the action, if there is any, is ignored by
+the framework\&.
+.RE
+.TP
+\fB<officer>\fR \fBhas\fR \fIname\fR
+This method returns a boolean value indicating if this officer has a
+sub-ordinate of the given \fIname\fR (\fBtrue\fR), or not
+(\fBfalse\fR)\&. See also method \fBlookup\fR\&.
+.RS
+.TP
+string \fIname\fR
+The name of the sub-ordinate to look for\&.
+.RE
+.TP
+\fB<officer>\fR \fBhasdefault\fR
+This method returns a boolean value indicating if this officer has a
+default sub-ordinate (\fBtrue\fR), or not (\fBfalse\fR)\&. See also
+method \fBdefault\fR\&.
+.TP
+\fB<officer>\fR \fBhelp\fR ?\fIprefix\fR?
+This method returns the help information for the officer and its
+subordinates\&. The \fIprefix\fR, if specified provides the name of the
+officer within the help data\&. It defaults to the empty string\&.
 The result of the command is a structure of the form
 described in section \fBHelp Information\fR\&.
 .RS
 .TP
 string \fIprefix\fR
-The name to use for the private within the generated help\&.
+The name to use for the officer within the generated help\&.
 .RE
 .TP
-\fB<private>\fR \fBunknown\fR \fIm\fR ?\fIword\fR\&.\&.\&.?
-This method overrides the standard behaviour for unknown methods\&.
-Instead of throwing an error they are routed to the hidden container
-of the private's parameters, of class \fBcmdr::config\fR\&.
+\fB<officer>\fR \fBknown\fR
+This method returns a list containing the names of the subordinate
+actors managed by this officer\&.
+See also method \fBchildren\fR which returns a list of instance
+commands\&.
+See also method \fBlookup\fR to map names to instance commands\&.
+.TP
+\fB<officer>\fR \fBlearn\fR \fIscript\fR
+This method takes a regular specification script and uses it to extend
+the set of subordinates known to this officer\&. This is the same type
+of script as used during construction, except here we dynamically
+extend the officer\&.
 .RS
 .TP
-string \fIm\fR
-The name of the unknown method\&.
+script \fIactions\fR
+The specification of the officer's additional subordinates\&.
+Please read \fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+.RE
 .TP
-string \fIword\fR
-The argument (one or more) of the unknown method\&.
+\fB<officer>\fR \fBlookup\fR \fIname\fR
+This method returns the instance command of the sub-ordinate with the
+given \fIname\fR\&. An error is thrown if such a sub-ordinate does not
+exist\&. See also method \fBhas\fR\&.
+.RS
+.TP
+string \fIname\fR
+The name of the sub-ordinate to look for\&.
+.RE
+.TP
+\fB<officer>\fR \fBprompt1\fR
+This hook-method for the main shell returns the primary prompt string
+to use\&.
+.TP
+\fB<officer>\fR \fBprompt2\fR
+This hook-method for the main shell returns the secondary prompt
+string for use within a continuation\&. As the main shell does not
+support continuation lines it should not be invoked ever, and thus
+always throws an error should it be invoked\&.
+.TP
+\fB<officer>\fR \fBreport\fR \fIwhat\fR \fIdata\fR
+This hook-method for the main shell is responsible for the reporting
+of the command results\&.
+.sp
+Its result is the empty string\&.
+.RS
+.TP
+enum \fIwhat\fR
+The result code of the command, one of \fBok\fR, or \fBfail\fR\&.
+.TP
+any \fIdata\fR
+The result of the command, or an error message in case of failure\&.
 .RE
 .PP
 .SH "HELP INFORMATION"
