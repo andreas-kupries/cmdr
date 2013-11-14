@@ -1,0 +1,49 @@
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_dsl [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[titledesc [vset TITLE_DSL]]
+[description]
+[include parts/welcome.inc]
+
+This document is for users of the cmdr framework. It describes the
+domain-specific language for the specification of command hierarchies
+with commands and their parameters (options, and inputs).
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Introductory examples}]
+
+Instead of immediately diving into the full syntax of the
+specification language first a few examples to demonstrate the general
+look and feel, plus basic features.
+
+[comment ================================================]
+[subsection {Basic setup, private with inputs}]
+[include parts/ex_alias0.inc]
+
+[comment ================================================]
+[subsection {Basic setup, command nesting}]
+[include parts/ex_alias1.inc]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Language Reference}]
+
+With the examples behind us we can now go and specify the entire
+specification language. If you have skipped here on first reading,
+ignoring the examples, please go back and read them first.
+
+[comment ================================================]
+[subsection Officers]
+[include parts/dsl_officer.inc]
+
+[comment ================================================]
+[subsection Privates]
+[include parts/dsl_private.inc]
+
+[comment ================================================]
+[subsection Parameters]
+[include parts/dsl_parameter.inc]
+
+[include parts/related.inc]
+[include parts/feedback.inc]
+[manpage_end]
+

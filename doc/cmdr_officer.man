@@ -46,7 +46,7 @@ The user-visible name of the command.
 
 [arg_def script actions]
 The specification of the officer's subordinates.
-Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+Please read [term [vset TITLE_DSL]] (section "Officers") for the details.
 
 [list_end][comment arguments]
 [list_end][comment definitions]
@@ -189,7 +189,7 @@ the preceding names specify the intermediate officers.
 [comment {--- TODO place into text block for inclusion --- see private - constructor}]
 [arg_def script arguments]
 The specification of the private's parameters.
-Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+Please read [term [vset TITLE_DSL]] (section "Parameters") for the details.
 
 [arg_def cmd-prefix action]
 The command prefix to invoke when this private is selected for
@@ -256,7 +256,7 @@ extend the officer.
 [list_begin arguments]
 [arg_def script actions]
 The specification of the officer's additional subordinates.
-Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+Please read [term [vset TITLE_DSL]] (section "Officers") for the details.
 
 [list_end][comment arguments]
 

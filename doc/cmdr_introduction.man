@@ -5,13 +5,21 @@
 [description]
 [include parts/welcome.inc]
 
-[comment { -- @EDIT Please edit to suit --
-    [para]
-    What are your goals which drove you here ?
-    [list_begin enumerated][comment {--------------------}]
-    [enum]
-    [list_end][comment {---------------------------------}]
-}]
+The cmdr framework is a set of 12 related Tcl packages for the easy
+specification of the interfaces of command line applications.
+
+This means the declaration of the set of commands to be provided by an
+application, and their parameters, be they options or positional
+inputs.
+
+At runtime the internals of the framework, guided by the chosen
+specification, handle the bulk of processing [var \$::argv]. This
+covers determining the requested command, mapping argument words to
+command parameters, and validating them.
+
+Additional features of the runtime are an integrated help system and
+interactive command line shells with basic command and argument
+completion.
 
 [section {System Architecture}]
 

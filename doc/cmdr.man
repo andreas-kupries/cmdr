@@ -39,9 +39,9 @@ The user-visible name of the command (hierarchy).
 [arg_def script actions]
 The specification of the subordinate commands. On the command line
 these are the toplevel commands of the application using the
-hierarchy.
+hierarchy. Please read [term [vset TITLE_DSL]], (section "Officers")
+for the details.
 
-Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]

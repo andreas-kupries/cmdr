@@ -46,7 +46,7 @@ will belong to.
 [arg_def script spec]
 
 Tcl-script specifying the parameters in detail. Please read
-[term [vset TITLE_DSL]], section --TODO-- for the details.
+[term [vset TITLE_DSL]] (section "Parameters") for the details.
 
 [list_end][comment arguments]
 
