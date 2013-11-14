@@ -48,7 +48,7 @@ The user-visible name of the command.
 [comment {--- TODO place into text block for inclusion --- see officer - extend}]
 [arg_def script arguments]
 The specification of the private's parameters.
-Please read [term [vset TITLE_DSL]], section --TODO-- for the details.
+Please read [term [vset TITLE_DSL]] (section "Privates") for the details.
 
 [arg_def cmd-prefix action]
 The command prefix to invoke when this private is selected for

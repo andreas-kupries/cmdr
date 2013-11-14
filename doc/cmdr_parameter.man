@@ -69,9 +69,8 @@ help, if not overridden by a [cmd label] declaration
 Human-readable help text for the parameter.
 
 [arg_def script spec]
-
 Tcl-script specifying the parameter in detail. Please read
-[term [vset TITLE_DSL]], section --TODO-- for the details.
+[term [vset TITLE_DSL]] (section "Parameters") for the details.
 
 [list_end][comment arguments]
 [list_end][comment definitions]
