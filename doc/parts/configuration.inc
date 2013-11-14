@@ -3,7 +3,7 @@
 [vset COPYRIGHT 2013]
 [vset LICENSE bsd]
 [vset MAN_SECTION n]
-[vset MODULE_DESC <<unknown>>]
+[vset MODULE_DESC {Cmdr, a framework for command line parsing and dispatch}]
 [vset PROJECT cmdr]
 [vset PTITLE Cmdr]
 [vset REPOSITORY https:/core.tcl.tk/akupries/cmdr]
