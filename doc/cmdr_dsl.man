@@ -5,9 +5,14 @@
 [description]
 [include parts/welcome.inc]
 
-This document is for users of the cmdr framework. It describes the
+This document is for users of the cmdr framework. It introduces the
 domain-specific language for the specification of command hierarchies
-with commands and their parameters (options, and inputs).
+with commands and their parameters by way of examples and then
+provides links to the detailed reference documents.
+
+[para] These related documents are:
+
+[include parts/related_dsl.inc]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Introductory examples}]
@@ -31,21 +36,11 @@ With the examples behind us we can now go and specify the entire
 specification language. If you have skipped here on first reading,
 ignoring the examples, please go back and read them first.
 
-[comment ================================================]
-[subsection General]
 [include parts/dsl_general.inc]
 
-[comment ================================================]
-[subsection Officers]
-[include parts/dsl_officer.inc]
+[para] For the details please continue reading at
 
-[comment ================================================]
-[subsection Privates]
-[include parts/dsl_private.inc]
-
-[comment ================================================]
-[subsection Parameters]
-[include parts/dsl_parameter.inc]
+[include parts/related_dsl.inc]
 
 [include parts/related.inc]
 [include parts/feedback.inc]
