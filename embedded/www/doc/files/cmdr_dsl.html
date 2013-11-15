@@ -1,0 +1,742 @@
+
+<html><head>
+<title>cmdr_dsl - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_dsl.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_dsl.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_dsl(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_dsl - Cmdr - Specification Language</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Introductory examples</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Basic setup, private with inputs</a></li>
+<li class="subsection"><a href="#subsection2">Basic setup, command nesting</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section3">Language Reference</a>
+<ul>
+<li class="subsection"><a href="#subsection3">General</a></li>
+<li class="subsection"><a href="#subsection4">Officers</a></li>
+<li class="subsection"><a href="#subsection5">Privates</a></li>
+<li class="subsection"><a href="#subsection6">Parameters</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section4">Related Documents</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document is for users of the cmdr framework. It describes the
+domain-specific language for the specification of command hierarchies
+with commands and their parameters (options, and inputs).</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Introductory examples</a></h2>
+<p>Instead of immediately diving into the full syntax of the
+specification language first a few examples to demonstrate the general
+look and feel, plus basic features.</p>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Basic setup, private with inputs</a></h3>
+<p>This example specifies a command line providing 3 commands for
+the management of command aliases.
+This is actually a slice of <b class="syscmd">stackato</b>'s interface, reduced and
+modified to fit here.
+While it does not have the necessary backend procedures required to
+actually run the commands, it is enough to demonstrate basic features,
+namely the declaration of &quot;privates&quot; with &quot;input&quot; parameters.</p>
+<p>&quot;privates&quot; are the actual commands, the leaves at the bottom of
+the hierarchy. Their &quot;inputs&quot; are positional parameters, i.e. the
+association of argument words on a command line to parameter is done
+in order of occurence (on command line, and in the specification).</p>
+<pre class="example">
+# -*- tcl -*
+package require Tcl 8.5
+package require cmdr
+package require foo-backend
+cmdr create ::foo foo {
+    private alias+ {
+	description {
+	    Create a shortcut for a command (prefix).
+	}
+	input name {
+	    The name of the new shortcut.
+	} {
+	    validate ::foo::backend::vt::notacommand
+	}
+	input command {
+	    The command (prefix) the name will map to.
+	} {
+	    list
+	}
+    } ::foo::backend::alias::add
+    private alias- {
+	description {
+	    Remove a shortcut by name.
+	}
+	input name {
+	    The name of the shortcut to remove.
+	} {
+	    validate ::foo::backend::vt::aliasname
+	}
+    } ::foo::backend::alias::remove
+    private alias? {
+	description {
+	    List the known aliases (shortcuts).
+	}
+    } ::foo::backend::alias::list
+}
+foo do {*}$argv
+exit
+</pre>
+<p>At the bottom of the example, just above we can also see the
+very simple Tcl command which invokes the command line processing for
+a list of words, here coming from <b class="variable">$argv</b>, i.e. the application's
+command line.</p>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">Basic setup, command nesting</a></h3>
+<p>The decoupling of command names from their implementations seen
+in the previous example makes it easy to re-arrange and re-label the
+user visible commands without having to touch any other part of the
+code.</p>
+<p>This is demonstrated in the example below, moving the 3
+&quot;privates&quot; into an &quot;officer&quot; and renaming them, without changing the
+actions. Note that the parameter specifications were removed for
+clarity, as they were not changed compared to the original example.</p>
+<p>&quot;officers&quot; are named inner nodes in the command hierarchy. They
+aggregate related commands, which may not only be &quot;privates&quot; as seen
+here, but sub-officers as well.</p>
+<pre class="example">
+...
+cmdr create ::foo foo {
+    officer alias {
+	description {
+	    A collection of commands to manage
+	    user-specific shortcuts for command
+	    entry
+	}
+	private add {
+	    ...
+	} ::foo::backend::alias::add
+	private remove {
+	    ...
+	} ::foo::backend::alias::remove
+	private list {
+	    ...
+	} ::foo::backend::alias::list
+    }
+}
+...
+</pre>
+</div>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Language Reference</a></h2>
+<p>With the examples behind us we can now go and specify the entire
+specification language. If you have skipped here on first reading,
+ignoring the examples, please go back and read them first.</p>
+<div id="subsection3" class="subsection"><h3><a name="subsection3">General</a></h3>
+<p>The conceptual model underneath the command hierarchy is that
+of a tree.</p>
+<p>The inner nodes of the tree represent command ensembles, here
+called &quot;officer&quot;s. Each officer knows one or more commands, and
+delegates actual execution to their respective specification, which
+may be another officer, or a private.</p>
+<p>The leaf nodes of the tree represent the individual commands,
+here called &quot;private&quot;s. Each private is responsible for a single
+action, and knows how to perform it and the parameters used to
+configure that action at runtime.</p>
+<p>The same model is graphically presented in the
+Entity-Relationship-Diagram below.
+<img alt="erd" src="../../image/erd.png"></p>
+<p>The &quot;Actor&quot; in that diagram is the common base class for the
+ensembles and commands and not directly relevant to users.</p>
+<p>The &quot;Config&quot; on the other hand is the second interface seen by
+the user, as the sole argument to the action command prefix of
+<b class="cmd">private</b> (See section <b class="sectref">Officer</b>).
+This container holds all the declared parameters of the command the
+action is invoked for, and provides easy access to them through its
+methods (see package <b class="package">cmdr::config</b>) at the time of execution.</p>
+</div>
+<div id="subsection4" class="subsection"><h3><a name="subsection4">Officers</a></h3>
+<pre class="example">
+alias &lt;name&gt; = &lt;name'&gt;...            Declare an alternate name for a command path.
+alias &lt;name&gt;                         Declare an alternate name for the previous command.
+common &lt;name&gt; &lt;script&gt;               Declare a named shared code block.
+default                              Set last command as default.
+description &lt;text&gt;                   Set help text for the current ensemble.
+ehandler &lt;cmdprefix&gt;                 Execution Interposition.
+officer &lt;name&gt; &lt;script&gt;              Declare a nested ensemble = sub-officer
+private &lt;name&gt; &lt;script&gt; &lt;cmdprefix&gt;  Declare a simple command  = private
+undocumented                         Hide ensemble from help.
+</pre>
+<dl class="definitions">
+<dt><b class="cmd">alias</b> <i class="arg">name</i> <b class="const">=</b> <i class="arg">name'</i>...</dt>
+<dd></dd>
+<dt><b class="cmd">alias</b> <i class="arg">name</i></dt>
+<dd><p>This is a structuring command, for the command hierarchy. Its main
+uses are the creation of alternate command names, and of shortcuts
+through the command hierarchy.</p>
+<p>For example, stackato's command specification for alias management is
+more like <span class="sectref"><a href="#subsection2">Basic setup, command nesting</a></span> and uses shortcuts
+similar to what is shown in
+--TODO--(example ls-alias2)-- to provide the look of a flat namespace.</p>
+<p>In the first form the <i class="arg">name</i> is given the explicit path to
+the command it is an alias for. In the second form it implicitly
+refers to the immediately preceding officer or private.
+Note that &quot;immediately&quot; is interpreted at the current level. The
+system is <em>not</em> looking into a nested specification for its last
+command.</p></dd>
+<dt><b class="cmd">common</b> <i class="arg">name</i> <i class="arg">text</i></dt>
+<dd><p>This is another structuring command, for structuring the specification
+itself instead of the command tree it declares.</p>
+<p>It creates named values, usually code blocks, which can be
+shared between specifications. Note that while each block is visible
+in the current officer and its subordinates, parents and siblings have
+no access.</p>
+<p>An example of such a block would be</p>
+<pre class="example">
+common *all* {
+    option debug {
+	Activate client internal tracing.
+    } {
+	undocumented
+	list
+	when-complete [lambda {p tags} {
+	    foreach t $tags { debug on $t }
+	}]
+    }
+}
+</pre>
+<p>This example defines an option to access the subsystem for debug
+narative (See package <b class="package">Tcllib</b>). 
+The example is actually special, as the block named <b class="const">*all*</b> is
+reserved by the framework. This block, if defined, is automatically
+included at the front of all &quot;private&quot; specifications, i.e. shared
+across all the specified commands underneath this officer. A very
+important trait for the option in the example, as it makes the debug
+setup available to all commands without having to explicitly include
+the block, and possibly forgetting such.</p>
+<p>Generally speaking, the framework reserves all blocks whose
+name begins with a star, i.e <b class="const">*</b>, for its own use.</p></dd>
+<dt><b class="cmd">default</b></dt>
+<dd><p>This command sets up a special kind of alias. The last &quot;private&quot; or
+&quot;officer&quot; is set as the default command to use at runtime.
+This means that if during &quot;Dispatch&quot; the currently processed word does
+not match any of the commands known to this officer this default is
+used. If no default is specified an error will be thrown instead.</p></dd>
+<dt><b class="cmd">description</b> <i class="arg">text</i></dt>
+<dd><p>This command declares the help text of the officer.</p></dd>
+<dt><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></dt>
+<dd><p>This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates).</p>
+<p>At runtime the framework will call the specified command prefix
+with a single argument, a script whose execution is equivalent to the
+phases &quot;Parsing&quot;, &quot;Completion&quot;, and &quot;Execution&quot; of the framework, as
+described in section --TODO--(sectref:flow/phases)--. The handler <em>must</em>
+call this script, and can perform any application-specific actions
+before and after.</p>
+<p>This handler's main uses are two-fold:</p>
+<ol class="enumerated">
+<li><p>Capture and hande application-specific errors which should not
+abort the application, or shown as Tcl stacktrace.</p></li>
+<li><p>Cleanup of application-specific transient settings the
+parameter callbacks and/or command implementations may have set during
+their execution. This is especially important if the interactive
+command line shells of the framework are active. Without such a
+handler and its bespoke cleanup code transient settings will leak
+between multiple commands run from such a shell, something which is
+definitely not wanted.</p></li>
+</ol></dd>
+<dt><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></dt>
+<dd><p>This command creates a named subordinate officer with its
+specification <i class="arg">script</i> of officer commands as described here.</p></dd>
+<dt><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></dt>
+<dd><p>This command creates a named subordinate private with its
+specification <i class="arg">script</i> of private commands as described in the
+following section, and a command prefix to invoke when it is chosen.</p>
+<p>This command prefix is called with a single argument, the
+<b class="package">cmdr::config</b> instance holding the parameters of the private.
+--TODO--(ref:backend-example-code)--</p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p>Use of this command influences the generation of help, excluding all
+officers having this marker (and their subordinates) from the
+help. Note that subordinates reachable through aliases may be
+included, under the alias name, if not explicitly excluded themselves.</p></dd>
+</dl>
+</div>
+<div id="subsection5" class="subsection"><h3><a name="subsection5">Privates</a></h3>
+<p>The specification of simple commands, i.e. &quot;privates&quot; is quite
+easy, with only seven commands (see the table below). The important
+parts are found in the parameter specifications, explained in the next
+section.</p>
+<pre class="example">
+description &lt;text&gt;             Set help text for command.
+input &lt;name&gt; &lt;help&gt; &lt;script&gt;   Declare a positional parameter.
+interactive                    Allow interactive shell.
+option &lt;name&gt; &lt;help&gt; &lt;script&gt;  Declare a named parameter.
+state &lt;name&gt; &lt;help&gt; &lt;script&gt;   Declare a hidden parameter.
+undocumented                   Hide command from help.
+use &lt;name&gt;                     Execute the named &quot;common&quot; block here.
+</pre>
+<dl class="definitions">
+<dt><b class="cmd">description</b> <i class="arg">text</i></dt>
+<dd><p>Like the equivalent command for <span class="sectref"><a href="#subsection4">Officers</a></span> this command
+declares the help text for the private.</p></dd>
+<dt><b class="cmd">input</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></dt>
+<dd><p>This command adds an &quot;input&quot; (positional) parameter to the &quot;private&quot;,
+with description <i class="arg">help</i> and its specification <i class="arg">script</i> of
+parameter commands as described in the following section.</p></dd>
+<dt><b class="cmd">interactive</b></dt>
+<dd><p>This command influences the runtime. By default the only interactive
+command line shells are associated with the officers. Setting this
+marker activates such a shell for the private, to be invoked when
+required parameters do not have a value.</p>
+<p>The global command <b class="cmd">cmdr::config interactive</b> in package
+<b class="package">cmdr::config</b> can be used to globally activate this type of
+shell for all &quot;privates&quot;.</p></dd>
+<dt><b class="cmd">option</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></dt>
+<dd><p>This command adds an &quot;option&quot; (named) parameter to the &quot;private&quot;, with
+description <i class="arg">help</i> and its specification <i class="arg">script</i> of parameter
+commands as described in the following section.</p></dd>
+<dt><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></dt>
+<dd><p>This command adds a &quot;state&quot; (hidden) parameter to the &quot;private&quot;, with
+description <i class="arg">help</i> and its specification <i class="arg">script</i> of parameter
+commands as described in the following section.</p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p>Like the equivalent command for <span class="sectref"><a href="#subsection4">Officers</a></span> use of this command
+influences the generation of help, excluding all privates having this
+marker from it.</p></dd>
+<dt><b class="cmd">use</b> <i class="arg">name</i></dt>
+<dd><p>This command is the counterpart to <b class="cmd">common</b> of <span class="sectref"><a href="#subsection4">Officers</a></span>.
+It inserts the named block into the specification, executing it. As
+such it expects the contents to be a script of private commands as
+described in this section.</p></dd>
+</dl>
+</div>
+<div id="subsection6" class="subsection"><h3><a name="subsection6">Parameters</a></h3>
+<p>The parameters of private commands are the heart of the system,
+providing the space needed to transfer the command arguments to the
+implementations, and having the most attributes controlling their
+behaviour.</p>
+<p>This complexity is mitigated strongly by the use of sensible
+defaults for each of the three possible kinds of parameter, i.e.
+positional &quot;inputs&quot;, named &quot;options&quot;, and &quot;state&quot; hidden from the
+command line.</p>
+<p>Each kind has its own construction command in the DSL for
+<span class="sectref"><a href="#subsection5">Privates</a></span> which specifies the common information which cannot
+have defaults, i.e.</p>
+<ol class="enumerated">
+<li><p>the name identifying it to the system,</p></li>
+<li><p>the help text describing it in informal speech, and, of course,</p></li>
+<li><p>the parameter specification itself, using the commands of this section.</p></li>
+</ol>
+<pre class="example">
+alias &lt;name&gt;              N  Declare alternate flag for an option.
+default &lt;value&gt;            R Set constant default value.
+defered                    R  Defer calculation of the internal representation until demanded.
+generate &lt;cmdprefix&gt;       R  Set callback returning the default value.
+immediate                  R  Complement of defered.
+interact ?&lt;prompt&gt;?        R  Enable the interactive entry of the string value.
+label &lt;text&gt;              N  Name to use in the help, and as primary flag (for an option).
+list                       R Declare as list-valued.
+optional                  G  Declare input as optional.
+presence                   V Declare as boolean option without argument.
+test                      G  Control the matching of words to optional inputs.
+undocumented              G  Declare as hidden from help.
+validate &lt;cmdprefix&gt;       V Declare validation type.
+when-complete &lt;cmdprefix&gt; C  Set callback executed when the value becomes known.
+when-set &lt;cmdprefix&gt;      C  Set callback executed when the string value becomes known.
+</pre>
+<p><em>Naming</em></p>
+<p>We have two commands to influence the visible naming of all
+parameters.</p>
+<p>As background, all parameters are named for proper
+identification within the framework and other Tcl code, i.e. the
+various callbacks, including a &quot;private&quot;s action. This &quot;system name&quot;
+has to be unique within the &quot;private&quot; a parameter belongs to. Beyond
+that however the visible parameters have to be identified within help
+texts, and, in case of &quot;options&quot;, for detection during &quot;Parsing&quot;. That
+is the visible naming, seen by a user of any application whose command
+line processing is based on the Cmdr framework.</p>
+<dl class="definitions">
+<dt><b class="cmd">label</b> <i class="arg">text</i></dt>
+<dd><p>This command declares the visible name, if different from the system
+name used as the default. Note that in most cases this default is good
+enough, obviating the need for this command.</p>
+<p>The only use case seen so far is when two semantically
+equivalent input and option parameters clash, requiring different
+internal names due to the requirement for uniqueness, yet also the
+same visible name and flag within the help to highlight their
+connection and equivalence.</p></dd>
+<dt><b class="cmd">alias</b> <i class="arg">name</i></dt>
+<dd><p>For option parameters the &quot;label&quot; command and its default specifies
+the name of the primary flag recognized during parsing. If that is not
+enough for a specific option this command allows the specification of
+any number additional flags to be recognized.</p>
+<p>Note however that the framework automatically recognizes not
+only the specified flags, but also all unique prefixes, obviating the
+need for this command in many cases.</p></dd>
+</dl>
+<p><em>General control</em></p>
+<p>The general handling of a parameter is influenced by three
+commands.</p>
+<dl class="definitions">
+<dt><b class="cmd">optional</b></dt>
+<dd><p>This command marks the parameter as optional, i.e. as something the
+user may skip on the command line, and the application supplying
+sensible defaults. --TODO--(sectref:para/vtype)--
+During parsing the framework will then expend some effort to determine
+whether an argument word should be assigned to the parameter, or not.</p>
+<p>This setting is only applicable to &quot;inputs&quot;, as &quot;options&quot; are
+optional by definition, and &quot;state&quot; is hidden.</p></dd>
+<dt><b class="cmd">test</b></dt>
+<dd><p>This command is related to the above, switching from the standard
+regime for acceptance based on counting and thresholds to a different
+one based on validation. The details are explained in section
+--TODO--(sectref:flow/parsing, flow/optional)--.</p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p>Like &quot;officers&quot; and &quot;privates&quot; parameters can be hidden from the
+generated help. This is the command for doing so, the same as for the
+first two.</p>
+<p>The main use case is the hiding of options giving an
+application developer access to the internals of their application,
+something a regular user has no need of, and doesn't have to know
+about.</p></dd>
+</dl>
+<p><em>Representations</em></p>
+<p>An important concept of parameters is something taken up from
+Tcl itself.
+The differentation between string and internal representations.
+Where Tcl uses internal representations to speed up its execution here
+this separation is that of between the information delivered to the
+application by a user, and the application-specific data structures
+behind them.</p>
+<p>All parameters will have an internal representation.
+This is usually derived from the string representation provided by the
+user.
+The details of that process are explained in section
+--TODO--(sectref:para/vtype)--
+about validation types.
+However we have cases where the user cannot specify a string
+representation (&quot;states&quot;), or is allowed to choose not to (optional
+&quot;inputs&quot;, &quot;options&quot;).
+For these cases three specification commands are made available
+enabling us to programmatically choose the internal representation.</p>
+<dl class="definitions">
+<dt><b class="cmd">default</b> <i class="arg">value</i></dt>
+<dd><p>This command provides a constant value for the internal
+representation.</p></dd>
+<dt><b class="cmd">generate</b> <i class="arg">cmdprefix</i></dt>
+<dd><p>This command provides a callback to compute the internal
+representation at runtime. This is useful if the default is something
+which cannot be captured as a fixed value, for example a handle to
+some resource, or a dynamically created object.</p>
+<p>The command prefix is invoked with a single argument, the
+<b class="package">cmdr::parameter</b> instance for which to generate the internal
+representation.</p></dd>
+</dl>
+<p>The commands &quot;default&quot; and &quot;generate&quot; exclude each other,
+i.e. only of them can be specified.
+If neither are specified, and we need a default (see the cases
+above) a default is chosen per the two rules below:</p>
+<ol class="enumerated">
+<li><p>Use the empty string for a &quot;list&quot; parameter.</p></li>
+<li><p>Use the default value supplied by the chosen validation type
+       (See section --TODO--(sectref:para/vtype)--).</p></li>
+</ol>
+<dl class="definitions">
+<dt><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></dt>
+<dd><p>This command actually does not specify an internal representation, but
+activates another method for the user to specify a string value for
+the parameter, outside of the command line. 
+As such it has priority over either &quot;default&quot; and &quot;generate,&quot; and can
+be specified with either. A parameter marked with it will
+interactively ask the user for a value if none was specified on the
+command line.</p>
+<p>The default <i class="arg">prompt</i> is derived from the system name.</p></dd>
+</dl>
+<p>To recapitulate:</p>
+<ol class="enumerated">
+<li><p>A string representation specified on the command line has the
+       highest priority and goes through the chosen validation type to
+       get the associated internal representation.</p></li>
+<li><p>If activated via &quot;interact&quot; a small shell is run asking the
+       user for a value (or more, as per &quot;list&quot;, see below). The
+       result goes through the chosen validation type to get the
+       associated internal representation.</p></li>
+<li><p>After that the internal representation is either the declared
+       &quot;default,&quot; or the result of invoking the &quot;generate&quot;
+       callback. As internal representations they are <em>not</em> run
+       through the chosen validation type.</p></li>
+</ol>
+<dl class="definitions">
+<dt><b class="cmd">list</b></dt>
+<dd><p>This command is used to mark parameters whose string and thus internal
+value should be treated as a list. By default all parameters are scalar.</p>
+<p>This affects the handling of the parameter during parsing, by
+&quot;interact&quot; above, and the use of the validation type. The last two ask
+for multiple values, and feed the elements of the string value
+separately through validation instead of just the string value in one.
+During parsing treatment of &quot;options&quot; changes from keeping only the
+last assigned value to accumulation of all values. Similarly a
+list-&quot;input&quot; takes all remaining words on the command line for itself
+instead of just the current word. Because of this list-&quot;inputs&quot; are
+only allowed as the last parameter of a &quot;private.&quot;</p></dd>
+</dl>
+<p>The last two specification commands dealing with the
+representations control when the internal representation is created.</p>
+<dl class="definitions">
+<dt><b class="cmd">defered</b></dt>
+<dd><p>This command marks a parameter as defered, with the internal
+representation computed on first access to its value. This is the
+default for &quot;state&quot; parameters.</p></dd>
+<dt><b class="cmd">immediate</b></dt>
+<dd><p>This command marks a parameter as immediate, with the internal
+representation computed in the &quot;Completion&quot; phase. This is the default
+for &quot;input&quot; and &quot;option&quot; parameters.</p></dd>
+</dl>
+<p><em>Validation</em></p>
+<p>The answer to the necessity of moving between the string and
+internal representations described in the previous section are the
+validation types. Given a string representation they either return the
+associated internal representation or raise an error, signaling that
+the input was illegal. This part of their work, the verification of
+the legality of the input string gave them their name.</p>
+<p>The general concept of validation types was taken from
+<b class="package">snit</b>, and modified to suit Cmdr. Where snit's types
+expect only a single method to validate the input Cmdr
+expects all types to support an ensemble of <em>four</em> methods, one
+for the basic validation and transformation of the input, another for
+the release of any internal representation so generated, plus delivery
+of a default representation and support for command line completion.</p>
+<dl class="definitions">
+<dt><b class="cmd">validate</b> <i class="arg">cmdprefix</i></dt>
+<dd><p>This command specifies a validation type for the parameter, in the
+form of a command prefix.
+The set of methods this callback has to support, their signatures,
+etc. are all explained in <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>. This document
+contains the implementation of the standard boolean validation type as
+an example as well.</p>
+<p>Because of the same necessity all parameters must have a
+validation type assigned to them, and the system will choose which, if
+the user did not. This choice is made per the six rules below and
+always returns one of the standard types implemented in package
+<b class="package">cmdr::validate</b>.</p>
+<ol class="enumerated">
+<li><p>Use &quot;identity&quot; if a &quot;generate&quot; callback is specified.</p></li>
+<li><p>Use &quot;boolean&quot;  if no &quot;default&quot; is specified and the parameter is an option.</p></li>
+<li><p>Use &quot;identity&quot; if no &quot;default&quot; is specified and the parameter is an input.</p></li>
+<li><p>Use &quot;boolean&quot;  if the specified &quot;default&quot; value is a Tcl boolean.</p></li>
+<li><p>Use &quot;integer&quot;  if the specified &quot;default&quot; value is a Tcl integer.</p></li>
+<li><p>Use &quot;identity&quot; as fallback of last resort.</p></li>
+</ol></dd>
+<dt><b class="cmd">presence</b></dt>
+<dd><p>This command is best discussed as part of the wider area of &quot;boolean&quot;
+options, i.e. options with validation type &quot;boolean&quot; assigned to
+them. These have associated special behaviours, both in the handling
+of the specification, and during parsing.</p>
+<p>First, normal boolean options. They have automatic aliases
+declared for them, derived from their primary flag. An option named
+&quot;foo&quot; will have an alias of &quot;no-foo&quot;, and the reverse. During parsing
+the &quot;foo&quot; and &quot;no-foo&quot; flags have inverse semantics, and both are
+allowed to occur without option argument following the flag. This is
+in contrast to all other options which must have such an argument. The
+parser essentially uses the validation type to decide if the word
+after the flag is a proper boolean value, or not, i.e. an argument to
+assign to the parameter, or not.</p>
+<p>Now &quot;presence&quot; declares a variant of the above, a boolean
+option without the automatic aliases, and <em>never</em> taking an
+argument during parsing. Its mere <em>presence</em> on the command line
+will set its parameter. Their default value is consequently fixed to
+<b class="const">false</b> as well.</p></dd>
+</dl>
+<p><em>Signaling</em>         
+Of the four callbacks supported by parameters the first two,
+&quot;generate&quot; and &quot;validate&quot; have been described already, in the sections
+--TODO--\ref{para/reps} about representations and
+--TODO--\ref{para/vtype} about validation types, respectively.</p>
+<p>This section explains the commonalities between the callbacks
+in general, and the last two, for notifications about state changes in
+detail.</p>
+<p>All callbacks are treated as command prefixes, not
+scripts.
+There are no placeholder substitutions, only arguments added to each
+command prefix on invokation. This does not harm the generality of the
+system, as complex scripts can be used via procedures or equivalents
+(i.e. <b class="cmd">apply</b>).</p>
+<p>The two callbacks not yet described are the state-change
+callbacks through which the framework can actively drive parts of the
+application while processing the command line, whereas normally the
+application drives access to parameters through their methods.</p>
+<dl class="definitions">
+<dt><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></dt>
+<dd><p>This command declares the state-change callback to invoke when the
+internal representation of the parameter is generated from the string
+representation, or the various ways of getting a default.</p>
+<p>The callback is invoked with two arguments, the
+<b class="package">cmdr::parameter</b> instance of the parameter which changed, and
+its internal representation, in this order.</p></dd>
+<dt><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></dt>
+<dd><p>This command declares the state-change callback to invoke when the
+string representation of the parameter is set during command line
+parsing.</p>
+<p>The callback is invoked with two arguments, the
+<b class="package">cmdr::parameter</b> instance of the parameter which changed, and
+its string representation, in this order.</p></dd>
+</dl>
+<p>Due to their nature these callbacks are invoked at runtime during
+either parsing, completion,&quot; or execution. The details are shown in
+the table below. The specification commands influencing the timing,
+i.e. forcing the use in a specific phase are shown in the intersection
+of callback and phase.</p>
+<pre class="example">
+                    | Dispatch | Parsing | Completion  | Execution
+--------------------+----------+---------+-------------+-----------
+validate (default)  | *        |         |             |          
+--------------------+----------+---------+-------------+-----------
+validate (complete) |          | *       | immediate   | defered
+when-set            |          | *       |             |          
+--------------------+----------+---------+-------------+-----------
+generate            |          |         | immediate   | defered
+validate (validate) |          | test    | immediate   | defered
+validate (release)  |          | test    | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+when-complete       |          |         | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+</pre>
+</div>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Related Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_changes.html">Cmdr - Log of Changes</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
+</ol>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

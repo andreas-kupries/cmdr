@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr" n 0 doc "<<unknown>>"
+.TH "cmdr" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr \- Cmdr - Main package and API
@@ -287,8 +287,8 @@ The user-visible name of the command (hierarchy)\&.
 script \fIactions\fR
 The specification of the subordinate commands\&. On the command line
 these are the toplevel commands of the application using the
-hierarchy\&.
-Please read \fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+hierarchy\&. Please read \fICmdr - Specification Language\fR, (section "Officers")
+for the details\&.
 .RE
 .TP
 \fB::cmdr\fR \fBinteractive\fR ?\fIenable\fR?

@@ -257,6 +257,9 @@ doc
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
 .TP
+\fBcmdr_dsl\fR
+\fIfiles/cmdr_dsl\&.n\fR: Cmdr - Specification Language
+.TP
 \fBcmdr_help\fR
 \fIfiles/cmdr_help\&.n\fR: Cmdr - Utilities for help text formatting and setup - Internal
 .TP

@@ -259,6 +259,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -318,6 +321,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -379,6 +385,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -438,6 +447,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -499,6 +511,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -558,6 +573,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -619,6 +637,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -678,6 +699,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -739,6 +763,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -798,6 +825,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -859,6 +889,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -918,6 +951,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
@@ -979,6 +1015,9 @@ cmdr_config
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
+.TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
 .TP
@@ -1038,6 +1077,9 @@ cmdr_config
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
+.TP
+\fBfiles/cmdr_dsl\&.n\fR
+cmdr_dsl
 .TP
 \fBfiles/cmdr_help\&.n\fR
 cmdr_help
