@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_parameter" n 0 doc "<<unknown>>"
+.TH "cmdr_parameter" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr_parameter \- Cmdr - Command parameters
@@ -402,7 +402,7 @@ Human-readable help text for the parameter\&.
 .TP
 script \fIspec\fR
 Tcl-script specifying the parameter in detail\&. Please read
-\fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+\fICmdr - Specification Language\fR (section "Parameters") for the details\&.
 .RE
 .PP
 .SH "INSTANCE API"

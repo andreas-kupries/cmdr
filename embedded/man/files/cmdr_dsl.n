@@ -1,0 +1,980 @@
+'\"
+'\" Generated from file 'cmdr_dsl\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_dsl" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.BS
+.SH NAME
+cmdr_dsl \- Cmdr - Specification Language
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This document is for users of the cmdr framework\&. It describes the
+domain-specific language for the specification of command hierarchies
+with commands and their parameters (options, and inputs)\&.
+.SH "INTRODUCTORY EXAMPLES"
+Instead of immediately diving into the full syntax of the
+specification language first a few examples to demonstrate the general
+look and feel, plus basic features\&.
+.SS "BASIC SETUP, PRIVATE WITH INPUTS"
+.PP
+This example specifies a command line providing 3 commands for
+the management of command aliases\&.
+This is actually a slice of \fBstackato\fR's interface, reduced and
+modified to fit here\&.
+While it does not have the necessary backend procedures required to
+actually run the commands, it is enough to demonstrate basic features,
+namely the declaration of "privates" with "input" parameters\&.
+.PP
+"privates" are the actual commands, the leaves at the bottom of
+the hierarchy\&. Their "inputs" are positional parameters, i\&.e\&. the
+association of argument words on a command line to parameter is done
+in order of occurence (on command line, and in the specification)\&.
+.CS
+
+
+# -*- tcl -*
+package require Tcl 8\&.5
+package require cmdr
+package require foo-backend
+
+cmdr create ::foo foo {
+    private alias+ {
+	description {
+	    Create a shortcut for a command (prefix)\&.
+	}
+	input name {
+	    The name of the new shortcut\&.
+	} {
+	    validate ::foo::backend::vt::notacommand
+	}
+	input command {
+	    The command (prefix) the name will map to\&.
+	} {
+	    list
+	}
+    } ::foo::backend::alias::add
+
+    private alias- {
+	description {
+	    Remove a shortcut by name\&.
+	}
+	input name {
+	    The name of the shortcut to remove\&.
+	} {
+	    validate ::foo::backend::vt::aliasname
+	}
+    } ::foo::backend::alias::remove
+
+    private alias? {
+	description {
+	    List the known aliases (shortcuts)\&.
+	}
+    } ::foo::backend::alias::list
+}
+
+foo do {*}$argv
+exit
+
+.CE
+.PP
+At the bottom of the example, just above we can also see the
+very simple Tcl command which invokes the command line processing for
+a list of words, here coming from \fB$argv\fR, i\&.e\&. the application's
+command line\&.
+.SS "BASIC SETUP, COMMAND NESTING"
+.PP
+The decoupling of command names from their implementations seen
+in the previous example makes it easy to re-arrange and re-label the
+user visible commands without having to touch any other part of the
+code\&.
+.PP
+This is demonstrated in the example below, moving the 3
+"privates" into an "officer" and renaming them, without changing the
+actions\&. Note that the parameter specifications were removed for
+clarity, as they were not changed compared to the original example\&.
+.PP
+"officers" are named inner nodes in the command hierarchy\&. They
+aggregate related commands, which may not only be "privates" as seen
+here, but sub-officers as well\&.
+.CS
+
+
+\&.\&.\&.
+cmdr create ::foo foo {
+    officer alias {
+	description {
+	    A collection of commands to manage
+	    user-specific shortcuts for command
+	    entry
+	}
+
+	private add {
+	    \&.\&.\&.
+	} ::foo::backend::alias::add
+
+	private remove {
+	    \&.\&.\&.
+	} ::foo::backend::alias::remove
+
+	private list {
+	    \&.\&.\&.
+	} ::foo::backend::alias::list
+    }
+}
+\&.\&.\&.
+
+.CE
+.SH "LANGUAGE REFERENCE"
+With the examples behind us we can now go and specify the entire
+specification language\&. If you have skipped here on first reading,
+ignoring the examples, please go back and read them first\&.
+.SS GENERAL
+.PP
+The conceptual model underneath the command hierarchy is that
+of a tree\&.
+.PP
+The inner nodes of the tree represent command ensembles, here
+called "officer"s\&. Each officer knows one or more commands, and
+delegates actual execution to their respective specification, which
+may be another officer, or a private\&.
+.PP
+The leaf nodes of the tree represent the individual commands,
+here called "private"s\&. Each private is responsible for a single
+action, and knows how to perform it and the parameters used to
+configure that action at runtime\&.
+.PP
+The same model is graphically presented in the
+Entity-Relationship-Diagram below\&.
+.PS
+.nf
+      is-a         is-a
+    /-1:1-> actor <-1:1-\\
+   /                     \\
+officer ---1:(0-n)--> private --1:1-> config --1:(0-n)-> parameter
+ |  ^      has                  has            has
+ |  |
+ \\--/
+ 1:(0-n)
+ has
+
+.fi
+.PE
+.PP
+The "Actor" in that diagram is the common base class for the
+ensembles and commands and not directly relevant to users\&.
+.PP
+The "Config" on the other hand is the second interface seen by
+the user, as the sole argument to the action command prefix of
+\fBprivate\fR (See section \fBOfficer\fR)\&.
+This container holds all the declared parameters of the command the
+action is invoked for, and provides easy access to them through its
+methods (see package \fBcmdr::config\fR) at the time of execution\&.
+.SS OFFICERS
+.CS
+
+
+alias <name> = <name'>\&.\&.\&.            Declare an alternate name for a command path\&.
+alias <name>                         Declare an alternate name for the previous command\&.
+common <name> <script>               Declare a named shared code block\&.
+default                              Set last command as default\&.
+description <text>                   Set help text for the current ensemble\&.
+ehandler <cmdprefix>                 Execution Interposition\&.
+officer <name> <script>              Declare a nested ensemble = sub-officer
+private <name> <script> <cmdprefix>  Declare a simple command  = private
+undocumented                         Hide ensemble from help\&.
+
+.CE
+.TP
+\fBalias\fR \fIname\fR \fB=\fR \fIname'\fR\&.\&.\&.
+.TP
+\fBalias\fR \fIname\fR
+This is a structuring command, for the command hierarchy\&. Its main
+uses are the creation of alternate command names, and of shortcuts
+through the command hierarchy\&.
+.sp
+For example, stackato's command specification for alias management is
+more like \fBBasic setup, command nesting\fR and uses shortcuts
+similar to what is shown in
+--TODO--(example ls-alias2)-- to provide the look of a flat namespace\&.
+.sp
+In the first form the \fIname\fR is given the explicit path to
+the command it is an alias for\&. In the second form it implicitly
+refers to the immediately preceding officer or private\&.
+Note that "immediately" is interpreted at the current level\&. The
+system is \fInot\fR looking into a nested specification for its last
+command\&.
+.TP
+\fBcommon\fR \fIname\fR \fItext\fR
+This is another structuring command, for structuring the specification
+itself instead of the command tree it declares\&.
+.sp
+It creates named values, usually code blocks, which can be
+shared between specifications\&. Note that while each block is visible
+in the current officer and its subordinates, parents and siblings have
+no access\&.
+.sp
+An example of such a block would be
+.CS
+
+
+common *all* {
+    option debug {
+	Activate client internal tracing\&.
+    } {
+	undocumented
+	list
+	when-complete [lambda {p tags} {
+	    foreach t $tags { debug on $t }
+	}]
+    }
+}
+
+.CE
+.IP
+This example defines an option to access the subsystem for debug
+narative (See package \fBTcllib\fR)\&.
+The example is actually special, as the block named \fB*all*\fR is
+reserved by the framework\&. This block, if defined, is automatically
+included at the front of all "private" specifications, i\&.e\&. shared
+across all the specified commands underneath this officer\&. A very
+important trait for the option in the example, as it makes the debug
+setup available to all commands without having to explicitly include
+the block, and possibly forgetting such\&.
+.sp
+Generally speaking, the framework reserves all blocks whose
+name begins with a star, i\&.e \fB*\fR, for its own use\&.
+.TP
+\fBdefault\fR
+This command sets up a special kind of alias\&. The last "private" or
+"officer" is set as the default command to use at runtime\&.
+This means that if during "Dispatch" the currently processed word does
+not match any of the commands known to this officer this default is
+used\&. If no default is specified an error will be thrown instead\&.
+.TP
+\fBdescription\fR \fItext\fR
+This command declares the help text of the officer\&.
+.TP
+\fBehandler\fR \fIcmdprefix\fR
+This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates)\&.
+.sp
+At runtime the framework will call the specified command prefix
+with a single argument, a script whose execution is equivalent to the
+phases "Parsing", "Completion", and "Execution" of the framework, as
+described in section --TODO--(sectref:flow/phases)--\&. The handler \fImust\fR
+call this script, and can perform any application-specific actions
+before and after\&.
+.sp
+This handler's main uses are two-fold:
+.RS
+.IP [1]
+Capture and hande application-specific errors which should not
+abort the application, or shown as Tcl stacktrace\&.
+.IP [2]
+Cleanup of application-specific transient settings the
+parameter callbacks and/or command implementations may have set during
+their execution\&. This is especially important if the interactive
+command line shells of the framework are active\&. Without such a
+handler and its bespoke cleanup code transient settings will leak
+between multiple commands run from such a shell, something which is
+definitely not wanted\&.
+.RE
+.TP
+\fBofficer\fR \fIname\fR \fIscript\fR
+This command creates a named subordinate officer with its
+specification \fIscript\fR of officer commands as described here\&.
+.TP
+\fBprivate\fR \fIname\fR \fIscript\fR \fIcmdprefix\fR
+This command creates a named subordinate private with its
+specification \fIscript\fR of private commands as described in the
+following section, and a command prefix to invoke when it is chosen\&.
+.sp
+This command prefix is called with a single argument, the
+\fBcmdr::config\fR instance holding the parameters of the private\&.
+--TODO--(ref:backend-example-code)--
+.TP
+\fBundocumented\fR
+Use of this command influences the generation of help, excluding all
+officers having this marker (and their subordinates) from the
+help\&. Note that subordinates reachable through aliases may be
+included, under the alias name, if not explicitly excluded themselves\&.
+.PP
+.SS PRIVATES
+.PP
+The specification of simple commands, i\&.e\&. "privates" is quite
+easy, with only seven commands (see the table below)\&. The important
+parts are found in the parameter specifications, explained in the next
+section\&.
+.CS
+
+
+description <text>             Set help text for command\&.
+input <name> <help> <script>   Declare a positional parameter\&.
+interactive                    Allow interactive shell\&.
+option <name> <help> <script>  Declare a named parameter\&.
+state <name> <help> <script>   Declare a hidden parameter\&.
+undocumented                   Hide command from help\&.
+use <name>                     Execute the named "common" block here\&.
+
+.CE
+.TP
+\fBdescription\fR \fItext\fR
+Like the equivalent command for \fBOfficers\fR this command
+declares the help text for the private\&.
+.TP
+\fBinput\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds an "input" (positional) parameter to the "private",
+with description \fIhelp\fR and its specification \fIscript\fR of
+parameter commands as described in the following section\&.
+.TP
+\fBinteractive\fR
+This command influences the runtime\&. By default the only interactive
+command line shells are associated with the officers\&. Setting this
+marker activates such a shell for the private, to be invoked when
+required parameters do not have a value\&.
+.sp
+The global command \fBcmdr::config interactive\fR in package
+\fBcmdr::config\fR can be used to globally activate this type of
+shell for all "privates"\&.
+.TP
+\fBoption\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds an "option" (named) parameter to the "private", with
+description \fIhelp\fR and its specification \fIscript\fR of parameter
+commands as described in the following section\&.
+.TP
+\fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds a "state" (hidden) parameter to the "private", with
+description \fIhelp\fR and its specification \fIscript\fR of parameter
+commands as described in the following section\&.
+.TP
+\fBundocumented\fR
+Like the equivalent command for \fBOfficers\fR use of this command
+influences the generation of help, excluding all privates having this
+marker from it\&.
+.TP
+\fBuse\fR \fIname\fR
+This command is the counterpart to \fBcommon\fR of \fBOfficers\fR\&.
+It inserts the named block into the specification, executing it\&. As
+such it expects the contents to be a script of private commands as
+described in this section\&.
+.PP
+.SS PARAMETERS
+.PP
+The parameters of private commands are the heart of the system,
+providing the space needed to transfer the command arguments to the
+implementations, and having the most attributes controlling their
+behaviour\&.
+.PP
+This complexity is mitigated strongly by the use of sensible
+defaults for each of the three possible kinds of parameter, i\&.e\&.
+positional "inputs", named "options", and "state" hidden from the
+command line\&.
+.PP
+Each kind has its own construction command in the DSL for
+\fBPrivates\fR which specifies the common information which cannot
+have defaults, i\&.e\&.
+.IP [1]
+the name identifying it to the system,
+.IP [2]
+the help text describing it in informal speech, and, of course,
+.IP [3]
+the parameter specification itself, using the commands of this section\&.
+.PP
+.CS
+
+
+alias <name>              N  Declare alternate flag for an option\&.
+default <value>            R Set constant default value\&.
+defered                    R  Defer calculation of the internal representation until demanded\&.
+generate <cmdprefix>       R  Set callback returning the default value\&.
+immediate                  R  Complement of defered\&.
+interact ?<prompt>?        R  Enable the interactive entry of the string value\&.
+label <text>              N  Name to use in the help, and as primary flag (for an option)\&.
+list                       R Declare as list-valued\&.
+optional                  G  Declare input as optional\&.
+presence                   V Declare as boolean option without argument\&.
+test                      G  Control the matching of words to optional inputs\&.
+undocumented              G  Declare as hidden from help\&.
+validate <cmdprefix>       V Declare validation type\&.
+when-complete <cmdprefix> C  Set callback executed when the value becomes known\&.
+when-set <cmdprefix>      C  Set callback executed when the string value becomes known\&.
+
+.CE
+.PP
+\fINaming\fR
+.PP
+We have two commands to influence the visible naming of all
+parameters\&.
+.PP
+As background, all parameters are named for proper
+identification within the framework and other Tcl code, i\&.e\&. the
+various callbacks, including a "private"s action\&. This "system name"
+has to be unique within the "private" a parameter belongs to\&. Beyond
+that however the visible parameters have to be identified within help
+texts, and, in case of "options", for detection during "Parsing"\&. That
+is the visible naming, seen by a user of any application whose command
+line processing is based on the Cmdr framework\&.
+.TP
+\fBlabel\fR \fItext\fR
+This command declares the visible name, if different from the system
+name used as the default\&. Note that in most cases this default is good
+enough, obviating the need for this command\&.
+.sp
+The only use case seen so far is when two semantically
+equivalent input and option parameters clash, requiring different
+internal names due to the requirement for uniqueness, yet also the
+same visible name and flag within the help to highlight their
+connection and equivalence\&.
+.TP
+\fBalias\fR \fIname\fR
+For option parameters the "label" command and its default specifies
+the name of the primary flag recognized during parsing\&. If that is not
+enough for a specific option this command allows the specification of
+any number additional flags to be recognized\&.
+.sp
+Note however that the framework automatically recognizes not
+only the specified flags, but also all unique prefixes, obviating the
+need for this command in many cases\&.
+.PP
+.PP
+\fIGeneral control\fR
+.PP
+The general handling of a parameter is influenced by three
+commands\&.
+.TP
+\fBoptional\fR
+This command marks the parameter as optional, i\&.e\&. as something the
+user may skip on the command line, and the application supplying
+sensible defaults\&. --TODO--(sectref:para/vtype)--
+During parsing the framework will then expend some effort to determine
+whether an argument word should be assigned to the parameter, or not\&.
+.sp
+This setting is only applicable to "inputs", as "options" are
+optional by definition, and "state" is hidden\&.
+.TP
+\fBtest\fR
+This command is related to the above, switching from the standard
+regime for acceptance based on counting and thresholds to a different
+one based on validation\&. The details are explained in section
+--TODO--(sectref:flow/parsing, flow/optional)--\&.
+.TP
+\fBundocumented\fR
+Like "officers" and "privates" parameters can be hidden from the
+generated help\&. This is the command for doing so, the same as for the
+first two\&.
+.sp
+The main use case is the hiding of options giving an
+application developer access to the internals of their application,
+something a regular user has no need of, and doesn't have to know
+about\&.
+.PP
+.PP
+\fIRepresentations\fR
+.PP
+An important concept of parameters is something taken up from
+Tcl itself\&.
+The differentation between string and internal representations\&.
+Where Tcl uses internal representations to speed up its execution here
+this separation is that of between the information delivered to the
+application by a user, and the application-specific data structures
+behind them\&.
+.PP
+All parameters will have an internal representation\&.
+This is usually derived from the string representation provided by the
+user\&.
+The details of that process are explained in section
+--TODO--(sectref:para/vtype)--
+about validation types\&.
+However we have cases where the user cannot specify a string
+representation ("states"), or is allowed to choose not to (optional
+"inputs", "options")\&.
+For these cases three specification commands are made available
+enabling us to programmatically choose the internal representation\&.
+.TP
+\fBdefault\fR \fIvalue\fR
+This command provides a constant value for the internal
+representation\&.
+.TP
+\fBgenerate\fR \fIcmdprefix\fR
+This command provides a callback to compute the internal
+representation at runtime\&. This is useful if the default is something
+which cannot be captured as a fixed value, for example a handle to
+some resource, or a dynamically created object\&.
+.sp
+The command prefix is invoked with a single argument, the
+\fBcmdr::parameter\fR instance for which to generate the internal
+representation\&.
+.PP
+.PP
+The commands "default" and "generate" exclude each other,
+i\&.e\&. only of them can be specified\&.
+If neither are specified, and we need a default (see the cases
+above) a default is chosen per the two rules below:
+.IP [1]
+Use the empty string for a "list" parameter\&.
+.IP [2]
+Use the default value supplied by the chosen validation type
+(See section --TODO--(sectref:para/vtype)--)\&.
+.PP
+.TP
+\fBinteract\fR ?\fIprompt\fR?
+This command actually does not specify an internal representation, but
+activates another method for the user to specify a string value for
+the parameter, outside of the command line\&.
+As such it has priority over either "default" and "generate," and can
+be specified with either\&. A parameter marked with it will
+interactively ask the user for a value if none was specified on the
+command line\&.
+.sp
+The default \fIprompt\fR is derived from the system name\&.
+.PP
+.PP
+To recapitulate:
+.IP [1]
+A string representation specified on the command line has the
+highest priority and goes through the chosen validation type to
+get the associated internal representation\&.
+.IP [2]
+If activated via "interact" a small shell is run asking the
+user for a value (or more, as per "list", see below)\&. The
+result goes through the chosen validation type to get the
+associated internal representation\&.
+.IP [3]
+After that the internal representation is either the declared
+"default," or the result of invoking the "generate"
+callback\&. As internal representations they are \fInot\fR run
+through the chosen validation type\&.
+.PP
+.TP
+\fBlist\fR
+This command is used to mark parameters whose string and thus internal
+value should be treated as a list\&. By default all parameters are scalar\&.
+.sp
+This affects the handling of the parameter during parsing, by
+"interact" above, and the use of the validation type\&. The last two ask
+for multiple values, and feed the elements of the string value
+separately through validation instead of just the string value in one\&.
+During parsing treatment of "options" changes from keeping only the
+last assigned value to accumulation of all values\&. Similarly a
+list-"input" takes all remaining words on the command line for itself
+instead of just the current word\&. Because of this list-"inputs" are
+only allowed as the last parameter of a "private\&."
+.PP
+.PP
+The last two specification commands dealing with the
+representations control when the internal representation is created\&.
+.TP
+\fBdefered\fR
+This command marks a parameter as defered, with the internal
+representation computed on first access to its value\&. This is the
+default for "state" parameters\&.
+.TP
+\fBimmediate\fR
+This command marks a parameter as immediate, with the internal
+representation computed in the "Completion" phase\&. This is the default
+for "input" and "option" parameters\&.
+.PP
+.PP
+\fIValidation\fR
+.PP
+The answer to the necessity of moving between the string and
+internal representations described in the previous section are the
+validation types\&. Given a string representation they either return the
+associated internal representation or raise an error, signaling that
+the input was illegal\&. This part of their work, the verification of
+the legality of the input string gave them their name\&.
+.PP
+The general concept of validation types was taken from
+\fBsnit\fR, and modified to suit Cmdr\&. Where snit's types
+expect only a single method to validate the input Cmdr
+expects all types to support an ensemble of \fIfour\fR methods, one
+for the basic validation and transformation of the input, another for
+the release of any internal representation so generated, plus delivery
+of a default representation and support for command line completion\&.
+.TP
+\fBvalidate\fR \fIcmdprefix\fR
+This command specifies a validation type for the parameter, in the
+form of a command prefix\&.
+The set of methods this callback has to support, their signatures,
+etc\&. are all explained in \fICmdr - Writing custom validation types\fR\&. This document
+contains the implementation of the standard boolean validation type as
+an example as well\&.
+.sp
+Because of the same necessity all parameters must have a
+validation type assigned to them, and the system will choose which, if
+the user did not\&. This choice is made per the six rules below and
+always returns one of the standard types implemented in package
+\fBcmdr::validate\fR\&.
+.RS
+.IP [1]
+Use "identity" if a "generate" callback is specified\&.
+.IP [2]
+Use "boolean"  if no "default" is specified and the parameter is an option\&.
+.IP [3]
+Use "identity" if no "default" is specified and the parameter is an input\&.
+.IP [4]
+Use "boolean"  if the specified "default" value is a Tcl boolean\&.
+.IP [5]
+Use "integer"  if the specified "default" value is a Tcl integer\&.
+.IP [6]
+Use "identity" as fallback of last resort\&.
+.RE
+.TP
+\fBpresence\fR
+This command is best discussed as part of the wider area of "boolean"
+options, i\&.e\&. options with validation type "boolean" assigned to
+them\&. These have associated special behaviours, both in the handling
+of the specification, and during parsing\&.
+.sp
+First, normal boolean options\&. They have automatic aliases
+declared for them, derived from their primary flag\&. An option named
+"foo" will have an alias of "no-foo", and the reverse\&. During parsing
+the "foo" and "no-foo" flags have inverse semantics, and both are
+allowed to occur without option argument following the flag\&. This is
+in contrast to all other options which must have such an argument\&. The
+parser essentially uses the validation type to decide if the word
+after the flag is a proper boolean value, or not, i\&.e\&. an argument to
+assign to the parameter, or not\&.
+.sp
+Now "presence" declares a variant of the above, a boolean
+option without the automatic aliases, and \fInever\fR taking an
+argument during parsing\&. Its mere \fIpresence\fR on the command line
+will set its parameter\&. Their default value is consequently fixed to
+\fBfalse\fR as well\&.
+.PP
+.PP
+\fISignaling\fR
+Of the four callbacks supported by parameters the first two,
+"generate" and "validate" have been described already, in the sections
+--TODO--\\ref{para/reps} about representations and
+--TODO--\\ref{para/vtype} about validation types, respectively\&.
+.PP
+This section explains the commonalities between the callbacks
+in general, and the last two, for notifications about state changes in
+detail\&.
+.PP
+All callbacks are treated as command prefixes, not
+scripts\&.
+There are no placeholder substitutions, only arguments added to each
+command prefix on invokation\&. This does not harm the generality of the
+system, as complex scripts can be used via procedures or equivalents
+(i\&.e\&. \fBapply\fR)\&.
+.PP
+The two callbacks not yet described are the state-change
+callbacks through which the framework can actively drive parts of the
+application while processing the command line, whereas normally the
+application drives access to parameters through their methods\&.
+.TP
+\fBwhen-complete\fR \fIcmdprefix\fR
+This command declares the state-change callback to invoke when the
+internal representation of the parameter is generated from the string
+representation, or the various ways of getting a default\&.
+.sp
+The callback is invoked with two arguments, the
+\fBcmdr::parameter\fR instance of the parameter which changed, and
+its internal representation, in this order\&.
+.TP
+\fBwhen-set\fR \fIcmdprefix\fR
+This command declares the state-change callback to invoke when the
+string representation of the parameter is set during command line
+parsing\&.
+.sp
+The callback is invoked with two arguments, the
+\fBcmdr::parameter\fR instance of the parameter which changed, and
+its string representation, in this order\&.
+.PP
+Due to their nature these callbacks are invoked at runtime during
+either parsing, completion," or execution\&. The details are shown in
+the table below\&. The specification commands influencing the timing,
+i\&.e\&. forcing the use in a specific phase are shown in the intersection
+of callback and phase\&.
+.CS
+
+
+                    | Dispatch | Parsing | Completion  | Execution
+--------------------+----------+---------+-------------+-----------
+validate (default)  | *        |         |             |
+--------------------+----------+---------+-------------+-----------
+validate (complete) |          | *       | immediate   | defered
+when-set            |          | *       |             |
+--------------------+----------+---------+-------------+-----------
+generate            |          |         | immediate   | defered
+validate (validate) |          | test    | immediate   | defered
+validate (release)  |          | test    | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+when-complete       |          |         | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+
+.CE
+.SH "RELATED DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the project\fR
+.IP [2]
+\fICmdr - License\fR
+.IP [3]
+\fICmdr - Log of Changes\fR
+.IP [4]
+\fICmdr - How To Get The Sources\fR
+.IP [5]
+\fICmdr - The Installer's Guide\fR
+.IP [6]
+\fICmdr - The Developer's Guide\fR
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

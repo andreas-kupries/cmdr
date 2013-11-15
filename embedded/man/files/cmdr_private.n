@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_private" n 0 doc "<<unknown>>"
+.TH "cmdr_private" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr_private \- Cmdr - Single command handling, options, and arguments
@@ -300,7 +300,7 @@ The user-visible name of the command\&.
 .TP
 script \fIarguments\fR
 The specification of the private's parameters\&.
-Please read \fICmdr - Specification Language\fR, section --TODO-- for the details\&.
+Please read \fICmdr - Specification Language\fR (section "Privates") for the details\&.
 .TP
 cmd-prefix \fIaction\fR
 The command prefix to invoke when this private is selected for
