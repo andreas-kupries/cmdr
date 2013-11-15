@@ -1,0 +1,22 @@
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_dsl_parameter [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[titledesc [vset TITLE_DSL_PARAMETER]]
+[description]
+[include parts/welcome.inc]
+
+This document is for users of the cmdr framework. It introduces the
+domain-specific language for the specification of parameters in
+detail.
+
+[para] Related documents are:
+
+[include parts/related_dsl.inc]
+
+[include parts/dsl_parameter.inc]
+
+[include parts/related_dsl.inc]
+[include parts/related.inc]
+[include parts/feedback.inc]
+[manpage_end]
+
