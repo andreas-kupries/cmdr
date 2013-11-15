@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_help_sql" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::help::sql" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_help_sql \- Cmdr - Formatting help as series of SQL commands
+cmdr::help::sql \- Cmdr - Formatting help as series of SQL commands
 .SH SYNOPSIS
 package require \fBcmdr::help::sql \fR
 .sp

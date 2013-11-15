@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_dsl_private\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,20 +239,24 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr_dsl_private" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr \- Cmdr - Main package and API
+cmdr_dsl_private \- Cmdr - Private Specification Language
 .SH SYNOPSIS
-package require \fBcmdr \fR
+\fBdescription\fR \fItext\fR
 .sp
-\fB::cmdr\fR \fBnew\fR \fIname\fR \fIspecification\fR
+\fBinput\fR \fIname\fR \fIhelp\fR \fIscript\fR
 .sp
-\fB::cmdr\fR \fBcreate\fR \fIobj\fR \fIname\fR \fIspecification\fR
+\fBinteractive\fR
 .sp
-\fB::cmdr\fR \fBinteractive\fR ?\fIenable\fR?
+\fBoption\fR \fIname\fR \fIhelp\fR \fIscript\fR
 .sp
-\fB::cmdr\fR \fBinteractive?\fR
+\fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
+.sp
+\fBundocumented\fR
+.sp
+\fBuse\fR \fIname\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -261,51 +265,82 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This is the main package of the framework, its public entry point\&.
-It provides four commands for setup and configuration of command
-hierarchies\&.
-.SH API
+This document is for users of the cmdr framework\&. It introduces the
+domain-specific language for the specification of privates in detail\&.
+.SH "RELATED SPECIFICATION DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the Specification Language\fR
+.IP [2]
+\fICmdr - Officer Specification Language\fR
+.IP [3]
+\fICmdr - Private Specification Language\fR
+.IP [4]
+\fICmdr - Parameter Specification Language\fR
+.PP
+.SH "LANGUAGE REFERENCE"
+.PP
+The specification of \fIprivate\fRs is quite easy, with only
+seven commands\&. The important parts are found in the \fIparameter\fR
+specifications, explained in \fICmdr - Parameter Specification Language\fR\&.
 .TP
-\fB::cmdr\fR \fBnew\fR \fIname\fR \fIspecification\fR
-This command creates an automatically-named officer instance which is
-the root of the command hierarchy given in the \fIspecification\fR,
-and has the user-visible command \fIname\fR\&.
+\fBdescription\fR \fItext\fR
+This command declares the help text for the \fIprivate\fR\&.
+.TP
+\fBinput\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds an \fIinput\fR (i\&.e\&. positional) \fIparameter\fR
+to the \fIprivate\fR, with description \fIhelp\fR and its
+specification \fIscript\fR of parameter commands as described in
+\fICmdr - Parameter Specification Language\fR\&.
+.TP
+\fBinteractive\fR
+This command activates a mini-shell for this \fIprivate\fR which will
+be invoked when required \fIparameter\fRs do not have a value after
+argument extraction and matching\&.
 .sp
-The result of the command is the new instance command\&.
-.TP
-\fB::cmdr\fR \fBcreate\fR \fIobj\fR \fIname\fR \fIspecification\fR
-This command creates the officer instance \fIobj\fR which is the root
-of the command hierarchy given in the \fIspecification\fR, and has the
-user-visible command \fIname\fR\&.
+By default the only interactive command line shells are
+associated with the \fIofficer\fRs\&.
 .sp
-The result of the command is the new instance command\&.
-.RS
+The command \fBcmdr::config interactive\fR provided by the
+package \fBcmdr::config\fR can be used to globally activate this
+type of shell for all \fIprivate\fRs\&.
 .TP
-string \fIname\fR
-The user-visible name of the command (hierarchy)\&.
+\fBoption\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds an \fIoption\fR (i\&.e\&. named) \fIparameter\fR to
+the \fIprivate\fR, with description \fIhelp\fR and its specification
+\fIscript\fR of parameter commands as described in
+\fICmdr - Parameter Specification Language\fR\&.
 .TP
-script \fIactions\fR
-The specification of the subordinate commands\&. On the command line
-these are the toplevel commands of the application using the
-hierarchy\&. Please read \fICmdr - Officer Specification Language\fR for the
-details\&.
-.RE
+\fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
+This command adds a \fIstate\fR (i\&.e\&. hidden) \fIparameter\fR to the
+\fIprivate\fR, with description \fIhelp\fR and its specification
+\fIscript\fR of parameter commands as described in
+\fICmdr - Parameter Specification Language\fR\&.
 .TP
-\fB::cmdr\fR \fBinteractive\fR ?\fIenable\fR?
-This command globally (de)activates the interactive parts of the
-framework, as per the value of \fIenable\fR\&.
-.sp
-By default (initial state) the framework allows interaction\&.
-.RS
+\fBundocumented\fR
+This command excludes the \fIprivate\fR from the generated help\&.
 .TP
-boolean \fIenable\fR
-If not specified defaults to \fBtrue\fR, globally enabling the
-interactive parts of the framework\&. The value \fBfalse\fR globally
-disables the interactive parts of the framework
-.RE
-.TP
-\fB::cmdr\fR \fBinteractive?\fR
-This method returns the state of the global interaction flag\&.
+\fBuse\fR \fIname\fR
+This command is the counterpart to \fBcommon\fR of \fIofficer\fRs
+(See \fICmdr - Officer Specification Language\fR)\&.
+It inserts the named block into the specification, executing it in
+place\&. As such it expects the contents to be a script of private
+commands as described in this section\&.
+.PP
+.PP
+Please continue reading with \fICmdr - Parameter Specification Language\fR\&.
+.SH "RELATED DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the project\fR
+.IP [2]
+\fICmdr - License\fR
+.IP [3]
+\fICmdr - Log of Changes\fR
+.IP [4]
+\fICmdr - How To Get The Sources\fR
+.IP [5]
+\fICmdr - The Installer's Guide\fR
+.IP [6]
+\fICmdr - The Developer's Guide\fR
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain

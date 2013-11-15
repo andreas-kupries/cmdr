@@ -1,6 +1,6 @@
 
 <html><head>
-<title>cmdr_parameter - Cmdr, a framework for command line parsing and dispatch</title>
+<title>cmdr::parameter - Cmdr, a framework for command line parsing and dispatch</title>
 <style type="text/css"><!--
     HTML {
 	background: 	#FFFFFF;
@@ -96,7 +96,7 @@
    -->
 <! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
    -->
-<! -- CVS: $Id$ cmdr_parameter.n
+<! -- CVS: $Id$ cmdr::parameter.n
    -->
 <body><div class="doctools">
 <hr> [
@@ -105,9 +105,9 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr_parameter(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr::parameter(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>cmdr_parameter - Cmdr - Command parameters</p>
+<p>cmdr::parameter - Cmdr - Command parameters</p>
 </div>
 <div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
 <ul class="toc">
@@ -125,7 +125,7 @@
 <div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
 <div class="synopsis">
 <ul class="requirements">
-<li>package require <b class="pkgname">cmdr::util</b></li>
+<li>package require <b class="pkgname">cmdr::parameter</b></li>
 </ul>
 <ul class="syntax">
 <li><a href="#1"><b class="cmd">::cmdr::parameter</b> <b class="method">new</b> <i class="arg">config</i> <i class="arg">order</i> <i class="arg">cmdline</i> <i class="arg">required</i> <i class="arg">defered</i> <i class="arg">name</i> <i class="arg">description</i> <i class="arg">spec</i></a></li>
@@ -182,8 +182,8 @@
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
 <p>This package implements <em>parameters</em>, collections of which (see
-<b class="package">cmdr::config</b>) serve as the configuration of privates (see
-<b class="package">cmdr::private</b>).</p>
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b>) serve as the configuration of privates (see
+<b class="package"><a href="cmdr_private.html">cmdr::private</a></b>).</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
 <p>The class API is not public. It is used internally by the framework
@@ -203,7 +203,7 @@ Used by the DSL processing parts of the framework to instantiate parameters.</p>
 <dt>string <i class="arg">obj</i></dt>
 <dd><p>The (command) name of the new parameter instance.</p></dd>
 <dt>cmdr::config <i class="arg">config</i></dt>
-<dd><p>The instance command of the <b class="package">cmdr::config</b> instance
+<dd><p>The instance command of the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance
 holding the parameter.</p></dd>
 <dt>boolean <i class="arg">order</i></dt>
 <dd><p>Flag. Parameter is specified by order (<b class="const">true</b>: argument),
@@ -224,8 +224,8 @@ help, if not overridden by a <b class="cmd">label</b> declaration
 <dt>string <i class="arg">description</i></dt>
 <dd><p>Human-readable help text for the parameter.</p></dd>
 <dt>script <i class="arg">spec</i></dt>
-<dd><p>Tcl-script specifying the parameter in detail. Please read
-<i class="term"><a href="cmdr_dsl.html">Cmdr - Specification Language</a></i> (section &quot;Parameters&quot;) for the details.</p></dd>
+<dd><p>Tcl-script specifying the parameter in detail.
+Please read <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i> for the details.</p></dd>
 </dl></dd>
 </dl>
 </div>
@@ -280,7 +280,7 @@ line.</p>
 <p>--TODO-- Describe the state fields and their meaning.</p></dd>
 </dl></dd>
 <dt><a name="7"><b class="cmd">&lt;parameter&gt;</b> <b class="method">config</b> <i class="arg">word...</i></a></dt>
-<dd><p>This method either returns the <b class="package">cmdr::config</b> instance
+<dd><p>This method either returns the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance
 containing the parameter, or the result of applying the words to that config
 instance. It is through this method that any script with access to a single
 parameter instance of a private will have access to all its parameters.</p>

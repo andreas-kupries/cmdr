@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_validate" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::validate" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_validate \- Cmdr - Standard validation types for parameters
+cmdr::validate \- Cmdr - Standard validation types for parameters
 .SH SYNOPSIS
 package require \fBcmdr::validate \fR
 .sp

@@ -239,12 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_config" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::config" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_config \- Cmdr - Collection of parameters for privates
+cmdr::config \- Cmdr - Collection of parameters for privates
 .SH SYNOPSIS
-package require \fBcmdr::util \fR
+package require \fBcmdr::config \fR
 .sp
 \fB::cmdr::config\fR \fBnew\fR \fIcontext\fR \fIspec\fR
 .sp
@@ -357,8 +357,8 @@ The instance command of the \fBcmdr::private\fR instance the configuration
 will belong to\&.
 .TP
 script \fIspec\fR
-Tcl-script specifying the parameters in detail\&. Please read
-\fICmdr - Specification Language\fR (section "Parameters") for the details\&.
+Tcl-script specifying the parameters in detail\&.
+Please read \fICmdr - Parameter Specification Language\fR for the details\&.
 .RE
 .TP
 \fB::cmdr::config\fR \fBinteractive\fR ?\fIenable\fR?

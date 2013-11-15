@@ -246,13 +246,13 @@ cmdr_vtypes \- Cmdr - Writing custom validation types
 .SH SYNOPSIS
 package require \fBcmdr::validate \fR
 .sp
-\fBcmd\fR \fBcomplete\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBcomplete\fR \fIp\fR \fIx\fR
 .sp
-\fBcmd\fR \fBdefault\fR \fIp\fR
+\fB<v-type>\fR \fBdefault\fR \fIp\fR
 .sp
-\fBcmd\fR \fBrelease\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBrelease\fR \fIp\fR \fIx\fR
 .sp
-\fBcmd\fR \fBvalidate\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBvalidate\fR \fIp\fR \fIx\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -261,9 +261,9 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This document describes the API expected of validation types to make
-them usable within the Cmdr framework, and how to write a
-custom validation type\&.
+This document describes the API expected of \fIvalidation types\fR
+to make them usable within the Cmdr framework, and how to
+write a custom validation type\&.
 .PP
 Readers interested in the standard validation types of the
 framework should read \fICmdr - Standard validation types for parameters\fR\&.
@@ -283,9 +283,9 @@ always returns one of the builtins described in \fICmdr - Standard validation ty
 .IP [1]
 Use \fBidentity\fR if a  \fBgenerate\fR callback is specified\&.
 .IP [2]
-Use \fBboolean\fR  if no \fBdefault\fR is specified and the parameter is an option\&.
+Use \fBboolean\fR  if no \fBdefault\fR is specified and the parameter is an \fIoption\fR\&.
 .IP [3]
-Use \fBidentity\fR if no \fBdefault\fR is specified and the parameter is an input\&.
+Use \fBidentity\fR if no \fBdefault\fR is specified and the parameter is an \fIinput\fR\&.
 .IP [4]
 Use \fBboolean\fR  if the specified \fBdefault\fR value is a Tcl boolean\&.
 .IP [5]
@@ -294,51 +294,55 @@ Use \fBinteger\fR  if the specified \fBdefault\fR value is a Tcl integer\&.
 Use \fBidentity\fR as fallback of last resort\&.
 .PP
 .PP
-The general concept of validation types was taken from package
-\fBsnit\fR, and modified to suit Cmdr\&. Where snit's types
-expect only a single method to validate the input we expect all types
-to support an ensemble of \fIfour\fR methods\&. One for the basic
-validation and transformation of the input, another for the release of
-any internal representation so generated, plus two more for delivery
-of a default representation and support for command line completion\&.
+The general concept of \fIvalidation types\fR was taken from
+package \fBsnit\fR, and modified to suit Cmdr\&.
+Where \fBsnit\fR's types expect only a single method to validate
+the input we expect all types to support an ensemble of \fIfour\fR
+methods\&.
+One for the basic validation and transformation of the string, another
+for the release of any internal representation so generated, plus two
+more for delivery of a default representation and support for command
+line completion\&.
 The details (method names, signatures, etc\&.) can be found in section
 \fBAPI\fR below\&.
 .PP
 As an example the implementation of the standard boolean
 validation type is shown in section \fBExample\fR\&.
 .PP
-It should be noted that while snit's validation types in
-principle allow for the transformation of input into a disparate
+It should be noted that while \fBsnit\fR's validation types
+in principle allow for the transformation of input into a disparate
 internal representation, they never went so far as to allow complex
 representations which might require the release of resources after
 use\&.
 .PP
 The \fBvalidate\fR and \fBrelease\fR methods are primarily used
-during either completion or execution phases, depending on the chosen
-deferal state\&. They may also be used during parsing, for optional
-inputs under the \fBtest\fR-regime]\&.
+during either \fICompletion\fR or \fIExecution\fR phases, depending
+on the chosen deferal state\&.
+They may also be used during the \fIParsing\fR phase, for optional
+\fIinputs\fR under the \fBtest\fR-regime]\&.
 .PP
 The \fBcomplete\fR method will be used whereever the system
 activates an interactive command line shell where arguments may be
 assigned to parameters\&.
 .PP
 The \fBdefault\fR method on the other hand can expect to be
-invoked during dispatch, as part of the system's declaration
-processing, if not preempted by \fBdefault\fR and \fBgenerate\fR
-declarations for the parameter\&. Note here that the \fBdefault\fR
-method has the same signature as a \fBgenerate\fR callback and can be
-used as such\&. This is actually needed and useful when the default
-internal representation for a validation type cannot be expressed as a
-fixed value and its creation while parsing the specification itself is
-too early\&. We can still use the validation type for its generation, by
-hooking it explicitly into \fBgenerate\fR to change the timing of its
-invokation\&.
+invoked during the \fIDispatch\fR phase, as part of the system's
+declaration processing, if not preempted by \fBdefault\fR and
+\fBgenerate\fR declarations for the parameter\&.
+Note here that the \fBdefault\fR method has the same signature as a
+paramete's \fBgenerate\fR callback and can be used as such\&.
+This is actually needed and useful when the default internal
+representation for a validation type cannot be expressed as a fixed
+value and its creation while parsing the specification itself is too
+early\&.
+We can still use the validation type for its generation, by hooking it
+explicitly into \fBgenerate\fR to change the timing of its invokation\&.
 .SH API
-In the descriptions below the \fBcmd\fR is a placeholder for the
+In the descriptions below the \fB<v-type>\fR is a placeholder for the
 actual command prefix, most often a main command, of the validation
 type\&.
 .TP
-\fBcmd\fR \fBcomplete\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBcomplete\fR \fIp\fR \fIx\fR
 This method is invoked during command completion done by the framework\&.
 .sp
 It has to return the list of legal string representations for
@@ -355,7 +359,7 @@ string \fIx\fR
 The string value to complete\&.
 .RE
 .TP
-\fBcmd\fR \fBdefault\fR \fIp\fR
+\fB<v-type>\fR \fBdefault\fR \fIp\fR
 This method is invoked when the framework has to determine the
 internal representation of a parameter which has no user-specified
 string representation\&.
@@ -374,7 +378,7 @@ string \fIx\fR
 The string value to complete\&.
 .RE
 .TP
-\fBcmd\fR \fBrelease\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBrelease\fR \fIp\fR \fIx\fR
 This method is invoked when the framework has to get rid of an
 internal representation for a parameter\&.
 .sp
@@ -395,7 +399,7 @@ string \fIx\fR
 The internal representation to release\&.
 .RE
 .TP
-\fBcmd\fR \fBvalidate\fR \fIp\fR \fIx\fR
+\fB<v-type>\fR \fBvalidate\fR \fIp\fR \fIx\fR
 This method is invoked during to validate and convert a string
 representation\&.
 .sp

@@ -128,26 +128,26 @@
 <li>package require <b class="pkgname">cmdr::validate</b></li>
 </ul>
 <ul class="syntax">
-<li><a href="#1"><b class="cmd">cmd</b> <b class="method">complete</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
-<li><a href="#2"><b class="cmd">cmd</b> <b class="method">default</b> <i class="arg">p</i></a></li>
-<li><a href="#3"><b class="cmd">cmd</b> <b class="method">release</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
-<li><a href="#4"><b class="cmd">cmd</b> <b class="method">validate</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
+<li><a href="#1"><b class="cmd">&lt;v-type&gt;</b> <b class="method">complete</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
+<li><a href="#2"><b class="cmd">&lt;v-type&gt;</b> <b class="method">default</b> <i class="arg">p</i></a></li>
+<li><a href="#3"><b class="cmd">&lt;v-type&gt;</b> <b class="method">release</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
+<li><a href="#4"><b class="cmd">&lt;v-type&gt;</b> <b class="method">validate</b> <i class="arg">p</i> <i class="arg">x</i></a></li>
 </ul>
 </div>
 </div>
 <div id="section1" class="section"><h2><a name="section1">Description</a></h2>
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
-<p>This document describes the API expected of validation types to make
-them usable within the Cmdr framework, and how to write a
-custom validation type.</p>
+<p>This document describes the API expected of <i class="term">validation types</i>
+to make them usable within the Cmdr framework, and how to
+write a custom validation type.</p>
 <p>Readers interested in the standard validation types of the
 framework should read <i class="term"><a href="cmdr_validate.html">Cmdr - Standard validation types for parameters</a></i>.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Background</a></h2>
 <p>Validation types are Cmdr's answer to the necessity of moving
 between the string and internal representations of
-<b class="package">cmdr::parameter</b> instances.
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instances.
 Given a string representation they either return the associated
 internal representation or raise an error, signaling that the input
 was illegal. This part of their work, the verification of the legality
@@ -158,81 +158,85 @@ if the user did not. This choice is made per the six rules below and
 always returns one of the builtins described in <i class="term"><a href="cmdr_validate.html">Cmdr - Standard validation types for parameters</a></i>.</p>
 <ol class="enumerated">
 <li><p>Use <b class="const">identity</b> if a  <b class="cmd">generate</b> callback is specified.</p></li>
-<li><p>Use <b class="const">boolean</b>  if no <b class="cmd">default</b> is specified and the parameter is an option.</p></li>
-<li><p>Use <b class="const">identity</b> if no <b class="cmd">default</b> is specified and the parameter is an input.</p></li>
+<li><p>Use <b class="const">boolean</b>  if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">option</i>.</p></li>
+<li><p>Use <b class="const">identity</b> if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">input</i>.</p></li>
 <li><p>Use <b class="const">boolean</b>  if the specified <b class="cmd">default</b> value is a Tcl boolean.</p></li>
 <li><p>Use <b class="const">integer</b>  if the specified <b class="cmd">default</b> value is a Tcl integer.</p></li>
 <li><p>Use <b class="const">identity</b> as fallback of last resort.</p></li>
 </ol>
-<p>The general concept of validation types was taken from package
-<b class="package">snit</b>, and modified to suit Cmdr. Where snit's types
-expect only a single method to validate the input we expect all types
-to support an ensemble of <em>four</em> methods. One for the basic
-validation and transformation of the input, another for the release of
-any internal representation so generated, plus two more for delivery
-of a default representation and support for command line completion.
+<p>The general concept of <i class="term">validation types</i> was taken from
+package <b class="package">snit</b>, and modified to suit Cmdr.
+Where <b class="package">snit</b>'s types expect only a single method to validate
+the input we expect all types to support an ensemble of <em>four</em>
+methods.
+One for the basic validation and transformation of the string, another
+for the release of any internal representation so generated, plus two
+more for delivery of a default representation and support for command
+line completion.
 The details (method names, signatures, etc.) can be found in section
 <span class="sectref"><a href="#section3">API</a></span> below.</p>
 <p>As an example the implementation of the standard boolean
 validation type is shown in section <span class="sectref"><a href="#section4">Example</a></span>.</p>
-<p>It should be noted that while snit's validation types in
-principle allow for the transformation of input into a disparate
+<p>It should be noted that while <b class="package">snit</b>'s validation types
+in principle allow for the transformation of input into a disparate
 internal representation, they never went so far as to allow complex
 representations which might require the release of resources after
 use.</p>
 <p>The <b class="cmd">validate</b> and <b class="cmd">release</b> methods are primarily used
-during either completion or execution phases, depending on the chosen
-deferal state. They may also be used during parsing, for optional
-inputs under the <b class="cmd">test</b>-regime].</p>
+during either <i class="term">Completion</i> or <i class="term">Execution</i> phases, depending
+on the chosen deferal state.
+They may also be used during the <i class="term">Parsing</i> phase, for optional
+<i class="term">inputs</i> under the <b class="cmd">test</b>-regime].</p>
 <p>The <b class="cmd">complete</b> method will be used whereever the system
 activates an interactive command line shell where arguments may be
 assigned to parameters.</p>
 <p>The <b class="cmd">default</b> method on the other hand can expect to be
-invoked during dispatch, as part of the system's declaration
-processing, if not preempted by <b class="cmd">default</b> and <b class="cmd">generate</b>
-declarations for the parameter. Note here that the <b class="cmd">default</b>
-method has the same signature as a <b class="cmd">generate</b> callback and can be
-used as such. This is actually needed and useful when the default
-internal representation for a validation type cannot be expressed as a
-fixed value and its creation while parsing the specification itself is
-too early. We can still use the validation type for its generation, by
-hooking it explicitly into <b class="cmd">generate</b> to change the timing of its
-invokation.</p>
+invoked during the <i class="term">Dispatch</i> phase, as part of the system's
+declaration processing, if not preempted by <b class="cmd">default</b> and
+<b class="cmd">generate</b> declarations for the parameter.
+Note here that the <b class="cmd">default</b> method has the same signature as a
+paramete's <b class="cmd">generate</b> callback and can be used as such.
+This is actually needed and useful when the default internal
+representation for a validation type cannot be expressed as a fixed
+value and its creation while parsing the specification itself is too
+early.
+We can still use the validation type for its generation, by hooking it
+explicitly into <b class="cmd">generate</b> to change the timing of its invokation.</p>
 </div>
 <div id="section3" class="section"><h2><a name="section3">API</a></h2>
-<p>In the descriptions below the <b class="cmd">cmd</b> is a placeholder for the
+<p>In the descriptions below the <b class="cmd">&lt;v-type&gt;</b> is a placeholder for the
 actual command prefix, most often a main command, of the validation
 type.</p>
 <dl class="definitions">
-<dt><a name="1"><b class="cmd">cmd</b> <b class="method">complete</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
+<dt><a name="1"><b class="cmd">&lt;v-type&gt;</b> <b class="method">complete</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
 <dd><p>This method is invoked during command completion done by the framework.</p>
 <p>It has to return the list of legal string representations for
 the type and parameter instance <i class="arg">p</i> which have the incomplete word
 <i class="arg">x</i> as their prefix.</p>
 <dl class="arguments">
-<dt><b class="package">cmdr::parameter</b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package">cmdr::parameter</b> instance governing the completion
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance governing the completion
 process.  While the standard validation types do not make use of it a
 custom type may have need for access to the context of the completion.</p></dd>
 <dt>string <i class="arg">x</i></dt>
 <dd><p>The string value to complete.</p></dd>
 </dl></dd>
-<dt><a name="2"><b class="cmd">cmd</b> <b class="method">default</b> <i class="arg">p</i></a></dt>
+<dt><a name="2"><b class="cmd">&lt;v-type&gt;</b> <b class="method">default</b> <i class="arg">p</i></a></dt>
 <dd><p>This method is invoked when the framework has to determine the
 internal representation of a parameter which has no user-specified
 string representation.</p>
 <p>It has to return the default internal representation for
 the type and parameter instance <i class="arg">p</i>.</p>
 <dl class="arguments">
-<dt><b class="package">cmdr::parameter</b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package">cmdr::parameter</b> instance whose default internal
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose default internal
 representation is to be computed. While the standard validation types
 do not make use of it a custom type may have need for access to the
 context.</p></dd>
 <dt>string <i class="arg">x</i></dt>
 <dd><p>The string value to complete.</p></dd>
 </dl></dd>
-<dt><a name="3"><b class="cmd">cmd</b> <b class="method">release</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
+<dt><a name="3"><b class="cmd">&lt;v-type&gt;</b> <b class="method">release</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
 <dd><p>This method is invoked when the framework has to get rid of an
 internal representation for a parameter.</p>
 <p>It has to release any resources associated with the internal
@@ -240,23 +244,23 @@ representation <i class="arg">x</i> of parameter instance <i class="arg">p</i>.<
 <p>Note that the result of this method, if there is any, is
 ignored by the framework.</p>
 <dl class="arguments">
-<dt><b class="package">cmdr::parameter</b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package">cmdr::parameter</b> instance holding the internal
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance holding the internal
 representation to release. While the standard validation types do not
 make use of it a custom type may have need for access to the context
 of the completion.</p></dd>
 <dt>string <i class="arg">x</i></dt>
 <dd><p>The internal representation to release.</p></dd>
 </dl></dd>
-<dt><a name="4"><b class="cmd">cmd</b> <b class="method">validate</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
+<dt><a name="4"><b class="cmd">&lt;v-type&gt;</b> <b class="method">validate</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
 <dd><p>This method is invoked during to validate and convert a string
 representation.</p>
 <p>It has to verify that <i class="arg">x</i> is a legal string representation
 for the parameter instance <i class="arg">p</i>, and return the associated internal
 representation.</p>
 <dl class="arguments">
-<dt><b class="package">cmdr::parameter</b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package">cmdr::parameter</b> instance governing the validation
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance governing the validation
 process. The standard validation types make use of it in case of a
 validation failure to generate a proper error message.
 See also <i class="term">Utilities for Validation Types</i> for commands helping

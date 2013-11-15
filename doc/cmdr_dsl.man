@@ -10,8 +10,6 @@ domain-specific language for the specification of command hierarchies
 with commands and their parameters by way of examples and then
 provides links to the detailed reference documents.
 
-[para] These related documents are:
-
 [include parts/related_dsl.inc]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
@@ -22,11 +20,11 @@ specification language first a few examples to demonstrate the general
 look and feel, plus basic features.
 
 [comment ================================================]
-[subsection {Basic setup, private with inputs}]
+[subsection {Basic private commands with inputs}]
 [include parts/ex_alias0.inc]
 
 [comment ================================================]
-[subsection {Basic setup, command nesting}]
+[subsection {Simple command nesting}]
 [include parts/ex_alias1.inc]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
@@ -38,9 +36,7 @@ ignoring the examples, please go back and read them first.
 
 [include parts/dsl_general.inc]
 
-[para] For the details please continue reading at
-
-[include parts/related_dsl.inc]
+[para] Please continue reading with [term [vset TITLE_DSL_OFFICER]].
 
 [include parts/related.inc]
 [include parts/feedback.inc]

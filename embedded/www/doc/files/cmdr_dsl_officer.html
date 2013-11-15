@@ -1,0 +1,296 @@
+
+<html><head>
+<title>cmdr_dsl_officer - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_dsl_officer.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_dsl_officer.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_dsl_officer(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_dsl_officer - Cmdr - Officer Specification Language</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Related Specification Documents</a></li>
+<li class="section"><a href="#section3">Language Reference</a></li>
+<li class="section"><a href="#section4">Related Documents</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">alias</b> <i class="arg">name</i> <b class="const">=</b> <i class="arg">name'</i>...</a></li>
+<li><a href="#2"><b class="cmd">alias</b> <i class="arg">name</i></a></li>
+<li><a href="#3"><b class="cmd">common</b> <i class="arg">name</i> <i class="arg">text</i></a></li>
+<li><a href="#4"><b class="cmd">default</b></a></li>
+<li><a href="#5"><b class="cmd">description</b> <i class="arg">text</i></a></li>
+<li><a href="#6"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#7"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></li>
+<li><a href="#8"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#9"><b class="cmd">undocumented</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document is for users of the cmdr framework. It introduces the
+domain-specific language for the specification of <i class="term">officer</i>s in
+detail.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Related Specification Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i></p></li>
+<li><p><i class="term">Cmdr - Officer Specification Language</i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i></p></li>
+</ol>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Language Reference</a></h2>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">alias</b> <i class="arg">name</i> <b class="const">=</b> <i class="arg">name'</i>...</a></dt>
+<dd></dd>
+<dt><a name="2"><b class="cmd">alias</b> <i class="arg">name</i></a></dt>
+<dd><p>This is a structuring command, for the command hierarchy. Its main
+uses are the creation of alternate command names, and of shortcuts
+through the command hierarchy.</p>
+<p>For example, <b class="syscmd">stackato</b>'s command specification for
+alias management is written using deep nesting and uses aliases to
+provide the look of a flat namespace to application users.</p>
+<p>In the first form the <i class="arg">name</i> is given the explicit path to
+the actor the name is an alias for.
+In the second form the alias implicitly refers to the immediately
+preceding <i class="term">officer</i> or <i class="term">private</i>.
+Note that &quot;immediately&quot; is interpreted at the current level. The
+system is <em>not</em> looking into a nested specification for its last
+command.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the alias.</p></dd>
+<dt>string <i class="arg">name'...</i></dt>
+<dd><p>The path to the actor, as list of names.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">common</b> <i class="arg">name</i> <i class="arg">text</i></a></dt>
+<dd><p>This is another structuring command, for structuring the specification
+itself instead of the command tree it declares.</p>
+<p>It creates named values, usually code blocks, which can be
+shared between specifications. Note that while each block is visible
+in the current <i class="term">officer</i> and its subordinates, parents and
+siblings have no access.</p>
+<p>An example of such a block would be</p>
+<pre class="example">
+common *all* {
+    option debug {
+	Activate client internal tracing.
+    } {
+	undocumented
+	list
+	when-complete [lambda {p tags} {
+	    foreach t $tags { debug on $t }
+	}]
+    }
+}
+</pre>
+<p>This example defines an option to access the subsystem for debug
+narative (See package <b class="package">Tcllib</b>).
+The example is actually special, as the block named <b class="const">*all*</b> is
+reserved by the framework.
+This block, if defined, is automatically included at the front of all
+<i class="term">private</i> specifications, i.e. shared across all the privates
+specified underneath this <i class="term">officer</i>. A very important trait for
+the <i class="term">option</i> in the example, as it makes the debug setup
+available to all privates without having to explicitly include the
+block, and possibly forgetting such.</p>
+<p>Generally speaking, the framework reserves all blocks whose
+name begins with a star, i.e <b class="const">*</b>, for its own use.</p>
+<dl class="arguments">
+<dt>string <i class="arg">name</i></dt>
+<dd><p>The name of the common block.</p></dd>
+<dt>string <i class="arg">text</i></dt>
+<dd><p>The text of the block.</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">default</b></a></dt>
+<dd><p>This command sets up a special kind of alias.
+The last <i class="term">private</i> or <i class="term">officer</i> is set as the default
+command to use at runtime.
+This means that if during &quot;Dispatch&quot; phase the currently processed
+word does not match any of the commands known to this <i class="term">officer</i>
+this default is used. If no default is specified an error will be
+thrown instead.</p></dd>
+<dt><a name="5"><b class="cmd">description</b> <i class="arg">text</i></a></dt>
+<dd><p>This command declares the help text of the <i class="term">officer</i>.</p></dd>
+<dt><a name="6"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates).</p>
+<p>At runtime the framework will call the specified command prefix
+with a single argument, a script whose execution is equivalent to the
+phases &quot;Parsing&quot;, &quot;Completion&quot;, and &quot;Execution&quot; of the framework, as
+described in --TODO--(sectref:flow/phases)--. The handler <em>must</em>
+call this script, and can perform any application-specific actions
+before and after.</p>
+<p>This handler's main uses are two-fold:</p>
+<ol class="enumerated">
+<li><p>Capture and hande application-specific errors which should not
+abort the application, nor shown as Tcl stacktrace.</p></li>
+<li><p>Cleanup of application-specific transient state the
+<i class="term">parameter</i> callbacks (See <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>)
+and/or actions may have set during their execution.
+This is especially important if the interactive command line shells of
+the framework are enabled. Without such a handler and its bespoke
+cleanup code transient state <em>will</em> leak between multiple
+commands run from such a shell, something which is definitely not
+wanted.</p></li>
+</ol></dd>
+<dt><a name="7"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></dt>
+<dd><p>This command creates a named subordinate <i class="term">officer</i> with its
+specification <i class="arg">script</i> of officer commands as described here.</p></dd>
+<dt><a name="8"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This command creates a named subordinate <i class="term">private</i> with its
+specification <i class="arg">script</i> of private commands
+(See <i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i>), and a command prefix to invoke
+when it is chosen.</p>
+<p>This command prefix is called with a single argument, the
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance holding the <i class="term">parameter</i>s of the
+private.
+--TODO--(ref:backend-example-code)--</p></dd>
+<dt><a name="9"><b class="cmd">undocumented</b></a></dt>
+<dd><p>This command excludes the <i class="term">officer</i> (and its subordinates) from
+the generated help.
+Note that subordinates reachable through aliases may be included,
+under the alias name, if they are not explicitly excluded themselves.</p></dd>
+</dl>
+<p>Please continue reading with <i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i>.</p>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Related Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_changes.html">Cmdr - Log of Changes</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
+</ol>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

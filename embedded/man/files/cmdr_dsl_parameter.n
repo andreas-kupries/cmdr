@@ -1,0 +1,679 @@
+'\"
+'\" Generated from file 'cmdr_dsl_parameter\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_dsl_parameter" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.BS
+.SH NAME
+cmdr_dsl_parameter \- Cmdr - Parameter Specification Language
+.SH SYNOPSIS
+\fBlabel\fR \fItext\fR
+.sp
+\fBalias\fR \fIname\fR
+.sp
+\fBoptional\fR
+.sp
+\fBtest\fR
+.sp
+\fBundocumented\fR
+.sp
+\fBdefault\fR \fIvalue\fR
+.sp
+\fBgenerate\fR \fIcmdprefix\fR
+.sp
+\fBinteract\fR ?\fIprompt\fR?
+.sp
+\fBlist\fR
+.sp
+\fBdefered\fR
+.sp
+\fBimmediate\fR
+.sp
+\fBvalidate\fR \fIcmdprefix\fR
+.sp
+\fBpresence\fR
+.sp
+\fBwhen-complete\fR \fIcmdprefix\fR
+.sp
+\fBwhen-set\fR \fIcmdprefix\fR
+.sp
+.BE
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This document is for users of the cmdr framework\&. It introduces the
+domain-specific language for the specification of parameters in
+detail\&.
+.SH "RELATED SPECIFICATION DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the Specification Language\fR
+.IP [2]
+\fICmdr - Officer Specification Language\fR
+.IP [3]
+\fICmdr - Private Specification Language\fR
+.IP [4]
+\fICmdr - Parameter Specification Language\fR
+.PP
+.SH "LANGUAGE REFERENCE"
+.PP
+The \fIparameter\fRs of \fIprivate\fRs are the heart of the
+system, providing the space needed to transfer command arguments to
+their implementations, and having the most attributes controlling
+their behaviour\&.
+.PP
+This complexity is strongly mitigated by the use of sensible
+defaults for each of the three possible kinds of parameter, i\&.e\&.
+positional \fIinput\fRs, named \fIoption\fRs", and \fIstate\fR
+hidden from the command line\&.
+.PP
+Each kind has its own construction command in the language for
+\fIprivate\fRs (See \fICmdr - Private Specification Language\fR) which specifies
+the common information which cannot have defaults, i\&.e\&.
+.IP [1]
+the name identifying it to the system,
+.IP [2]
+the help text describing it in informal speech, and, of course,
+.IP [3]
+the parameter specification itself, using the commands of this section\&.
+.PP
+.PP
+.SS NAMING
+.PP
+We have two commands to influence the visible naming of all
+\fIparameter\fRs\&.
+.PP
+As background, all \fIparameter\fRs are named, to properly
+identify them within the framework and other Tcl code, i\&.e\&. in the
+various callbacks and the \fIprivate\fR's action\&.
+This \fIsystem name\fR has to be unique within the \fIprivate\fR a
+\fIparameter\fR belongs to\&.
+Beyond that however the visible (i\&.e\&. non-term state])
+\fIparameter\fRs have to be identified by users within help texts,
+and, in the case of \fIoption\fRs, for detection during the
+\fIParsing\fR phase\&.
+That is the visible naming, seen by a user of any application whose
+command line processing is based on the Cmdr framework\&.
+.TP
+\fBlabel\fR \fItext\fR
+This command declares the \fIparameter\fR's visible name, if
+different from the \fIsystem name\fR used as the default\&. Note that
+in most cases this default is good enough, obviating the need for this
+command\&.
+.sp
+The only use case seen so far is when two semantically
+equivalent \fIinput\fR and \fIoption\fR \fIparameter\fRs clash,
+forcing the use of different system names due to the requirement for
+their uniqueness, yet also use the same visible name and flag within
+the help to highlight their connection and equivalence\&.
+.TP
+\fBalias\fR \fIname\fR
+For \fIoption\fRs the \fBlabel\fR command and its default specifies
+the name of the \fIprimary flag\fR recognized during the
+\fIParsing\fR phase\&.
+If that is not enough for a specific \fIoption\fR this command allows
+the specification of any number additional flags to be recognized\&.
+.sp
+Note however that the framework automatically recognizes not
+only the specified flag(s), but also all their unique prefixes,
+obviating the need for this command in many cases\&.
+.PP
+.PP
+.SS "GENERAL CONTROL"
+.PP
+The general handling of a \fIparameter\fR is influenced by
+three commands:
+.TP
+\fBoptional\fR
+This command marks the parameter as \fIoptional\fR, i\&.e\&. as something
+the user may skip on the command line, with the application supplying
+sensible defaults (See section \fBRepresentations\fR)\&.
+This causes the framework to expend some effort in the \fIParsing\fR
+phase to determine whether an argument word should be assigned to the
+parameter, or not\&.
+.sp
+This setting is only applicable to \fIinput\fRs, as
+\fIoption\fRs are optional by definition, and \fIstate\fR is hidden\&.
+.TP
+\fBtest\fR
+This command is related to the above, switching the runtime from the
+standard regime for acceptance (based on counting and thresholds) to a
+different regime based on validation\&.
+The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--\&.
+.TP
+\fBundocumented\fR
+This command excludes the \fIparameter\fR from the generated help\&.
+.sp
+Its main use case is the hiding of \fIoption\fRs giving an
+application developer access to the internals of their application,
+something a regular user has no need of, and doesn't have to know
+about\&.
+.PP
+.PP
+.SS REPRESENTATIONS
+.PP
+An important concept of \fIparameter\fRs is something taken up
+from Tcl itself\&.
+The differentation between \fIstring\fR and \fIinternal representations\fR\&.
+Where Tcl uses \fIinternal representations\fR to speed up its
+execution here this separation is that of between the information
+delivered to the application by a user, and the application-specific
+data structures behind them\&.
+.PP
+All \fIparameter\fRs will have an \fIinternal representation\fR\&.
+This is usually derived from the \fIstring representation\fR
+provided by the user\&.
+The details of that process are explained in section \fBValidation\fR\&.
+However we have cases where the user cannot specify a string
+representation (\fIstate\fRs), or is allowed to choose not to
+(optional \fIinput\fRs, \fIoption\fRs)\&.
+For these cases three specification commands are made available
+enabling us to programmatically choose the internal representation\&.
+.TP
+\fBdefault\fR \fIvalue\fR
+This command specifies a constant default value for the internal
+representation\&.
+.TP
+\fBgenerate\fR \fIcmdprefix\fR
+This command specifies a callback to compute the default internal
+representation at runtime\&. This is useful if the default is something
+which cannot be captured as a fixed value\&. An example would be a
+handle to some resource, or a dynamically created object\&.
+.sp
+The command prefix is invoked with a single argument, the
+\fBcmdr::parameter\fR instance for which to generate the internal
+representation\&.
+.PP
+.PP
+The commands \fBdefault\fR and \fBgenerate\fR exclude each
+other, i\&.e\&. only of them can be specified, but not both\&.
+If neither are specified, and we need a default (see the cases above)
+then a default is chosen by the framework itself, as per the two rules
+below:
+.IP [1]
+Use the empty string for a \fBlist\fR parameter\&.
+.IP [2]
+Use the default value supplied by the chosen
+\fIvalidation type\fR (See section \fBValidation\fR)\&.
+.PP
+.TP
+\fBinteract\fR ?\fIprompt\fR?
+This command actually does not specify an
+\fIinternal representation\fR, but activates another method for the
+user to specify the \fIstring representation\fR of the
+\fIparameter\fR, outside of the command line\&.
+As such it has priority over either \fBdefault\fR and \fBgenerate\fR,
+and can be specified with either\&. A \fIparameter\fR marked with it
+will interactively ask the user for a value if none was specified on
+the command line\&.
+.sp
+The default for the \fIprompt\fR is derived from the
+\fIparameter\fR's \fIsystem name\fR\&.
+.PP
+.PP
+To recapitulate:
+.IP [1]
+A \fIstring representation\fR specified on the command line
+has the highest priority and goes through the chosen
+\fIvalidation type\fR to get the associated
+\fIinternal representation\fR\&.
+.IP [2]
+If activated via \fBinteract\fR a small shell is run asking the
+user for a value (or more, as per \fBlist\fR, see below)\&. The result
+goes through the chosen \fIvalidation type\fR to get the associated
+\fIinternal representation\fR\&.
+.IP [3]
+After that the \fIinternal representation\fR is either the
+declared \fBdefault\fR value, or the result of invoking the
+\fBgenerate\fR callback\&.
+As \fIinternal representation\fRs the resulting values are
+\fInot\fR run through the chosen \fIvalidation type\fR\&.
+.PP
+.TP
+\fBlist\fR
+This command marks the \fIparameter\fR as a list\&. In other words, its
+\fIstring\fR and \fIinternal representation\fR is actually a list
+of such, instead of a single value\&.
+By default all parameters are scalar\&.
+.sp
+This affects the handling of the parameter by the
+\fIParsing\fR phase, by \fBinteract\fR above, and the use of the
+\fIvalidation type\fR\&.
+The last two ask for multiple values, and feed the elements of the
+\fIstring representation\fR separately through validation instead
+of just the string value in one\&.
+In the \fIParsing\fR phase treatment of \fIoption\fRs changes from
+keeping only the last assigned value to the accumulation of all
+values\&.
+Similarly a list-\fIinput\fR takes all the remaining words on the
+command line for itself instead of just the current word\&. Because of
+this list-\fIinputs\fR are only allowed as the last \fIparameter\fR
+of a \fIprivate\fR\&.
+.PP
+.PP
+The last two specification commands dealing with the
+representations control \fIwhen\fR the
+\fIinternal representation\fR is created\&.
+.TP
+\fBdefered\fR
+This command marks a \fIparameter\fR as \fIdefered\fR, causing its
+\fIinternal representation\fR to be computed on first access to its
+value\&. This is the default for \fIstate\fR parameters\&.
+.TP
+\fBimmediate\fR
+This command marks a \fIparameter\fR as \fIimmediate\fR, causing its
+\fIinternal representation\fR to be computed in the
+\fICompletion\fR phase\&.
+This is the default for \fIinput\fR and \fIoption\fR parameters\&.
+.PP
+.PP
+.SS VALIDATION
+.PP
+The answer to the necessity of moving between the \fIstring\fR
+and \fIinternal representations\fR described in the previous
+section are the \fIvalidation types\fR\&.
+Given a \fIstring representation\fR they either return the
+associated \fIinternal representation\fR or raise an error,
+signaling that the string was illegal\&. This part of their work, the
+verification of the legality of the input string gave them their name\&.
+.PP
+The general concept of \fIvalidation types\fR was taken from
+\fBsnit\fR, and modified to suit Cmdr\&.
+Where snit's types expect only a single method to validate the input
+Cmdr expects all types to support an ensemble of \fIfour\fR
+methods, one for the basic validation and transformation of the input,
+another for the release of any internal representation so generated,
+plus delivery of a default representation and support for command line
+completion\&.
+.TP
+\fBvalidate\fR \fIcmdprefix\fR
+This command specifies a \fIvalidation type\fR for the
+\fIparameter\fR, in the form of a command prefix (or the name of one
+of the builtin types, see package \fBcmdr::validate\fR)\&.
+The set of methods this callback has to support, their signatures,
+etc\&. are all explained in \fICmdr - Writing custom validation types\fR\&. This document
+contains the implementation of the standard boolean validation type as
+an example as well\&.
+.sp
+Because of the same necessity all \fIparameter\fRs must have a
+\fIvalidation type\fR assigned to them, and the system will choose
+which, if the user did not\&. This choice is made as per the six rules
+below and always returns one of the standard types implemented by
+package \fBcmdr::validate\fR\&.
+.RS
+.IP [1]
+Use \fBidentity\fR if a \fBgenerate\fR callback is specified\&.
+.IP [2]
+Use \fBboolean\fR  if no \fBdefault\fR is specified and the parameter is an \fIoption\fR\&.
+.IP [3]
+Use \fBidentity\fR if no \fBdefault\fR is specified and the parameter is an \fIinput\fR\&.
+.IP [4]
+Use \fBboolean\fR  if the specified \fBdefault\fR value is a Tcl boolean\&.
+.IP [5]
+Use \fBinteger\fR  if the specified \fBdefault\fR value is a Tcl integer\&.
+.IP [6]
+Use \fBidentity\fR as fallback of last resort\&.
+.RE
+.TP
+\fBpresence\fR
+This command is best discussed as part of the wider area of
+\fIboolean\fR \fIoption\fRs, i\&.e\&. \fIoption\fRs with the standard
+\fIvalidation type\fR \fBboolean\fR assigned to them\&. These have
+associated special behaviours, both in the handling of the
+specification, and in the \fIParsing\fR phase\&.
+.sp
+First, normal boolean options\&.
+They have automatic aliases declared for them, derived from their
+primary flag\&.
+An option named "foo" will have an alias of "no-foo", and the
+reverse\&.
+In the \fIParsing\fR phase the "foo" and "no-foo" flags have inverse
+semantics, and both are allowed to occur without option argument
+following the flag\&.
+This is in contrast to all other \fIoption\fRs which must have such
+an argument\&. The parser essentially uses the \fIvalidation type\fR
+to decide if the word after the flag is a proper boolean value, or
+not, i\&.e\&. an argument to assign to the \fIparameter\fR, or not\&.
+.sp
+Now \fBpresence\fR declares a variant of the above, a boolean
+option \fIwithout\fR the automatic aliases, and \fInever\fR taking
+an argument during parsing\&.
+Its mere \fIpresence\fR on the command line will set its
+\fIparameter\fR\&.
+Their \fBdefault\fR value is consequently fixed to \fBfalse\fR as
+well\&.
+.PP
+.PP
+.SS SIGNALING
+Of the four callbacks supported by parameters the first two,
+\fBgenerate\fR and \fBvalidate\fR have been described already, in the
+sections \fBRepresentations\fR and \fBValidation\fR,
+respectively\&.
+.PP
+This section explains the commonalities between the callbacks
+in general, and the last two, for notifications about state changes in
+detail\&.
+.PP
+All callbacks are treated as command prefixes, not scripts\&.
+There are no placeholder substitutions, only arguments added to each
+command prefix on invokation\&. This does not harm the generality of the
+system, as complex scripts can be used via procedures or equivalents
+(i\&.e\&. \fBapply\fR)\&.
+.PP
+The two callbacks not yet described are the state-change
+callbacks through which the framework can actively drive parts of the
+application while processing the command line, whereas normally the
+application drives access to parameters through their methods\&.
+.TP
+\fBwhen-complete\fR \fIcmdprefix\fR
+This command declares the state-change callback to invoke when the
+\fIinternal representation\fR of the \fIparameter\fR is generated
+from the \fIstring representation\fR, or the various ways of
+getting a default\&.
+.sp
+The callback is invoked with two arguments, the
+\fBcmdr::parameter\fR instance of the changed \fIparameter\fR,
+and its \fIinternal representation\fR, in this order\&.
+.TP
+\fBwhen-set\fR \fIcmdprefix\fR
+This command declares the state-change callback to invoke when the
+\fIstring representation\fR of the \fIparameter\fR is set during
+command line parsing\&.
+.sp
+The callback is invoked with two arguments, the
+\fBcmdr::parameter\fR instance of the changed \fIparameter\fR,
+and its \fIstring representation\fR, in this order\&.
+.PP
+Due to their nature these callbacks are invoked at runtime during
+either the \fIParsing\fR, \fICompletion\fR, or \fIExecution\fR
+phases\&.
+The details are shown in the table below\&. The specification commands
+influencing the timing, i\&.e\&. forcing the use in a specific phase are
+shown in the intersection of callback and phase\&.
+.CS
+
+
+                    | Dispatch | Parsing | Completion  | Execution
+--------------------+----------+---------+-------------+-----------
+validate (default)  | *        |         |             |
+--------------------+----------+---------+-------------+-----------
+validate (complete) |          | *       | immediate   | defered
+when-set            |          | *       |             |
+--------------------+----------+---------+-------------+-----------
+generate            |          |         | immediate   | defered
+validate (validate) |          | test    | immediate   | defered
+validate (release)  |          | test    | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+when-complete       |          |         | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+
+.CE
+.SH "RELATED DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the project\fR
+.IP [2]
+\fICmdr - License\fR
+.IP [3]
+\fICmdr - Log of Changes\fR
+.IP [4]
+\fICmdr - How To Get The Sources\fR
+.IP [5]
+\fICmdr - The Installer's Guide\fR
+.IP [6]
+\fICmdr - The Developer's Guide\fR
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

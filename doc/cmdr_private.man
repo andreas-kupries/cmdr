@@ -1,8 +1,8 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]_private [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset PROJECT]::private [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
-[require cmdr::util]
+[require cmdr::private]
 [titledesc [vset TITLE_PRIVATE]]
 [description]
 [include parts/welcome.inc]
@@ -48,7 +48,7 @@ The user-visible name of the command.
 [comment {--- TODO place into text block for inclusion --- see officer - extend}]
 [arg_def script arguments]
 The specification of the private's parameters.
-Please read [term [vset TITLE_DSL]] (section "Privates") for the details.
+Please read [term [vset TITLE_DSL_PRIVATE]] for the details.
 
 [arg_def cmd-prefix action]
 The command prefix to invoke when this private is selected for

@@ -1,6 +1,6 @@
 
 <html><head>
-<title>cmdr_officer - Cmdr, a framework for command line parsing and dispatch</title>
+<title>cmdr::officer - Cmdr, a framework for command line parsing and dispatch</title>
 <style type="text/css"><!--
     HTML {
 	background: 	#FFFFFF;
@@ -96,7 +96,7 @@
    -->
 <! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
    -->
-<! -- CVS: $Id$ cmdr_officer.n
+<! -- CVS: $Id$ cmdr::officer.n
    -->
 <body><div class="doctools">
 <hr> [
@@ -105,9 +105,9 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr_officer(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr::officer(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>cmdr_officer - Cmdr - Aggregation of multiple commands for dispatch.</p>
+<p>cmdr::officer - Cmdr - Aggregation of multiple commands for dispatch.</p>
 </div>
 <div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
 <ul class="toc">
@@ -125,7 +125,7 @@
 <div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
 <div class="synopsis">
 <ul class="requirements">
-<li>package require <b class="pkgname">cmdr::util</b></li>
+<li>package require <b class="pkgname">cmdr::officer</b></li>
 </ul>
 <ul class="syntax">
 <li><a href="#1"><b class="cmd">::cmdr::officer</b> <b class="method">new</b> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">actions</i></a></li>
@@ -158,7 +158,7 @@
 <p>This package implements <em>officers</em>, the inner nodes of command
 hierarchies.  Each officer can execute many actions, by delegating
 them to their sub-ordinate actors, officers and privates.</p>
-<p>This class is sub-class of <b class="package">cmdr::actor</b>.</p>
+<p>This class is sub-class of <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
 <p>The class API is not public. It is used internally by the framework
@@ -181,7 +181,7 @@ Used by the DSL processing parts of the framework to instantiate officers.</p>
 <dd><p>The user-visible name of the command.</p></dd>
 <dt>script <i class="arg">actions</i></dt>
 <dd><p>The specification of the officer's subordinates.
-Please read <i class="term"><a href="cmdr_dsl.html">Cmdr - Specification Language</a></i> (section &quot;Officers&quot;) for the details.</p></dd>
+Please read <i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i> for the details.</p></dd>
 </dl></dd>
 </dl>
 </div>
@@ -277,11 +277,11 @@ private. The last element is the name of the private command, while
 the preceding names specify the intermediate officers.</p></dd>
 <dt>script <i class="arg">arguments</i></dt>
 <dd><p>The specification of the private's parameters.
-Please read <i class="term"><a href="cmdr_dsl.html">Cmdr - Specification Language</a></i> (section &quot;Parameters&quot;) for the details.</p></dd>
+Please read <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i> for the details.</p></dd>
 <dt>cmd-prefix <i class="arg">action</i></dt>
 <dd><p>The command prefix to invoke when this private is selected for
 execution.  It takes a single argument, the instance command of the
-hidden <b class="package">cmdr::config</b> container holding the private's
+hidden <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> container holding the private's
 parameters. The result of the action, if there is any, is ignored by
 the framework.</p></dd>
 </dl></dd>
@@ -321,7 +321,7 @@ extend the officer.</p>
 <dl class="arguments">
 <dt>script <i class="arg">actions</i></dt>
 <dd><p>The specification of the officer's additional subordinates.
-Please read <i class="term"><a href="cmdr_dsl.html">Cmdr - Specification Language</a></i> (section &quot;Officers&quot;) for the details.</p></dd>
+Please read <i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i> for the details.</p></dd>
 </dl></dd>
 <dt><a name="18"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></dt>
 <dd><p>This method returns the instance command of the sub-ordinate with the
@@ -368,7 +368,7 @@ These names are keys into the <b class="variable">parameters</b> sub-dictionary.
 <dt>parameters</dt>
 <dd><p>A dictionary mapping parameter names to their definition.
 Each definition is a dictionary containing the keys below.
-See also package <b class="package">cmdr::parameter</b>.</p>
+See also package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p>
 <dl class="definitions">
 <dt>cmdline</dt>
 <dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
