@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]_help_sql [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset PROJECT]::help::sql [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::help::sql]
 [titledesc [vset TITLE_HELP_SQL]]

@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr_dsl\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_dsl_officer\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,10 +239,30 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_dsl" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr_dsl_officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_dsl \- Cmdr - Introduction to the Specification Language
+cmdr_dsl_officer \- Cmdr - Officer Specification Language
+.SH SYNOPSIS
+\fBalias\fR \fIname\fR \fB=\fR \fIname'\fR\&.\&.\&.
+.sp
+\fBalias\fR \fIname\fR
+.sp
+\fBcommon\fR \fIname\fR \fItext\fR
+.sp
+\fBdefault\fR
+.sp
+\fBdescription\fR \fItext\fR
+.sp
+\fBehandler\fR \fIcmdprefix\fR
+.sp
+\fBofficer\fR \fIname\fR \fIscript\fR
+.sp
+\fBprivate\fR \fIname\fR \fIscript\fR \fIcmdprefix\fR
+.sp
+\fBundocumented\fR
+.sp
+.BE
 .SH DESCRIPTION
 .PP
 Welcome to the Cmdr project, written by Andreas Kupries\&.
@@ -250,9 +270,8 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 This document is for users of the cmdr framework\&. It introduces the
-domain-specific language for the specification of command hierarchies
-with commands and their parameters by way of examples and then
-provides links to the detailed reference documents\&.
+domain-specific language for the specification of \fIofficer\fRs in
+detail\&.
 .SH "RELATED SPECIFICATION DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the Specification Language\fR
@@ -263,167 +282,147 @@ provides links to the detailed reference documents\&.
 .IP [4]
 \fICmdr - Parameter Specification Language\fR
 .PP
-.SH "INTRODUCTORY EXAMPLES"
-Instead of immediately diving into the full syntax of the
-specification language first a few examples to demonstrate the general
-look and feel, plus basic features\&.
-.SS "BASIC PRIVATE COMMANDS WITH INPUTS"
-.PP
-This example specifies a command line providing 3 commands for
-the management of command aliases\&.
-This is actually a slice of \fBstackato\fR's interface, reduced and
-modified to fit here\&.
-While it does not have the necessary backend procedures required to
-actually run the commands, it is enough to demonstrate basic features,
-namely the declaration of "privates" with "input" parameters\&.
-.PP
-"privates" are the actual commands, the leaves at the bottom of
-the hierarchy\&. Their "inputs" are positional parameters, i\&.e\&. the
-association of argument words on a command line to parameter is done
-in order of occurence (on command line, and in the specification)\&.
+.SH "LANGUAGE REFERENCE"
+.TP
+\fBalias\fR \fIname\fR \fB=\fR \fIname'\fR\&.\&.\&.
+.TP
+\fBalias\fR \fIname\fR
+This is a structuring command, for the command hierarchy\&. Its main
+uses are the creation of alternate command names, and of shortcuts
+through the command hierarchy\&.
+.sp
+For example, \fBstackato\fR's command specification for
+alias management is written using deep nesting and uses aliases to
+provide the look of a flat namespace to application users\&.
+.sp
+In the first form the \fIname\fR is given the explicit path to
+the actor the name is an alias for\&.
+In the second form the alias implicitly refers to the immediately
+preceding \fIofficer\fR or \fIprivate\fR\&.
+Note that "immediately" is interpreted at the current level\&. The
+system is \fInot\fR looking into a nested specification for its last
+command\&.
+.RS
+.TP
+string \fIname\fR
+The name of the alias\&.
+.TP
+string \fIname'\&.\&.\&.\fR
+The path to the actor, as list of names\&.
+.RE
+.TP
+\fBcommon\fR \fIname\fR \fItext\fR
+This is another structuring command, for structuring the specification
+itself instead of the command tree it declares\&.
+.sp
+It creates named values, usually code blocks, which can be
+shared between specifications\&. Note that while each block is visible
+in the current \fIofficer\fR and its subordinates, parents and
+siblings have no access\&.
+.sp
+An example of such a block would be
 .CS
 
 
-# -*- tcl -*
-package require Tcl 8\&.5
-package require cmdr
-package require foo-backend
-
-cmdr create ::foo foo {
-    private alias+ {
-	description {
-	    Create a shortcut for a command (prefix)\&.
-	}
-	input name {
-	    The name of the new shortcut\&.
-	} {
-	    validate ::foo::backend::vt::notacommand
-	}
-	input command {
-	    The command (prefix) the name will map to\&.
-	} {
-	    list
-	}
-    } ::foo::backend::alias::add
-
-    private alias- {
-	description {
-	    Remove a shortcut by name\&.
-	}
-	input name {
-	    The name of the shortcut to remove\&.
-	} {
-	    validate ::foo::backend::vt::aliasname
-	}
-    } ::foo::backend::alias::remove
-
-    private alias? {
-	description {
-	    List the known aliases (shortcuts)\&.
-	}
-    } ::foo::backend::alias::list
-}
-
-foo do {*}$argv
-exit
-
-.CE
-.PP
-At the bottom of the example, just above we can also see the
-very simple Tcl command which invokes the command line processing for
-a list of words, here coming from \fB$argv\fR, i\&.e\&. the application's
-command line\&.
-.SS "SIMPLE COMMAND NESTING"
-.PP
-The decoupling of command names from their implementations seen
-in the previous example makes it easy to re-arrange and re-label the
-user visible commands without having to touch any other part of the
-code\&.
-.PP
-This is demonstrated in the example below, moving the 3
-"privates" into an "officer" and renaming them, without changing the
-actions\&. Note that the parameter specifications were removed for
-clarity, as they were not changed compared to the original example\&.
-.PP
-"officers" are named inner nodes in the command hierarchy\&. They
-aggregate related commands, which may not only be "privates" as seen
-here, but sub-officers as well\&.
-.CS
-
-
-\&.\&.\&.
-cmdr create ::foo foo {
-    officer alias {
-	description {
-	    A collection of commands to manage
-	    user-specific shortcuts for command
-	    entry
-	}
-
-	private add {
-	    \&.\&.\&.
-	} ::foo::backend::alias::add
-
-	private remove {
-	    \&.\&.\&.
-	} ::foo::backend::alias::remove
-
-	private list {
-	    \&.\&.\&.
-	} ::foo::backend::alias::list
+common *all* {
+    option debug {
+	Activate client internal tracing\&.
+    } {
+	undocumented
+	list
+	when-complete [lambda {p tags} {
+	    foreach t $tags { debug on $t }
+	}]
     }
 }
-\&.\&.\&.
 
 .CE
-.SH "LANGUAGE REFERENCE"
-With the examples behind us we can now go and specify the entire
-specification language\&. If you have skipped here on first reading,
-ignoring the examples, please go back and read them first\&.
+.IP
+This example defines an option to access the subsystem for debug
+narative (See package \fBTcllib\fR)\&.
+The example is actually special, as the block named \fB*all*\fR is
+reserved by the framework\&.
+This block, if defined, is automatically included at the front of all
+\fIprivate\fR specifications, i\&.e\&. shared across all the privates
+specified underneath this \fIofficer\fR\&. A very important trait for
+the \fIoption\fR in the example, as it makes the debug setup
+available to all privates without having to explicitly include the
+block, and possibly forgetting such\&.
+.sp
+Generally speaking, the framework reserves all blocks whose
+name begins with a star, i\&.e \fB*\fR, for its own use\&.
+.RS
+.TP
+string \fIname\fR
+The name of the common block\&.
+.TP
+string \fItext\fR
+The text of the block\&.
+.RE
+.TP
+\fBdefault\fR
+This command sets up a special kind of alias\&.
+The last \fIprivate\fR or \fIofficer\fR is set as the default
+command to use at runtime\&.
+This means that if during "Dispatch" phase the currently processed
+word does not match any of the commands known to this \fIofficer\fR
+this default is used\&. If no default is specified an error will be
+thrown instead\&.
+.TP
+\fBdescription\fR \fItext\fR
+This command declares the help text of the \fIofficer\fR\&.
+.TP
+\fBehandler\fR \fIcmdprefix\fR
+This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates)\&.
+.sp
+At runtime the framework will call the specified command prefix
+with a single argument, a script whose execution is equivalent to the
+phases "Parsing", "Completion", and "Execution" of the framework, as
+described in --TODO--(sectref:flow/phases)--\&. The handler \fImust\fR
+call this script, and can perform any application-specific actions
+before and after\&.
+.sp
+This handler's main uses are two-fold:
+.RS
+.IP [1]
+Capture and hande application-specific errors which should not
+abort the application, nor shown as Tcl stacktrace\&.
+.IP [2]
+Cleanup of application-specific transient state the
+\fIparameter\fR callbacks (See \fICmdr - Parameter Specification Language\fR)
+and/or actions may have set during their execution\&.
+This is especially important if the interactive command line shells of
+the framework are enabled\&. Without such a handler and its bespoke
+cleanup code transient state \fIwill\fR leak between multiple
+commands run from such a shell, something which is definitely not
+wanted\&.
+.RE
+.TP
+\fBofficer\fR \fIname\fR \fIscript\fR
+This command creates a named subordinate \fIofficer\fR with its
+specification \fIscript\fR of officer commands as described here\&.
+.TP
+\fBprivate\fR \fIname\fR \fIscript\fR \fIcmdprefix\fR
+This command creates a named subordinate \fIprivate\fR with its
+specification \fIscript\fR of private commands
+(See \fICmdr - Private Specification Language\fR), and a command prefix to invoke
+when it is chosen\&.
+.sp
+This command prefix is called with a single argument, the
+\fBcmdr::config\fR instance holding the \fIparameter\fRs of the
+private\&.
+--TODO--(ref:backend-example-code)--
+.TP
+\fBundocumented\fR
+This command excludes the \fIofficer\fR (and its subordinates) from
+the generated help\&.
+Note that subordinates reachable through aliases may be included,
+under the alias name, if they are not explicitly excluded themselves\&.
 .PP
-The conceptual model underneath the command hierarchy is that
-of a tree\&.
 .PP
-The inner nodes of the tree represent command ensembles, here
-called \fIofficer\fRs\&. Each officer knows one or more commands to
-perform, and delegates actual execution to their respective
-specification, which may be another \fIofficer\fR, or a \fIprivate\fR\&.
-.PP
-The leaf nodes of the tree represent the individual commands,
-here called \fIprivate\fRs\&.
-Each \fIprivate\fR is responsible for a single action and knows how
-to perform it, and the set of \fIparameter\fRs used to configure that
-action at runtime\&.
-.PP
-The same model is graphically presented in the
-Entity-Relationship-Diagram below\&.
-.PS
-.nf
-      is-a         is-a
-    /-1:1-> actor <-1:1-\\
-   /                     \\
-officer ---1:(0-n)--> private --1:1-> config --1:(0-n)-> parameter
- |  ^      has                  has            has
- |  |
- \\--/
- 1:(0-n)
- has
-
-.fi
-.PE
-.PP
-The \fIactor\fR in that diagram is the common base class for the
-ensembles and commands and not directly relevant to users\&.
-.PP
-The \fIconfig\fR on the other hand is the second interface
-seen by the user, as the sole argument to the action command prefix of
-\fBprivate\fR\&. See \fICmdr - Officer Specification Language\fR for the details\&.
-This container, an instance of \fBcmdr::config\fR, holds all the
-declared parameters of the command the action is invoked for, and
-provides easy access to them through its methods at the time of
-execution\&.
-.PP
-Please continue reading with \fICmdr - Officer Specification Language\fR\&.
+Please continue reading with \fICmdr - Private Specification Language\fR\&.
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR

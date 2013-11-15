@@ -239,12 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_officer \- Cmdr - Aggregation of multiple commands for dispatch\&.
+cmdr::officer \- Cmdr - Aggregation of multiple commands for dispatch\&.
 .SH SYNOPSIS
-package require \fBcmdr::util \fR
+package require \fBcmdr::officer \fR
 .sp
 \fB::cmdr::officer\fR \fBnew\fR \fIsuper\fR \fIname\fR \fIactions\fR
 .sp
@@ -327,7 +327,7 @@ The user-visible name of the command\&.
 .TP
 script \fIactions\fR
 The specification of the officer's subordinates\&.
-Please read \fICmdr - Specification Language\fR (section "Officers") for the details\&.
+Please read \fICmdr - Officer Specification Language\fR for the details\&.
 .RE
 .PP
 .SH "INSTANCE API"
@@ -442,7 +442,7 @@ the preceding names specify the intermediate officers\&.
 .TP
 script \fIarguments\fR
 The specification of the private's parameters\&.
-Please read \fICmdr - Specification Language\fR (section "Parameters") for the details\&.
+Please read \fICmdr - Parameter Specification Language\fR for the details\&.
 .TP
 cmd-prefix \fIaction\fR
 The command prefix to invoke when this private is selected for
@@ -495,7 +495,7 @@ extend the officer\&.
 .TP
 script \fIactions\fR
 The specification of the officer's additional subordinates\&.
-Please read \fICmdr - Specification Language\fR (section "Officers") for the details\&.
+Please read \fICmdr - Officer Specification Language\fR for the details\&.
 .RE
 .TP
 \fB<officer>\fR \fBlookup\fR \fIname\fR

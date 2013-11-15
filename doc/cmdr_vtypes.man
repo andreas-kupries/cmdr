@@ -7,9 +7,9 @@
 [description]
 [include parts/welcome.inc]
 
-This document describes the API expected of validation types to make
-them usable within the [vset PTITLE] framework, and how to write a
-custom validation type.
+This document describes the API expected of [term {validation types}]
+to make them usable within the [vset PTITLE] framework, and how to
+write a custom validation type.
 
 [para] Readers interested in the standard validation types of the
 framework should read [term [vset TITLE_VALIDATE]].
@@ -32,63 +32,74 @@ always returns one of the builtins described in [term [vset TITLE_VALIDATE]].
 
 [list_begin enumerated]
 [enum] Use [const identity] if a  [cmd generate] callback is specified.
-[enum] Use [const boolean]  if no [cmd default] is specified and the parameter is an option.
-[enum] Use [const identity] if no [cmd default] is specified and the parameter is an input.
+[enum] Use [const boolean]  if no [cmd default] is specified and the parameter is an [term option].
+[enum] Use [const identity] if no [cmd default] is specified and the parameter is an [term input].
 [enum] Use [const boolean]  if the specified [cmd default] value is a Tcl boolean.
 [enum] Use [const integer]  if the specified [cmd default] value is a Tcl integer.
 [enum] Use [const identity] as fallback of last resort.
 [list_end]
 
-[para] The general concept of validation types was taken from package
-[package snit], and modified to suit [vset PTITLE]. Where snit's types
-expect only a single method to validate the input we expect all types
-to support an ensemble of [emph four] methods. One for the basic
-validation and transformation of the input, another for the release of
-any internal representation so generated, plus two more for delivery
-of a default representation and support for command line completion.
+[para] The general concept of [term {validation types}] was taken from
+package [package snit], and modified to suit [vset PTITLE].
+
+Where [package snit]'s types expect only a single method to validate
+the input we expect all types to support an ensemble of [emph four]
+methods.
+
+One for the basic validation and transformation of the string, another
+for the release of any internal representation so generated, plus two
+more for delivery of a default representation and support for command
+line completion.
+
 The details (method names, signatures, etc.) can be found in section
 [sectref API] below.
 
 [para] As an example the implementation of the standard boolean
 validation type is shown in section [sectref Example].
 
-[para] It should be noted that while snit's validation types in
-principle allow for the transformation of input into a disparate
+[para] It should be noted that while [package snit]'s validation types
+in principle allow for the transformation of input into a disparate
 internal representation, they never went so far as to allow complex
 representations which might require the release of resources after
 use.
 
 [para] The [cmd validate] and [cmd release] methods are primarily used
-during either completion or execution phases, depending on the chosen
-deferal state. They may also be used during parsing, for optional
-inputs under the [cmd test]-regime].
+during either [term Completion] or [term Execution] phases, depending
+on the chosen deferal state.
+
+They may also be used during the [term Parsing] phase, for optional
+[term inputs] under the [cmd test]-regime].
 
 [para] The [cmd complete] method will be used whereever the system
 activates an interactive command line shell where arguments may be
 assigned to parameters.
 
 [para] The [cmd default] method on the other hand can expect to be
-invoked during dispatch, as part of the system's declaration
-processing, if not preempted by [cmd default] and [cmd generate]
-declarations for the parameter. Note here that the [cmd default]
-method has the same signature as a [cmd generate] callback and can be
-used as such. This is actually needed and useful when the default
-internal representation for a validation type cannot be expressed as a
-fixed value and its creation while parsing the specification itself is
-too early. We can still use the validation type for its generation, by
-hooking it explicitly into [cmd generate] to change the timing of its
-invokation.
+invoked during the [term Dispatch] phase, as part of the system's
+declaration processing, if not preempted by [cmd default] and
+[cmd generate] declarations for the parameter.
+
+Note here that the [cmd default] method has the same signature as a
+paramete's [cmd generate] callback and can be used as such.
+
+This is actually needed and useful when the default internal
+representation for a validation type cannot be expressed as a fixed
+value and its creation while parsing the specification itself is too
+early.
+
+We can still use the validation type for its generation, by hooking it
+explicitly into [cmd generate] to change the timing of its invokation.
 
 [section API]
 
-In the descriptions below the [cmd cmd] is a placeholder for the
+In the descriptions below the [cmd <v-type>] is a placeholder for the
 actual command prefix, most often a main command, of the validation
 type.
 
 [list_begin definitions]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd cmd] [method complete] [arg p] [arg x]]
+[call [cmd <v-type>] [method complete] [arg p] [arg x]]
 
 This method is invoked during command completion done by the framework.
 
@@ -108,7 +119,7 @@ The string value to complete.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd cmd] [method default] [arg p]]
+[call [cmd <v-type>] [method default] [arg p]]
 
 This method is invoked when the framework has to determine the
 internal representation of a parameter which has no user-specified
@@ -129,9 +140,8 @@ context.
 The string value to complete.
 [list_end]
 
-
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd cmd] [method release] [arg p] [arg x]]
+[call [cmd <v-type>] [method release] [arg p] [arg x]]
 
 This method is invoked when the framework has to get rid of an
 internal representation for a parameter.
@@ -155,7 +165,7 @@ The internal representation to release.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd cmd] [method validate] [arg p] [arg x]]
+[call [cmd <v-type>] [method validate] [arg p] [arg x]]
 
 This method is invoked during to validate and convert a string
 representation.

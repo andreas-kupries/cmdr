@@ -1,8 +1,8 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]_parameter [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset PROJECT]::parameter [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
-[require cmdr::util]
+[require cmdr::parameter]
 [titledesc [vset TITLE_PARAMETER]]
 [description]
 [include parts/welcome.inc]
@@ -69,8 +69,8 @@ help, if not overridden by a [cmd label] declaration
 Human-readable help text for the parameter.
 
 [arg_def script spec]
-Tcl-script specifying the parameter in detail. Please read
-[term [vset TITLE_DSL]] (section "Parameters") for the details.
+Tcl-script specifying the parameter in detail.
+Please read [term [vset TITLE_DSL_PARAMETER]] for the details.
 
 [list_end][comment arguments]
 [list_end][comment definitions]

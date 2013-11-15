@@ -1,0 +1,499 @@
+
+<html><head>
+<title>cmdr_dsl_parameter - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_dsl_parameter.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_dsl_parameter.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_dsl_parameter(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_dsl_parameter - Cmdr - Parameter Specification Language</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Related Specification Documents</a></li>
+<li class="section"><a href="#section3">Language Reference</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Naming</a></li>
+<li class="subsection"><a href="#subsection2">General control</a></li>
+<li class="subsection"><a href="#subsection3">Representations</a></li>
+<li class="subsection"><a href="#subsection4">Validation</a></li>
+<li class="subsection"><a href="#subsection5">Signaling</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section4">Related Documents</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">label</b> <i class="arg">text</i></a></li>
+<li><a href="#2"><b class="cmd">alias</b> <i class="arg">name</i></a></li>
+<li><a href="#3"><b class="cmd">optional</b></a></li>
+<li><a href="#4"><b class="cmd">test</b></a></li>
+<li><a href="#5"><b class="cmd">undocumented</b></a></li>
+<li><a href="#6"><b class="cmd">default</b> <i class="arg">value</i></a></li>
+<li><a href="#7"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#8"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></li>
+<li><a href="#9"><b class="cmd">list</b></a></li>
+<li><a href="#10"><b class="cmd">defered</b></a></li>
+<li><a href="#11"><b class="cmd">immediate</b></a></li>
+<li><a href="#12"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#13"><b class="cmd">presence</b></a></li>
+<li><a href="#14"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#15"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document is for users of the cmdr framework. It introduces the
+domain-specific language for the specification of parameters in
+detail.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Related Specification Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i></p></li>
+<li><p><i class="term">Cmdr - Parameter Specification Language</i></p></li>
+</ol>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Language Reference</a></h2>
+<p>The <i class="term">parameter</i>s of <i class="term">private</i>s are the heart of the
+system, providing the space needed to transfer command arguments to
+their implementations, and having the most attributes controlling
+their behaviour.</p>
+<p>This complexity is strongly mitigated by the use of sensible
+defaults for each of the three possible kinds of parameter, i.e.
+positional <i class="term">input</i>s, named <i class="term">option</i>s&quot;, and <i class="term">state</i>
+hidden from the command line.</p>
+<p>Each kind has its own construction command in the language for
+<i class="term">private</i>s (See <i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i>) which specifies
+the common information which cannot have defaults, i.e.</p>
+<ol class="enumerated">
+<li><p>the name identifying it to the system,</p></li>
+<li><p>the help text describing it in informal speech, and, of course,</p></li>
+<li><p>the parameter specification itself, using the commands of this section.</p></li>
+</ol>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Naming</a></h3>
+<p>We have two commands to influence the visible naming of all
+<i class="term">parameter</i>s.</p>
+<p>As background, all <i class="term">parameter</i>s are named, to properly
+identify them within the framework and other Tcl code, i.e. in the
+various callbacks and the <i class="term">private</i>'s action.
+This <i class="term">system name</i> has to be unique within the <i class="term">private</i> a
+<i class="term">parameter</i> belongs to.
+Beyond that however the visible (i.e. non-term state])
+<i class="term">parameter</i>s have to be identified by users within help texts,
+and, in the case of <i class="term">option</i>s, for detection during the
+<i class="term">Parsing</i> phase.
+That is the visible naming, seen by a user of any application whose
+command line processing is based on the Cmdr framework.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">label</b> <i class="arg">text</i></a></dt>
+<dd><p>This command declares the <i class="term">parameter</i>'s visible name, if
+different from the <i class="term">system name</i> used as the default. Note that
+in most cases this default is good enough, obviating the need for this
+command.</p>
+<p>The only use case seen so far is when two semantically
+equivalent <i class="term">input</i> and <i class="term">option</i> <i class="term">parameter</i>s clash,
+forcing the use of different system names due to the requirement for
+their uniqueness, yet also use the same visible name and flag within
+the help to highlight their connection and equivalence.</p></dd>
+<dt><a name="2"><b class="cmd">alias</b> <i class="arg">name</i></a></dt>
+<dd><p>For <i class="term">option</i>s the <b class="cmd">label</b> command and its default specifies
+the name of the <i class="term">primary flag</i> recognized during the
+<i class="term">Parsing</i> phase.
+If that is not enough for a specific <i class="term">option</i> this command allows
+the specification of any number additional flags to be recognized.</p>
+<p>Note however that the framework automatically recognizes not
+only the specified flag(s), but also all their unique prefixes,
+obviating the need for this command in many cases.</p></dd>
+</dl>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">General control</a></h3>
+<p>The general handling of a <i class="term">parameter</i> is influenced by
+three commands:</p>
+<dl class="definitions">
+<dt><a name="3"><b class="cmd">optional</b></a></dt>
+<dd><p>This command marks the parameter as <i class="term">optional</i>, i.e. as something
+the user may skip on the command line, with the application supplying
+sensible defaults (See section <span class="sectref"><a href="#subsection3">Representations</a></span>).
+This causes the framework to expend some effort in the <i class="term">Parsing</i>
+phase to determine whether an argument word should be assigned to the
+parameter, or not.</p>
+<p>This setting is only applicable to <i class="term">input</i>s, as
+<i class="term">option</i>s are optional by definition, and <i class="term">state</i> is hidden.</p></dd>
+<dt><a name="4"><b class="cmd">test</b></a></dt>
+<dd><p>This command is related to the above, switching the runtime from the
+standard regime for acceptance (based on counting and thresholds) to a
+different regime based on validation.
+The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--.</p></dd>
+<dt><a name="5"><b class="cmd">undocumented</b></a></dt>
+<dd><p>This command excludes the <i class="term">parameter</i> from the generated help.</p>
+<p>Its main use case is the hiding of <i class="term">option</i>s giving an
+application developer access to the internals of their application,
+something a regular user has no need of, and doesn't have to know
+about.</p></dd>
+</dl>
+</div>
+<div id="subsection3" class="subsection"><h3><a name="subsection3">Representations</a></h3>
+<p>An important concept of <i class="term">parameter</i>s is something taken up
+from Tcl itself.
+The differentation between <i class="term">string</i> and <i class="term">internal representations</i>.
+Where Tcl uses <i class="term">internal representations</i> to speed up its
+execution here this separation is that of between the information
+delivered to the application by a user, and the application-specific
+data structures behind them.</p>
+<p>All <i class="term">parameter</i>s will have an <i class="term">internal representation</i>.
+This is usually derived from the <i class="term">string representation</i>
+provided by the user.
+The details of that process are explained in section <span class="sectref"><a href="#subsection4">Validation</a></span>.
+However we have cases where the user cannot specify a string
+representation (<i class="term">state</i>s), or is allowed to choose not to
+(optional <i class="term">input</i>s, <i class="term">option</i>s).
+For these cases three specification commands are made available
+enabling us to programmatically choose the internal representation.</p>
+<dl class="definitions">
+<dt><a name="6"><b class="cmd">default</b> <i class="arg">value</i></a></dt>
+<dd><p>This command specifies a constant default value for the internal
+representation.</p></dd>
+<dt><a name="7"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This command specifies a callback to compute the default internal
+representation at runtime. This is useful if the default is something
+which cannot be captured as a fixed value. An example would be a
+handle to some resource, or a dynamically created object.</p>
+<p>The command prefix is invoked with a single argument, the
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance for which to generate the internal
+representation.</p></dd>
+</dl>
+<p>The commands <b class="cmd">default</b> and <b class="cmd">generate</b> exclude each
+other, i.e. only of them can be specified, but not both.
+If neither are specified, and we need a default (see the cases above)
+then a default is chosen by the framework itself, as per the two rules
+below:</p>
+<ol class="enumerated">
+<li><p>Use the empty string for a <b class="cmd">list</b> parameter.</p></li>
+<li><p>Use the default value supplied by the chosen
+<i class="term">validation type</i> (See section <span class="sectref"><a href="#subsection4">Validation</a></span>).</p></li>
+</ol>
+<dl class="definitions">
+<dt><a name="8"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></dt>
+<dd><p>This command actually does not specify an
+<i class="term">internal representation</i>, but activates another method for the
+user to specify the <i class="term">string representation</i> of the
+<i class="term">parameter</i>, outside of the command line.
+As such it has priority over either <b class="cmd">default</b> and <b class="cmd">generate</b>,
+and can be specified with either. A <i class="term">parameter</i> marked with it
+will interactively ask the user for a value if none was specified on
+the command line.</p>
+<p>The default for the <i class="arg">prompt</i> is derived from the
+<i class="term">parameter</i>'s <i class="term">system name</i>.</p></dd>
+</dl>
+<p>To recapitulate:</p>
+<ol class="enumerated">
+<li><p>A <i class="term">string representation</i> specified on the command line
+has the highest priority and goes through the chosen
+<i class="term">validation type</i> to get the associated
+<i class="term">internal representation</i>.</p></li>
+<li><p>If activated via <b class="cmd">interact</b> a small shell is run asking the
+user for a value (or more, as per <b class="cmd">list</b>, see below). The result
+goes through the chosen <i class="term">validation type</i> to get the associated
+<i class="term">internal representation</i>.</p></li>
+<li><p>After that the <i class="term">internal representation</i> is either the
+declared <b class="cmd">default</b> value, or the result of invoking the
+<b class="cmd">generate</b> callback.
+As <i class="term">internal representation</i>s the resulting values are
+<em>not</em> run through the chosen <i class="term">validation type</i>.</p></li>
+</ol>
+<dl class="definitions">
+<dt><a name="9"><b class="cmd">list</b></a></dt>
+<dd><p>This command marks the <i class="term">parameter</i> as a list. In other words, its
+<i class="term">string</i> and <i class="term">internal representation</i> is actually a list
+of such, instead of a single value.
+By default all parameters are scalar.</p>
+<p>This affects the handling of the parameter by the
+<i class="term">Parsing</i> phase, by <b class="cmd">interact</b> above, and the use of the
+<i class="term">validation type</i>.
+The last two ask for multiple values, and feed the elements of the
+<i class="term">string representation</i> separately through validation instead
+of just the string value in one. 
+In the <i class="term">Parsing</i> phase treatment of <i class="term">option</i>s changes from
+keeping only the last assigned value to the accumulation of all
+values.
+Similarly a list-<i class="term">input</i> takes all the remaining words on the
+command line for itself instead of just the current word. Because of
+this list-<i class="term">inputs</i> are only allowed as the last <i class="term">parameter</i>
+of a <i class="term">private</i>.</p></dd>
+</dl>
+<p>The last two specification commands dealing with the
+representations control <em>when</em> the
+<i class="term">internal representation</i> is created.</p>
+<dl class="definitions">
+<dt><a name="10"><b class="cmd">defered</b></a></dt>
+<dd><p>This command marks a <i class="term">parameter</i> as <i class="term">defered</i>, causing its
+<i class="term">internal representation</i> to be computed on first access to its
+value. This is the default for <i class="term">state</i> parameters.</p></dd>
+<dt><a name="11"><b class="cmd">immediate</b></a></dt>
+<dd><p>This command marks a <i class="term">parameter</i> as <i class="term">immediate</i>, causing its
+<i class="term">internal representation</i> to be computed in the
+<i class="term">Completion</i> phase.
+This is the default for <i class="term">input</i> and <i class="term">option</i> parameters.</p></dd>
+</dl>
+</div>
+<div id="subsection4" class="subsection"><h3><a name="subsection4">Validation</a></h3>
+<p>The answer to the necessity of moving between the <i class="term">string</i>
+and <i class="term">internal representations</i> described in the previous
+section are the <i class="term">validation types</i>.
+Given a <i class="term">string representation</i> they either return the
+associated <i class="term">internal representation</i> or raise an error,
+signaling that the string was illegal. This part of their work, the
+verification of the legality of the input string gave them their name.</p>
+<p>The general concept of <i class="term">validation types</i> was taken from
+<b class="package">snit</b>, and modified to suit Cmdr.
+Where snit's types expect only a single method to validate the input
+Cmdr expects all types to support an ensemble of <em>four</em>
+methods, one for the basic validation and transformation of the input,
+another for the release of any internal representation so generated,
+plus delivery of a default representation and support for command line
+completion.</p>
+<dl class="definitions">
+<dt><a name="12"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This command specifies a <i class="term">validation type</i> for the
+<i class="term">parameter</i>, in the form of a command prefix (or the name of one
+of the builtin types, see package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>).
+The set of methods this callback has to support, their signatures,
+etc. are all explained in <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>. This document
+contains the implementation of the standard boolean validation type as
+an example as well.</p>
+<p>Because of the same necessity all <i class="term">parameter</i>s must have a
+<i class="term">validation type</i> assigned to them, and the system will choose
+which, if the user did not. This choice is made as per the six rules
+below and always returns one of the standard types implemented by
+package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>.</p>
+<ol class="enumerated">
+<li><p>Use <b class="const">identity</b> if a <b class="cmd">generate</b> callback is specified.</p></li>
+<li><p>Use <b class="const">boolean</b>  if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">option</i>.</p></li>
+<li><p>Use <b class="const">identity</b> if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">input</i>.</p></li>
+<li><p>Use <b class="const">boolean</b>  if the specified <b class="cmd">default</b> value is a Tcl boolean.</p></li>
+<li><p>Use <b class="const">integer</b>  if the specified <b class="cmd">default</b> value is a Tcl integer.</p></li>
+<li><p>Use <b class="const">identity</b> as fallback of last resort.</p></li>
+</ol></dd>
+<dt><a name="13"><b class="cmd">presence</b></a></dt>
+<dd><p>This command is best discussed as part of the wider area of
+<i class="term">boolean</i> <i class="term">option</i>s, i.e. <i class="term">option</i>s with the standard
+<i class="term">validation type</i> <b class="const">boolean</b> assigned to them. These have
+associated special behaviours, both in the handling of the
+specification, and in the <i class="term">Parsing</i> phase.</p>
+<p>First, normal boolean options.
+They have automatic aliases declared for them, derived from their
+primary flag.
+An option named &quot;foo&quot; will have an alias of &quot;no-foo&quot;, and the
+reverse.
+In the <i class="term">Parsing</i> phase the &quot;foo&quot; and &quot;no-foo&quot; flags have inverse
+semantics, and both are allowed to occur without option argument
+following the flag.
+This is in contrast to all other <i class="term">option</i>s which must have such
+an argument. The parser essentially uses the <i class="term">validation type</i>
+to decide if the word after the flag is a proper boolean value, or
+not, i.e. an argument to assign to the <i class="term">parameter</i>, or not.</p>
+<p>Now <b class="cmd">presence</b> declares a variant of the above, a boolean
+option <em>without</em> the automatic aliases, and <em>never</em> taking
+an argument during parsing.
+Its mere <em>presence</em> on the command line will set its
+<i class="term">parameter</i>.
+Their <b class="cmd">default</b> value is consequently fixed to <b class="const">false</b> as
+well.</p></dd>
+</dl>
+</div>
+<div id="subsection5" class="subsection"><h3><a name="subsection5">Signaling</a></h3>
+<p>Of the four callbacks supported by parameters the first two,
+<b class="cmd">generate</b> and <b class="cmd">validate</b> have been described already, in the
+sections <span class="sectref"><a href="#subsection3">Representations</a></span> and <span class="sectref"><a href="#subsection4">Validation</a></span>,
+respectively.</p>
+<p>This section explains the commonalities between the callbacks
+in general, and the last two, for notifications about state changes in
+detail.</p>
+<p>All callbacks are treated as command prefixes, not scripts.
+There are no placeholder substitutions, only arguments added to each
+command prefix on invokation. This does not harm the generality of the
+system, as complex scripts can be used via procedures or equivalents
+(i.e. <b class="cmd">apply</b>).</p>
+<p>The two callbacks not yet described are the state-change
+callbacks through which the framework can actively drive parts of the
+application while processing the command line, whereas normally the
+application drives access to parameters through their methods.</p>
+<dl class="definitions">
+<dt><a name="14"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This command declares the state-change callback to invoke when the
+<i class="term">internal representation</i> of the <i class="term">parameter</i> is generated
+from the <i class="term">string representation</i>, or the various ways of
+getting a default.</p>
+<p>The callback is invoked with two arguments, the
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance of the changed <i class="term">parameter</i>,
+and its <i class="term">internal representation</i>, in this order.</p></dd>
+<dt><a name="15"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This command declares the state-change callback to invoke when the
+<i class="term">string representation</i> of the <i class="term">parameter</i> is set during
+command line parsing.</p>
+<p>The callback is invoked with two arguments, the
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance of the changed <i class="term">parameter</i>,
+and its <i class="term">string representation</i>, in this order.</p></dd>
+</dl>
+<p>Due to their nature these callbacks are invoked at runtime during
+either the <i class="term">Parsing</i>, <i class="term">Completion</i>, or <i class="term">Execution</i>
+phases.
+The details are shown in the table below. The specification commands
+influencing the timing, i.e. forcing the use in a specific phase are
+shown in the intersection of callback and phase.</p>
+<pre class="example">
+                    | Dispatch | Parsing | Completion  | Execution
+--------------------+----------+---------+-------------+-----------
+validate (default)  | *        |         |             |          
+--------------------+----------+---------+-------------+-----------
+validate (complete) |          | *       | immediate   | defered
+when-set            |          | *       |             |          
+--------------------+----------+---------+-------------+-----------
+generate            |          |         | immediate   | defered
+validate (validate) |          | test    | immediate   | defered
+validate (release)  |          | test    | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+when-complete       |          |         | immediate   | defered
+--------------------+----------+---------+-------------+-----------
+</pre>
+</div>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Related Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_changes.html">Cmdr - Log of Changes</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
+</ol>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

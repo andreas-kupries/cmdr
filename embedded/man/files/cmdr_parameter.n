@@ -239,12 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_parameter" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::parameter" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_parameter \- Cmdr - Command parameters
+cmdr::parameter \- Cmdr - Command parameters
 .SH SYNOPSIS
-package require \fBcmdr::util \fR
+package require \fBcmdr::parameter \fR
 .sp
 \fB::cmdr::parameter\fR \fBnew\fR \fIconfig\fR \fIorder\fR \fIcmdline\fR \fIrequired\fR \fIdefered\fR \fIname\fR \fIdescription\fR \fIspec\fR
 .sp
@@ -401,8 +401,8 @@ string \fIdescription\fR
 Human-readable help text for the parameter\&.
 .TP
 script \fIspec\fR
-Tcl-script specifying the parameter in detail\&. Please read
-\fICmdr - Specification Language\fR (section "Parameters") for the details\&.
+Tcl-script specifying the parameter in detail\&.
+Please read \fICmdr - Parameter Specification Language\fR for the details\&.
 .RE
 .PP
 .SH "INSTANCE API"

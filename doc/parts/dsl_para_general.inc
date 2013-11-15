@@ -1,34 +1,38 @@
 
-[para] The general handling of a parameter is influenced by three
-commands.
+[para] The general handling of a [term parameter] is influenced by
+three commands:
 
 [list_begin definitions]
-[def "[cmd optional]"]
 
-This command marks the parameter as optional, i.e. as something the
-user may skip on the command line, and the application supplying
-sensible defaults. --TODO--(sectref:para/vtype)--
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd optional]]
 
-During parsing the framework will then expend some effort to determine
-whether an argument word should be assigned to the parameter, or not.
+This command marks the parameter as [term optional], i.e. as something
+the user may skip on the command line, with the application supplying
+sensible defaults (See section [sectref Representations]).
 
-[para] This setting is only applicable to "inputs", as "options" are
-optional by definition, and "state" is hidden.
+This causes the framework to expend some effort in the [term Parsing]
+phase to determine whether an argument word should be assigned to the
+parameter, or not.
 
-[def "[cmd test]"]
+[para] This setting is only applicable to [term input]s, as
+[term option]s are optional by definition, and [term state] is hidden.
 
-This command is related to the above, switching from the standard
-regime for acceptance based on counting and thresholds to a different
-one based on validation. The details are explained in section
---TODO--(sectref:flow/parsing, flow/optional)--.
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd test]]
 
-[def "[cmd undocumented]"]
+This command is related to the above, switching the runtime from the
+standard regime for acceptance (based on counting and thresholds) to a
+different regime based on validation.
 
-Like "officers" and "privates" parameters can be hidden from the
-generated help. This is the command for doing so, the same as for the
-first two.
+The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--.
 
-[para] The main use case is the hiding of options giving an
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd undocumented]]
+
+This command excludes the [term parameter] from the generated help.
+
+[para] Its main use case is the hiding of [term option]s giving an
 application developer access to the internals of their application,
 something a regular user has no need of, and doesn't have to know
 about.

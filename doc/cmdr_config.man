@@ -1,8 +1,8 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]_config [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset PROJECT]::config [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
-[require cmdr::util]
+[require cmdr::config]
 [titledesc [vset TITLE_CONFIG]]
 [description]
 [include parts/welcome.inc]
@@ -45,8 +45,8 @@ will belong to.
 
 [arg_def script spec]
 
-Tcl-script specifying the parameters in detail. Please read
-[term [vset TITLE_DSL]] (section "Parameters") for the details.
+Tcl-script specifying the parameters in detail.
+Please read [term [vset TITLE_DSL_PARAMETER]] for the details.
 
 [list_end][comment arguments]
 

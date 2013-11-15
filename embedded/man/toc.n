@@ -245,29 +245,56 @@ doc
 \fBcmdr\fR
 \fIfiles/cmdr\&.n\fR: Cmdr - Main package and API
 .TP
-\fBcmdr_actor\fR
+\fBcmdr::actor\fR
 \fIfiles/cmdr_actor\&.n\fR: Cmdr - Base class for officers and privates - Internal
+.TP
+\fBcmdr::config\fR
+\fIfiles/cmdr_config\&.n\fR: Cmdr - Collection of parameters for privates
+.TP
+\fBcmdr::help\fR
+\fIfiles/cmdr_help\&.n\fR: Cmdr - Utilities for help text formatting and setup - Internal
+.TP
+\fBcmdr::help::json\fR
+\fIfiles/cmdr_help_json\&.n\fR: Cmdr - Formatting help as JSON object
+.TP
+\fBcmdr::help::sql\fR
+\fIfiles/cmdr_help_sql\&.n\fR: Cmdr - Formatting help as series of SQL commands
+.TP
+\fBcmdr::officer\fR
+\fIfiles/cmdr_officer\&.n\fR: Cmdr - Aggregation of multiple commands for dispatch\&.
+.TP
+\fBcmdr::parameter\fR
+\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Command parameters
+.TP
+\fBcmdr::private\fR
+\fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
+.TP
+\fBcmdr::util\fR
+\fIfiles/cmdr_util\&.n\fR: Cmdr - General Utilities - Internal
+.TP
+\fBcmdr::validate\fR
+\fIfiles/cmdr_validate\&.n\fR: Cmdr - Standard validation types for parameters
+.TP
+\fBcmdr::validate::common\fR
+\fIfiles/cmdr_vcommon\&.n\fR: Cmdr - Utilities for Validation Types
 .TP
 \fBcmdr_changes\fR
 \fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
-.TP
-\fBcmdr_config\fR
-\fIfiles/cmdr_config\&.n\fR: Cmdr - Collection of parameters for privates
 .TP
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
 .TP
 \fBcmdr_dsl\fR
-\fIfiles/cmdr_dsl\&.n\fR: Cmdr - Specification Language
+\fIfiles/cmdr_dsl\&.n\fR: Cmdr - Introduction to the Specification Language
 .TP
-\fBcmdr_help\fR
-\fIfiles/cmdr_help\&.n\fR: Cmdr - Utilities for help text formatting and setup - Internal
+\fBcmdr_dsl_officer\fR
+\fIfiles/cmdr_dsl_officer\&.n\fR: Cmdr - Officer Specification Language
 .TP
-\fBcmdr_help_json\fR
-\fIfiles/cmdr_help_json\&.n\fR: Cmdr - Formatting help as JSON object
+\fBcmdr_dsl_parameter\fR
+\fIfiles/cmdr_dsl_parameter\&.n\fR: Cmdr - Parameter Specification Language
 .TP
-\fBcmdr_help_sql\fR
-\fIfiles/cmdr_help_sql\&.n\fR: Cmdr - Formatting help as series of SQL commands
+\fBcmdr_dsl_private\fR
+\fIfiles/cmdr_dsl_private\&.n\fR: Cmdr - Private Specification Language
 .TP
 \fBcmdr_howto_get_sources\fR
 \fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
@@ -280,24 +307,6 @@ doc
 .TP
 \fBcmdr_license\fR
 \fIfiles/cmdr_license\&.n\fR: Cmdr - License
-.TP
-\fBcmdr_officer\fR
-\fIfiles/cmdr_officer\&.n\fR: Cmdr - Aggregation of multiple commands for dispatch\&.
-.TP
-\fBcmdr_parameter\fR
-\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Command parameters
-.TP
-\fBcmdr_private\fR
-\fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
-.TP
-\fBcmdr_util\fR
-\fIfiles/cmdr_util\&.n\fR: Cmdr - General Utilities - Internal
-.TP
-\fBcmdr_validate\fR
-\fIfiles/cmdr_validate\&.n\fR: Cmdr - Standard validation types for parameters
-.TP
-\fBcmdr_validate_common\fR
-\fIfiles/cmdr_vcommon\&.n\fR: Cmdr - Utilities for Validation Types
 .TP
 \fBcmdr_vtypes\fR
 \fIfiles/cmdr_vtypes\&.n\fR: Cmdr - Writing custom validation types

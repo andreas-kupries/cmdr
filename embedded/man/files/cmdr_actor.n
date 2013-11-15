@@ -239,12 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_actor" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::actor" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_actor \- Cmdr - Base class for officers and privates - Internal
+cmdr::actor \- Cmdr - Base class for officers and privates - Internal
 .SH SYNOPSIS
-package require \fBcmdr::util \fR
+package require \fBcmdr::actor \fR
 .sp
 \fB::cmdr::actor\fR \fBnew\fR
 .sp

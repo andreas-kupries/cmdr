@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_help_json" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::help::json" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_help_json \- Cmdr - Formatting help as JSON object
+cmdr::help::json \- Cmdr - Formatting help as JSON object
 .SH SYNOPSIS
 package require \fBcmdr::help::json \fR
 .sp
