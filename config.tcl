@@ -1017,6 +1017,7 @@ oo::class create ::cmdr::config {
 	my ShowState
 
 	$shell history 1
+	[context root] set *in-shell* true
 	try {
 	    $shell repl
 	} trap {CMDR CONFIG INTERACT CANCEL} {e o} {
@@ -1029,6 +1030,7 @@ oo::class create ::cmdr::config {
 	    }
 	    return 1
 	} finally {
+	    [context root] set *in-shell* false
 	    $shell destroy
 	}
 
@@ -1354,4 +1356,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.10
+package provide cmdr::config 0.11

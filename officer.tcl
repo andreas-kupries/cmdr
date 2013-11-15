@@ -328,7 +328,9 @@ oo::class create ::cmdr::officer {
 	    set shell [linenoise::facade new [self]]
 	    set myreplexit 0 ; # Initialize stop signal, no stopping
 	    $shell history 1
+	    [my root] set *in-shell* true
 	    $shell repl
+	    [my root] set *in-shell* false
 	    $shell destroy
 	    return
 	}
