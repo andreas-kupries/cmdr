@@ -514,4 +514,4 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 0.10
+package provide cmdr::help 0.11
