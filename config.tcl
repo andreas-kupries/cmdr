@@ -180,6 +180,10 @@ oo::class create ::cmdr::config {
 	    dict set optpara $o [$para name]
 	}
 
+	# Order not required of the structure, improves testability
+	set options [cmdr util dictsort $options]
+	set optpara [cmdr util dictsort $optpara]
+
 	set arguments $myargs
 	set sections  $mysections
 
@@ -190,7 +194,7 @@ oo::class create ::cmdr::config {
 	set states     {}
 	set parameters {}
 
-	foreach p $mynames {
+	foreach p [lsort -dict $mynames] {
 	    set para [dict get $mymap $p]
 	    dict set parameters $p [$para help]
 
@@ -1356,4 +1360,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.11
+package provide cmdr::config 0.12

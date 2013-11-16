@@ -248,6 +248,8 @@ package require \fBcmdr::util \fR
 .sp
 \fB::cmdr::util\fR \fBpadr\fR \fIlist\fR
 .sp
+\fB::cmdr::util\fR \fBdictsort\fR \fIdict\fR
+.sp
 .BE
 .SH DESCRIPTION
 .PP
@@ -255,7 +257,7 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This internal package provides a single utility command\&.
+This internal package provides a few utility commands\&.
 .SH API
 .TP
 \fB::cmdr::util\fR \fBpadr\fR \fIlist\fR
@@ -270,6 +272,16 @@ The modified list is returned as the result of the command\&.
 list \fIlist\fR
 A list of strings to normalize in length by appending space characters
 as needed\&.
+.RE
+.TP
+\fB::cmdr::util\fR \fBdictsort\fR \fIdict\fR
+When invoked this command sorts the provided dictionary by its keys\&.
+.sp
+The modified dictionary is returned as the result of the command\&.
+.RS
+.TP
+dictionary \fIdict\fR
+The dictionary to sort\&.
 .RE
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"

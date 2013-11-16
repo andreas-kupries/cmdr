@@ -5,7 +5,7 @@
 ## mdr::help heuristics see and automatically integrate the format.
 
 # @@ Meta Begin
-# Package cmdr::help::sql 0.1
+# Package cmdr::help::sql 0.2
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -15,7 +15,8 @@
 # Meta require {Tcl 8.5-}
 # Meta require debug
 # Meta require debug::caller
-# Meta require cmdr::help
+# Meta require {cmdr::help 0.12}
+# Meta require {cmdr::util 0.12}
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -24,7 +25,8 @@
 package require Tcl 8.5
 package require debug
 package require debug::caller
-package require cmdr::help
+package require cmdr::help 0.12
+package require cmdr::util 0.12
 
 # # ## ### ##### ######## ############# #####################
 
@@ -154,7 +156,7 @@ proc ::cmdr::help::format::SQL {name command} {
 proc ::cmdr::help::format::SQL::para {def} {
     set result {}
 
-    foreach {xname xdef} [::cmdr::help::DictSort $def] {
+    foreach {xname xdef} [::cmdr util dictsort $def] {
 	switch -glob -- $xname {
 	    cmdline -
 	    defered -
@@ -291,4 +293,4 @@ proc ::cmdr::help::format::SQL::schema {} {
 }
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::sql 0.1
+package provide cmdr::help::sql 0.2

@@ -31,7 +31,9 @@ proc HelpLarge {format {n 50}} {
 	    officer hammer {
 		private nail {
 		    description workbench
-		    option driver force { validate adouble ; default 0 ; list ; alias force }
+		    option driver force {
+			validate adouble ; default 0 ; list ; alias force
+		    }
 		    state  context orientation
 		    input supply magazine { list ; optional }
 		} ::wall
@@ -64,7 +66,7 @@ proc HelpSmall {format {n 50}} {
 proc Help {def format n} {
     try {
 	cmdr create x foo $def
-	cmdr help format $format $n [x help]
+	cmdr help format $format x $n [x help]
     } finally {
 	x destroy
     }

@@ -7,7 +7,7 @@
 [description]
 [include parts/welcome.inc]
 
-This internal package provides a single utility command.
+This internal package provides a few utility commands.
 
 [section API]
 [list_begin definitions]
@@ -25,6 +25,17 @@ the list.
 [arg_def list list]
 A list of strings to normalize in length by appending space characters
 as needed.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::util] [method dictsort] [arg dict]]
+
+When invoked this command sorts the provided dictionary by its keys.
+
+[para] The modified dictionary is returned as the result of the command.
+
+[list_begin arguments]
+[arg_def dictionary dict] The dictionary to sort.
 [list_end]
 
 [list_end]
