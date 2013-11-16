@@ -362,7 +362,7 @@ test cmdr-runtime-3.3 {options, simple, boolean, special forms} -body {
 	option G - { validate identity }
     } -A -G X --no-B -G X -C 1 -D 0 --no-E 1 --no-F 0
 } -result {
-    A = 'yes' v'yes'
+    A = 'yes' v'1'
     B = '0'   v'0'
     C = '1'   v'1'
     D = '0'   v'0'
@@ -621,7 +621,7 @@ test cmdr-runtime-7.2 {validation errors} -body {
 	input B - { validate integer }
     } 1 X
 } -returnCodes error \
-    -result {Expected an integer for "B", got "X"}
+    -result {Expected an integer for input "B", got "X"}
 
 # # ## ### ##### ######## ############# #####################
 

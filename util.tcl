@@ -32,7 +32,7 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::util {
-    namespace export padr
+    namespace export padr dictsort
     namespace ensemble create
 }
 
@@ -60,6 +60,14 @@ proc ::cmdr::util::padr {list} {
     return $res
 }
 
+proc ::cmdr::util::dictsort {dict} {
+    set r {}
+    foreach k [lsort -dict [dict keys $dict]] {
+	lappend r $k [dict get $dict $k]
+    }
+    return $r
+}
+
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::util 0.11
+package provide cmdr::util 0.12

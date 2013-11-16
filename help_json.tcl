@@ -5,7 +5,7 @@
 ## mdr::help heuristics see and automatically integrate the format.
 
 # @@ Meta Begin
-# Package cmdr::help::json 0.1
+# Package cmdr::help::json 0.2
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -15,7 +15,8 @@
 # Meta require {Tcl 8.5-}
 # Meta require debug
 # Meta require debug::caller
-# Meta require cmdr::help
+# Meta require {cmdr::help 0.12}
+# Meta require {cmdr::util 0.12}
 # Meta require json::write
 # @@ Meta End
 
@@ -25,7 +26,8 @@
 package require Tcl 8.5
 package require debug
 package require debug::caller
-package require cmdr::help
+package require cmdr::help 0.12
+package require cmdr::util 0.12
 package require json::write
 
 # # ## ### ##### ######## ############# #####################
@@ -123,9 +125,9 @@ proc ::cmdr::help::format::JSON {command} {
 
 proc ::cmdr::help::format::JSON::parameters {parameters} {
     set dict {}
-    foreach {name def} [::cmdr::help::DictSort $parameters] {
+    foreach {name def} [::cmdr util dictsort $parameters] {
 	set tmp {}
-	foreach {xname xdef} [::cmdr::help::DictSort $def] {
+	foreach {xname xdef} [::cmdr util dictsort $def] {
 	    switch -glob -- $xname {
 		cmdline -
 		defered -
@@ -186,7 +188,7 @@ proc ::cmdr::help::format::JSON::alist {thelist} {
 
 proc ::cmdr::help::format::JSON::adict {thedict} {
     set tmp {}
-    foreach {k v} [::cmdr::help::DictSort $thedict] {
+    foreach {k v} [::cmdr util dictsort $thedict] {
 	lappend tmp $k [json::write string $v]
     }
     return [json::write object {*}$tmp]
@@ -199,4 +201,4 @@ proc ::cmdr::help::format::JSON::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::json 0.1
+package provide cmdr::help::json 0.2

@@ -92,8 +92,12 @@ proc ::cmdr::help::auto {actor} {
     # Generate a standard help command for any actor, and add it dynamically.
 
     # Auto create options based on the help formats found installed
-    foreach c [info commands {::cmdr::help::format::[a-z]*}] {
+    foreach c [lsort -dict [info commands {::cmdr::help::format::[a-z]*}]] {
 	set format [namespace tail $c]
+
+	# Skip the imported helper commands which are NOT formats
+	if {[string match query* $format]} continue
+
 	lappend formats --$format
 	lappend options [string map [list @c@ $format] {
 	    option @c@ {
@@ -156,16 +160,8 @@ proc ::cmdr::help::auto-help {actor config} {
 	}
     }
 
-    puts [format $format [$actor root] $width [DictSort [query $actor $words]]]
+    puts [format $format [$actor root] $width [cmdr util dictsort [query $actor $words]]]
     return
-}
-
-proc ::cmdr::help::DictSort {dict} {
-    set r {}
-    foreach k [lsort -dict [dict keys $dict]] {
-	lappend r $k [dict get $dict $k]
-    }
-    return $r
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -225,7 +221,7 @@ proc ::cmdr::help::format::Full {width name command} {
     if {[dict size $options]} {
 	set onames {}
 	set odefs  {}
-	foreach {oname ohelp} [::cmdr::help::DictSort $options] {
+	foreach {oname ohelp} [::cmdr util dictsort $options] {
 	    lappend onames $oname
 	    lappend odefs  $ohelp
 	}
@@ -416,7 +412,7 @@ proc ::cmdr::help::format::Arguments {arguments parameters} {
 	switch -exact -- $code {
 	    +  { set text "<$label>" }
 	    ?  { set text "\[<${label}>\]" }
-	    +* { set text "<{label}>..." }
+	    +* { set text "<${label}>..." }
 	    ?* { set text "\[<${label}>...\]" }
 	}
 	lappend result $text
@@ -514,4 +510,4 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 0.11
+package provide cmdr::help 0.12
