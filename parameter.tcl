@@ -75,6 +75,7 @@ oo::class create ::cmdr::parameter {
 	set myiscmdline   $cmdline	; # [R3,4,5,6]
 	set myisrequired  $required	; # [R7,8,9,10]
 	set myisdefered   $defered      ; # [R ???]
+	set mynopromote   no
 
 	my C1_StateIsUnordered
 	my C2_OptionIsOptional
@@ -179,6 +180,7 @@ oo::class create ::cmdr::parameter {
     method cmdline      {} { return $myiscmdline }
     method required     {} { return $myisrequired }
     method defered      {} { return $myisdefered }
+    method nopromote    {} { return $mynopromote }
 
     method list         {} { return $myislist }
     method presence     {} { return $myonlypresence }
@@ -216,6 +218,7 @@ oo::class create ::cmdr::parameter {
 	} thecode]} {
 	    set thecode {}
 	}
+	# mynopromote - Irrelevant to help
 	return [dict create \
 		    cmdline     $myiscmdline    \
 		    code        $thecode        \
@@ -263,12 +266,13 @@ oo::class create ::cmdr::parameter {
 	    {default       Default} \
 	    {defered       Defered} \
 	    {generate      Generate} \
-	    {interact      Interact} \
 	    {immediate     Immediate} \
+	    {interact      Interact} \
 	    {label         Label} \
 	    {list          List} \
-	    {presence      Presence} \
+	    {no-promotion  NoPromote} \
 	    {optional      Optional} \
+	    {presence      Presence} \
 	    {test          Test} \
 	    {undocumented  Undocumented} \
 	    {validate      Validate} \
@@ -362,6 +366,16 @@ oo::class create ::cmdr::parameter {
 	# Consider adding checks against current state, prevent use
 	# of calls not making an actual change.
 	set myisdefered no
+	return
+    }
+
+    method NoPromote {} {
+	# Arguments only. Options cannot take unknown option as value,
+	# nor can hidden state.
+	my Promote_InputOnly
+	# Consider adding checks against current state, prevent use
+	# of calls not making an actual change.
+	set mynopromote yes
 	return
     }
 
@@ -512,6 +526,10 @@ oo::class create ::cmdr::parameter {
     forward Test_NotRequired \
 	my Assert {!$myisrequired} \
 	{Required argument "@" has no test-mode}
+
+    forward Promote_InputOnly \
+	my Assert {$myisordered && $myiscmdline} \
+	{Non-input parameter "@" does not handle promotion}
 
     # # ## ### ##### ######## #############
     ## Internal: DSL support. General helpers.
@@ -1182,11 +1200,11 @@ oo::class create ::cmdr::parameter {
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue mylocker mystopinteraction \
 	myisdocumented myonlypresence myisdefered \
-	myisundefined
+	myisundefined mynopromote
 
     # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 0.12
+package provide cmdr::parameter 0.13

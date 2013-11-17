@@ -5,6 +5,21 @@ three commands:
 [list_begin definitions]
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd no-promotion]]
+
+When the framework encounters an unknown flag during the
+[term Parsing] phase it will not unconditionally throw an error about
+it, but first check if the next available [term input]
+[term parameter] (if any) could accept the flag string as its value,
+per that [term input]'s [term {validation type}], and if yes, does so.
+
+[para] This command causes the rejection of such flag strings by this
+parameter on general principle, without having to validate it.
+
+[para] [emph Note] that it is only useful for and applicable to
+[term input] [term parameters].
+
+[comment {- - -- --- ----- -------- -------------}]
 [call [cmd optional]]
 
 This command marks the parameter as [term optional], i.e. as something

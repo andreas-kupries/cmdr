@@ -135,19 +135,20 @@
 <ul class="syntax">
 <li><a href="#1"><b class="cmd">label</b> <i class="arg">text</i></a></li>
 <li><a href="#2"><b class="cmd">alias</b> <i class="arg">name</i></a></li>
-<li><a href="#3"><b class="cmd">optional</b></a></li>
-<li><a href="#4"><b class="cmd">test</b></a></li>
-<li><a href="#5"><b class="cmd">undocumented</b></a></li>
-<li><a href="#6"><b class="cmd">default</b> <i class="arg">value</i></a></li>
-<li><a href="#7"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#8"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></li>
-<li><a href="#9"><b class="cmd">list</b></a></li>
-<li><a href="#10"><b class="cmd">defered</b></a></li>
-<li><a href="#11"><b class="cmd">immediate</b></a></li>
-<li><a href="#12"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#13"><b class="cmd">presence</b></a></li>
-<li><a href="#14"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#15"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#3"><b class="cmd">no-promotion</b></a></li>
+<li><a href="#4"><b class="cmd">optional</b></a></li>
+<li><a href="#5"><b class="cmd">test</b></a></li>
+<li><a href="#6"><b class="cmd">undocumented</b></a></li>
+<li><a href="#7"><b class="cmd">default</b> <i class="arg">value</i></a></li>
+<li><a href="#8"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#9"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></li>
+<li><a href="#10"><b class="cmd">list</b></a></li>
+<li><a href="#11"><b class="cmd">defered</b></a></li>
+<li><a href="#12"><b class="cmd">immediate</b></a></li>
+<li><a href="#13"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#14"><b class="cmd">presence</b></a></li>
+<li><a href="#15"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#16"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></li>
 </ul>
 </div>
 </div>
@@ -223,7 +224,17 @@ obviating the need for this command in many cases.</p></dd>
 <p>The general handling of a <i class="term">parameter</i> is influenced by
 three commands:</p>
 <dl class="definitions">
-<dt><a name="3"><b class="cmd">optional</b></a></dt>
+<dt><a name="3"><b class="cmd">no-promotion</b></a></dt>
+<dd><p>When the framework encounters an unknown flag during the
+<i class="term">Parsing</i> phase it will not unconditionally throw an error about
+it, but first check if the next available <i class="term">input</i>
+<i class="term">parameter</i> (if any) could accept the flag string as its value,
+per that <i class="term">input</i>'s <i class="term">validation type</i>, and if yes, does so.</p>
+<p>This command causes the rejection of such flag strings by this
+parameter on general principle, without having to validate it.</p>
+<p><em>Note</em> that it is only useful for and applicable to
+<i class="term">input</i> <i class="term"><a href="../../index.html#key12">parameters</a></i>.</p></dd>
+<dt><a name="4"><b class="cmd">optional</b></a></dt>
 <dd><p>This command marks the parameter as <i class="term">optional</i>, i.e. as something
 the user may skip on the command line, with the application supplying
 sensible defaults (See section <span class="sectref"><a href="#subsection3">Representations</a></span>).
@@ -232,12 +243,12 @@ phase to determine whether an argument word should be assigned to the
 parameter, or not.</p>
 <p>This setting is only applicable to <i class="term">input</i>s, as
 <i class="term">option</i>s are optional by definition, and <i class="term">state</i> is hidden.</p></dd>
-<dt><a name="4"><b class="cmd">test</b></a></dt>
+<dt><a name="5"><b class="cmd">test</b></a></dt>
 <dd><p>This command is related to the above, switching the runtime from the
 standard regime for acceptance (based on counting and thresholds) to a
 different regime based on validation.
 The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--.</p></dd>
-<dt><a name="5"><b class="cmd">undocumented</b></a></dt>
+<dt><a name="6"><b class="cmd">undocumented</b></a></dt>
 <dd><p>This command excludes the <i class="term">parameter</i> from the generated help.</p>
 <p>Its main use case is the hiding of <i class="term">option</i>s giving an
 application developer access to the internals of their application,
@@ -263,10 +274,10 @@ representation (<i class="term">state</i>s), or is allowed to choose not to
 For these cases three specification commands are made available
 enabling us to programmatically choose the internal representation.</p>
 <dl class="definitions">
-<dt><a name="6"><b class="cmd">default</b> <i class="arg">value</i></a></dt>
+<dt><a name="7"><b class="cmd">default</b> <i class="arg">value</i></a></dt>
 <dd><p>This command specifies a constant default value for the internal
 representation.</p></dd>
-<dt><a name="7"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="8"><b class="cmd">generate</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command specifies a callback to compute the default internal
 representation at runtime. This is useful if the default is something
 which cannot be captured as a fixed value. An example would be a
@@ -286,7 +297,7 @@ below:</p>
 <i class="term">validation type</i> (See section <span class="sectref"><a href="#subsection4">Validation</a></span>).</p></li>
 </ol>
 <dl class="definitions">
-<dt><a name="8"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></dt>
+<dt><a name="9"><b class="cmd">interact</b> <span class="opt">?<i class="arg">prompt</i>?</span></a></dt>
 <dd><p>This command actually does not specify an
 <i class="term">internal representation</i>, but activates another method for the
 user to specify the <i class="term">string representation</i> of the
@@ -315,7 +326,7 @@ As <i class="term">internal representation</i>s the resulting values are
 <em>not</em> run through the chosen <i class="term">validation type</i>.</p></li>
 </ol>
 <dl class="definitions">
-<dt><a name="9"><b class="cmd">list</b></a></dt>
+<dt><a name="10"><b class="cmd">list</b></a></dt>
 <dd><p>This command marks the <i class="term">parameter</i> as a list. In other words, its
 <i class="term">string</i> and <i class="term">internal representation</i> is actually a list
 of such, instead of a single value.
@@ -338,11 +349,11 @@ of a <i class="term">private</i>.</p></dd>
 representations control <em>when</em> the
 <i class="term">internal representation</i> is created.</p>
 <dl class="definitions">
-<dt><a name="10"><b class="cmd">defered</b></a></dt>
+<dt><a name="11"><b class="cmd">defered</b></a></dt>
 <dd><p>This command marks a <i class="term">parameter</i> as <i class="term">defered</i>, causing its
 <i class="term">internal representation</i> to be computed on first access to its
 value. This is the default for <i class="term">state</i> parameters.</p></dd>
-<dt><a name="11"><b class="cmd">immediate</b></a></dt>
+<dt><a name="12"><b class="cmd">immediate</b></a></dt>
 <dd><p>This command marks a <i class="term">parameter</i> as <i class="term">immediate</i>, causing its
 <i class="term">internal representation</i> to be computed in the
 <i class="term">Completion</i> phase.
@@ -366,7 +377,7 @@ another for the release of any internal representation so generated,
 plus delivery of a default representation and support for command line
 completion.</p>
 <dl class="definitions">
-<dt><a name="12"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="13"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command specifies a <i class="term">validation type</i> for the
 <i class="term">parameter</i>, in the form of a command prefix (or the name of one
 of the builtin types, see package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>).
@@ -387,7 +398,7 @@ package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>.<
 <li><p>Use <b class="const">integer</b>  if the specified <b class="cmd">default</b> value is a Tcl integer.</p></li>
 <li><p>Use <b class="const">identity</b> as fallback of last resort.</p></li>
 </ol></dd>
-<dt><a name="13"><b class="cmd">presence</b></a></dt>
+<dt><a name="14"><b class="cmd">presence</b></a></dt>
 <dd><p>This command is best discussed as part of the wider area of
 <i class="term">boolean</i> <i class="term">option</i>s, i.e. <i class="term">option</i>s with the standard
 <i class="term">validation type</i> <b class="const">boolean</b> assigned to them. These have
@@ -432,7 +443,7 @@ callbacks through which the framework can actively drive parts of the
 application while processing the command line, whereas normally the
 application drives access to parameters through their methods.</p>
 <dl class="definitions">
-<dt><a name="14"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="15"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command declares the state-change callback to invoke when the
 <i class="term">internal representation</i> of the <i class="term">parameter</i> is generated
 from the <i class="term">string representation</i>, or the various ways of
@@ -440,7 +451,7 @@ getting a default.</p>
 <p>The callback is invoked with two arguments, the
 <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance of the changed <i class="term">parameter</i>,
 and its <i class="term">internal representation</i>, in this order.</p></dd>
-<dt><a name="15"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="16"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command declares the state-change callback to invoke when the
 <i class="term">string representation</i> of the <i class="term">parameter</i> is set during
 command line parsing.</p>
