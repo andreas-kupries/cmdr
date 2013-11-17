@@ -853,10 +853,13 @@ oo::class create ::cmdr::config {
 		    } trap {CMDR CONFIG BAD OPTION} {e o} {
 			# Test if we have regular arguments left, and
 			# if the first of them is willing to accept
-			# the word. If yes, the bad option is treated
-			# as regular argument.
+			# the word (on principle, and by type). If
+			# yes, the bad option is treated as regular
+			# argument.
 			if {![A size] ||
+			    [[dict get $mymap [A peek]] nopromote] ||
 			    ![[dict get $mymap [A peek]] accept $word]} {
+			    # Not accepted, throw as error.
 			    return {*}$o $e
 			}
 
@@ -1360,4 +1363,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 0.12
+package provide cmdr::config 0.13

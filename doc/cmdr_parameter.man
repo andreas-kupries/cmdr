@@ -355,6 +355,12 @@ modification.
 This method returns the internal name of the parameter.
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd <parameter>] [method nopromote]]
+
+This method returns the state of the non-promotion flag of the
+parameter.
+
+[comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method options]]
 
 This method returns the list of option flags recognized

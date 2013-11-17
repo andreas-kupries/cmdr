@@ -298,6 +298,8 @@ package require \fBcmdr::parameter \fR
 .sp
 \fB<parameter>\fR \fBname\fR
 .sp
+\fB<parameter>\fR \fBnopromote\fR
+.sp
 \fB<parameter>\fR \fBoptions\fR
 .sp
 \fB<parameter>\fR \fBordered\fR
@@ -623,6 +625,10 @@ modification\&.
 .TP
 \fB<parameter>\fR \fBname\fR
 This method returns the internal name of the parameter\&.
+.TP
+\fB<parameter>\fR \fBnopromote\fR
+This method returns the state of the non-promotion flag of the
+parameter\&.
 .TP
 \fB<parameter>\fR \fBoptions\fR
 This method returns the list of option flags recognized

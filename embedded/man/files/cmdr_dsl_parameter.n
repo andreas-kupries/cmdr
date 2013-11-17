@@ -248,6 +248,8 @@ cmdr_dsl_parameter \- Cmdr - Parameter Specification Language
 .sp
 \fBalias\fR \fIname\fR
 .sp
+\fBno-promotion\fR
+.sp
 \fBoptional\fR
 .sp
 \fBtest\fR
@@ -362,6 +364,19 @@ obviating the need for this command in many cases\&.
 .PP
 The general handling of a \fIparameter\fR is influenced by
 three commands:
+.TP
+\fBno-promotion\fR
+When the framework encounters an unknown flag during the
+\fIParsing\fR phase it will not unconditionally throw an error about
+it, but first check if the next available \fIinput\fR
+\fIparameter\fR (if any) could accept the flag string as its value,
+per that \fIinput\fR's \fIvalidation type\fR, and if yes, does so\&.
+.sp
+This command causes the rejection of such flag strings by this
+parameter on general principle, without having to validate it\&.
+.sp
+\fINote\fR that it is only useful for and applicable to
+\fIinput\fR \fIparameters\fR\&.
 .TP
 \fBoptional\fR
 This command marks the parameter as \fIoptional\fR, i\&.e\&. as something
