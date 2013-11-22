@@ -70,4 +70,4 @@ proc ::cmdr::util::dictsort {dict} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::util 0.13
+package provide cmdr::util 0.14

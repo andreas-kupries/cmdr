@@ -302,6 +302,18 @@ The result code of the command, one of [const ok], or [const fail].
 The result of the command, or an error message in case of failure.
 [list_end][comment {--- arguments --}]
 
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <officer>] [method shell-exit] [arg config]]
+
+This is the backend for a private ending the main shell,
+be it automatically created by the pacge, or by a user.
+
+[para] The argument is the [package cmdr::config]
+instance holding the parameters. The method does not
+expect any and ignore it.
+
 [list_end][comment definitions]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
