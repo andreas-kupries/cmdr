@@ -159,8 +159,24 @@ oo::class create ::cmdr::officer {
 
 	my learn $myactions
 
-	if {[my has help]} return
-	cmdr help auto [self]
+	# Auto-create a 'help' command when possible, i.e not in
+	# conflict with a user-specified command.
+	if {![my has help]} {
+	    cmdr help auto [self]
+	}
+
+	# Auto-create an 'exit' command when possible, i.e not in
+	# conflict with a user-specified command.
+	if {![my has exit]} {
+	    my learn {
+		private exit {
+		    description {
+			Exit the shell.
+			No-op if not in a shell.
+		    }
+		} [mymethod shell-exit]
+	    }
+	}
 	return
     }
 
@@ -398,6 +414,12 @@ oo::class create ::cmdr::officer {
     method continued {line} { return 0 }
     method exit      {}     { return $myreplexit }
 
+    method shell-exit {config} {
+	# No arguments, ignore config.
+	set myreplexit 1
+	return
+    }
+
     method dispatch {cmd} {
 	debug.cmdr/officer {}
 
@@ -407,6 +429,9 @@ oo::class create ::cmdr::officer {
 	}
 
 	if {$cmd eq ".exit"} {
+	    # See method 'shell-exit' as well, and 'Setup' for
+	    # the auto-creation of an 'exit' command when possible,
+	    # i.e not in conflict with a user-specified command.
 	    set myreplexit 1 ; return
 	}
 	my Do {*}[string token shell $cmd]
@@ -618,4 +643,4 @@ oo::class create ::cmdr::officer {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::officer 0.13
+package provide cmdr::officer 0.14
