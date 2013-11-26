@@ -27,23 +27,29 @@ how to build and install the project, and that all the necessary
 requisites are available.
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
-[comment {
-    @ EDIT Please edit the remainder of the document to suit.
-    Information to consider putting into this documentat are
-
-    - Physical directory structure
-    - Logical structure (file- and package dependencies, for example)
-    - Development Tools required, beyond the tools for building and installation.
-    - System architecture, beyond what a simple user is given (in the introduction).
-    -- Data structures, for example.
-    - Deeper assumptions how pieces work together (Sequence diagrams?)
-}]
-
-[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Development Tools}]
 
-[vset PTITLE] (currently) does not require tools beyond those needed for
-build and installation.
+[vset PTITLE] requires the following tools going beyond those needed
+for build and installation.
+
+[list_begin definitions]
+
+[def [syscmd dia]]
+
+Processor for [package diagram]-based figures.
+See package [package tklib].
+
+[def [syscmd dtplite]]
+
+Processor for [package doctools]-based documentation files, i.e. the
+[file .man] files under [file doc/].
+See package [package tcllib].
+
+[para] This requirement is optional. If a Tcllib providing the package
+[package dtplite] is installed then [syscmd kettle] will use the
+package in favor of the external application.
+
+[list_end]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Demonstration/Example Applications}]
@@ -55,24 +61,49 @@ build and installation.
 
 Explain the physical layout (directory structure).
 
-[comment { @EDIT Explain physical layout (directory structure)
-    Kettle: Consider providing standard text blocks explaining
-            doc/
-            doc/figures/
-            embedded/
-}]
+[list_begin definitions]
+
+[include parts/layout_standard.inc]
+
+[def [file actor.tcl]]     == Package [package cmdr::actor].
+[def [file cmdr.tcl]]      == Package [package cmdr].
+[def [file config.tcl]]    == Package [package cmdr::config].
+[def [file help.tcl]]      == Package [package cmdr::help].
+[def [file help_json.tcl]] == Package [package cmdr::help::json].
+[def [file help_sql.tcl]]  == Package [package cmdr::help::sql].
+[def [file officer.tcl]]   == Package [package cmdr::officer].
+[def [file parameter.tcl]] == Package [package cmdr::parameter].
+[def [file private.tcl]]   == Package [package cmdr::private].
+[def [file util.tcl]]      == Package [package cmdr::util].
+[def [file validate.tcl]]  == Package [package cmdr::validate].
+[def [file vcommon.tcl]]   == Package [package cmdr::validate::common].
+
+[list_end]
+
+[section {Extended Build Actions}]
+
+[include parts/build-dev.inc]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Architecture & Concepts}]
 
+The following sections explain
+
 [list_begin enumerated]
-[enum] Explain the internal architecture.
-[enum] Explain file dependencies, if any.
-[enum] Explain package dependencies, if any.
-[enum] Explain the internal data structures, if any.
-[enum] Explain entity relationships (UML ERD), if any.
-[enum] Explain important operation sequences (UML SD), if any.
+[enum] the internal architecture and package dependencies.
+[enum] the internal data structures.
+[enum] important operation sequences (UML SD).
 [list_end]
+
+[subsection {System Architecture}]
+[include parts/architecture.inc]
+[comment { @EDIT Package dependencies (diagram) }]
+
+[subsection {Data structures}]
+[comment { @EDIT Explain data structures }]
+
+[subsection {Operation Sequences}]
+[comment { @EDIT Explain operation sequences }]
 
 [include parts/related.inc]
 [include parts/feedback.inc]

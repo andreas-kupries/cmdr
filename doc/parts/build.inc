@@ -1,6 +1,3 @@
-[comment {
-    @EDIT Please edit to suit - Kettle based build and installation.
-}]
 
 [vset PTITLE] uses the Kettle application and package to handle building
 and installation. It is assumed to be installed and working. Please see
