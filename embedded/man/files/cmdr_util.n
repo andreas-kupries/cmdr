@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::util" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::util \- Cmdr - General Utilities - Internal
+cmdr::util \- Cmdr - (Internal) General Utilities
 .SH SYNOPSIS
 package require \fBcmdr::util \fR
 .sp

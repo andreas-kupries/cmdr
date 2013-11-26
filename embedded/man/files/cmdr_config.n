@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::config" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::config \- Cmdr - Collection of parameters for privates
+cmdr::config \- Cmdr - (Partially internal) Collection of parameters for privates
 .SH SYNOPSIS
 package require \fBcmdr::config \fR
 .sp

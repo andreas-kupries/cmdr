@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::officer \- Cmdr - Aggregation of multiple commands for dispatch\&.
+cmdr::officer \- Cmdr - (Internal) Aggregation of multiple commands for dispatch\&.
 .SH SYNOPSIS
 package require \fBcmdr::officer \fR
 .sp

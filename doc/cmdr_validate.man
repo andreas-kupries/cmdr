@@ -7,14 +7,37 @@
 [description]
 [include parts/welcome.inc]
 
-This internal package implements the twelve standard validation types
-shown below. The [cmd validate] command of the parameter declaration
-DSL can use these by name. Non-standard types have to provide a proper
-command prefix instead.
+[para] Validation types are [vset PTITLE]'s answer to the necessity of
+moving between the string and internal representations of
+[package cmdr::parameter] instances.
+
+[para] This internal package implements the twelve standard validation
+types shown below. The [cmd validate] command of the parameter
+declaration DSL can use these by name. Non-standard types have to
+provide a proper command prefix instead.
 
 [para] Readers interested in writing their own custom validation types
 should read [term [vset TITLE_DEV_VT]].
 
+[section {Standard Types}]
 [include parts/vtypes_std.inc]
+
+[section {Standard Selection Rules}]
+
+[para] Because of the aformentioned necessity all parameters must have
+a validation type assigned to them, and the framework will choose
+which, if the user did not. This choice is made per the six rules
+below and always returns one of the builtins described here.
+
+[list_begin enumerated]
+[enum] Use [const identity] if a  [cmd generate] callback is specified.
+[enum] Use [const boolean]  if no [cmd default] is specified and the parameter is an [term option].
+[enum] Use [const identity] if no [cmd default] is specified and the parameter is an [term input].
+[enum] Use [const boolean]  if the specified [cmd default] value is a Tcl boolean.
+[enum] Use [const integer]  if the specified [cmd default] value is a Tcl integer.
+[enum] Use [const identity] as fallback of last resort.
+[list_end]
+
+
 [include parts/feedback.inc]
 [manpage_end]

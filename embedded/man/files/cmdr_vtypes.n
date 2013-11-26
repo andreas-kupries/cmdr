@@ -276,24 +276,6 @@ internal representation or raise an error, signaling that the input
 was illegal\&. This part of their work, the verification of the legality
 of the input string gave them their name\&.
 .PP
-Because of the same necessity all parameters must have a
-validation type assigned to them, and the framework will choose which,
-if the user did not\&. This choice is made per the six rules below and
-always returns one of the builtins described in \fICmdr - Standard validation types for parameters\fR\&.
-.IP [1]
-Use \fBidentity\fR if a  \fBgenerate\fR callback is specified\&.
-.IP [2]
-Use \fBboolean\fR  if no \fBdefault\fR is specified and the parameter is an \fIoption\fR\&.
-.IP [3]
-Use \fBidentity\fR if no \fBdefault\fR is specified and the parameter is an \fIinput\fR\&.
-.IP [4]
-Use \fBboolean\fR  if the specified \fBdefault\fR value is a Tcl boolean\&.
-.IP [5]
-Use \fBinteger\fR  if the specified \fBdefault\fR value is a Tcl integer\&.
-.IP [6]
-Use \fBidentity\fR as fallback of last resort\&.
-.PP
-.PP
 The general concept of \fIvalidation types\fR was taken from
 package \fBsnit\fR, and modified to suit Cmdr\&.
 Where \fBsnit\fR's types expect only a single method to validate
@@ -373,9 +355,6 @@ The \fBcmdr::parameter\fR instance whose default internal
 representation is to be computed\&. While the standard validation types
 do not make use of it a custom type may have need for access to the
 context\&.
-.TP
-string \fIx\fR
-The string value to complete\&.
 .RE
 .TP
 \fB<v-type>\fR \fBrelease\fR \fIp\fR \fIx\fR
