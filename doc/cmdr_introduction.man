@@ -22,8 +22,7 @@ interactive command line shells with basic command and argument
 completion.
 
 [section {System Architecture}]
-
-[comment { -- @EDIT Please edit to suit -- }]
+[include parts/architecture.inc]
 
 [include parts/related.inc]
 [include parts/feedback.inc]

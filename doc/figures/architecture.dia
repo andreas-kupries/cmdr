@@ -1,0 +1,78 @@
+# -*- tcl -*- tcl.tk//DSL diagram//EN//1.0
+# Parser Tools Architecture Diagram
+
+set counter 0
+if {![info exists mark]} { set mark -1 }
+
+proc xbox {args} {
+    variable mark
+    variable counter
+
+    if {$mark == $counter} {
+	lappend args color red stroke 2
+    }
+    incr counter
+    return [uplevel 1 [list box {*}$args]]
+}
+
+proc public {args} {
+    {*}$args color blue stroke 2
+}
+
+proc partial {args} {
+    {*}$args dashed
+}
+
+proc area {label args} {
+    set E [xbox fillcolor lightyellow {*}$args]
+    group {
+	text text $label with nw at [last box nw]
+    }
+    return $E
+}
+
+down
+set boxwidth [100 mm]
+set movelength [5 mm]
+
+set M [area "Main"             height [20 mm]] ; move
+set E [area "Entities"         height [30 mm]] ; move
+set S [area "Support Packages" height [38 mm]]
+
+block {
+    set fillcolor white
+    set boxheight [10 mm]
+    set boxwidth  [20 mm]
+
+    public xbox "cmdr"
+} at $M
+
+block {
+    east
+    set fillcolor white
+    set boxheight [10 mm]
+    set boxwidth  [20 mm]
+
+    xbox "util" ; move
+    xbox "validate" ; move
+    public xbox "validate::common" width [40 mm]
+    down ; move ; move ; west
+
+    public xbox "help::sql" ; move
+    public xbox "help::json" ; move
+    xbox "help"
+} at $S
+
+block {
+    set fillcolor white
+    set boxheight [10 mm]
+    set boxwidth  [20 mm]
+    east
+
+    xbox "actor" ; down ; move
+    xbox "private" 
+    group { west ; move ; xbox "officer" }
+    east ; move
+    partial public xbox "config" ; move
+    partial public xbox "parameter"
+} at $E
