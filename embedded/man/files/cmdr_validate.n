@@ -253,13 +253,19 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This internal package implements the twelve standard validation types
-shown below\&. The \fBvalidate\fR command of the parameter declaration
-DSL can use these by name\&. Non-standard types have to provide a proper
-command prefix instead\&.
+.PP
+Validation types are Cmdr's answer to the necessity of
+moving between the string and internal representations of
+\fBcmdr::parameter\fR instances\&.
+.PP
+This internal package implements the twelve standard validation
+types shown below\&. The \fBvalidate\fR command of the parameter
+declaration DSL can use these by name\&. Non-standard types have to
+provide a proper command prefix instead\&.
 .PP
 Readers interested in writing their own custom validation types
 should read \fICmdr - Writing custom validation types\fR\&.
+.SH "STANDARD TYPES"
 .TP
 boolean
 Completable\&. Accepts a Tcl boolean\&.
@@ -291,6 +297,25 @@ Completable\&. Accepts a read/writable file (path)\&.
 .TP
 rwpath
 Completable\&. Accepts a read/writable path\&.
+.PP
+.SH "STANDARD SELECTION RULES"
+.PP
+Because of the aformentioned necessity all parameters must have
+a validation type assigned to them, and the framework will choose
+which, if the user did not\&. This choice is made per the six rules
+below and always returns one of the builtins described here\&.
+.IP [1]
+Use \fBidentity\fR if a  \fBgenerate\fR callback is specified\&.
+.IP [2]
+Use \fBboolean\fR  if no \fBdefault\fR is specified and the parameter is an \fIoption\fR\&.
+.IP [3]
+Use \fBidentity\fR if no \fBdefault\fR is specified and the parameter is an \fIinput\fR\&.
+.IP [4]
+Use \fBboolean\fR  if the specified \fBdefault\fR value is a Tcl boolean\&.
+.IP [5]
+Use \fBinteger\fR  if the specified \fBdefault\fR value is a Tcl integer\&.
+.IP [6]
+Use \fBidentity\fR as fallback of last resort\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain

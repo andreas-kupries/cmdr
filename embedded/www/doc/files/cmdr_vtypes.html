@@ -152,18 +152,6 @@ Given a string representation they either return the associated
 internal representation or raise an error, signaling that the input
 was illegal. This part of their work, the verification of the legality
 of the input string gave them their name.</p>
-<p>Because of the same necessity all parameters must have a
-validation type assigned to them, and the framework will choose which,
-if the user did not. This choice is made per the six rules below and
-always returns one of the builtins described in <i class="term"><a href="cmdr_validate.html">Cmdr - Standard validation types for parameters</a></i>.</p>
-<ol class="enumerated">
-<li><p>Use <b class="const">identity</b> if a  <b class="cmd">generate</b> callback is specified.</p></li>
-<li><p>Use <b class="const">boolean</b>  if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">option</i>.</p></li>
-<li><p>Use <b class="const">identity</b> if no <b class="cmd">default</b> is specified and the parameter is an <i class="term">input</i>.</p></li>
-<li><p>Use <b class="const">boolean</b>  if the specified <b class="cmd">default</b> value is a Tcl boolean.</p></li>
-<li><p>Use <b class="const">integer</b>  if the specified <b class="cmd">default</b> value is a Tcl integer.</p></li>
-<li><p>Use <b class="const">identity</b> as fallback of last resort.</p></li>
-</ol>
 <p>The general concept of <i class="term">validation types</i> was taken from
 package <b class="package">snit</b>, and modified to suit Cmdr.
 Where <b class="package">snit</b>'s types expect only a single method to validate
@@ -233,8 +221,6 @@ the type and parameter instance <i class="arg">p</i>.</p>
 representation is to be computed. While the standard validation types
 do not make use of it a custom type may have need for access to the
 context.</p></dd>
-<dt>string <i class="arg">x</i></dt>
-<dd><p>The string value to complete.</p></dd>
 </dl></dd>
 <dt><a name="3"><b class="cmd">&lt;v-type&gt;</b> <b class="method">release</b> <i class="arg">p</i> <i class="arg">x</i></a></dt>
 <dd><p>This method is invoked when the framework has to get rid of an

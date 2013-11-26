@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::parameter" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::parameter \- Cmdr - Command parameters
+cmdr::parameter \- Cmdr - (Partially internal) Command parameters
 .SH SYNOPSIS
 package require \fBcmdr::parameter \fR
 .sp

@@ -246,13 +246,13 @@ doc
 \fIfiles/cmdr\&.n\fR: Cmdr - Main package and API
 .TP
 \fBcmdr::actor\fR
-\fIfiles/cmdr_actor\&.n\fR: Cmdr - Base class for officers and privates - Internal
+\fIfiles/cmdr_actor\&.n\fR: Cmdr - (Internal) Base class for officers and privates
 .TP
 \fBcmdr::config\fR
-\fIfiles/cmdr_config\&.n\fR: Cmdr - Collection of parameters for privates
+\fIfiles/cmdr_config\&.n\fR: Cmdr - (Partially internal) Collection of parameters for privates
 .TP
 \fBcmdr::help\fR
-\fIfiles/cmdr_help\&.n\fR: Cmdr - Utilities for help text formatting and setup - Internal
+\fIfiles/cmdr_help\&.n\fR: Cmdr - (Internal) Utilities for help text formatting and setup
 .TP
 \fBcmdr::help::json\fR
 \fIfiles/cmdr_help_json\&.n\fR: Cmdr - Formatting help as JSON object
@@ -261,16 +261,16 @@ doc
 \fIfiles/cmdr_help_sql\&.n\fR: Cmdr - Formatting help as series of SQL commands
 .TP
 \fBcmdr::officer\fR
-\fIfiles/cmdr_officer\&.n\fR: Cmdr - Aggregation of multiple commands for dispatch\&.
+\fIfiles/cmdr_officer\&.n\fR: Cmdr - (Internal) Aggregation of multiple commands for dispatch\&.
 .TP
 \fBcmdr::parameter\fR
-\fIfiles/cmdr_parameter\&.n\fR: Cmdr - Command parameters
+\fIfiles/cmdr_parameter\&.n\fR: Cmdr - (Partially internal) Command parameters
 .TP
 \fBcmdr::private\fR
-\fIfiles/cmdr_private\&.n\fR: Cmdr - Single command handling, options, and arguments
+\fIfiles/cmdr_private\&.n\fR: Cmdr - (Internal) Single command handling, options, and arguments
 .TP
 \fBcmdr::util\fR
-\fIfiles/cmdr_util\&.n\fR: Cmdr - General Utilities - Internal
+\fIfiles/cmdr_util\&.n\fR: Cmdr - (Internal) General Utilities
 .TP
 \fBcmdr::validate\fR
 \fIfiles/cmdr_validate\&.n\fR: Cmdr - Standard validation types for parameters

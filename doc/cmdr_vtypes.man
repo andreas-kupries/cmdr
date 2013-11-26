@@ -25,20 +25,6 @@ internal representation or raise an error, signaling that the input
 was illegal. This part of their work, the verification of the legality
 of the input string gave them their name.
 
-[para] Because of the same necessity all parameters must have a
-validation type assigned to them, and the framework will choose which,
-if the user did not. This choice is made per the six rules below and
-always returns one of the builtins described in [term [vset TITLE_VALIDATE]].
-
-[list_begin enumerated]
-[enum] Use [const identity] if a  [cmd generate] callback is specified.
-[enum] Use [const boolean]  if no [cmd default] is specified and the parameter is an [term option].
-[enum] Use [const identity] if no [cmd default] is specified and the parameter is an [term input].
-[enum] Use [const boolean]  if the specified [cmd default] value is a Tcl boolean.
-[enum] Use [const integer]  if the specified [cmd default] value is a Tcl integer.
-[enum] Use [const identity] as fallback of last resort.
-[list_end]
-
 [para] The general concept of [term {validation types}] was taken from
 package [package snit], and modified to suit [vset PTITLE].
 
@@ -136,8 +122,6 @@ representation is to be computed. While the standard validation types
 do not make use of it a custom type may have need for access to the
 context.
 
-[arg_def string x]
-The string value to complete.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]

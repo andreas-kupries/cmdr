@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::actor" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::actor \- Cmdr - Base class for officers and privates - Internal
+cmdr::actor \- Cmdr - (Internal) Base class for officers and privates
 .SH SYNOPSIS
 package require \fBcmdr::actor \fR
 .sp

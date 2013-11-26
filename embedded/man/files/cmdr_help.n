@@ -242,7 +242,7 @@ Database Class:	\\fB\\$3\\fR
 .TH "cmdr::help" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::help \- Cmdr - Utilities for help text formatting and setup - Internal
+cmdr::help \- Cmdr - (Internal) Utilities for help text formatting and setup
 .SH SYNOPSIS
 package require \fBcmdr::help \fR
 .sp
