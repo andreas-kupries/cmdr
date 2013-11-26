@@ -116,9 +116,16 @@
 <li class="section"><a href="#section2">Development Tools</a></li>
 <li class="section"><a href="#section3">Demonstration/Example Applications</a></li>
 <li class="section"><a href="#section4">Directory structure</a></li>
-<li class="section"><a href="#section5">Architecture &amp; Concepts</a></li>
-<li class="section"><a href="#section6">Related Documents</a></li>
-<li class="section"><a href="#section7">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section5">Extended Build Actions</a></li>
+<li class="section"><a href="#section6">Architecture &amp; Concepts</a>
+<ul>
+<li class="subsection"><a href="#subsection1">System Architecture</a></li>
+<li class="subsection"><a href="#subsection2">Data structures</a></li>
+<li class="subsection"><a href="#subsection3">Operation Sequences</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section7">Related Documents</a></li>
+<li class="section"><a href="#section8">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
@@ -141,26 +148,158 @@ how to build and install the project, and that all the necessary
 requisites are available.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Development Tools</a></h2>
-<p>Cmdr (currently) does not require tools beyond those needed for
-build and installation.</p>
+<p>Cmdr requires the following tools going beyond those needed
+for build and installation.</p>
+<dl class="definitions">
+<dt><b class="syscmd">dia</b></dt>
+<dd><p>Processor for <b class="package">diagram</b>-based figures.
+See package <b class="package">tklib</b>.</p></dd>
+<dt><b class="syscmd">dtplite</b></dt>
+<dd><p>Processor for <b class="package">doctools</b>-based documentation files, i.e. the
+&quot;<b class="file">.man</b>&quot; files under &quot;<b class="file">doc/</b>&quot;.
+See package <b class="package">tcllib</b>.</p>
+<p>This requirement is optional. If a Tcllib providing the package
+<b class="package">dtplite</b> is installed then <b class="syscmd">kettle</b> will use the
+package in favor of the external application.</p></dd>
+</dl>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Demonstration/Example Applications</a></h2>
 <p>Cmdr (currently) does not have demonstrations, nor examples.</p>
 </div>
 <div id="section4" class="section"><h2><a name="section4">Directory structure</a></h2>
 <p>Explain the physical layout (directory structure).</p>
-</div>
-<div id="section5" class="section"><h2><a name="section5">Architecture &amp; Concepts</a></h2>
+<dl class="definitions">
+<dt>&quot;<b class="file">build.tcl</b>&quot;</dt>
+<dd><p>The main file of the <b class="syscmd">kettle</b>-based build-system.</p></dd>
+<dt>&quot;<b class="file">doc/</b>&quot;</dt>
+<dd><p>Main directory for all documentation.</p>
+<p>Based on the <b class="package">doctools</b> package and tools provided by
+<b class="package">Tcllib</b>.</p></dd>
+<dt>&quot;<b class="file">doc/figures/</b>&quot;</dt>
+<dd><p>Main directory for all diagrams and figures used by the documentation.</p>
+<p>Based on the <b class="package">diagram</b> package and tools provided by
+<b class="package">Tklib</b>.</p></dd>
+<dt>&quot;<b class="file">embedded/</b>&quot;</dt>
+<dd><p>Compiled documentation (manpages and HTML).
+Part of the repository for</p>
 <ol class="enumerated">
-<li><p>Explain the internal architecture.</p></li>
-<li><p>Explain file dependencies, if any.</p></li>
-<li><p>Explain package dependencies, if any.</p></li>
-<li><p>Explain the internal data structures, if any.</p></li>
-<li><p>Explain entity relationships (UML ERD), if any.</p></li>
-<li><p>Explain important operation sequences (UML SD), if any.</p></li>
-</ol>
+<li><p>easy access from the repository's web interface
+(<a href="http://fossil-scm.org/index.html/doc/tip/www/embeddeddoc.wiki">embedded documentation</a>),
+and</p></li>
+<li><p>quicker installation (no need to compile during the
+installation process itself).</p></li>
+</ol></dd>
+<dt>&quot;<b class="file">tests/</b>&quot;</dt>
+<dd><p>Main directory for the test-suite.</p>
+<p>Based on the <b class="package">tcltest</b> package distributed with the Tcl
+core.</p></dd>
+<dt>&quot;<b class="file">actor.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p></dd>
+<dt>&quot;<b class="file">cmdr.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr.html">cmdr</a></b>.</p></dd>
+<dt>&quot;<b class="file">config.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.</p></dd>
+<dt>&quot;<b class="file">help.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>.</p></dd>
+<dt>&quot;<b class="file">help_json.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_help_json.html">cmdr::help::json</a></b>.</p></dd>
+<dt>&quot;<b class="file">help_sql.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_help_sql.html">cmdr::help::sql</a></b>.</p></dd>
+<dt>&quot;<b class="file">officer.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>.</p></dd>
+<dt>&quot;<b class="file">parameter.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p></dd>
+<dt>&quot;<b class="file">private.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.</p></dd>
+<dt>&quot;<b class="file">util.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_util.html">cmdr::util</a></b>.</p></dd>
+<dt>&quot;<b class="file">validate.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>.</p></dd>
+<dt>&quot;<b class="file">vcommon.tcl</b>&quot;</dt>
+<dd><p>== Package <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>.</p></dd>
+</dl>
 </div>
-<div id="section6" class="section"><h2><a name="section6">Related Documents</a></h2>
+<div id="section5" class="section"><h2><a name="section5">Extended Build Actions</a></h2>
+<p>Our build-system is based on <b class="syscmd">kettle</b>, as already explained in
+the <i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i>. Beyond the targets useful for
+installation it also provides targets aiding developers and
+maintainers. These are:</p>
+<dl class="definitions">
+<dt>Validation of the documentation</dt>
+<dd>
+<pre class="example">
+% /path/to/cmdr/build.tcl validate-doc
+</pre>
+</dd>
+<dt>Regeneration of the embedded documentation</dt>
+<dd>
+<pre class="example">
+% /path/to/cmdr/build.tcl doc
+</pre>
+</dd>
+<dt>Regeneration of the figures for the documentation</dt>
+<dd>
+<pre class="example">
+% /path/to/cmdr/build.tcl figures
+</pre>
+</dd>
+<dt>Execution of the test-suite</dt>
+<dd><p>The most basic execution of the test-suite is done with</p>
+<pre class="example">
+% /path/to/cmdr/build.tcl test
+</pre>
+<p>When the test-suite reports issues with the framework use of
+the more extended form below is indicated, with a <b class="const">&lt;stem&gt;</b> of
+your choice. This will generate a number of files whose name starts
+with the prefix &quot;<b class="file">&lt;stem&gt;.</b>&quot;. These will contain extended test logs,
+details about errors and failures, etc.</p>
+<pre class="example">
+% /path/to/cmdr/build.tcl test --log &lt;stem&gt;
+</pre>
+</dd>
+</dl>
+</div>
+<div id="section6" class="section"><h2><a name="section6">Architecture &amp; Concepts</a></h2>
+<p>The following sections explain</p>
+<ol class="enumerated">
+<li><p>the internal architecture and package dependencies.</p></li>
+<li><p>the internal data structures.</p></li>
+<li><p>important operation sequences (UML SD).</p></li>
+</ol>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">System Architecture</a></h3>
+<p>All packages in the framework belong to one of three layers,
+as shown below:</p>
+<p><img alt="architecture" src="../../image/architecture.png"></p>
+<p>Note that:</p>
+<ul class="itemized">
+<li><p>Packages marked with a dashed blue border are public in parts,
+and private in parts.</p></li>
+<li><p>Packages marked with an unbroken blue border are fully public.</p></li>
+<li><p>The topmost layer contains only a single package,
+<b class="package"><a href="cmdr.html">cmdr</a></b>, which is the trivial entry point to the system.</p></li>
+<li><p>The bottom layer contains the mainly internal utility packages.
+The exception is <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>, for use in bespoke
+validation types. See the document about <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>
+for details.</p></li>
+<li><p>The important pieces implementing the various entities are all
+in the middle layer. The relationship of these entities can be seen in
+the next diagram:</p>
+<p><img alt="erd" src="../../image/erd.png"></p></li>
+</ul>
+<p>The dependencies between the packages are very
+straight-forward, following mostly directly out of the relationships
+shown above, plus the few where the utilities are imported. To reduce
+the complexity of the diagram below a few direct dependencies on
+<b class="package"><a href="cmdr_util.html">cmdr::util</a></b> were omitted where indirectly present through
+other dependencies (i.e. through <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>):</p>
+<p><img alt="pkg_dependencies" src="../../image/pkg_dependencies.png"></p>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">Data structures</a></h3>
+</div>
+<div id="subsection3" class="subsection"><h3><a name="subsection3">Operation Sequences</a></h3>
+</div>
+</div>
+<div id="section7" class="section"><h2><a name="section7">Related Documents</a></h2>
 <ol class="enumerated">
 <li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
@@ -170,7 +309,7 @@ build and installation.</p>
 <li><p><i class="term">Cmdr - The Developer's Guide</i></p></li>
 </ol>
 </div>
-<div id="section7" class="section"><h2><a name="section7">Bugs, Ideas, Feedback</a></h2>
+<div id="section8" class="section"><h2><a name="section8">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at

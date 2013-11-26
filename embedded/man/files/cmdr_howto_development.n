@@ -266,26 +266,220 @@ are already available in a directory of your choice, that it is known
 how to build and install the project, and that all the necessary
 requisites are available\&.
 .SH "DEVELOPMENT TOOLS"
-Cmdr (currently) does not require tools beyond those needed for
-build and installation\&.
+Cmdr requires the following tools going beyond those needed
+for build and installation\&.
+.TP
+\fBdia\fR
+Processor for \fBdiagram\fR-based figures\&.
+See package \fBtklib\fR\&.
+.TP
+\fBdtplite\fR
+Processor for \fBdoctools\fR-based documentation files, i\&.e\&. the
+"\fI\&.man\fR" files under "\fIdoc/\fR"\&.
+See package \fBtcllib\fR\&.
+.sp
+This requirement is optional\&. If a Tcllib providing the package
+\fBdtplite\fR is installed then \fBkettle\fR will use the
+package in favor of the external application\&.
+.PP
 .SH "DEMONSTRATION/EXAMPLE APPLICATIONS"
 Cmdr (currently) does not have demonstrations, nor examples\&.
 .SH "DIRECTORY STRUCTURE"
 Explain the physical layout (directory structure)\&.
-.SH "ARCHITECTURE & CONCEPTS"
+.TP
+"\fIbuild\&.tcl\fR"
+The main file of the \fBkettle\fR-based build-system\&.
+.TP
+"\fIdoc/\fR"
+Main directory for all documentation\&.
+.sp
+Based on the \fBdoctools\fR package and tools provided by
+\fBTcllib\fR\&.
+.TP
+"\fIdoc/figures/\fR"
+Main directory for all diagrams and figures used by the documentation\&.
+.sp
+Based on the \fBdiagram\fR package and tools provided by
+\fBTklib\fR\&.
+.TP
+"\fIembedded/\fR"
+Compiled documentation (manpages and HTML)\&.
+Part of the repository for
+.RS
 .IP [1]
-Explain the internal architecture\&.
+easy access from the repository's web interface
+(\fIembedded documentation\fR [http://fossil-scm\&.org/index\&.html/doc/tip/www/embeddeddoc\&.wiki]),
+and
 .IP [2]
-Explain file dependencies, if any\&.
-.IP [3]
-Explain package dependencies, if any\&.
-.IP [4]
-Explain the internal data structures, if any\&.
-.IP [5]
-Explain entity relationships (UML ERD), if any\&.
-.IP [6]
-Explain important operation sequences (UML SD), if any\&.
+quicker installation (no need to compile during the
+installation process itself)\&.
+.RE
+.TP
+"\fItests/\fR"
+Main directory for the test-suite\&.
+.sp
+Based on the \fBtcltest\fR package distributed with the Tcl
+core\&.
+.TP
+"\fIactor\&.tcl\fR"
+== Package \fBcmdr::actor\fR\&.
+.TP
+"\fIcmdr\&.tcl\fR"
+== Package \fBcmdr\fR\&.
+.TP
+"\fIconfig\&.tcl\fR"
+== Package \fBcmdr::config\fR\&.
+.TP
+"\fIhelp\&.tcl\fR"
+== Package \fBcmdr::help\fR\&.
+.TP
+"\fIhelp_json\&.tcl\fR"
+== Package \fBcmdr::help::json\fR\&.
+.TP
+"\fIhelp_sql\&.tcl\fR"
+== Package \fBcmdr::help::sql\fR\&.
+.TP
+"\fIofficer\&.tcl\fR"
+== Package \fBcmdr::officer\fR\&.
+.TP
+"\fIparameter\&.tcl\fR"
+== Package \fBcmdr::parameter\fR\&.
+.TP
+"\fIprivate\&.tcl\fR"
+== Package \fBcmdr::private\fR\&.
+.TP
+"\fIutil\&.tcl\fR"
+== Package \fBcmdr::util\fR\&.
+.TP
+"\fIvalidate\&.tcl\fR"
+== Package \fBcmdr::validate\fR\&.
+.TP
+"\fIvcommon\&.tcl\fR"
+== Package \fBcmdr::validate::common\fR\&.
 .PP
+.SH "EXTENDED BUILD ACTIONS"
+Our build-system is based on \fBkettle\fR, as already explained in
+the \fICmdr - The Installer's Guide\fR\&. Beyond the targets useful for
+installation it also provides targets aiding developers and
+maintainers\&. These are:
+.TP
+Validation of the documentation
+.CS
+
+
+% /path/to/cmdr/build\&.tcl validate-doc
+
+.CE
+.TP
+Regeneration of the embedded documentation
+.CS
+
+
+% /path/to/cmdr/build\&.tcl doc
+
+.CE
+.TP
+Regeneration of the figures for the documentation
+.CS
+
+
+% /path/to/cmdr/build\&.tcl figures
+
+.CE
+.TP
+Execution of the test-suite
+The most basic execution of the test-suite is done with
+.CS
+
+
+% /path/to/cmdr/build\&.tcl test
+
+.CE
+.sp
+When the test-suite reports issues with the framework use of
+the more extended form below is indicated, with a \fB<stem>\fR of
+your choice\&. This will generate a number of files whose name starts
+with the prefix "\fI<stem>\&.\fR"\&. These will contain extended test logs,
+details about errors and failures, etc\&.
+.CS
+
+
+% /path/to/cmdr/build\&.tcl test --log <stem>
+
+.CE
+.PP
+.SH "ARCHITECTURE & CONCEPTS"
+The following sections explain
+.IP [1]
+the internal architecture and package dependencies\&.
+.IP [2]
+the internal data structures\&.
+.IP [3]
+important operation sequences (UML SD)\&.
+.PP
+.SS "SYSTEM ARCHITECTURE"
+.PP
+All packages in the framework belong to one of three layers,
+as shown below:
+.PP
+.PS
+.nf
++--------------------------------------------+
+|                    cmdr                    |
++--------------------------------------------+
+| actor, officer, private, config, parameter |
++--------------------------------------------+
+|           help*, util, validate*           |
++--------------------------------------------+
+
+.fi
+.PE
+.PP
+Note that:
+.IP \(bu
+Packages marked with a dashed blue border are public in parts,
+and private in parts\&.
+.IP \(bu
+Packages marked with an unbroken blue border are fully public\&.
+.IP \(bu
+The topmost layer contains only a single package,
+\fBcmdr\fR, which is the trivial entry point to the system\&.
+.IP \(bu
+The bottom layer contains the mainly internal utility packages\&.
+The exception is \fBcmdr::validate::common\fR, for use in bespoke
+validation types\&. See the document about \fICmdr - Writing custom validation types\fR
+for details\&.
+.IP \(bu
+The important pieces implementing the various entities are all
+in the middle layer\&. The relationship of these entities can be seen in
+the next diagram:
+.sp
+.PS
+.nf
+      is-a         is-a
+    /-1:1-> actor <-1:1-\\
+   /                     \\
+officer ---1:(0-n)--> private --1:1-> config --1:(0-n)-> parameter
+ |  ^      has                  has            has
+ |  |
+ \\--/
+ 1:(0-n)
+ has
+
+.fi
+.PE
+.PP
+.PP
+The dependencies between the packages are very
+straight-forward, following mostly directly out of the relationships
+shown above, plus the few where the utilities are imported\&. To reduce
+the complexity of the diagram below a few direct dependencies on
+\fBcmdr::util\fR were omitted where indirectly present through
+other dependencies (i\&.e\&. through \fBcmdr::help\fR):
+.PP
+IMAGE: pkg_dependencies
+.SS "DATA STRUCTURES"
+.SS "OPERATION SEQUENCES"
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR

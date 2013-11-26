@@ -137,6 +137,32 @@ interactive command line shells with basic command and argument
 completion.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">System Architecture</a></h2>
+<p>All packages in the framework belong to one of three layers,
+as shown below:</p>
+<p><img alt="architecture" src="../../image/architecture.png"></p>
+<p>Note that:</p>
+<ul class="itemized">
+<li><p>Packages marked with a dashed blue border are public in parts,
+and private in parts.</p></li>
+<li><p>Packages marked with an unbroken blue border are fully public.</p></li>
+<li><p>The topmost layer contains only a single package,
+<b class="package"><a href="cmdr.html">cmdr</a></b>, which is the trivial entry point to the system.</p></li>
+<li><p>The bottom layer contains the mainly internal utility packages.
+The exception is <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>, for use in bespoke
+validation types. See the document about <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>
+for details.</p></li>
+<li><p>The important pieces implementing the various entities are all
+in the middle layer. The relationship of these entities can be seen in
+the next diagram:</p>
+<p><img alt="erd" src="../../image/erd.png"></p></li>
+</ul>
+<p>The dependencies between the packages are very
+straight-forward, following mostly directly out of the relationships
+shown above, plus the few where the utilities are imported. To reduce
+the complexity of the diagram below a few direct dependencies on
+<b class="package"><a href="cmdr_util.html">cmdr::util</a></b> were omitted where indirectly present through
+other dependencies (i.e. through <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>):</p>
+<p><img alt="pkg_dependencies" src="../../image/pkg_dependencies.png"></p>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Related Documents</a></h2>
 <ol class="enumerated">

@@ -262,6 +262,66 @@ Additional features of the runtime are an integrated help system and
 interactive command line shells with basic command and argument
 completion\&.
 .SH "SYSTEM ARCHITECTURE"
+.PP
+All packages in the framework belong to one of three layers,
+as shown below:
+.PP
+.PS
+.nf
++--------------------------------------------+
+|                    cmdr                    |
++--------------------------------------------+
+| actor, officer, private, config, parameter |
++--------------------------------------------+
+|           help*, util, validate*           |
++--------------------------------------------+
+
+.fi
+.PE
+.PP
+Note that:
+.IP \(bu
+Packages marked with a dashed blue border are public in parts,
+and private in parts\&.
+.IP \(bu
+Packages marked with an unbroken blue border are fully public\&.
+.IP \(bu
+The topmost layer contains only a single package,
+\fBcmdr\fR, which is the trivial entry point to the system\&.
+.IP \(bu
+The bottom layer contains the mainly internal utility packages\&.
+The exception is \fBcmdr::validate::common\fR, for use in bespoke
+validation types\&. See the document about \fICmdr - Writing custom validation types\fR
+for details\&.
+.IP \(bu
+The important pieces implementing the various entities are all
+in the middle layer\&. The relationship of these entities can be seen in
+the next diagram:
+.sp
+.PS
+.nf
+      is-a         is-a
+    /-1:1-> actor <-1:1-\\
+   /                     \\
+officer ---1:(0-n)--> private --1:1-> config --1:(0-n)-> parameter
+ |  ^      has                  has            has
+ |  |
+ \\--/
+ 1:(0-n)
+ has
+
+.fi
+.PE
+.PP
+.PP
+The dependencies between the packages are very
+straight-forward, following mostly directly out of the relationships
+shown above, plus the few where the utilities are imported\&. To reduce
+the complexity of the diagram below a few direct dependencies on
+\fBcmdr::util\fR were omitted where indirectly present through
+other dependencies (i\&.e\&. through \fBcmdr::help\fR):
+.PP
+IMAGE: pkg_dependencies
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
