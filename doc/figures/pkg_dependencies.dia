@@ -1,0 +1,77 @@
+# -*- tcl -*- tcl.tk//DSL diagram//EN//1.0
+## ====================================================================
+## DSL for dependency diagram. Default parameters.
+
+source [file join [file dirname [file normalize [info script]]] dsl_dependencies.inc]
+
+## ====================================================================
+## Dependencies, bottom-up, one procedure per package.
+
+proc actor     {} { box cmdr::actor                            }
+proc util      {} { box cmdr::util                             }
+proc vcommon   {} { box cmdr::validate::common width [grid 15] color blue stroke 2 }
+proc parameter {} { box cmdr::parameter        width [grid 10] color blue stroke 2 dashed }
+
+proc validate {} {
+    box cmdr::validate width [grid 9]
+    group { down ; ---> ; vcommon }
+}
+
+proc help {} {
+    box cmdr::help
+    group { down ; ---> ; util }
+}
+
+proc help_json {} {
+    box cmdr::help::json width [grid 10] color blue stroke 2
+    group { down ; ---> 16 ; help }
+}
+
+proc help_sql {} {
+    box cmdr::help::sql width [grid 10] color blue stroke 2
+    group { down ; --- ; l ; --- 4 ; r ; ---> 14 ; # help
+    }
+}
+
+proc config {} {
+    box cmdr::config color blue stroke 2 dashed
+    group { down ; --- ; l ; --- 5 ; r ; ---> ; parameter }
+    group { down ; ---> 3 ; validate }
+    group { down ; --- ; r ; --- 4.5 ; l ; ---> ; # help
+    }
+}
+
+proc private {} {
+    box cmdr::private
+    group { down ; --- ; l ; --- 5 ; r ; ---> ; actor }
+    group { down ; ---> 3 ; config }
+}
+
+proc officer {} {
+    box cmdr::officer
+    group { down ; ---> 3 ; private }
+    group { down ; --- ; l ; --- 6 ; r ; ---> 6 ; #actor
+    }
+}
+
+proc cmdr {} {
+    box cmdr color blue stroke 2
+    group { down ; ---> ; officer }
+}
+
+## ====================================================================
+
+proc layout {} {
+    east
+    cmdr
+    move
+    move
+    help_json
+    move
+    help_sql
+    move
+}
+
+## ====================================================================
+
+layout

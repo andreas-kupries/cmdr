@@ -149,6 +149,7 @@
 <li><a href="#19"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></li>
 <li><a href="#20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></li>
 <li><a href="#21"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></li>
+<li><a href="#22"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></li>
 </ul>
 </div>
 </div>
@@ -349,6 +350,12 @@ of the command results.</p>
 <dt>any <i class="arg">data</i></dt>
 <dd><p>The result of the command, or an error message in case of failure.</p></dd>
 </dl></dd>
+<dt><a name="22"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></dt>
+<dd><p>This is the backend for a private ending the main shell,
+be it automatically created by the pacge, or by a user.</p>
+<p>The argument is the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>
+instance holding the parameters. The method does not
+expect any and ignore it.</p></dd>
 </dl>
 </div>
 <div id="section4" class="section"><h2><a name="section4">Help Information</a></h2>
