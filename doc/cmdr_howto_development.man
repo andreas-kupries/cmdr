@@ -99,7 +99,7 @@ in [term [vset TITLE_VALIDATE]]) as well.
 
 Everything said in the public document [term [vset TITLE_DEV_HF]]
 applies to the standard help formats of the framework (as listed in
-[term [vset TITLE_HELP_STD]]) as well.
+[term [vset TITLE_HELP]]) as well.
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Command Line Completion}]

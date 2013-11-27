@@ -1,0 +1,131 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_helpformats [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::help]
+[titledesc [vset TITLE_DEV_HF]]
+[description]
+[include parts/welcome.inc]
+
+This document describes the API expected of [term {help formats}]
+to make them usable within the [vset PTITLE] framework, and how to
+write a custom help format.
+
+[para] Readers interested in the standard help formats of the
+framework should read [term [vset TITLE_HELP]].
+
+[section Background]
+
+Help formats are [vset PTITLE]'s way of converting in-memory
+information about a command hierarchy into something usable for human
+consumption and obviating the need for writing separate documentation,
+which may easily get out of sync with the specification.
+
+[para] The system was made extensible for while the standard formats
+listed in [term [vset TITLE_HELP]] should cover the common cases, and
+the json format of [term [vset TITLE_HELP_JSON]] is a general export,
+it is always possible to run into unprediced non-standard situations
+not covered as is.
+
+[section API]
+
+For the framework to automatically pick up a new help format
+[const foo] the package implementing it has to specify a single
+command [cmd ::cmdr::help::format::<[var foo]>], and this package has
+to be loaded before the command hierarchy you want to use it for is
+specified.
+
+[para] In more detail:
+
+[list_begin definitions]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::help::format::<foo>] [arg root] [arg width] [arg help]]
+
+This command, having access to the root actor of a command hierarchy,
+the number of columns to format the help towards, and a help data
+structure itself, has to return a string, the formatted help generated
+from the arguments.
+
+[list_begin arguments]
+[arg_def cmdr::officer root]
+The root officer of the command hierarchy.
+
+With the exception of [const by-category] the standard formats do not
+use this argument. By providing it the format has access to the
+toplevel common blocks, allowing for the transfer of custom
+information from the specifiction to the format.
+
+[para] [const by-category] for example looks for and uses the block
+[const *category-order*] for when the user wishes to override the
+natural order of used for the toplevel sections.
+
+[arg_def integer width]
+The number of columns to format the help towards.
+
+[arg_def dictionary help]
+A dictonary holding the help information to format. For more details
+see section [sectref {Help Dictionary}].
+
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[list_end]
+
+[section {Help Dictionary}]
+[include parts/help_structure.inc]
+
+[section Example]
+
+As an example the implementation of the standard help format
+[const list] is shown here.
+
+[example {
+# Entrypoint
+proc ::cmdr::help::format::list {root width help} {
+    set result {}
+    dict for {cmd desc} $help {
+	lappend result [List $width $cmd $desc]
+    }
+    return [join $result \n]
+}
+
+# Main work procedure for commands
+proc ::cmdr::help::format::List {width name command} {
+    dict with command {} ; # -> desc, options, arguments, parameters
+
+    # Short line.
+    lappend lines \
+	[string trimright \
+	     "    [join $name] [HasOptions $options][Arguments $arguments $parameters]"]
+    return [join $lines \n]
+}
+
+# Support procedures
+proc ::cmdr::help::format::HasOptions {options} {
+    if {[dict size $options]} {
+	return "\[OPTIONS\] "
+    } else {
+	return {}
+    }
+}
+
+proc ::cmdr::help::format::Arguments {arguments parameters} {
+    set result {}
+    foreach a $arguments {
+	set v [dict get $parameters $a]
+	dict with v {} ; # -> code, desc, label
+	switch -exact -- $code {
+	    +  { set text "<$label>" }
+	    ?  { set text "\[<${label}>\]" }
+	    +* { set text "<${label}>..." }
+	    ?* { set text "\[<${label}>...\]" }
+	}
+	lappend result $text
+    }
+    return [join $result]
+}
+}]
+
+[include parts/feedback.inc]
+[manpage_end]

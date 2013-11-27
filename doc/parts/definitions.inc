@@ -19,7 +19,6 @@
 [vset TITLE_DSL_PARAMETER "[vset PTITLE] - Parameter Specification Language"]
 [vset TITLE_HELP          "[vset PTITLE] - (Internal) Utilities for help text formatting and setup"]
 [vset TITLE_HELP_JSON     "[vset PTITLE] - Formatting help as JSON object"]
-[vset TITLE_HELP_STD      "[vset PTITLE] - Standard help formats of the framework"]
 [vset TITLE_HELP_SQL      "[vset PTITLE] - Formatting help as series of SQL commands"]
 [vset TITLE_OFFICER       "[vset PTITLE] - (Internal) Aggregation of multiple commands for dispatch."]
 [vset TITLE_PARAMETER     "[vset PTITLE] - (Partially internal) Command parameters"]

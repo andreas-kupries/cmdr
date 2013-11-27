@@ -41,6 +41,21 @@ the [term private], with description [arg help] and its specification
 [term [vset TITLE_DSL_PARAMETER]].
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd section] [arg word]...]
+
+This command places the [term private] into a help section/category,
+for use by the standard help format [term by-category]
+(See [term [vset TITLE_HELP]]).
+
+[para] The section/category is specified as a list of words, each
+denoting part of the path to the section. This means that the last
+word is the section of the private, with the preceding words the
+sections it is nested in.
+
+[para] Multiple calls are possible and accumulate. In other words,
+the private can be placed in more than one section/category.
+
+[comment {- - -- --- ----- -------- -------------}]
 [call [cmd state] [arg name] [arg help] [arg script]]
 
 This command adds a [term state] (i.e. hidden) [term parameter] to the
