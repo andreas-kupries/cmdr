@@ -117,15 +117,12 @@
 <li class="section"><a href="#section3">Demonstration/Example Applications</a></li>
 <li class="section"><a href="#section4">Directory structure</a></li>
 <li class="section"><a href="#section5">Extended Build Actions</a></li>
-<li class="section"><a href="#section6">Architecture &amp; Concepts</a>
-<ul>
-<li class="subsection"><a href="#subsection1">System Architecture</a></li>
-<li class="subsection"><a href="#subsection2">Data structures</a></li>
-<li class="subsection"><a href="#subsection3">Operation Sequences</a></li>
-</ul>
-</li>
-<li class="section"><a href="#section7">Related Documents</a></li>
-<li class="section"><a href="#section8">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section6">Architecture &amp; Concepts</a></li>
+<li class="section"><a href="#section7">Validation Types</a></li>
+<li class="section"><a href="#section8">Help Formats</a></li>
+<li class="section"><a href="#section9">Command Line Completion</a></li>
+<li class="section"><a href="#section10">Related Documents</a></li>
+<li class="section"><a href="#section11">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
@@ -167,7 +164,7 @@ package in favor of the external application.</p></dd>
 <p>Cmdr (currently) does not have demonstrations, nor examples.</p>
 </div>
 <div id="section4" class="section"><h2><a name="section4">Directory structure</a></h2>
-<p>Explain the physical layout (directory structure).</p>
+<p>The directory structure of the sources is as explained below:</p>
 <dl class="definitions">
 <dt>&quot;<b class="file">build.tcl</b>&quot;</dt>
 <dd><p>The main file of the <b class="syscmd">kettle</b>-based build-system.</p></dd>
@@ -194,29 +191,29 @@ installation process itself).</p></li>
 <p>Based on the <b class="package">tcltest</b> package distributed with the Tcl
 core.</p></dd>
 <dt>&quot;<b class="file">actor.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p></dd>
 <dt>&quot;<b class="file">cmdr.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr.html">cmdr</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr.html">cmdr</a></b>.</p></dd>
 <dt>&quot;<b class="file">config.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.</p></dd>
 <dt>&quot;<b class="file">help.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>.</p></dd>
 <dt>&quot;<b class="file">help_json.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_help_json.html">cmdr::help::json</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_help_json.html">cmdr::help::json</a></b>.</p></dd>
 <dt>&quot;<b class="file">help_sql.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_help_sql.html">cmdr::help::sql</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_help_sql.html">cmdr::help::sql</a></b>.</p></dd>
 <dt>&quot;<b class="file">officer.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>.</p></dd>
 <dt>&quot;<b class="file">parameter.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p></dd>
 <dt>&quot;<b class="file">private.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.</p></dd>
 <dt>&quot;<b class="file">util.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_util.html">cmdr::util</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_util.html">cmdr::util</a></b>.</p></dd>
 <dt>&quot;<b class="file">validate.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>.</p></dd>
 <dt>&quot;<b class="file">vcommon.tcl</b>&quot;</dt>
-<dd><p>== Package <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>.</p></dd>
+<dd><p>Package <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>.</p></dd>
 </dl>
 </div>
 <div id="section5" class="section"><h2><a name="section5">Extended Build Actions</a></h2>
@@ -260,13 +257,6 @@ details about errors and failures, etc.</p>
 </dl>
 </div>
 <div id="section6" class="section"><h2><a name="section6">Architecture &amp; Concepts</a></h2>
-<p>The following sections explain</p>
-<ol class="enumerated">
-<li><p>the internal architecture and package dependencies.</p></li>
-<li><p>the internal data structures.</p></li>
-<li><p>important operation sequences (UML SD).</p></li>
-</ol>
-<div id="subsection1" class="subsection"><h3><a name="subsection1">System Architecture</a></h3>
 <p>All packages in the framework belong to one of three layers,
 as shown below:</p>
 <p><img alt="architecture" src="../../image/architecture.png"></p>
@@ -294,12 +284,21 @@ the complexity of the diagram below a few direct dependencies on
 other dependencies (i.e. through <b class="package"><a href="cmdr_help.html">cmdr::help</a></b>):</p>
 <p><img alt="pkg_dependencies" src="../../image/pkg_dependencies.png"></p>
 </div>
-<div id="subsection2" class="subsection"><h3><a name="subsection2">Data structures</a></h3>
+<div id="section7" class="section"><h2><a name="section7">Validation Types</a></h2>
+<p>Everything said in the public document <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>
+applies to the standard validation types of the framework (as listed
+in <i class="term"><a href="cmdr_validate.html">Cmdr - Standard validation types for parameters</a></i>) as well.</p>
 </div>
-<div id="subsection3" class="subsection"><h3><a name="subsection3">Operation Sequences</a></h3>
+<div id="section8" class="section"><h2><a name="section8">Help Formats</a></h2>
+<p>Everything said in the public document <i class="term">Cmdr - Writing custom help formats</i>
+applies to the standard help formats of the framework (as listed in
+<i class="term">Cmdr - Standard help formats of the framework</i>) as well.</p>
 </div>
+<div id="section9" class="section"><h2><a name="section9">Command Line Completion</a></h2>
+<p>The document <i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i> describes the inner
+workings of the command line completion provided by the framework.</p>
 </div>
-<div id="section7" class="section"><h2><a name="section7">Related Documents</a></h2>
+<div id="section10" class="section"><h2><a name="section10">Related Documents</a></h2>
 <ol class="enumerated">
 <li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
@@ -309,7 +308,7 @@ other dependencies (i.e. through <b class="package"><a href="cmdr_help.html">cmd
 <li><p><i class="term">Cmdr - The Developer's Guide</i></p></li>
 </ol>
 </div>
-<div id="section8" class="section"><h2><a name="section8">Bugs, Ideas, Feedback</a></h2>
+<div id="section11" class="section"><h2><a name="section11">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at

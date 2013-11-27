@@ -1,0 +1,418 @@
+
+<html><head>
+<title>cmdr_completion - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_dev_completion.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_completion.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_completion(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_completion - Cmdr - Internals of command line completion</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Code Overview</a></li>
+<li class="section"><a href="#section3">Parse State</a></li>
+<li class="section"><a href="#section4">Main Shell Operation</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Overview</a></li>
+<li class="subsection"><a href="#subsection2">Sequencing and Rules</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section5">Mini Shell Operation</a>
+<ul>
+<li class="subsection"><a href="#subsection3">Overview</a></li>
+<li class="subsection"><a href="#subsection4">Sequencing and Rules</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section6">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr</b></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This internal document provides an overview on how the framework
+performs command-line completion in both the main and mini shells,
+referencing all the relevant methods and describing the data
+structures in use.</p>
+<p>For more information about other internals of the framework
+please read <i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i>.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Code Overview</a></h2>
+<p>The methods relevant to command-line completion can be found in four
+packages/classes, namely:</p>
+<dl class="definitions">
+<dt><b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b></dt>
+<dd><dl class="definitions">
+     
+<dt><b class="method">parse-line</b></dt>
+<dd><p>Takes a command-line and returns an initial parse structure as
+     described in section <span class="sectref"><a href="#section3">Parse State</a></span></p></dd>
+<dt><b class="method">completions</b></dt>
+<dd></dd>
+<dt><b class="method">match</b></dt>
+<dd></dd>
+</dl></dd>
+<dt><b class="package"><a href="cmdr_config.html">cmdr::config</a></b></dt>
+<dd><dl class="definitions">
+     
+<dt><b class="method">complete</b></dt>
+<dd><p>Hook method, entrypoint for the mini-shell.
+     Takes the buffer to complete and returns the list of completions,
+     which may be empty.
+     Uses the workhorse method below and the <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>
+     methods.</p></dd>
+<dt><b class="method">complete-repl</b></dt>
+<dd><p>Main work method taking a parse structure and returning the list
+     of completions. More details about it (and the mini-shell) can be
+     found in section <span class="sectref"><a href="#section5">Mini Shell Operation</a></span>.</p></dd>
+<dt><b class="method">complete-words</b></dt>
+<dd><p>Main work method for completion from the main shell, invoked by
+     the <b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance having to complete words.</p></dd>
+</dl></dd>
+<dt><b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b></dt>
+<dd><dl class="definitions">
+     
+<dt><b class="method">complete</b></dt>
+<dd><p>Hook method, entrypoint for the main shell.
+     Takes the buffer to complete and returns the list of completions,
+     which may be empty.
+     Uses the workhorse method below and the <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>
+     methods.</p></dd>
+<dt><b class="method">complete-words</b></dt>
+<dd><p>Main work method taking a parse structure and returning the list
+     of completions. More details about it (and the main shell) can be
+     found in section <span class="sectref"><a href="#section4">Main Shell Operation</a></span>.</p>
+<p>Can recurse to the same method of other officers, and
+     private instances.</p></dd>
+</dl></dd>
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b></dt>
+<dd><dl class="definitions">
+     
+<dt><b class="method">complete-words</b></dt>
+<dd><p>Main work method when reaching a parameter.
+     Simply delegates the work to the method <b class="method">complete</b> of the
+     validation type associated with the parameter.</p></dd>
+</dl></dd>
+<dt><b class="package"><a href="cmdr_private.html">cmdr::private</a></b></dt>
+<dd><dl class="definitions">
+     
+<dt><b class="method">complete-words</b></dt>
+<dd><p>Main work method when reaching a private while recursing through
+     the command hierarchy from officers.
+     Delegates to the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> method of the same name.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Parse State</a></h2>
+<p>The state structure used by all methods relevant to command line
+completion is a dictionary containing the six keys listed below.
+The only generator for this structure is method <b class="method">parse-line</b> of
+the base-class <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>. All others parts of the system
+then only read and manipulate it.</p>
+<dl class="definitions">
+<dt><b class="const">ok</b></dt>
+<dd><p>A boolean flag. Indicates if the <b class="const">line</b> parsed sucessfully into
+words (<b class="const">true</b>), or not (<b class="const">false</b>, syntax error).</p>
+<p>The framework expects basic shell syntax with space-separated
+words using single- and double-quotes for words containing whitespace
+themselves. Note that complex syntax like variable- and
+command-substitutions are not allowed.</p></dd>
+<dt><b class="const">line</b></dt>
+<dd><p>A copy of the unparsed command line.</p></dd>
+<dt><b class="const">words</b></dt>
+<dd><p>The command <b class="const">line</b> parsed into the bare words. The data is not
+valid if <b class="const">ok</b> indicates a parsing error. This is not a list of
+strings, but actually a list of tokens.</p>
+<p>Each token is a list of four elements containing, in the order
+below:</p>
+<ol class="enumerated">
+<li><p>Type of the token (implicitly specifies found quoting).</p></li>
+<li><p>Start index of token in <b class="const">line</b> including quoting.</p></li>
+<li><p>End index of token in <b class="const">line</b>, including quoting.</p></li>
+<li><p>The string value of the token, with escapes fully resolved.
+	I.e. the actual word.</p></li>
+</ol>
+<p>Note: If <b class="const">line</b> ended in trailing whitespace the last
+element of this list will be an empty string representing the word
+started by the user, yet still empty.</p></dd>
+<dt><b class="const">nwords</b></dt>
+<dd><p>The number of element in <b class="const">words</b>. The data is not valid if
+<b class="const">ok</b> indicates a parsing error.</p></dd>
+<dt><b class="const">at</b></dt>
+<dd><p>The index of the <i class="term">current word</i> in <b class="const">words</b> currently
+considered by the completion code. Initially <b class="const">0</b> this advances
+as the completion code works through the prefix to determine the
+context for the completion of the last word.</p></dd>
+<dt><b class="const">doexit</b></dt>
+<dd><p>A boolean flag. Indicates if the pseudo-command <b class="cmd">.exit</b> is active
+(<b class="const">true</b>), or not. Initially <b class="const">true</b>.</p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Main Shell Operation</a></h2>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Overview</a></h3>
+<p>The <i class="term">main shell</i> is fully implemented within the package
+<b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>, while its command-line completion also
+reaches into the packages <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>,
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b>, and <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.
+The purpose of this shell is interactive access to the commands of an
+officer. Which implies, for the toplevel officer, access to the entire
+command hierarchy.</p>
+<p>To this end this shell accepts the names of all subordinate
+commands known to the officer as commands.</p>
+<p>It may additional accept a hard-wired command <b class="cmd">.exit</b>,
+depending on the parse state (see flag <b class="const">doexit</b>).</p>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">Sequencing and Rules</a></h3>
+<p>This section is in essence the textual description of an UML sequence
+diagram.</p>
+<p>Note that the state structure used by this code and referenced
+in the text is explained in section <span class="sectref"><a href="#section3">Parse State</a></span>.</p>
+<ol class="enumerated">
+<li><p>The main shell's core read-eval-print-loop calls on the
+instance method <b class="method">complete</b> for command-line completion,
+providing the text of the buffer to complete at the end).</p></li>
+<li><p>The method <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>::<b class="method">parse-line</b> is called
+on first, to get a parse of the buffer. This parse is then delegated
+to the instance method <b class="method">complete-words</b> to perform the bulk of
+the work.</p>
+<p>Note: The officer instance has access to <b class="method">parse-line</b>
+because it is a derived class of <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p></li>
+<li><p>The implementation of method <b class="method">complete-words</b> applies
+the rules below:</p>
+<ol class="enumerated">
+<li><p>If the buffer was not properly parsed (i.e. the state indicates
+a syntax error), the list of completions is empty.</p></li>
+<li><p>When the buffer is empty all commands are possible completions,
+as are all the commands of the default subordinate, if any was
+specified.</p></li>
+<li><p>If the <i class="term">current word</i> (as per <b class="const">at</b>) is the last
+word (per <b class="const">nwords</b>) on the command line then completion is done
+using the set of commands known to the officer and its default
+subordinate, if any.</p></li>
+<li><p>For a <i class="term">current word</i> which is not the last, i.e. at the
+beginning or in the middle of the command line instead, then this word
+is the name of the subordinate object responsible for handling the
+remaining words.</p>
+<p>No completion is done however if the current word does not
+yield a subordinate to delegate to (i.e. unknown or ambigous). If a
+default command is known this case will delegate to this subordinate,
+as a last attempt.</p>
+<p>When a subordinate was found the system advances the current
+word, resets the <b class="const">doexit</b> flag, and lastly invokes the method
+<b class="method">complete-words</b> of the sub-ordinate.</p></li>
+<li><p>When the subordinate is again an <i class="term">officer</i>, these rules
+here apply again.</p></li>
+<li><p>A <i class="term">private</i> however will delegate to the embedded
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance, again using the method
+<b class="method">complete-words</b>.</p></li>
+<li><p>This method processes the remaining words similar to how the
+command line is parsed at runtime to match words to parameters, to
+know at the end which (set of) parameter(s) governs the last word.</p>
+<p>For <i class="term"><a href="../../index.html#key2">options</a></i> the last word may be partial name of a flag,
+or it may be the partial argument to an option.
+In case of the first the set of completions is the set of all flags
+with the word as its prefix.
+In case of the second the completion delegates to the parameter
+governing the flag, if there is any, which in turn delegates to its
+associated validation type.</p>
+<p>For <i class="term">inputs</i> the system essentially steps through a
+non-deterministic finite automaton to find all the parameters which
+may govern the current word. Completion is done as the union of the
+completion done by the individual parameters.</p>
+<p>Note that the automaton and its results can be precomputed,
+this happens in the internal method <b class="method">CompletionGraph</b>.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Mini Shell Operation</a></h2>
+<div id="subsection3" class="subsection"><h3><a name="subsection3">Overview</a></h3>
+<p>The <i class="term">mini shell</i> and its command-line completion is fully
+implemented within the package <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.
+The purpose of this shell is the interactive entry of the parameters
+for a <i class="term">private</i>.</p>
+<p>To this end this shell accepts the <i class="term">system</i> names of all
+parameters held by the config instance as commands, plus five
+hard-wired commands to control exit conditions and access to help.</p>
+<p>The parameter commands all take single value as their argument,
+the string value to set.
+The sole exception to this are <i class="term">presence options</i> which do not
+take any argument.</p>
+<p>Similarly none of the hardwired commands take an
+argument. Their names all start with a <b class="const">.</b>. They are, in
+alphabetical order, <b class="const">.cancel</b>, <b class="const">.exit</b>, <b class="const">.help</b>
+<b class="const">.ok</b>, and <b class="const">.run</b>.</p>
+</div>
+<div id="subsection4" class="subsection"><h3><a name="subsection4">Sequencing and Rules</a></h3>
+<p>This section is in essence the textual description of an UML sequence
+diagram.</p>
+<p>Note that the state structure used by this code and referenced
+in the text is explained in section <span class="sectref"><a href="#section3">Parse State</a></span>.</p>
+<ol class="enumerated">
+<li><p>The mini shell's core read-eval-print-loop calls on the
+instance method <b class="method">complete</b> for command-line completion,
+providing the text of the buffer to complete at the end).</p></li>
+<li><p>The method <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>::<b class="method">parse-line</b> is called
+on first, to get a parse of the buffer. This parse is then delegated
+to the instance method <b class="method">complete-repl</b> to perform the bulk of
+the work.</p>
+<p>Note: The config instance has access to <b class="method">parse-line</b>
+through its internal <b class="const">context</b> command, which is an alias of the
+<b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance the configuration belongs to. This
+class is derived from <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b>.</p></li>
+<li><p>The implementation of method <b class="method">complete-repl</b> applies the
+rules below:</p>
+<ol class="enumerated">
+<li><p>If the buffer was not properly parsed (i.e. the state indicates
+a syntax error), the list of completions is empty.</p></li>
+<li><p>When the buffer is empty all commands are possible completions.</p></li>
+<li><p>When the buffer contains more than three words the list of
+completions is empty, as all valid mini-shell commands consist of at
+most two words.</p></li>
+<li><p>A buffer containing a single word contain a partial command
+name and the list of completions is the set of commands having this
+word as prefix.</p></li>
+<li><p>A buffer containing two words contains a command name and a
+partial argument. Completion is delegated to the parameter (method
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>::<b class="method">complete-words</b>) indicated by the
+command name, and through it to the associated validation type.</p>
+<p>No completion is done however if the first word does not yield
+a parameter to delegate to (i.e. unknown or ambigous), or if it is a
+presence option, which does not take an argument.</p>
+<p>The hardwired commands fall here implicitly under unknown
+parameter.</p></li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div id="section6" class="section"><h2><a name="section6">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

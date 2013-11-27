@@ -1,0 +1,24 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset PROJECT]_completion [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr]
+[titledesc [vset TITLE_DEV_COMPLETE]]
+[description]
+[include parts/welcome.inc]
+
+This internal document provides an overview on how the framework
+performs command-line completion in both the main and mini shells,
+referencing all the relevant methods and describing the data
+structures in use.
+
+[para] For more information about other internals of the framework
+please read [term [vset TITLE_DEV]].
+
+[section {Code Overview}]        [include parts/completion_methods.inc]
+[section {Parse State}]          [include parts/completion_state.inc]
+[section {Main Shell Operation}] [include parts/completion_main.inc]
+[section {Mini Shell Operation}] [include parts/completion_mini.inc]
+
+[include parts/feedback.inc]
+[manpage_end]

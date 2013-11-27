@@ -1,0 +1,569 @@
+'\"
+'\" Generated from file 'cmdr_dev_completion\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr_completion" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.BS
+.SH NAME
+cmdr_completion \- Cmdr - Internals of command line completion
+.SH SYNOPSIS
+package require \fBcmdr \fR
+.sp
+.BE
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This internal document provides an overview on how the framework
+performs command-line completion in both the main and mini shells,
+referencing all the relevant methods and describing the data
+structures in use\&.
+.PP
+For more information about other internals of the framework
+please read \fICmdr - The Developer's Guide\fR\&.
+.SH "CODE OVERVIEW"
+The methods relevant to command-line completion can be found in four
+packages/classes, namely:
+.TP
+\fBcmdr::actor\fR
+.RS
+.TP
+\fBparse-line\fR
+Takes a command-line and returns an initial parse structure as
+described in section \fBParse State\fR
+.TP
+\fBcompletions\fR
+.TP
+\fBmatch\fR
+.RE
+.TP
+\fBcmdr::config\fR
+.RS
+.TP
+\fBcomplete\fR
+Hook method, entrypoint for the mini-shell\&.
+Takes the buffer to complete and returns the list of completions,
+which may be empty\&.
+Uses the workhorse method below and the \fBcmdr::actor\fR
+methods\&.
+.TP
+\fBcomplete-repl\fR
+Main work method taking a parse structure and returning the list
+of completions\&. More details about it (and the mini-shell) can be
+found in section \fBMini Shell Operation\fR\&.
+.TP
+\fBcomplete-words\fR
+Main work method for completion from the main shell, invoked by
+the \fBcmdr::private\fR instance having to complete words\&.
+.RE
+.TP
+\fBcmdr::officer\fR
+.RS
+.TP
+\fBcomplete\fR
+Hook method, entrypoint for the main shell\&.
+Takes the buffer to complete and returns the list of completions,
+which may be empty\&.
+Uses the workhorse method below and the \fBcmdr::actor\fR
+methods\&.
+.TP
+\fBcomplete-words\fR
+Main work method taking a parse structure and returning the list
+of completions\&. More details about it (and the main shell) can be
+found in section \fBMain Shell Operation\fR\&.
+.sp
+Can recurse to the same method of other officers, and
+private instances\&.
+.RE
+.TP
+\fBcmdr::parameter\fR
+.RS
+.TP
+\fBcomplete-words\fR
+Main work method when reaching a parameter\&.
+Simply delegates the work to the method \fBcomplete\fR of the
+validation type associated with the parameter\&.
+.RE
+.TP
+\fBcmdr::private\fR
+.RS
+.TP
+\fBcomplete-words\fR
+Main work method when reaching a private while recursing through
+the command hierarchy from officers\&.
+Delegates to the \fBcmdr::config\fR method of the same name\&.
+.RE
+.PP
+.SH "PARSE STATE"
+The state structure used by all methods relevant to command line
+completion is a dictionary containing the six keys listed below\&.
+The only generator for this structure is method \fBparse-line\fR of
+the base-class \fBcmdr::actor\fR\&. All others parts of the system
+then only read and manipulate it\&.
+.TP
+\fBok\fR
+A boolean flag\&. Indicates if the \fBline\fR parsed sucessfully into
+words (\fBtrue\fR), or not (\fBfalse\fR, syntax error)\&.
+.sp
+The framework expects basic shell syntax with space-separated
+words using single- and double-quotes for words containing whitespace
+themselves\&. Note that complex syntax like variable- and
+command-substitutions are not allowed\&.
+.TP
+\fBline\fR
+A copy of the unparsed command line\&.
+.TP
+\fBwords\fR
+The command \fBline\fR parsed into the bare words\&. The data is not
+valid if \fBok\fR indicates a parsing error\&. This is not a list of
+strings, but actually a list of tokens\&.
+.sp
+Each token is a list of four elements containing, in the order
+below:
+.RS
+.IP [1]
+Type of the token (implicitly specifies found quoting)\&.
+.IP [2]
+Start index of token in \fBline\fR including quoting\&.
+.IP [3]
+End index of token in \fBline\fR, including quoting\&.
+.IP [4]
+The string value of the token, with escapes fully resolved\&.
+I\&.e\&. the actual word\&.
+.RE
+.sp
+Note: If \fBline\fR ended in trailing whitespace the last
+element of this list will be an empty string representing the word
+started by the user, yet still empty\&.
+.TP
+\fBnwords\fR
+The number of element in \fBwords\fR\&. The data is not valid if
+\fBok\fR indicates a parsing error\&.
+.TP
+\fBat\fR
+The index of the \fIcurrent word\fR in \fBwords\fR currently
+considered by the completion code\&. Initially \fB0\fR this advances
+as the completion code works through the prefix to determine the
+context for the completion of the last word\&.
+.TP
+\fBdoexit\fR
+A boolean flag\&. Indicates if the pseudo-command \fB\&.exit\fR is active
+(\fBtrue\fR), or not\&. Initially \fBtrue\fR\&.
+.PP
+.SH "MAIN SHELL OPERATION"
+.SS OVERVIEW
+The \fImain shell\fR is fully implemented within the package
+\fBcmdr::officer\fR, while its command-line completion also
+reaches into the packages \fBcmdr::private\fR,
+\fBcmdr::config\fR, and \fBcmdr::parameter\fR\&.
+The purpose of this shell is interactive access to the commands of an
+officer\&. Which implies, for the toplevel officer, access to the entire
+command hierarchy\&.
+.PP
+To this end this shell accepts the names of all subordinate
+commands known to the officer as commands\&.
+.PP
+It may additional accept a hard-wired command \fB\&.exit\fR,
+depending on the parse state (see flag \fBdoexit\fR)\&.
+.SS "SEQUENCING AND RULES"
+This section is in essence the textual description of an UML sequence
+diagram\&.
+.PP
+Note that the state structure used by this code and referenced
+in the text is explained in section \fBParse State\fR\&.
+.IP [1]
+The main shell's core read-eval-print-loop calls on the
+instance method \fBcomplete\fR for command-line completion,
+providing the text of the buffer to complete at the end)\&.
+.IP [2]
+The method \fBcmdr::actor\fR::\fBparse-line\fR is called
+on first, to get a parse of the buffer\&. This parse is then delegated
+to the instance method \fBcomplete-words\fR to perform the bulk of
+the work\&.
+.sp
+Note: The officer instance has access to \fBparse-line\fR
+because it is a derived class of \fBcmdr::actor\fR\&.
+.IP [3]
+The implementation of method \fBcomplete-words\fR applies
+the rules below:
+.RS
+.IP [1]
+If the buffer was not properly parsed (i\&.e\&. the state indicates
+a syntax error), the list of completions is empty\&.
+.IP [2]
+When the buffer is empty all commands are possible completions,
+as are all the commands of the default subordinate, if any was
+specified\&.
+.IP [3]
+If the \fIcurrent word\fR (as per \fBat\fR) is the last
+word (per \fBnwords\fR) on the command line then completion is done
+using the set of commands known to the officer and its default
+subordinate, if any\&.
+.IP [4]
+For a \fIcurrent word\fR which is not the last, i\&.e\&. at the
+beginning or in the middle of the command line instead, then this word
+is the name of the subordinate object responsible for handling the
+remaining words\&.
+.sp
+No completion is done however if the current word does not
+yield a subordinate to delegate to (i\&.e\&. unknown or ambigous)\&. If a
+default command is known this case will delegate to this subordinate,
+as a last attempt\&.
+.sp
+When a subordinate was found the system advances the current
+word, resets the \fBdoexit\fR flag, and lastly invokes the method
+\fBcomplete-words\fR of the sub-ordinate\&.
+.IP [5]
+When the subordinate is again an \fIofficer\fR, these rules
+here apply again\&.
+.IP [6]
+A \fIprivate\fR however will delegate to the embedded
+\fBcmdr::config\fR instance, again using the method
+\fBcomplete-words\fR\&.
+.IP [7]
+This method processes the remaining words similar to how the
+command line is parsed at runtime to match words to parameters, to
+know at the end which (set of) parameter(s) governs the last word\&.
+.sp
+For \fIoptions\fR the last word may be partial name of a flag,
+or it may be the partial argument to an option\&.
+In case of the first the set of completions is the set of all flags
+with the word as its prefix\&.
+In case of the second the completion delegates to the parameter
+governing the flag, if there is any, which in turn delegates to its
+associated validation type\&.
+.sp
+For \fIinputs\fR the system essentially steps through a
+non-deterministic finite automaton to find all the parameters which
+may govern the current word\&. Completion is done as the union of the
+completion done by the individual parameters\&.
+.sp
+Note that the automaton and its results can be precomputed,
+this happens in the internal method \fBCompletionGraph\fR\&.
+.RE
+.PP
+.SH "MINI SHELL OPERATION"
+.SS OVERVIEW
+The \fImini shell\fR and its command-line completion is fully
+implemented within the package \fBcmdr::config\fR\&.
+The purpose of this shell is the interactive entry of the parameters
+for a \fIprivate\fR\&.
+.PP
+To this end this shell accepts the \fIsystem\fR names of all
+parameters held by the config instance as commands, plus five
+hard-wired commands to control exit conditions and access to help\&.
+.PP
+The parameter commands all take single value as their argument,
+the string value to set\&.
+The sole exception to this are \fIpresence options\fR which do not
+take any argument\&.
+.PP
+Similarly none of the hardwired commands take an
+argument\&. Their names all start with a \fB\&.\fR\&. They are, in
+alphabetical order, \fB\&.cancel\fR, \fB\&.exit\fR, \fB\&.help\fR \fB\&.ok\fR, and \fB\&.run\fR\&.
+.SS "SEQUENCING AND RULES"
+This section is in essence the textual description of an UML sequence
+diagram\&.
+.PP
+Note that the state structure used by this code and referenced
+in the text is explained in section \fBParse State\fR\&.
+.IP [1]
+The mini shell's core read-eval-print-loop calls on the
+instance method \fBcomplete\fR for command-line completion,
+providing the text of the buffer to complete at the end)\&.
+.IP [2]
+The method \fBcmdr::actor\fR::\fBparse-line\fR is called
+on first, to get a parse of the buffer\&. This parse is then delegated
+to the instance method \fBcomplete-repl\fR to perform the bulk of
+the work\&.
+.sp
+Note: The config instance has access to \fBparse-line\fR
+through its internal \fBcontext\fR command, which is an alias of the
+\fBcmdr::private\fR instance the configuration belongs to\&. This
+class is derived from \fBcmdr::actor\fR\&.
+.IP [3]
+The implementation of method \fBcomplete-repl\fR applies the
+rules below:
+.RS
+.IP [1]
+If the buffer was not properly parsed (i\&.e\&. the state indicates
+a syntax error), the list of completions is empty\&.
+.IP [2]
+When the buffer is empty all commands are possible completions\&.
+.IP [3]
+When the buffer contains more than three words the list of
+completions is empty, as all valid mini-shell commands consist of at
+most two words\&.
+.IP [4]
+A buffer containing a single word contain a partial command
+name and the list of completions is the set of commands having this
+word as prefix\&.
+.IP [5]
+A buffer containing two words contains a command name and a
+partial argument\&. Completion is delegated to the parameter (method
+\fBcmdr::parameter\fR::\fBcomplete-words\fR) indicated by the
+command name, and through it to the associated validation type\&.
+.sp
+No completion is done however if the first word does not yield
+a parameter to delegate to (i\&.e\&. unknown or ambigous), or if it is a
+presence option, which does not take an argument\&.
+.sp
+The hardwired commands fall here implicitly under unknown
+parameter\&.
+.RE
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

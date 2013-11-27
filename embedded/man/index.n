@@ -283,6 +283,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -354,6 +357,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -427,6 +433,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -498,6 +507,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -571,6 +583,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -642,6 +657,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -715,6 +733,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -786,6 +807,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -859,6 +883,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -930,6 +957,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -1003,6 +1033,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -1074,6 +1107,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
@@ -1147,6 +1183,9 @@ cmdr::validate::common
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
 .TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
+.TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development
 .TP
@@ -1218,6 +1257,9 @@ cmdr::validate::common
 .TP
 \fBfiles/cmdr_changes\&.n\fR
 cmdr_changes
+.TP
+\fBfiles/cmdr_dev_completion\&.n\fR
+cmdr_completion
 .TP
 \fBfiles/cmdr_howto_development\&.n\fR
 cmdr_development

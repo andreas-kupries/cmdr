@@ -285,7 +285,7 @@ package in favor of the external application\&.
 .SH "DEMONSTRATION/EXAMPLE APPLICATIONS"
 Cmdr (currently) does not have demonstrations, nor examples\&.
 .SH "DIRECTORY STRUCTURE"
-Explain the physical layout (directory structure)\&.
+The directory structure of the sources is as explained below:
 .TP
 "\fIbuild\&.tcl\fR"
 The main file of the \fBkettle\fR-based build-system\&.
@@ -322,40 +322,40 @@ Based on the \fBtcltest\fR package distributed with the Tcl
 core\&.
 .TP
 "\fIactor\&.tcl\fR"
-== Package \fBcmdr::actor\fR\&.
+Package \fBcmdr::actor\fR\&.
 .TP
 "\fIcmdr\&.tcl\fR"
-== Package \fBcmdr\fR\&.
+Package \fBcmdr\fR\&.
 .TP
 "\fIconfig\&.tcl\fR"
-== Package \fBcmdr::config\fR\&.
+Package \fBcmdr::config\fR\&.
 .TP
 "\fIhelp\&.tcl\fR"
-== Package \fBcmdr::help\fR\&.
+Package \fBcmdr::help\fR\&.
 .TP
 "\fIhelp_json\&.tcl\fR"
-== Package \fBcmdr::help::json\fR\&.
+Package \fBcmdr::help::json\fR\&.
 .TP
 "\fIhelp_sql\&.tcl\fR"
-== Package \fBcmdr::help::sql\fR\&.
+Package \fBcmdr::help::sql\fR\&.
 .TP
 "\fIofficer\&.tcl\fR"
-== Package \fBcmdr::officer\fR\&.
+Package \fBcmdr::officer\fR\&.
 .TP
 "\fIparameter\&.tcl\fR"
-== Package \fBcmdr::parameter\fR\&.
+Package \fBcmdr::parameter\fR\&.
 .TP
 "\fIprivate\&.tcl\fR"
-== Package \fBcmdr::private\fR\&.
+Package \fBcmdr::private\fR\&.
 .TP
 "\fIutil\&.tcl\fR"
-== Package \fBcmdr::util\fR\&.
+Package \fBcmdr::util\fR\&.
 .TP
 "\fIvalidate\&.tcl\fR"
-== Package \fBcmdr::validate\fR\&.
+Package \fBcmdr::validate\fR\&.
 .TP
 "\fIvcommon\&.tcl\fR"
-== Package \fBcmdr::validate::common\fR\&.
+Package \fBcmdr::validate::common\fR\&.
 .PP
 .SH "EXTENDED BUILD ACTIONS"
 Our build-system is based on \fBkettle\fR, as already explained in
@@ -409,15 +409,6 @@ details about errors and failures, etc\&.
 .CE
 .PP
 .SH "ARCHITECTURE & CONCEPTS"
-The following sections explain
-.IP [1]
-the internal architecture and package dependencies\&.
-.IP [2]
-the internal data structures\&.
-.IP [3]
-important operation sequences (UML SD)\&.
-.PP
-.SS "SYSTEM ARCHITECTURE"
 .PP
 All packages in the framework belong to one of three layers,
 as shown below:
@@ -478,8 +469,17 @@ the complexity of the diagram below a few direct dependencies on
 other dependencies (i\&.e\&. through \fBcmdr::help\fR):
 .PP
 IMAGE: pkg_dependencies
-.SS "DATA STRUCTURES"
-.SS "OPERATION SEQUENCES"
+.SH "VALIDATION TYPES"
+Everything said in the public document \fICmdr - Writing custom validation types\fR
+applies to the standard validation types of the framework (as listed
+in \fICmdr - Standard validation types for parameters\fR) as well\&.
+.SH "HELP FORMATS"
+Everything said in the public document \fICmdr - Writing custom help formats\fR
+applies to the standard help formats of the framework (as listed in
+\fICmdr - Standard help formats of the framework\fR) as well\&.
+.SH "COMMAND LINE COMPLETION"
+The document \fICmdr - Internals of command line completion\fR describes the inner
+workings of the command line completion provided by the framework\&.
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
