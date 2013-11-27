@@ -8,13 +8,17 @@
 [include parts/welcome.inc]
 
 This internal package implements the four standard help formats
-[const full], [const short], [const list], and [const by-category].
+
+[list_begin enumerated]
+[enum] [const full],
+[enum] [const short],
+[enum] [const list], and
+[enum] [const by-category].
+[list_end]
 
 [para] It provides a single utility command used by the other parts of
 the framework to add a [syscmd help] command to any
 [package cmdr::actor] requiring such.
-
-
 
 [section API]
 [list_begin definitions]
@@ -39,5 +43,14 @@ terminal.
 The [package cmdr::actor] instance to be extended with [syscmd help].
 [list_end]
 [list_end]
+
+[section {Format Notes}]
+
+The format [const by-category] looks for and uses the block
+[const *category-order*] for when the user wishes to override the
+natural order of used for the toplevel sections.
+
+[para] This block has to be defined in the root of the command hierarchy.
+
 [include parts/feedback.inc]
 [manpage_end]
