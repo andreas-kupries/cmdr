@@ -119,9 +119,13 @@ for the parameters which are arguments.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <config>] [method complete] [arg line]]
 
-This hook-method for the mini-shell is responsible
-for computing the set of completions for the
-entered [arg line].
+This method is part of the mini shell command line
+completion. For the details of its workings please read
+[term [vset TITLE_DEV_COMPLETE]].
+
+[para] This hook-method, the entrypoint for the repl
+is responsible for computing the set of completions
+for the entered [arg line].
 
 [list_begin arguments]
 [arg_def string line]
@@ -131,32 +135,36 @@ The command line to complete.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <config>] [method complete-repl] [arg parse]]
 
-This internal method is used by the hook-method [method complete]
-for the mini-shell, see above. It is given the completion
-state [arg parse] of a partial command line and returns a
-list of strings which are the valid completions at this point.
+This internal method is part of the mini shell command line
+completion. For the details of its workings please read
+[term [vset TITLE_DEV_COMPLETE]].
 
-[list_begin arguments]
-[arg_def dict parse]
-A dictionary holding the current completion state of a partial command
-line.
-
-[para] -- TODO -- Describe the state fields and their meaning.
-[list_end][comment {--- arguments --}]
-
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd <config>] [method complete-words] [arg parse]]
-
-This method is given the completion state [arg parse] of a partial
-command line and returns a list of strings which are the valid
+[para] It is used by the hook-method [method complete] (see above).
+Given the completion state [arg parse] of a partial command
+line it returns a list of strings which are the valid
 completions at this point.
 
 [list_begin arguments]
 [arg_def dict parse]
 A dictionary holding the current completion state of a partial command
 line.
+[list_end][comment {--- arguments --}]
 
-[para] -- TODO -- Describe the state fields and their meaning.
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <config>] [method complete-words] [arg parse]]
+
+This method is part of the main shell command line
+completion. For the details of its workings please read
+[term [vset TITLE_DEV_COMPLETE]].
+
+[para] Given the completion state [arg parse] of a partial
+command line it returns a list of strings which are the valid
+completions at this point.
+
+[list_begin arguments]
+[arg_def dict parse]
+A dictionary holding the current completion state of a partial command
+line.
 [list_end][comment {--- arguments --}]
 
 [comment {- - -- --- ----- -------- -------------}]

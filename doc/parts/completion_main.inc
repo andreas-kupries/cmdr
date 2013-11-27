@@ -105,4 +105,4 @@ this happens in the internal method [method CompletionGraph].
 
 [list_end]
 
-[comment { @ EDIT: --- todo --- sequence diagram main shell completion }]
+[comment { @EDIT: --- todo --- sequence diagram main shell completion }]
