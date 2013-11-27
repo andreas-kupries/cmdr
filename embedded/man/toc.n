@@ -281,6 +281,9 @@ doc
 \fBcmdr_changes\fR
 \fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
 .TP
+\fBcmdr_completion\fR
+\fIfiles/cmdr_dev_completion\&.n\fR: Cmdr - Internals of command line completion
+.TP
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
 .TP

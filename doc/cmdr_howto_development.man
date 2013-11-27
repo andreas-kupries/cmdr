@@ -59,52 +59,55 @@ package in favor of the external application.
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Directory structure}]
 
-Explain the physical layout (directory structure).
+The directory structure of the sources is as explained below:
 
 [list_begin definitions]
-
 [include parts/layout_standard.inc]
 
-[def [file actor.tcl]]     == Package [package cmdr::actor].
-[def [file cmdr.tcl]]      == Package [package cmdr].
-[def [file config.tcl]]    == Package [package cmdr::config].
-[def [file help.tcl]]      == Package [package cmdr::help].
-[def [file help_json.tcl]] == Package [package cmdr::help::json].
-[def [file help_sql.tcl]]  == Package [package cmdr::help::sql].
-[def [file officer.tcl]]   == Package [package cmdr::officer].
-[def [file parameter.tcl]] == Package [package cmdr::parameter].
-[def [file private.tcl]]   == Package [package cmdr::private].
-[def [file util.tcl]]      == Package [package cmdr::util].
-[def [file validate.tcl]]  == Package [package cmdr::validate].
-[def [file vcommon.tcl]]   == Package [package cmdr::validate::common].
-
+[def [file actor.tcl]]     Package [package cmdr::actor].
+[def [file cmdr.tcl]]      Package [package cmdr].
+[def [file config.tcl]]    Package [package cmdr::config].
+[def [file help.tcl]]      Package [package cmdr::help].
+[def [file help_json.tcl]] Package [package cmdr::help::json].
+[def [file help_sql.tcl]]  Package [package cmdr::help::sql].
+[def [file officer.tcl]]   Package [package cmdr::officer].
+[def [file parameter.tcl]] Package [package cmdr::parameter].
+[def [file private.tcl]]   Package [package cmdr::private].
+[def [file util.tcl]]      Package [package cmdr::util].
+[def [file validate.tcl]]  Package [package cmdr::validate].
+[def [file vcommon.tcl]]   Package [package cmdr::validate::common].
 [list_end]
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Extended Build Actions}]
-
 [include parts/build-dev.inc]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Architecture & Concepts}]
 
-The following sections explain
-
-[list_begin enumerated]
-[enum] the internal architecture and package dependencies.
-[enum] the internal data structures.
-[enum] important operation sequences (UML SD).
-[list_end]
-
-[subsection {System Architecture}]
 [include parts/architecture.inc]
-[comment { @EDIT Package dependencies (diagram) }]
 
-[subsection {Data structures}]
-[comment { @EDIT Explain data structures }]
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Validation Types}]
 
-[subsection {Operation Sequences}]
-[comment { @EDIT Explain operation sequences }]
+Everything said in the public document [term [vset TITLE_DEV_VT]]
+applies to the standard validation types of the framework (as listed
+in [term [vset TITLE_VALIDATE]]) as well.
 
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Help Formats}]
+
+Everything said in the public document [term [vset TITLE_DEV_HF]]
+applies to the standard help formats of the framework (as listed in
+[term [vset TITLE_HELP_STD]]) as well.
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Command Line Completion}]
+
+The document [term [vset TITLE_DEV_COMPLETE]] describes the inner
+workings of the command line completion provided by the framework.
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [include parts/related.inc]
 [include parts/feedback.inc]
 [manpage_end]
