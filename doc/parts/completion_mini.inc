@@ -80,5 +80,5 @@ parameter.
 [list_end]
 [list_end]
 
-[comment { @ EDIT: --- todo --- sequence diagram mini shell completion }]
+[comment { @EDIT: --- todo --- sequence diagram mini shell completion }]
 

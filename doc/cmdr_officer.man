@@ -86,17 +86,18 @@ The command line to complete.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <officer>] [method complete-words] [arg parse]]
 
-This method is given the completion state [arg parse] of a partial
-command line and returns a list of strings which are the valid
+This method is part of the main shell command line
+completion. For the details of its workings please read
+[term [vset TITLE_DEV_COMPLETE]].
+
+[para] Given the completion state [arg parse] of a partial
+command line it returns a list of strings which are the valid
 completions at this point.
 
 [list_begin arguments]
 [arg_def dict parse]
 A dictionary holding the current completion state of a partial command
 line.
-
-[para] -- TODO -- Describe the state fields and their meaning.
-
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]

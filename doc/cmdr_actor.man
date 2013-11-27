@@ -50,17 +50,18 @@ has no need for it.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <actor>] [method completions] [arg parse] [arg cmdlist]]
 
-This method is given the completion state [arg parse] of a partial
-command line and a list of completions at the end of the line. It
-returns a list of strings which are the valid completions of the whole
-line, properly quoted.
+This method is part of command line completion. For the details of
+its workings please read [term [vset TITLE_DEV_COMPLETE]].
+
+[para] Given the completion state [arg parse] of a partial command
+line and a list of completions at the end of the line it returns a
+list of strings which are the valid completions of the whole line,
+properly quoted.
 
 [list_begin arguments]
 [arg_def dict parse]
 A dictionary holding the current completion state of a partial command
 line.
-
-[para] -- TODO -- Describe the state fields and their meaning.
 
 [arg_def list cmdlist]
 List of valid completions.
@@ -168,17 +169,17 @@ content is always stored in the actor.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <actor>] [method match] [arg parse] [arg cmdlist]]
 
-This method is given the completion state [arg parse] of a partial
-command line and a list of possible completions. The result is a list
-of valid completions, filtered against the current word in the command
-line.
+This method is part of command line completion. For the details of
+its workings please read [term [vset TITLE_DEV_COMPLETE]].
+
+[para] Given the completion state [arg parse] of a partial command
+line and a list of possible completions it returns a list of valid
+completions, filtered against the current word in the command line.
 
 [list_begin arguments]
 [arg_def dict parse]
 A dictionary holding the current completion state of a partial command
 line.
-
-[para] -- TODO -- Describe the state fields and their meaning.
 
 [arg_def list cmdlist]
 List of possible completions.
@@ -202,16 +203,18 @@ The name to remember.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <actor>] [method parse-line] [arg line]]
 
-This method is the main helper to begin command completion. Given the
-entered command [arg line] it parses it into words and returns a parse
-structure as is taken by all other methods taking part in command
-completion.
+This method is part of command line completion. For the details of
+its workings please read [term [vset TITLE_DEV_COMPLETE]].
+
+[para] Is the main helper to begin command completion. Given the
+entered command [arg line] it parses it into words and returns a
+parse structure as is taken by all other methods taking part in
+command completion.
 
 [list_begin arguments]
 [arg_def string line]
 The command line.
 [list_end][comment {--- arguments --}]
-
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <actor>] [method root]]
