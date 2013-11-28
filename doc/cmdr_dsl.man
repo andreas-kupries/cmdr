@@ -28,6 +28,10 @@ look and feel, plus basic features.
 [subsection {Simple command nesting}]
 [include parts/ex_alias1.inc]
 
+[comment ================================================]
+[subsection {Simple backend}]
+[include parts/ex_alias_backend.inc]
+
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Language Reference}]
 

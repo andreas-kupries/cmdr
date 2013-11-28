@@ -50,9 +50,25 @@ The format [const by-category] looks for and uses the block
 [const *category-order*] for when the user wishes to override the
 natural (alphabetical) order of display for the toplevel sections.
 
-[para] This block has to be defined in the root of the command hierarchy.
+[para] This block has to be defined by the user, in the root of
+the command hierarchy.
 
-@EDIT --TODO-- details of the *category-order* definition.
+Its value has to be a dictionary mapping from the names of toplevel
+sections/categories to an integer number. This is used to change
+the order of displaying these sections in the generated text.
+
+[para] Sections with higher/larger numbers are shown first, and
+lower/smaller numbers move towards the end. Negative numbers are
+possible.
+
+[para] Sections not mentioned in the dictionary are assigned their
+natural number. This is calculated by sorting all sections
+alphabetically ([option -dict]) ascending and assigning [const 0]
+to the first section, [const -10] to the next, and so on.
+
+[para] The generated section/category [const Miscellaneous] is
+given the number [const -10000] to force it to the end (bottom)
+of the help text, if it was generated.
 
 [include parts/feedback.inc]
 [manpage_end]

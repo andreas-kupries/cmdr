@@ -55,6 +55,10 @@ sections it is nested in.
 [para] Multiple calls are possible and accumulate. In other words,
 the private can be placed in more than one section/category.
 
+[para] Note further that [term privates] not put into any section are
+automatically placed into a generated section named
+[const Miscellaneous].
+
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd state] [arg name] [arg help] [arg script]]
 

@@ -576,7 +576,7 @@ An error is thrown if the value could not be determined.
 If the value is newly computed the action triggers the
 execution of the "when-complete" callback.
 
-[para] --TODO-- describe generation rules and order.
+[para][include parts/para_value.inc]
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <parameter>] [method when-complete]]
