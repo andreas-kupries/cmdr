@@ -3,91 +3,84 @@
 
 source [file join [file dirname [file normalize [info script]]] dsl_umlsequence.inc]
 
+set actorstep [10 mm]
+
 ## ====================================================================
 
-actor kn "known"            [20 mm]
-actor kv "kinetcl::Valid"
-actor cb "BASE"             [20 mm]
-actor cv "kinetcl_validate" [35 mm]
-actor cf "framesync"        [25 mm]
-actor co "context"          [20 mm]
+actor repl    REPL
+actor off     officer
+actor act     officer/actor
+actor pri     private
+actor para    parameter
+actor vt      "validation type"
 
-action  cf
-label   cf can-sync-with(node)
-action  cv
-call-up cf cv "invoke"
-action  kv
-call-up cv kv "invoke"
-action  kn
-call-up kv kn "dict exists"
+action repl
+action off
+action act
+skip   pri
+skip   para
+skip   vt
 
-action kn
-action kv
-return-down kn kv true
+call-down repl off complete(line)
+call-down off  act parse-line(buffer)
 
-skip   cb
-action cb
-call-down kv cb "@mark"
+action repl
+action off
+action act
+skip   pri
+skip   para
+skip   vt
 
-skip co
-action co
-call-down cb co "save handle"
+return-up act off state
 
-action co
-action cb
-return-up co cb ""
-action kv
-return-up cb kv ""
+action repl
+skip-> off
+skip   act
+skip   pri
+skip   para
+skip   vt
 
-action kv
-action cv dashed fillcolor {}
-action cv dashed fillcolor {}
-action cv
-return-down kv cv "TCL_OK"
-action co
-call-down cv co "get handle"
-action co
-action cv
-return-up co cv "handle"
+action repl
+action off
+skip   act
+skip   pri
+skip   para
+skip   vt
 
-action cv
-action cf dashed fillcolor {}
-action cf dashed fillcolor {}
-action cf dashed fillcolor {}
-action cf dashed fillcolor {}
-action cf
-return-down cv cf "TCL_OK, handle"
+label off  complete-words(state)
 
-# sync heights...
+action repl
+action off
+skip   act
+action pri
+action para
+action vt
 
-skip co
-skip cb
-skip cb
-skip cb
-skip kv
-skip kv
-skip kn
-skip kn
-skip kn
-skip kn
-stop co
-stop cb
-stop cf
-stop cv
-stop kv
-stop kn
+call-down off  pri  complete-words(state)
+call-down pri  para complete-words(state)
+call-down para vt   complete(p,word)
+
+action repl
+action off
+skip   act
+action pri
+action para
+action vt
+
+return-up vt   para completions
+return-up para pri  completions
+return-up pri  off  completions
+return-up off  repl completions
+
+stop repl
+stop off
+stop act
+stop pri
+stop para
+stop vt
 
 # close timelines
 
 line \
-    from [$kn by [10 mm] w] \
-    to   [$co by [10 mm] e]
-
-# outside annotation ... need symbolic locations.
-
-set p [[0.5 between [2nd box ne] [3rd box nw]] by [5 mm] n]
-line dashed \
-    from $p \
-    to   [[$p | $cb] by [5 mm] down]
-text text C   with w at [last line start]
-text text Tcl with e at [last line start]
+    from [$repl by [10 mm] w] \
+    to   [$vt   by [10 mm] e]

@@ -413,9 +413,13 @@ This method returns a list of parameter names,
 for the parameters which are arguments\&.
 .TP
 \fB<config>\fR \fBcomplete\fR \fIline\fR
-This hook-method for the mini-shell is responsible
-for computing the set of completions for the
-entered \fIline\fR\&.
+This method is part of the mini shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
+.sp
+This hook-method, the entrypoint for the repl
+is responsible for computing the set of completions
+for the entered \fIline\fR\&.
 .RS
 .TP
 string \fIline\fR
@@ -423,30 +427,34 @@ The command line to complete\&.
 .RE
 .TP
 \fB<config>\fR \fBcomplete-repl\fR \fIparse\fR
-This internal method is used by the hook-method \fBcomplete\fR
-for the mini-shell, see above\&. It is given the completion
-state \fIparse\fR of a partial command line and returns a
-list of strings which are the valid completions at this point\&.
-.RS
-.TP
-dict \fIparse\fR
-A dictionary holding the current completion state of a partial command
-line\&.
+This internal method is part of the mini shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
 .sp
--- TODO -- Describe the state fields and their meaning\&.
-.RE
-.TP
-\fB<config>\fR \fBcomplete-words\fR \fIparse\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and returns a list of strings which are the valid
+It is used by the hook-method \fBcomplete\fR (see above)\&.
+Given the completion state \fIparse\fR of a partial command
+line it returns a list of strings which are the valid
 completions at this point\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
+.RE
+.TP
+\fB<config>\fR \fBcomplete-words\fR \fIparse\fR
+This method is part of the main shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
 .sp
--- TODO -- Describe the state fields and their meaning\&.
+Given the completion state \fIparse\fR of a partial
+command line it returns a list of strings which are the valid
+completions at this point\&.
+.RS
+.TP
+dict \fIparse\fR
+A dictionary holding the current completion state of a partial command
+line\&.
 .RE
 .TP
 \fB<config>\fR \fBcontinued\fR \fIline\fR

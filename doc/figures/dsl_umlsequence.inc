@@ -4,19 +4,21 @@
 
 # Should have a grid parameter the others are based on.
 
-set boxheight [10 mm]
-set boxwidth  [30 mm]
+set boxheight  [10 mm]
+set boxwidth   [30 mm]
 set movelength [10 mm]
+set actorstep  [5 mm]
 
 proc actor {code n {w {}}} {
-    global $code
+    global $code 
+    variable actorstep
     if {$w eq ""} {
 	upvar 1 boxwidth bw
 	set w $bw
     }
     box "$n" width $w
     group { down ; line }
-    move to [by [5 mm] e]
+    move to [by $actorstep e]
     set $code [last line end]
     return
 }
@@ -24,6 +26,13 @@ proc actor {code n {w {}}} {
 proc skip {code} {
     global $code
     group { down ; line from [set $code] }
+    set $code [last line end]
+    return
+}
+
+proc skip-> {code} {
+    global $code
+    group { down ; line -> from [set $code] }
     set $code [last line end]
     return
 }

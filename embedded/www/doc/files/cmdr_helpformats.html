@@ -1,0 +1,314 @@
+
+<html><head>
+<title>cmdr_helpformats - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_helpformats.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_helpformats.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_helpformats(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_helpformats - Cmdr - Writing custom help formats</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Background</a></li>
+<li class="section"><a href="#section3">API</a></li>
+<li class="section"><a href="#section4">Help Dictionary</a></li>
+<li class="section"><a href="#section5">Example</a></li>
+<li class="section"><a href="#section6">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::help</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::help::format::&lt;foo&gt;</b> <i class="arg">root</i> <i class="arg">width</i> <i class="arg">help</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document describes the API expected of <i class="term">help formats</i>
+to make them usable within the Cmdr framework, and how to
+write a custom help format.</p>
+<p>Readers interested in the standard help formats of the
+framework should read <i class="term"><a href="cmdr_help.html">Cmdr - (Internal) Utilities for help text formatting and setup</a></i>.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Background</a></h2>
+<p>Help formats are Cmdr's way of converting in-memory
+information about a command hierarchy into something usable for human
+consumption and obviating the need for writing separate documentation,
+which may easily get out of sync with the specification.</p>
+<p>The system was made extensible for while the standard formats
+listed in <i class="term"><a href="cmdr_help.html">Cmdr - (Internal) Utilities for help text formatting and setup</a></i> should cover the common cases, and
+the json format of <i class="term"><a href="cmdr_help_json.html">Cmdr - Formatting help as JSON object</a></i> is a general export,
+it is always possible to run into unprediced non-standard situations
+not covered as is.</p>
+</div>
+<div id="section3" class="section"><h2><a name="section3">API</a></h2>
+<p>For the framework to automatically pick up a new help format
+<b class="const">foo</b> the package implementing it has to specify a single
+command <b class="cmd">::cmdr::help::format::&lt;<b class="variable">foo</b>&gt;</b>, and this package has
+to be loaded before the command hierarchy you want to use it for is
+specified.</p>
+<p>In more detail:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::help::format::&lt;foo&gt;</b> <i class="arg">root</i> <i class="arg">width</i> <i class="arg">help</i></a></dt>
+<dd><p>This command, having access to the root actor of a command hierarchy,
+the number of columns to format the help towards, and a help data
+structure itself, has to return a string, the formatted help generated
+from the arguments.</p>
+<dl class="arguments">
+<dt>cmdr::officer <i class="arg">root</i></dt>
+<dd><p>The root officer of the command hierarchy.
+With the exception of <b class="const">by-category</b> the standard formats do not
+use this argument. By providing it the format has access to the
+toplevel common blocks, allowing for the transfer of custom
+information from the specifiction to the format.</p>
+<p><b class="const">by-category</b> for example looks for and uses the block
+<b class="const">*category-order*</b> for when the user wishes to override the
+natural (alphabetical) order of display for the toplevel sections.</p></dd>
+<dt>integer <i class="arg">width</i></dt>
+<dd><p>The number of columns to format the help towards.</p></dd>
+<dt>dictionary <i class="arg">help</i></dt>
+<dd><p>A dictonary holding the help information to format. For more details
+see section <span class="sectref"><a href="#section4">Help Dictionary</a></span>.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Help Dictionary</a></h2>
+<p>The help information generated by various places of the framework
+is a dictionary containing the following keys:</p>
+<dl class="definitions">
+<dt>arguments</dt>
+<dd><p>A list of strings, the names of the command arguments, in order.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>desc</dt>
+<dd><p>The command's description, i.e. help text.</p></dd>
+<dt>opt2para</dt>
+<dd><p>A dictionary mapping option flags to option names.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+<dt>options</dt>
+<dd><p>A dictionary mapping option names to their descriptions.</p></dd>
+<dt>parameters</dt>
+<dd><p>A dictionary mapping parameter names to their definition.
+Each definition is a dictionary containing the keys below.
+See also package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p>
+<dl class="definitions">
+<dt>cmdline</dt>
+<dd><p>Output of method <b class="method">cmdline</b>.</p></dd>
+<dt>code</dt>
+<dd><p>Output of method <b class="method">code</b>.</p></dd>
+<dt>default</dt>
+<dd><p>Output of method <b class="method">default</b>.</p></dd>
+<dt>defered</dt>
+<dd><p>Output of method <b class="method">defered</b>.</p></dd>
+<dt>description</dt>
+<dd><p>Output of method <b class="method">description</b>.</p></dd>
+<dt>documented</dt>
+<dd><p>Output of method <b class="method">documented</b>.</p></dd>
+<dt>flags</dt>
+<dd><p>A dictionary mapping flag names to flag
+                   types, i.e. <b class="const">primary</b>, <b class="const">alias</b>,
+                   or <b class="const">inverted</b>.</p></dd>
+<dt>generator</dt>
+<dd><p>Output of method <b class="method">generator</b>.</p></dd>
+<dt>interactive</dt>
+<dd><p>Output of method <b class="method">interactive</b>.</p></dd>
+<dt>isbool</dt>
+<dd><p>Output of method <b class="method">isbool</b>.</p></dd>
+<dt>label</dt>
+<dd><p>Output of method <b class="method">label</b>.</p></dd>
+<dt>list</dt>
+<dd><p>Output of method <b class="method">list</b>.</p></dd>
+<dt>ordered</dt>
+<dd><p>Output of method <b class="method">ordered</b>.</p></dd>
+<dt>presence</dt>
+<dd><p>Output of method <b class="method">presence</b>.</p></dd>
+<dt>prompt</dt>
+<dd><p>Output of method <b class="method">prompt</b>.</p></dd>
+<dt>required</dt>
+<dd><p>Output of method <b class="method">required</b>.</p></dd>
+<dt>threshold</dt>
+<dd><p>Output of method <b class="method">threshold</b>.</p></dd>
+<dt>type</dt>
+<dd><p>Output of method <b class="method">type</b>.</p></dd>
+<dt>validator</dt>
+<dd><p>Output of method <b class="method">validator</b>.</p></dd>
+</dl></dd>
+<dt>sections</dt>
+<dd><p>A list of sections the command belongs to.
+Each section name is a list itself, the path of the section and sub-sections.</p></dd>
+<dt>states</dt>
+<dd><p>A list of strings, the names of the command's hidden state parameters.
+These names are keys into the <b class="variable">parameters</b> sub-dictionary.</p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Example</a></h2>
+<p>As an example the implementation of the standard help format
+<b class="const">list</b> is shown here.</p>
+<pre class="example">
+# Entrypoint
+proc ::cmdr::help::format::list {root width help} {
+    set result {}
+    dict for {cmd desc} $help {
+	lappend result [List $width $cmd $desc]
+    }
+    return [join $result \n]
+}
+# Main work procedure for commands
+proc ::cmdr::help::format::List {width name command} {
+    dict with command {} ; # -&gt; desc, options, arguments, parameters
+    # Short line.
+    lappend lines  [string trimright  &quot;    [join $name] [HasOptions $options][Arguments $arguments $parameters]&quot;]
+    return [join $lines \n]
+}
+# Support procedures
+proc ::cmdr::help::format::HasOptions {options} {
+    if {[dict size $options]} {
+	return &quot;\[OPTIONS\] &quot;
+    } else {
+	return {}
+    }
+}
+proc ::cmdr::help::format::Arguments {arguments parameters} {
+    set result {}
+    foreach a $arguments {
+	set v [dict get $parameters $a]
+	dict with v {} ; # -&gt; code, desc, label
+	switch -exact -- $code {
+	    +  { set text &quot;&lt;$label&gt;&quot; }
+	    ?  { set text &quot;\[&lt;${label}&gt;\]&quot; }
+	    +* { set text &quot;&lt;${label}&gt;...&quot; }
+	    ?* { set text &quot;\[&lt;${label}&gt;...\]&quot; }
+	}
+	lappend result $text
+    }
+    return [join $result]
+}
+</pre>
+</div>
+<div id="section6" class="section"><h2><a name="section6">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

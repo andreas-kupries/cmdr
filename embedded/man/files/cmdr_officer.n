@@ -357,16 +357,18 @@ The command line to complete\&.
 .RE
 .TP
 \fB<officer>\fR \fBcomplete-words\fR \fIparse\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and returns a list of strings which are the valid
+This method is part of the main shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
+.sp
+Given the completion state \fIparse\fR of a partial
+command line it returns a list of strings which are the valid
 completions at this point\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
-.sp
--- TODO -- Describe the state fields and their meaning\&.
 .RE
 .TP
 \fB<officer>\fR \fBcontinued\fR \fIline\fR

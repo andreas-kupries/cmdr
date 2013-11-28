@@ -26,8 +26,10 @@ alphabetical order, [const .cancel], [const .exit], [const .help]
 [comment ==============================================================]
 [subsection {Sequencing and Rules}]
 
-This section is in essence the textual description of an UML sequence
-diagram.
+[para][image mini-shell]
+
+[para] This rest of this section is a textual description of the UML
+sequence diagram shown above.
 
 [para] Note that the state structure used by this code and referenced
 in the text is explained in section [sectref {Parse State}].
@@ -79,6 +81,3 @@ parameter.
 
 [list_end]
 [list_end]
-
-[comment { @EDIT: --- todo --- sequence diagram mini shell completion }]
-

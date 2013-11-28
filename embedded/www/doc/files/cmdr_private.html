@@ -168,7 +168,7 @@ Used by the DSL processing parts of the framework to instantiate privates.</p>
 <dd><p>The user-visible name of the command.</p></dd>
 <dt>script <i class="arg">arguments</i></dt>
 <dd><p>The specification of the private's parameters.
-Please read <i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i> for the details.</p></dd>
+Please read <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i> for the details.</p></dd>
 <dt>cmd-prefix <i class="arg">action</i></dt>
 <dd><p>The command prefix to invoke when this private is selected for
 execution.  It takes a single argument, the instance command of the
@@ -189,14 +189,16 @@ has no need for it, although they have indirect access through
 parameters and their container.</p>
 <dl class="definitions">
 <dt><a name="3"><b class="cmd">&lt;private&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
-<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
-command line and returns a list of strings which are the valid
+<dd><p>This method is part of the main shell command line
+completion. For the details of its workings please read
+<i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Given the completion state <i class="arg">parse</i> of a partial
+command line it returns a list of strings which are the valid
 completions at this point.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
 <dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+line.</p></dd>
 </dl></dd>
 <dt><a name="4"><b class="cmd">&lt;private&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
 <dd><p>This method parses the <i class="arg">word</i>s of the command line, matching them

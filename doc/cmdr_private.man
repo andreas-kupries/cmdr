@@ -45,10 +45,9 @@ The instance command of the actor (officer actually) which contains the new priv
 [arg_def string name]
 The user-visible name of the command.
 
-[comment {--- TODO place into text block for inclusion --- see officer - extend}]
 [arg_def script arguments]
 The specification of the private's parameters.
-Please read [term [vset TITLE_DSL_PRIVATE]] for the details.
+Please read [term [vset TITLE_DSL_PARAMETER]] for the details.
 
 [arg_def cmd-prefix action]
 The command prefix to invoke when this private is selected for

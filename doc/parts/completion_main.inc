@@ -21,8 +21,10 @@ depending on the parse state (see flag [const doexit]).
 [comment ==============================================================]
 [subsection {Sequencing and Rules}]
 
-This section is in essence the textual description of an UML sequence
-diagram.
+[para][image main-shell]
+
+[para] This rest of this section is a textual description of the UML
+sequence diagram shown above.
 
 [para] Note that the state structure used by this code and referenced
 in the text is explained in section [sectref {Parse State}].
@@ -102,7 +104,4 @@ completion done by the individual parameters.
 this happens in the internal method [method CompletionGraph].
 
 [list_end]
-
 [list_end]
-
-[comment { @EDIT: --- todo --- sequence diagram main shell completion }]

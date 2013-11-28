@@ -159,8 +159,7 @@
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
 <p>This internal package implements the base class containing functionality
-common to <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> and <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.
---TODO-- Describe the common parts (common blocks, super chain, completion support, DSL support)</p>
+common to <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> and <b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Class API</a></h2>
 <p>The class API is not public. It is used internally by the framework
@@ -184,15 +183,16 @@ modifying and extending the framework itself. A user of the framework
 has no need for it.</p>
 <dl class="definitions">
 <dt><a name="3"><b class="cmd">&lt;actor&gt;</b> <b class="method">completions</b> <i class="arg">parse</i> <i class="arg">cmdlist</i></a></dt>
-<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
-command line and a list of completions at the end of the line. It
-returns a list of strings which are the valid completions of the whole
-line, properly quoted.</p>
+<dd><p>This method is part of command line completion. For the details of
+its workings please read <i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Given the completion state <i class="arg">parse</i> of a partial command
+line and a list of completions at the end of the line it returns a
+list of strings which are the valid completions of the whole line,
+properly quoted.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
 <dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+line.</p></dd>
 <dt>list <i class="arg">cmdlist</i></dt>
 <dd><p>List of valid completions.</p></dd>
 </dl></dd>
@@ -260,15 +260,15 @@ content is always stored in the actor.</p>
 <dd><p>The data to add to the block.</p></dd>
 </dl></dd>
 <dt><a name="15"><b class="cmd">&lt;actor&gt;</b> <b class="method">match</b> <i class="arg">parse</i> <i class="arg">cmdlist</i></a></dt>
-<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
-command line and a list of possible completions. The result is a list
-of valid completions, filtered against the current word in the command
-line.</p>
+<dd><p>This method is part of command line completion. For the details of
+its workings please read <i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Given the completion state <i class="arg">parse</i> of a partial command
+line and a list of possible completions it returns a list of valid
+completions, filtered against the current word in the command line.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
 <dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+line.</p></dd>
 <dt>list <i class="arg">cmdlist</i></dt>
 <dd><p>List of possible completions.</p></dd>
 </dl></dd>
@@ -281,10 +281,12 @@ line.</p>
 <dd><p>The name to remember.</p></dd>
 </dl></dd>
 <dt><a name="18"><b class="cmd">&lt;actor&gt;</b> <b class="method">parse-line</b> <i class="arg">line</i></a></dt>
-<dd><p>This method is the main helper to begin command completion. Given the
-entered command <i class="arg">line</i> it parses it into words and returns a parse
-structure as is taken by all other methods taking part in command
-completion.</p>
+<dd><p>This method is part of command line completion. For the details of
+its workings please read <i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Is the main helper to begin command completion. Given the
+entered command <i class="arg">line</i> it parses it into words and returns a
+parse structure as is taken by all other methods taking part in
+command completion.</p>
 <dl class="arguments">
 <dt>string <i class="arg">line</i></dt>
 <dd><p>The command line.</p></dd>

@@ -150,7 +150,9 @@ when it is chosen.
 [package cmdr::config] instance holding the [term parameter]s of the
 private.
 
-@EDIT --TODO--(ref:backend-example-code)--
+[comment {
+    @EDIT --TODO--(ref:backend-example-code)--
+}]
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd undocumented]]

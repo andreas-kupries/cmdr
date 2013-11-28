@@ -301,6 +301,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -375,6 +378,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -451,6 +457,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -525,6 +534,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -601,6 +613,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -675,6 +690,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -751,6 +769,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -825,6 +846,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -901,6 +925,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -975,6 +1002,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -1051,6 +1081,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -1125,6 +1158,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
@@ -1201,6 +1237,9 @@ cmdr_dsl_parameter
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
 .TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
+.TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources
 .TP
@@ -1275,6 +1314,9 @@ cmdr_dsl_parameter
 .TP
 \fBfiles/cmdr_dsl_private\&.n\fR
 cmdr_dsl_private
+.TP
+\fBfiles/cmdr_helpformats\&.n\fR
+cmdr_helpformats
 .TP
 \fBfiles/cmdr_howto_get_sources\&.n\fR
 cmdr_howto_get_sources

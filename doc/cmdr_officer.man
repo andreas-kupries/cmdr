@@ -187,7 +187,6 @@ The list of names specifying the route from this officer to the new
 private. The last element is the name of the private command, while
 the preceding names specify the intermediate officers.
 
-[comment {--- TODO place into text block for inclusion --- see private - constructor}]
 [arg_def script arguments]
 The specification of the private's parameters.
 Please read [term [vset TITLE_DSL_PARAMETER]] for the details.

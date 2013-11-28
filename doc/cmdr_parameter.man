@@ -84,7 +84,10 @@ Most of the instance API is not public.
 modifying and extending the framework itself. A user of the framework
 has no need for it.
 
---TODO-- mark the methods which are public -- and/or write a separate document?
+[comment {
+    @EDIT mark the methods which are public
+    @EDIT and/or write a separate document?
+}]
 
 [list_begin definitions]
 [comment {- - -- --- ----- -------- -------------}]

@@ -405,8 +405,11 @@ commands known to the officer as commands\&.
 It may additional accept a hard-wired command \fB\&.exit\fR,
 depending on the parse state (see flag \fBdoexit\fR)\&.
 .SS "SEQUENCING AND RULES"
-This section is in essence the textual description of an UML sequence
-diagram\&.
+.PP
+IMAGE: main-shell
+.PP
+This rest of this section is a textual description of the UML
+sequence diagram shown above\&.
 .PP
 Note that the state structure used by this code and referenced
 in the text is explained in section \fBParse State\fR\&.
@@ -501,8 +504,11 @@ Similarly none of the hardwired commands take an
 argument\&. Their names all start with a \fB\&.\fR\&. They are, in
 alphabetical order, \fB\&.cancel\fR, \fB\&.exit\fR, \fB\&.help\fR \fB\&.ok\fR, and \fB\&.run\fR\&.
 .SS "SEQUENCING AND RULES"
-This section is in essence the textual description of an UML sequence
-diagram\&.
+.PP
+IMAGE: mini-shell
+.PP
+This rest of this section is a textual description of the UML
+sequence diagram shown above\&.
 .PP
 Note that the state structure used by this code and referenced
 in the text is explained in section \fBParse State\fR\&.

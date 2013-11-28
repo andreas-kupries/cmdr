@@ -413,7 +413,6 @@ Most of the instance API is not public\&.
 It is described here for use by developers maintaining,
 modifying and extending the framework itself\&. A user of the framework
 has no need for it\&.
---TODO-- mark the methods which are public -- and/or write a separate document?
 .TP
 \fB<parameter>\fR \fBaccept\fR \fIx\fR
 This method validates the string value \fIx\fR
@@ -456,16 +455,18 @@ optional, list\&.
 .RE
 .TP
 \fB<parameter>\fR \fBcomplete-words\fR \fIparse\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and returns a list of strings which are the valid
+This method is part of the main shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
+.sp
+Given the completion state \fIparse\fR of a partial
+command line it returns a list of strings which are the valid
 completions at this point, for the parameter\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
-.sp
---TODO-- Describe the state fields and their meaning\&.
 .RE
 .TP
 \fB<parameter>\fR \fBconfig\fR \fIword\&.\&.\&.\fR

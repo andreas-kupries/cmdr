@@ -476,7 +476,7 @@ in \fICmdr - Standard validation types for parameters\fR) as well\&.
 .SH "HELP FORMATS"
 Everything said in the public document \fICmdr - Writing custom help formats\fR
 applies to the standard help formats of the framework (as listed in
-\fICmdr - Standard help formats of the framework\fR) as well\&.
+\fICmdr - (Internal) Utilities for help text formatting and setup\fR) as well\&.
 .SH "COMMAND LINE COMPLETION"
 The document \fICmdr - Internals of command line completion\fR describes the inner
 workings of the command line completion provided by the framework\&.

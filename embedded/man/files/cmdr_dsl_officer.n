@@ -413,7 +413,6 @@ when it is chosen\&.
 This command prefix is called with a single argument, the
 \fBcmdr::config\fR instance holding the \fIparameter\fRs of the
 private\&.
---TODO--(ref:backend-example-code)--
 .TP
 \fBundocumented\fR
 This command excludes the \fIofficer\fR (and its subordinates) from
