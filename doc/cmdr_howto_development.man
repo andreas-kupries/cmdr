@@ -108,6 +108,38 @@ The document [term [vset TITLE_DEV_COMPLETE]] describes the inner
 workings of the command line completion provided by the framework.
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section {Common Blocks}]
+
+The framework reserves all blocks whose name begins with a star, i.e
+[const *], for its own use.
+
+Currently the following names are in use:
+
+[list_begin definitions]
+[def [const *all*]]
+Publicly documented for users, this block is expected to contain
+parameter specification commands. These commands are automatically
+added to all privates found in the command hierarchy containing the
+block.
+
+[para] The details are explained by the description of command
+[cmd common] in [term [vset TITLE_DSL_OFFICER]].
+
+[def [const *category-order*]]
+
+Publicly documented for users, this block is expected to contain a
+dictionary mapping from toplevel section/category names to an integer
+number to override the natural order of displaying these sections in
+the help.
+
+[para] The details are explained in section [term {Format Notes}] of
+[term [vset TITLE_HELP]].
+
+[def [const *prefix*]]   --@EDIT todo-document--internal
+[def [const *in-shell*]] --@EDIT todo-document--public-where?
+[list_end]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [include parts/related.inc]
 [include parts/feedback.inc]
 [manpage_end]

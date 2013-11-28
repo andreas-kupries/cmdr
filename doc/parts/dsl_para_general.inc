@@ -40,7 +40,8 @@ This command is related to the above, switching the runtime from the
 standard regime for acceptance (based on counting and thresholds) to a
 different regime based on validation.
 
-The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--.
+[para] More details are explained in section [term Parsing] of
+[term [vset TITLE_FLOW]].
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd undocumented]]

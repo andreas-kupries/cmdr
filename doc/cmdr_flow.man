@@ -1,0 +1,44 @@
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_FLOW] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[titledesc [vset TITLE_FLOW]]
+[description]
+[include parts/welcome.inc]
+
+This document is for users of the cmdr framework.
+
+If you have not read [term [vset TITLE_DSL]] and the related documents
+yet, please do so.
+
+The explanations how the framework processes a command line at runtime
+guided by a specified command hierarchy presuppose knowledge of
+command-hierarchy specifications.
+
+[para] A command line is processed in four distinct phases, namely
+[sectref Dispatch], [sectref Parsing], [sectref Completion], and
+[sectref Execution]. Each is explained in more detail in the
+referenced sections.
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[include parts/related_dsl.inc]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section Dispatch]
+[include parts/flow_dispatch.inc]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section Parsing]
+[include parts/flow_parsing.inc]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section Completion]
+[include parts/flow_completion.inc]
+
+[comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
+[section Execution]
+[include parts/flow_execution.inc]
+
+[include parts/related.inc]
+[include parts/feedback.inc]
+[manpage_end]
+

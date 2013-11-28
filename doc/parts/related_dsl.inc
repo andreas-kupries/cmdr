@@ -5,4 +5,5 @@
 [enum] [term [vset TITLE_DSL_OFFICER]]
 [enum] [term [vset TITLE_DSL_PRIVATE]]
 [enum] [term [vset TITLE_DSL_PARAMETER]]
+[enum] [term [vset TITLE_FLOW]]
 [list_end]

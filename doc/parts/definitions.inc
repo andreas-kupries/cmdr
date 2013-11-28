@@ -26,6 +26,7 @@
 [vset TITLE_UTIL          "[vset PTITLE] - (Internal) General Utilities"]
 [vset TITLE_VALIDATE      "[vset PTITLE] - Standard validation types for parameters"]
 [vset TITLE_VCOMMON       "[vset PTITLE] - Utilities for Validation Types"]
+[vset TITLE_FLOW          "[vset PTITLE] - Runtime Processing Flow"]
 
 [comment {- Miscellanea ............. - - -- --- ----- --------}]
 [vset LABEL_INTRO         [vset PROJECT]-introduction]
@@ -54,3 +55,4 @@
 [vset LABEL_UTIL          [vset PROJECT]::util]
 [vset LABEL_VALIDATE      [vset PROJECT]::validate]
 [vset LABEL_VCOMMON       [vset PROJECT]::validate::common]
+[vset LABEL_FLOW          [vset PROJECT]-spec-flow]
