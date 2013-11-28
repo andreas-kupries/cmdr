@@ -52,5 +52,7 @@ natural (alphabetical) order of display for the toplevel sections.
 
 [para] This block has to be defined in the root of the command hierarchy.
 
+@EDIT --TODO-- details of the *category-order* definition.
+
 [include parts/feedback.inc]
 [manpage_end]

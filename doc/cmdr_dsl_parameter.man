@@ -14,6 +14,8 @@ detail.
 [section {Language Reference}]
 [include parts/dsl_parameter.inc]
 
+[para] Please continue reading with [term [vset TITLE_FLOW]].
+
 [include parts/related.inc]
 [include parts/feedback.inc]
 [manpage_end]

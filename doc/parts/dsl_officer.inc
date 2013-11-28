@@ -108,10 +108,11 @@ automatically propagate to all subordinates).
 
 [para] At runtime the framework will call the specified command prefix
 with a single argument, a script whose execution is equivalent to the
-phases "Parsing", "Completion", and "Execution" of the framework, as
-described in --TODO--(sectref:flow/phases)--. The handler [emph must]
-call this script, and can perform any application-specific actions
-before and after.
+phases [term Parsing], [term Completion], and [term Execution] of the
+framework, as described in [term [vset TITLE_FLOW]].
+
+The handler [emph must] call this script, and can perform any
+application-specific actions before and after.
 
 [para] This handler's main uses are two-fold:
 
