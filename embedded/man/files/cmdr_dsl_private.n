@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_dsl_private" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr-dsl-private" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_dsl_private \- Cmdr - Private Specification Language
+cmdr-dsl-private \- Cmdr - Private Specification Language
 .SH SYNOPSIS
 \fBdescription\fR \fItext\fR
 .sp

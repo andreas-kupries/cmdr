@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]::actor [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_ACTOR] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::actor]
 [titledesc [vset TITLE_ACTOR]]

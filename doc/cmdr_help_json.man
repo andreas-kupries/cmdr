@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]::help::json [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_HELP_JSON] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::help::json]
 [titledesc [vset TITLE_HELP_JSON]]

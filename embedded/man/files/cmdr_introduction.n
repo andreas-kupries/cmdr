@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_introduction" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr-introduction" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_introduction \- Cmdr - Introduction to the project
+cmdr-introduction \- Cmdr - Introduction to the project
 .SH DESCRIPTION
 .PP
 Welcome to the Cmdr project, written by Andreas Kupries\&.

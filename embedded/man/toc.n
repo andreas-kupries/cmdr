@@ -245,6 +245,39 @@ doc
 \fBcmdr\fR
 \fIfiles/cmdr\&.n\fR: Cmdr - Main package and API
 .TP
+\fBcmdr-changes\fR
+\fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
+.TP
+\fBcmdr-dsl\fR
+\fIfiles/cmdr_dsl\&.n\fR: Cmdr - Introduction to the Specification Language
+.TP
+\fBcmdr-dsl-officer\fR
+\fIfiles/cmdr_dsl_officer\&.n\fR: Cmdr - Officer Specification Language
+.TP
+\fBcmdr-dsl-parameter\fR
+\fIfiles/cmdr_dsl_parameter\&.n\fR: Cmdr - Parameter Specification Language
+.TP
+\fBcmdr-dsl-private\fR
+\fIfiles/cmdr_dsl_private\&.n\fR: Cmdr - Private Specification Language
+.TP
+\fBcmdr-helpformats\fR
+\fIfiles/cmdr_helpformats\&.n\fR: Cmdr - Writing custom help formats
+.TP
+\fBcmdr-howto-get-sources\fR
+\fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
+.TP
+\fBcmdr-installation\fR
+\fIfiles/cmdr_howto_installation\&.n\fR: Cmdr - The Installer's Guide
+.TP
+\fBcmdr-introduction\fR
+\fIfiles/cmdr_introduction\&.n\fR: Cmdr - Introduction to the project
+.TP
+\fBcmdr-license\fR
+\fIfiles/cmdr_license\&.n\fR: Cmdr - License
+.TP
+\fBcmdr-vtypes\fR
+\fIfiles/cmdr_vtypes\&.n\fR: Cmdr - Writing custom validation types
+.TP
 \fBcmdr::actor\fR
 \fIfiles/cmdr_actor\&.n\fR: Cmdr - (Internal) Base class for officers and privates
 .TP
@@ -278,41 +311,8 @@ doc
 \fBcmdr::validate::common\fR
 \fIfiles/cmdr_vcommon\&.n\fR: Cmdr - Utilities for Validation Types
 .TP
-\fBcmdr_changes\fR
-\fIfiles/cmdr_changes\&.n\fR: Cmdr - Log of Changes
-.TP
 \fBcmdr_completion\fR
 \fIfiles/cmdr_dev_completion\&.n\fR: Cmdr - Internals of command line completion
 .TP
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
-.TP
-\fBcmdr_dsl\fR
-\fIfiles/cmdr_dsl\&.n\fR: Cmdr - Introduction to the Specification Language
-.TP
-\fBcmdr_dsl_officer\fR
-\fIfiles/cmdr_dsl_officer\&.n\fR: Cmdr - Officer Specification Language
-.TP
-\fBcmdr_dsl_parameter\fR
-\fIfiles/cmdr_dsl_parameter\&.n\fR: Cmdr - Parameter Specification Language
-.TP
-\fBcmdr_dsl_private\fR
-\fIfiles/cmdr_dsl_private\&.n\fR: Cmdr - Private Specification Language
-.TP
-\fBcmdr_helpformats\fR
-\fIfiles/cmdr_helpformats\&.n\fR: Cmdr - Writing custom help formats
-.TP
-\fBcmdr_howto_get_sources\fR
-\fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
-.TP
-\fBcmdr_installation\fR
-\fIfiles/cmdr_howto_installation\&.n\fR: Cmdr - The Installer's Guide
-.TP
-\fBcmdr_introduction\fR
-\fIfiles/cmdr_introduction\&.n\fR: Cmdr - Introduction to the project
-.TP
-\fBcmdr_license\fR
-\fIfiles/cmdr_license\&.n\fR: Cmdr - License
-.TP
-\fBcmdr_vtypes\fR
-\fIfiles/cmdr_vtypes\&.n\fR: Cmdr - Writing custom validation types
