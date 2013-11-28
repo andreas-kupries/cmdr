@@ -151,9 +151,8 @@ when it is chosen.
 [package cmdr::config] instance holding the [term parameter]s of the
 private.
 
-[comment {
-    @EDIT --TODO--(ref:backend-example-code)--
-}]
+[para] For an example see section [term {Simple backend}]
+of [term [vset TITLE_DSL]].
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd undocumented]]

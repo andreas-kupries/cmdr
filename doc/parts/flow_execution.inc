@@ -6,10 +6,8 @@ chosen [package cmdr::private] instance, providing it with the
 [package cmdr::config] instance holding the parameter information
 extracted from the command line as its single argument.
 
-[para] Listing --TODO--backend-example-\ref{ex/execution} is an
-example of very simple action implementations, matching to the example
-specifications provided in [term [vset TITLE_DSL]]
-
+[para] For an example of very simple action implementations see
+section [term {Simple backend}] of [term [vset TITLE_DSL]].
 
 [para] All parameters declared for a [term private] are made
 accessible through individual methods associated with each.
@@ -21,11 +19,49 @@ method [method @P], with all instance methods provided by the
 This general access to all methods may be removed in the future,
 restricting actions and callbacks to a safe subset.
 
-[comment { @EDIT --todo-- figure out if we want this table (safe para methods) in the docs, and where
-A first approximation of such a set can be found in the table
-below.
+[para] Another place providing information to actions is the root and
+other actors of the command hierarchy itself, via [cmd common] blocks
+whose value is managed by the system. Currently we have
 
-[example {
+[list_begin definitions]
+[def [const *in-shell*]]
+
+This block is read-only, and only found in the root actor.
+
+Its value is managed by the framework.
+
+It is a boolean flag indicating if an interactive shell is currently
+active ([const true]) or not ([const false]).
+
+This can be used to modulate command messages and other
+context-dependent things.
+
+[para] [emph Note] that the block will not exist until after the first
+shell was active. This means that a missing [const *in-shell*] block
+should be treated like [const false].
+
+[def [const *prefix*]]
+
+This block is read-only and found in the private actor for the
+currently executing action command prefix, accessible through the
+[package cmdr::config] instance method [method context].
+
+Its value is managed by the framework.
+
+It is a list of the command names used to reach the [term private]
+instance.
+
+This is not the logical path in the command hierarchy, but the actual
+path taken, which may be through aliases.
+
+[list_end]
+
+
+[comment {@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+ @EDIT --todo-- figure out if we want this (safe para methods) in the docs/where
+
+ A first approximation of such a set can be found in the table below.
 
  cmdline      & True if the parameter accessible on command line. \\
  config \arg{...} & Access to the methods of the container the
@@ -78,8 +114,6 @@ below.
  when-complete & Command prefix invoked when the internal representation is set. \\
  when-set     & Command prefix invoked when the string representation is set. \\
 
-
-}]
 }]
 
 

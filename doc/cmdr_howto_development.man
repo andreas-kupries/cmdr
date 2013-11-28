@@ -135,8 +135,26 @@ the help.
 [para] The details are explained in section [term {Format Notes}] of
 [term [vset TITLE_HELP]].
 
-[def [const *prefix*]]   --@EDIT todo-document--internal
-[def [const *in-shell*]] --@EDIT todo-document--public-where?
+[def [const *prefix*]]
+
+Publicly documented for users as read-only this block's value is
+managed by the framework.
+
+Set during the [term Dispatch] phase it provides to access to the
+actual command name used to invoke a [term private].
+
+[para] See also section [term Execution] of [term [vset TITLE_FLOW]].
+
+[def [const *in-shell*]]
+
+Publicly documented for users as read-only this block's value is
+managed by the framework. Not set until the first main- or mini-shell
+was active its value is boolean flag indicating if an interactive
+shell is currently active ([const true]) or not ([const false], or not
+existing).
+
+[para] See also section [term Execution] of [term [vset TITLE_FLOW]].
+
 [list_end]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]

@@ -1,0 +1,22 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_DEV_DSL] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr]
+[titledesc [vset TITLE_DEV_DSL]]
+[description]
+[include parts/welcome.inc]
+
+This internal document provides an overview on how the framework
+implements the specification languages for officers, privates,
+and parameters.
+
+[para] For more information about other internals of the framework
+please read [term [vset TITLE_DEV]].
+
+[section {Officer DSL}]   [include parts/dev_dsl_officer.inc]
+[section {Private DSL}]   [include parts/dev_dsl_private.inc]
+[section {Parameter DSL}] [include parts/dev_dsl_parameter.inc]
+
+[include parts/feedback.inc]
+[manpage_end]
