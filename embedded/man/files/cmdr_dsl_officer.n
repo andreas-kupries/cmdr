@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr-dsl-officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr-spec-dsl-officer" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr-dsl-officer \- Cmdr - Officer Specification Language
+cmdr-spec-dsl-officer \- Cmdr - Officer Specification Language
 .SH SYNOPSIS
 \fBalias\fR \fIname\fR \fB=\fR \fIname'\fR\&.\&.\&.
 .sp
