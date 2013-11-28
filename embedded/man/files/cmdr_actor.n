@@ -303,7 +303,6 @@ For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 This internal package implements the base class containing functionality
 common to \fBcmdr::officer\fR and \fBcmdr::private\fR\&.
---TODO-- Describe the common parts (common blocks, super chain, completion support, DSL support)
 .SH "CLASS API"
 The class API is not public\&. It is used internally by the framework
 when parsing a command hierarchy specification to create the necessary
@@ -329,17 +328,18 @@ modifying and extending the framework itself\&. A user of the framework
 has no need for it\&.
 .TP
 \fB<actor>\fR \fBcompletions\fR \fIparse\fR \fIcmdlist\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and a list of completions at the end of the line\&. It
-returns a list of strings which are the valid completions of the whole
-line, properly quoted\&.
+This method is part of command line completion\&. For the details of
+its workings please read \fICmdr - Internals of command line completion\fR\&.
+.sp
+Given the completion state \fIparse\fR of a partial command
+line and a list of completions at the end of the line it returns a
+list of strings which are the valid completions of the whole line,
+properly quoted\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
-.sp
--- TODO -- Describe the state fields and their meaning\&.
 .TP
 list \fIcmdlist\fR
 List of valid completions\&.
@@ -425,17 +425,17 @@ The data to add to the block\&.
 .RE
 .TP
 \fB<actor>\fR \fBmatch\fR \fIparse\fR \fIcmdlist\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and a list of possible completions\&. The result is a list
-of valid completions, filtered against the current word in the command
-line\&.
+This method is part of command line completion\&. For the details of
+its workings please read \fICmdr - Internals of command line completion\fR\&.
+.sp
+Given the completion state \fIparse\fR of a partial command
+line and a list of possible completions it returns a list of valid
+completions, filtered against the current word in the command line\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
-.sp
--- TODO -- Describe the state fields and their meaning\&.
 .TP
 list \fIcmdlist\fR
 List of possible completions\&.
@@ -453,10 +453,13 @@ The name to remember\&.
 .RE
 .TP
 \fB<actor>\fR \fBparse-line\fR \fIline\fR
-This method is the main helper to begin command completion\&. Given the
-entered command \fIline\fR it parses it into words and returns a parse
-structure as is taken by all other methods taking part in command
-completion\&.
+This method is part of command line completion\&. For the details of
+its workings please read \fICmdr - Internals of command line completion\fR\&.
+.sp
+Is the main helper to begin command completion\&. Given the
+entered command \fIline\fR it parses it into words and returns a
+parse structure as is taken by all other methods taking part in
+command completion\&.
 .RS
 .TP
 string \fIline\fR

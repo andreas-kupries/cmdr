@@ -271,17 +271,17 @@ framework should read \fICmdr - Standard validation types for parameters\fR\&.
 Validation types are Cmdr's answer to the necessity of moving
 between the string and internal representations of
 \fBcmdr::parameter\fR instances\&.
-Given a string representation they either return the associated
-internal representation or raise an error, signaling that the input
-was illegal\&. This part of their work, the verification of the legality
-of the input string gave them their name\&.
+Given a \fIstring representation\fR they either return the
+associated \fIinternal representation\fR or raise an error,
+signaling that the string was illegal\&. This part of their work, the
+verification of the legality of the input string gave them their name\&.
 .PP
 The general concept of \fIvalidation types\fR was taken from
-package \fBsnit\fR, and modified to suit Cmdr\&.
-Where \fBsnit\fR's types expect only a single method to validate
-the input we expect all types to support an ensemble of \fIfour\fR
+\fBsnit\fR, and modified to suit Cmdr\&.
+Where snit's types expect only a single method to validate the input
+Cmdr expects all types to support an ensemble of \fIfour\fR
 methods\&.
-One for the basic validation and transformation of the string, another
+One for the basic validation and transformation of the input, another
 for the release of any internal representation so generated, plus two
 more for delivery of a default representation and support for command
 line completion\&.

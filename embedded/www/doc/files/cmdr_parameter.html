@@ -234,8 +234,7 @@ Please read <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter S
 <p>Most of the instance API is not public.</p>
 <p>It is described here for use by developers maintaining,
 modifying and extending the framework itself. A user of the framework
-has no need for it.
---TODO-- mark the methods which are public -- and/or write a separate document?</p>
+has no need for it.</p>
 <dl class="definitions">
 <dt><a name="3"><b class="cmd">&lt;parameter&gt;</b> <b class="method">accept</b> <i class="arg">x</i></a></dt>
 <dd><p>This method validates the string value <i class="arg">x</i>
@@ -271,14 +270,16 @@ otherwise (<b class="const">false</b>) hidden (state).</p></dd>
 <dd><p>optional, list.</p></dd>
 </dl></dd>
 <dt><a name="6"><b class="cmd">&lt;parameter&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
-<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
-command line and returns a list of strings which are the valid
+<dd><p>This method is part of the main shell command line
+completion. For the details of its workings please read
+<i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Given the completion state <i class="arg">parse</i> of a partial
+command line it returns a list of strings which are the valid
 completions at this point, for the parameter.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
 <dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>--TODO-- Describe the state fields and their meaning.</p></dd>
+line.</p></dd>
 </dl></dd>
 <dt><a name="7"><b class="cmd">&lt;parameter&gt;</b> <b class="method">config</b> <i class="arg">word...</i></a></dt>
 <dd><p>This method either returns the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance

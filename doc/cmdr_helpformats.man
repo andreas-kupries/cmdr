@@ -58,7 +58,7 @@ information from the specifiction to the format.
 
 [para] [const by-category] for example looks for and uses the block
 [const *category-order*] for when the user wishes to override the
-natural order of used for the toplevel sections.
+natural (alphabetical) order of display for the toplevel sections.
 
 [arg_def integer width]
 The number of columns to format the help towards.

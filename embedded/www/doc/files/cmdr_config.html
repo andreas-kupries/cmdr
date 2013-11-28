@@ -243,33 +243,40 @@ instance (like in the various callbacks) provides access to all.</p>
 <dd><p>This method returns a list of parameter names,
 for the parameters which are arguments.</p></dd>
 <dt><a name="7"><b class="cmd">&lt;config&gt;</b> <b class="method">complete</b> <i class="arg">line</i></a></dt>
-<dd><p>This hook-method for the mini-shell is responsible
-for computing the set of completions for the
-entered <i class="arg">line</i>.</p>
+<dd><p>This method is part of the mini shell command line
+completion. For the details of its workings please read
+<i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>This hook-method, the entrypoint for the repl
+is responsible for computing the set of completions
+for the entered <i class="arg">line</i>.</p>
 <dl class="arguments">
 <dt>string <i class="arg">line</i></dt>
 <dd><p>The command line to complete.</p></dd>
 </dl></dd>
 <dt><a name="8"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-repl</b> <i class="arg">parse</i></a></dt>
-<dd><p>This internal method is used by the hook-method <b class="method">complete</b>
-for the mini-shell, see above. It is given the completion
-state <i class="arg">parse</i> of a partial command line and returns a
-list of strings which are the valid completions at this point.</p>
-<dl class="arguments">
-<dt>dict <i class="arg">parse</i></dt>
-<dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
-</dl></dd>
-<dt><a name="9"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
-<dd><p>This method is given the completion state <i class="arg">parse</i> of a partial
-command line and returns a list of strings which are the valid
+<dd><p>This internal method is part of the mini shell command line
+completion. For the details of its workings please read
+<i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>It is used by the hook-method <b class="method">complete</b> (see above).
+Given the completion state <i class="arg">parse</i> of a partial command
+line it returns a list of strings which are the valid
 completions at this point.</p>
 <dl class="arguments">
 <dt>dict <i class="arg">parse</i></dt>
 <dd><p>A dictionary holding the current completion state of a partial command
-line.</p>
-<p>-- TODO -- Describe the state fields and their meaning.</p></dd>
+line.</p></dd>
+</dl></dd>
+<dt><a name="9"><b class="cmd">&lt;config&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></dt>
+<dd><p>This method is part of the main shell command line
+completion. For the details of its workings please read
+<i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i>.</p>
+<p>Given the completion state <i class="arg">parse</i> of a partial
+command line it returns a list of strings which are the valid
+completions at this point.</p>
+<dl class="arguments">
+<dt>dict <i class="arg">parse</i></dt>
+<dd><p>A dictionary holding the current completion state of a partial command
+line.</p></dd>
 </dl></dd>
 <dt><a name="10"><b class="cmd">&lt;config&gt;</b> <b class="method">continued</b> <i class="arg">line</i></a></dt>
 <dd><p>This hook-method for the mini-shell is responsible for the detection

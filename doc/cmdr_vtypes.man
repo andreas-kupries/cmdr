@@ -20,22 +20,7 @@ Validation types are [vset PTITLE]'s answer to the necessity of moving
 between the string and internal representations of
 [package cmdr::parameter] instances.
 
-Given a string representation they either return the associated
-internal representation or raise an error, signaling that the input
-was illegal. This part of their work, the verification of the legality
-of the input string gave them their name.
-
-[para] The general concept of [term {validation types}] was taken from
-package [package snit], and modified to suit [vset PTITLE].
-
-Where [package snit]'s types expect only a single method to validate
-the input we expect all types to support an ensemble of [emph four]
-methods.
-
-One for the basic validation and transformation of the string, another
-for the release of any internal representation so generated, plus two
-more for delivery of a default representation and support for command
-line completion.
+[include parts/vtypes_general.inc]
 
 The details (method names, signatures, etc.) can be found in section
 [sectref API] below.

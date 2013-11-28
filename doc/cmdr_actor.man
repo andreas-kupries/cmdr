@@ -10,7 +10,10 @@
 This internal package implements the base class containing functionality
 common to [package cmdr::officer] and [package cmdr::private].
 
---TODO-- Describe the common parts (common blocks, super chain, completion support, DSL support)
+[comment {
+    @EDIT describe the common parts -- common blocks, super chain
+    @EDIT describe the common parts -- completion support, DSL support
+}]
 
 [comment @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@]
 [section {Class API}]

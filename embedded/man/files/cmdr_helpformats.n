@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr_dsl_private\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_helpformats\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,26 +239,14 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_dsl_private" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr_helpformats" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_dsl_private \- Cmdr - Private Specification Language
+cmdr_helpformats \- Cmdr - Writing custom help formats
 .SH SYNOPSIS
-\fBdescription\fR \fItext\fR
+package require \fBcmdr::help \fR
 .sp
-\fBinput\fR \fIname\fR \fIhelp\fR \fIscript\fR
-.sp
-\fBinteractive\fR
-.sp
-\fBoption\fR \fIname\fR \fIhelp\fR \fIscript\fR
-.sp
-\fBsection\fR \fIword\fR\&.\&.\&.
-.sp
-\fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
-.sp
-\fBundocumented\fR
-.sp
-\fBuse\fR \fIname\fR
+\fB::cmdr::help::format::<foo>\fR \fIroot\fR \fIwidth\fR \fIhelp\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -267,96 +255,200 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This document is for users of the cmdr framework\&. It introduces the
-domain-specific language for the specification of privates in detail\&.
-.SH "RELATED SPECIFICATION DOCUMENTS"
-.IP [1]
-\fICmdr - Introduction to the Specification Language\fR
-.IP [2]
-\fICmdr - Officer Specification Language\fR
-.IP [3]
-\fICmdr - Private Specification Language\fR
-.IP [4]
-\fICmdr - Parameter Specification Language\fR
+This document describes the API expected of \fIhelp formats\fR
+to make them usable within the Cmdr framework, and how to
+write a custom help format\&.
 .PP
-.SH "LANGUAGE REFERENCE"
+Readers interested in the standard help formats of the
+framework should read \fICmdr - (Internal) Utilities for help text formatting and setup\fR\&.
+.SH BACKGROUND
+Help formats are Cmdr's way of converting in-memory
+information about a command hierarchy into something usable for human
+consumption and obviating the need for writing separate documentation,
+which may easily get out of sync with the specification\&.
 .PP
-The specification of \fIprivate\fRs is quite easy, with only
-seven commands\&. The important parts are found in the \fIparameter\fR
-specifications, explained in \fICmdr - Parameter Specification Language\fR\&.
+The system was made extensible for while the standard formats
+listed in \fICmdr - (Internal) Utilities for help text formatting and setup\fR should cover the common cases, and
+the json format of \fICmdr - Formatting help as JSON object\fR is a general export,
+it is always possible to run into unprediced non-standard situations
+not covered as is\&.
+.SH API
+For the framework to automatically pick up a new help format
+\fBfoo\fR the package implementing it has to specify a single
+command \fB::cmdr::help::format::<\fBfoo\fR>\fR, and this package has
+to be loaded before the command hierarchy you want to use it for is
+specified\&.
+.PP
+In more detail:
 .TP
-\fBdescription\fR \fItext\fR
-This command declares the help text for the \fIprivate\fR\&.
+\fB::cmdr::help::format::<foo>\fR \fIroot\fR \fIwidth\fR \fIhelp\fR
+This command, having access to the root actor of a command hierarchy,
+the number of columns to format the help towards, and a help data
+structure itself, has to return a string, the formatted help generated
+from the arguments\&.
+.RS
 .TP
-\fBinput\fR \fIname\fR \fIhelp\fR \fIscript\fR
-This command adds an \fIinput\fR (i\&.e\&. positional) \fIparameter\fR
-to the \fIprivate\fR, with description \fIhelp\fR and its
-specification \fIscript\fR of parameter commands as described in
-\fICmdr - Parameter Specification Language\fR\&.
-.TP
-\fBinteractive\fR
-This command activates a mini-shell for this \fIprivate\fR which will
-be invoked when required \fIparameter\fRs do not have a value after
-argument extraction and matching\&.
+cmdr::officer \fIroot\fR
+The root officer of the command hierarchy\&.
+With the exception of \fBby-category\fR the standard formats do not
+use this argument\&. By providing it the format has access to the
+toplevel common blocks, allowing for the transfer of custom
+information from the specifiction to the format\&.
 .sp
-By default the only interactive command line shells are
-associated with the \fIofficer\fRs\&.
-.sp
-The command \fBcmdr::config interactive\fR provided by the
-package \fBcmdr::config\fR can be used to globally activate this
-type of shell for all \fIprivate\fRs\&.
+\fBby-category\fR for example looks for and uses the block
+\fB*category-order*\fR for when the user wishes to override the
+natural (alphabetical) order of display for the toplevel sections\&.
 .TP
-\fBoption\fR \fIname\fR \fIhelp\fR \fIscript\fR
-This command adds an \fIoption\fR (i\&.e\&. named) \fIparameter\fR to
-the \fIprivate\fR, with description \fIhelp\fR and its specification
-\fIscript\fR of parameter commands as described in
-\fICmdr - Parameter Specification Language\fR\&.
+integer \fIwidth\fR
+The number of columns to format the help towards\&.
 .TP
-\fBsection\fR \fIword\fR\&.\&.\&.
-This command places the \fIprivate\fR into a help section/category,
-for use by the standard help format \fIby-category\fR
-(See \fICmdr - (Internal) Utilities for help text formatting and setup\fR)\&.
-.sp
-The section/category is specified as a list of words, each
-denoting part of the path to the section\&. This means that the last
-word is the section of the private, with the preceding words the
-sections it is nested in\&.
-.sp
-Multiple calls are possible and accumulate\&. In other words,
-the private can be placed in more than one section/category\&.
-.TP
-\fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
-This command adds a \fIstate\fR (i\&.e\&. hidden) \fIparameter\fR to the
-\fIprivate\fR, with description \fIhelp\fR and its specification
-\fIscript\fR of parameter commands as described in
-\fICmdr - Parameter Specification Language\fR\&.
-.TP
-\fBundocumented\fR
-This command excludes the \fIprivate\fR from the generated help\&.
-.TP
-\fBuse\fR \fIname\fR
-This command is the counterpart to \fBcommon\fR of \fIofficer\fRs
-(See \fICmdr - Officer Specification Language\fR)\&.
-It inserts the named block into the specification, executing it in
-place\&. As such it expects the contents to be a script of private
-commands as described in this section\&.
+dictionary \fIhelp\fR
+A dictonary holding the help information to format\&. For more details
+see section \fBHelp Dictionary\fR\&.
+.RE
 .PP
+.SH "HELP DICTIONARY"
+The help information generated by various places of the framework
+is a dictionary containing the following keys:
+.TP
+arguments
+A list of strings, the names of the command arguments, in order\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+desc
+The command's description, i\&.e\&. help text\&.
+.TP
+opt2para
+A dictionary mapping option flags to option names\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
+.TP
+options
+A dictionary mapping option names to their descriptions\&.
+.TP
+parameters
+A dictionary mapping parameter names to their definition\&.
+Each definition is a dictionary containing the keys below\&.
+See also package \fBcmdr::parameter\fR\&.
+.RS
+.TP
+cmdline
+Output of method \fBcmdline\fR\&.
+.TP
+code
+Output of method \fBcode\fR\&.
+.TP
+default
+Output of method \fBdefault\fR\&.
+.TP
+defered
+Output of method \fBdefered\fR\&.
+.TP
+description
+Output of method \fBdescription\fR\&.
+.TP
+documented
+Output of method \fBdocumented\fR\&.
+.TP
+flags
+A dictionary mapping flag names to flag
+types, i\&.e\&. \fBprimary\fR, \fBalias\fR,
+or \fBinverted\fR\&.
+.TP
+generator
+Output of method \fBgenerator\fR\&.
+.TP
+interactive
+Output of method \fBinteractive\fR\&.
+.TP
+isbool
+Output of method \fBisbool\fR\&.
+.TP
+label
+Output of method \fBlabel\fR\&.
+.TP
+list
+Output of method \fBlist\fR\&.
+.TP
+ordered
+Output of method \fBordered\fR\&.
+.TP
+presence
+Output of method \fBpresence\fR\&.
+.TP
+prompt
+Output of method \fBprompt\fR\&.
+.TP
+required
+Output of method \fBrequired\fR\&.
+.TP
+threshold
+Output of method \fBthreshold\fR\&.
+.TP
+type
+Output of method \fBtype\fR\&.
+.TP
+validator
+Output of method \fBvalidator\fR\&.
+.RE
+.TP
+sections
+A list of sections the command belongs to\&.
+Each section name is a list itself, the path of the section and sub-sections\&.
+.TP
+states
+A list of strings, the names of the command's hidden state parameters\&.
+These names are keys into the \fBparameters\fR sub-dictionary\&.
 .PP
-Please continue reading with \fICmdr - Parameter Specification Language\fR\&.
-.SH "RELATED DOCUMENTS"
-.IP [1]
-\fICmdr - Introduction to the project\fR
-.IP [2]
-\fICmdr - License\fR
-.IP [3]
-\fICmdr - Log of Changes\fR
-.IP [4]
-\fICmdr - How To Get The Sources\fR
-.IP [5]
-\fICmdr - The Installer's Guide\fR
-.IP [6]
-\fICmdr - The Developer's Guide\fR
-.PP
+.SH EXAMPLE
+As an example the implementation of the standard help format
+\fBlist\fR is shown here\&.
+.CS
+
+
+# Entrypoint
+proc ::cmdr::help::format::list {root width help} {
+    set result {}
+    dict for {cmd desc} $help {
+	lappend result [List $width $cmd $desc]
+    }
+    return [join $result \\n]
+}
+
+# Main work procedure for commands
+proc ::cmdr::help::format::List {width name command} {
+    dict with command {} ; # -> desc, options, arguments, parameters
+
+    # Short line\&.
+    lappend lines  [string trimright  "    [join $name] [HasOptions $options][Arguments $arguments $parameters]"]
+    return [join $lines \\n]
+}
+
+# Support procedures
+proc ::cmdr::help::format::HasOptions {options} {
+    if {[dict size $options]} {
+	return "\\[OPTIONS\\] "
+    } else {
+	return {}
+    }
+}
+
+proc ::cmdr::help::format::Arguments {arguments parameters} {
+    set result {}
+    foreach a $arguments {
+	set v [dict get $parameters $a]
+	dict with v {} ; # -> code, desc, label
+	switch -exact -- $code {
+	    +  { set text "<$label>" }
+	    ?  { set text "\\[<${label}>\\]" }
+	    +* { set text "<${label}>\&.\&.\&." }
+	    ?* { set text "\\[<${label}>\&.\&.\&.\\]" }
+	}
+	lappend result $text
+    }
+    return [join $result]
+}
+
+.CE
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems\&.

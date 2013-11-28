@@ -299,6 +299,9 @@ doc
 \fBcmdr_dsl_private\fR
 \fIfiles/cmdr_dsl_private\&.n\fR: Cmdr - Private Specification Language
 .TP
+\fBcmdr_helpformats\fR
+\fIfiles/cmdr_helpformats\&.n\fR: Cmdr - Writing custom help formats
+.TP
 \fBcmdr_howto_get_sources\fR
 \fIfiles/cmdr_howto_get_sources\&.n\fR: Cmdr - How To Get The Sources
 .TP

@@ -148,16 +148,16 @@ framework should read <i class="term"><a href="cmdr_validate.html">Cmdr - Standa
 <p>Validation types are Cmdr's answer to the necessity of moving
 between the string and internal representations of
 <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instances.
-Given a string representation they either return the associated
-internal representation or raise an error, signaling that the input
-was illegal. This part of their work, the verification of the legality
-of the input string gave them their name.</p>
+Given a <i class="term">string representation</i> they either return the
+associated <i class="term">internal representation</i> or raise an error,
+signaling that the string was illegal. This part of their work, the
+verification of the legality of the input string gave them their name.</p>
 <p>The general concept of <i class="term">validation types</i> was taken from
-package <b class="package">snit</b>, and modified to suit Cmdr.
-Where <b class="package">snit</b>'s types expect only a single method to validate
-the input we expect all types to support an ensemble of <em>four</em>
+<b class="package">snit</b>, and modified to suit Cmdr.
+Where snit's types expect only a single method to validate the input
+Cmdr expects all types to support an ensemble of <em>four</em>
 methods.
-One for the basic validation and transformation of the string, another
+One for the basic validation and transformation of the input, another
 for the release of any internal representation so generated, plus two
 more for delivery of a default representation and support for command
 line completion.

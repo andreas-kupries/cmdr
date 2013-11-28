@@ -372,10 +372,11 @@ verification of the legality of the input string gave them their name.</p>
 <b class="package">snit</b>, and modified to suit Cmdr.
 Where snit's types expect only a single method to validate the input
 Cmdr expects all types to support an ensemble of <em>four</em>
-methods, one for the basic validation and transformation of the input,
-another for the release of any internal representation so generated,
-plus delivery of a default representation and support for command line
-completion.</p>
+methods.
+One for the basic validation and transformation of the input, another
+for the release of any internal representation so generated, plus two
+more for delivery of a default representation and support for command
+line completion.</p>
 <dl class="definitions">
 <dt><a name="13"><b class="cmd">validate</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command specifies a <i class="term">validation type</i> for the

@@ -256,7 +256,15 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 This internal package implements the four standard help formats
-\fBfull\fR, \fBshort\fR, \fBlist\fR, and \fBby-category\fR\&.
+.IP [1]
+\fBfull\fR,
+.IP [2]
+\fBshort\fR,
+.IP [3]
+\fBlist\fR, and
+.IP [4]
+\fBby-category\fR\&.
+.PP
 .PP
 It provides a single utility command used by the other parts of
 the framework to add a \fBhelp\fR command to any
@@ -282,6 +290,12 @@ terminal\&.
 The \fBcmdr::actor\fR instance to be extended with \fBhelp\fR\&.
 .RE
 .PP
+.SH "FORMAT NOTES"
+The format \fBby-category\fR looks for and uses the block
+\fB*category-order*\fR for when the user wishes to override the
+natural (alphabetical) order of display for the toplevel sections\&.
+.PP
+This block has to be defined in the root of the command hierarchy\&.
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems\&.

@@ -129,9 +129,10 @@
 <li><a href="#2"><b class="cmd">input</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></li>
 <li><a href="#3"><b class="cmd">interactive</b></a></li>
 <li><a href="#4"><b class="cmd">option</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></li>
-<li><a href="#5"><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></li>
-<li><a href="#6"><b class="cmd">undocumented</b></a></li>
-<li><a href="#7"><b class="cmd">use</b> <i class="arg">name</i></a></li>
+<li><a href="#5"><b class="cmd">section</b> <i class="arg">word</i>...</a></li>
+<li><a href="#6"><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></li>
+<li><a href="#7"><b class="cmd">undocumented</b></a></li>
+<li><a href="#8"><b class="cmd">use</b> <i class="arg">name</i></a></li>
 </ul>
 </div>
 </div>
@@ -175,14 +176,24 @@ type of shell for all <i class="term">private</i>s.</p></dd>
 the <i class="term">private</i>, with description <i class="arg">help</i> and its specification
 <i class="arg">script</i> of parameter commands as described in
 <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></dd>
-<dt><a name="5"><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></dt>
+<dt><a name="5"><b class="cmd">section</b> <i class="arg">word</i>...</a></dt>
+<dd><p>This command places the <i class="term">private</i> into a help section/category,
+for use by the standard help format <i class="term">by-category</i>
+(See <i class="term"><a href="cmdr_help.html">Cmdr - (Internal) Utilities for help text formatting and setup</a></i>).</p>
+<p>The section/category is specified as a list of words, each
+denoting part of the path to the section. This means that the last
+word is the section of the private, with the preceding words the
+sections it is nested in.</p>
+<p>Multiple calls are possible and accumulate. In other words,
+the private can be placed in more than one section/category.</p></dd>
+<dt><a name="6"><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></dt>
 <dd><p>This command adds a <i class="term">state</i> (i.e. hidden) <i class="term">parameter</i> to the
 <i class="term">private</i>, with description <i class="arg">help</i> and its specification
 <i class="arg">script</i> of parameter commands as described in
 <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></dd>
-<dt><a name="6"><b class="cmd">undocumented</b></a></dt>
+<dt><a name="7"><b class="cmd">undocumented</b></a></dt>
 <dd><p>This command excludes the <i class="term">private</i> from the generated help.</p></dd>
-<dt><a name="7"><b class="cmd">use</b> <i class="arg">name</i></a></dt>
+<dt><a name="8"><b class="cmd">use</b> <i class="arg">name</i></a></dt>
 <dd><p>This command is the counterpart to <b class="cmd">common</b> of <i class="term">officer</i>s
 (See <i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i>).
 It inserts the named block into the specification, executing it in

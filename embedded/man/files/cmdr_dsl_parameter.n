@@ -535,10 +535,11 @@ The general concept of \fIvalidation types\fR was taken from
 \fBsnit\fR, and modified to suit Cmdr\&.
 Where snit's types expect only a single method to validate the input
 Cmdr expects all types to support an ensemble of \fIfour\fR
-methods, one for the basic validation and transformation of the input,
-another for the release of any internal representation so generated,
-plus delivery of a default representation and support for command line
-completion\&.
+methods\&.
+One for the basic validation and transformation of the input, another
+for the release of any internal representation so generated, plus two
+more for delivery of a default representation and support for command
+line completion\&.
 .TP
 \fBvalidate\fR \fIcmdprefix\fR
 This command specifies a \fIvalidation type\fR for the

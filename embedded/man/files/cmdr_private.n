@@ -300,7 +300,7 @@ The user-visible name of the command\&.
 .TP
 script \fIarguments\fR
 The specification of the private's parameters\&.
-Please read \fICmdr - Private Specification Language\fR for the details\&.
+Please read \fICmdr - Parameter Specification Language\fR for the details\&.
 .TP
 cmd-prefix \fIaction\fR
 The command prefix to invoke when this private is selected for
@@ -322,16 +322,18 @@ has no need for it, although they have indirect access through
 parameters and their container\&.
 .TP
 \fB<private>\fR \fBcomplete-words\fR \fIparse\fR
-This method is given the completion state \fIparse\fR of a partial
-command line and returns a list of strings which are the valid
+This method is part of the main shell command line
+completion\&. For the details of its workings please read
+\fICmdr - Internals of command line completion\fR\&.
+.sp
+Given the completion state \fIparse\fR of a partial
+command line it returns a list of strings which are the valid
 completions at this point\&.
 .RS
 .TP
 dict \fIparse\fR
 A dictionary holding the current completion state of a partial command
 line\&.
-.sp
--- TODO -- Describe the state fields and their meaning\&.
 .RE
 .TP
 \fB<private>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
