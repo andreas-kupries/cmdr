@@ -239,10 +239,10 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr_completion" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr_dev~completion" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr_completion \- Cmdr - Internals of command line completion
+cmdr_dev~completion \- Cmdr - Internals of command line completion
 .SH SYNOPSIS
 package require \fBcmdr \fR
 .sp
