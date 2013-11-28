@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]::officer [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_OFFICER] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::officer]
 [titledesc [vset TITLE_OFFICER]]

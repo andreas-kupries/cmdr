@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]::config [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_CONFIG] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::config]
 [titledesc [vset TITLE_CONFIG]]

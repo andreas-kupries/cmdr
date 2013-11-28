@@ -1,5 +1,5 @@
 [include parts/definitions.inc]
-[manpage_begin [vset PROJECT]_dsl_officer [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_DSL_OFFICER] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [titledesc [vset TITLE_DSL_OFFICER]]
 [description]
