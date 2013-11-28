@@ -24,6 +24,11 @@ completion.
 [section {System Architecture}]
 [include parts/architecture.inc]
 
+[section {Command Hierarchy Specifications}]
+
+This is a bit large for this document, and can be found in the
+separate [term [vset TITLE_DSL]].
+
 [include parts/related.inc]
 [include parts/feedback.inc]
 [manpage_end]
