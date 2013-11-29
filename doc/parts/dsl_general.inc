@@ -17,7 +17,7 @@ action at runtime.
 [para] The same model is graphically presented in the
 Entity-Relationship-Diagram below.
 
-[image erd]
+[para] [image erd]
 
 [para] The [term actor] in that diagram is the common base class for the
 ensembles and commands and not directly relevant to users.

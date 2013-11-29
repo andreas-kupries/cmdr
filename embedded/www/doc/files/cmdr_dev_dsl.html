@@ -1,0 +1,257 @@
+
+<html><head>
+<title>cmdr_dev~dsl - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_dev_dsl.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr_dev~dsl.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr_dev~dsl(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr_dev~dsl - Cmdr - Internals of DSL handling</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Officer DSL</a></li>
+<li class="section"><a href="#section3">Private DSL</a></li>
+<li class="section"><a href="#section4">Parameter DSL</a></li>
+<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr</b></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This internal document provides an overview on how the framework
+implements the specification languages for officers, privates,
+and parameters.</p>
+<p>For more information about other internals of the framework
+please read <i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i>.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Officer DSL</a></h2>
+<p>The officer DSL is implemented in <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>.</p>
+<p>While the specification is supplied with the instance
+constructor it is not processed immediately, but saved for when it is
+actually needed.</p>
+<p>The internal instance method <b class="method">Setup</b> is called at all
+places requiring access to the specification and processes it (once,
+on first call) to provide the necessary in-memory structures.</p>
+<p>The DSL commands map to instance methods as shown below:</p>
+<dl class="definitions">
+<dt><b class="cmd">alias</b></dt>
+<dd><p><b class="method">Alias</b></p></dd>
+<dt><b class="cmd">common</b></dt>
+<dd><p><b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b> <b class="method">set</b></p></dd>
+<dt><b class="cmd">default</b></dt>
+<dd><p><b class="method">Default</b></p></dd>
+<dt><b class="cmd">description</b></dt>
+<dd><p><b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b> <b class="method">description:</b></p></dd>
+<dt><b class="cmd">ehandler</b></dt>
+<dd><p><b class="method">ehandler</b></p></dd>
+<dt><b class="cmd">officer</b></dt>
+<dd><p><b class="method">Officer</b>, forward to <b class="method">DefineAction</b></p></dd>
+<dt><b class="cmd">private</b></dt>
+<dd><p><b class="method">Private</b>, forward to <b class="method">DefineAction</b></p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p><b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b> <b class="method">undocumented</b></p></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Private DSL</a></h2>
+<p>The private DSL is only partially implemented in
+<b class="package"><a href="cmdr_private.html">cmdr::private</a></b>.
+Most of the implementation is in <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.</p>
+<p>While the specification is supplied with the instance
+constructor it is not processed immediately, but saved for when it is
+actually needed.</p>
+<p>The internal instance method <b class="method">Setup</b> is called at all
+places requiring access to the specification and processes it (once,
+on first call) to provide the necessary in-memory structures. This
+then delegates to the embedded config instance.</p>
+<p>The DSL commands map to <em>config</em> instance methods as shown below:</p>
+<dl class="definitions">
+<dt><b class="cmd">description</b></dt>
+<dd><p><b class="method">Description</b>,  forward to <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b> <b class="method">description:</b></p></dd>
+<dt><b class="cmd">input</b></dt>
+<dd><p><b class="method">Input</b>,  forward to <b class="method">DefineParameter</b>)</p></dd>
+<dt><b class="cmd">interactive</b></dt>
+<dd><p><b class="method">Interactive</b></p></dd>
+<dt><b class="cmd">option</b></dt>
+<dd><p><b class="method">Option</b>, forward to <b class="method">DefineParameter</b>)</p></dd>
+<dt><b class="cmd">section</b></dt>
+<dd><p><b class="method">Section</b></p></dd>
+<dt><b class="cmd">state</b></dt>
+<dd><p><b class="method">State</b>,  forward to <b class="method">DefineParameter</b>)</p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p><b class="method">Undocumented</b>, forward to <b class="package"><a href="cmdr_actor.html">cmdr::actor</a></b> <b class="method">undocumented</b></p></dd>
+<dt><b class="cmd">use</b></dt>
+<dd><p><b class="method">Use</b></p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Parameter DSL</a></h2>
+<p>The parameter DSL is implemented in <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b>.</p>
+<p>The specification is supplied with the instance constructor and
+processed immediately. This is different from officers and privates
+which defer processing until use. When a parameter is declared the
+containing private is in use, and so is the parameter. Thus no delay.</p>
+<p>The DSL commands map to instance methods as shown below:</p>
+<dl class="definitions">
+<dt><b class="cmd">alias</b></dt>
+<dd><p><b class="method">Alias</b></p></dd>
+<dt><b class="cmd">default</b></dt>
+<dd><p><b class="method">Default</b></p></dd>
+<dt><b class="cmd">defered</b></dt>
+<dd><p><b class="method">Defered</b></p></dd>
+<dt><b class="cmd">generate</b></dt>
+<dd><p><b class="method">Generate</b></p></dd>
+<dt><b class="cmd">immediate</b></dt>
+<dd><p><b class="method">Immediate</b></p></dd>
+<dt><b class="cmd">interact</b></dt>
+<dd><p><b class="method">Interact</b></p></dd>
+<dt><b class="cmd">label</b></dt>
+<dd><p><b class="method">Label</b></p></dd>
+<dt><b class="cmd">list</b></dt>
+<dd><p><b class="method">List</b></p></dd>
+<dt><b class="cmd">no-promotion</b></dt>
+<dd><p><b class="method">NoPromote</b></p></dd>
+<dt><b class="cmd">optional</b></dt>
+<dd><p><b class="method">Optional</b></p></dd>
+<dt><b class="cmd">presence</b></dt>
+<dd><p><b class="method">Presence</b></p></dd>
+<dt><b class="cmd">test</b></dt>
+<dd><p><b class="method">Test</b></p></dd>
+<dt><b class="cmd">undocumented</b></dt>
+<dd><p><b class="method">Undocumented</b></p></dd>
+<dt><b class="cmd">validate</b></dt>
+<dd><p><b class="method">Validate</b></p></dd>
+<dt><b class="cmd">when-complete</b></dt>
+<dd><p><b class="method">WhenComplete</b></p></dd>
+<dt><b class="cmd">when-set</b></dt>
+<dd><p><b class="method">WhenSet</b></p></dd>
+</dl>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

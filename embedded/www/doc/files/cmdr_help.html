@@ -168,7 +168,21 @@ terminal.</p>
 <p>The format <b class="const">by-category</b> looks for and uses the block
 <b class="const">*category-order*</b> for when the user wishes to override the
 natural (alphabetical) order of display for the toplevel sections.</p>
-<p>This block has to be defined in the root of the command hierarchy.</p>
+<p>This block has to be defined by the user, in the root of
+the command hierarchy.
+Its value has to be a dictionary mapping from the names of toplevel
+sections/categories to an integer number. This is used to change
+the order of displaying these sections in the generated text.</p>
+<p>Sections with higher/larger numbers are shown first, and
+lower/smaller numbers move towards the end. Negative numbers are
+possible.</p>
+<p>Sections not mentioned in the dictionary are assigned their
+natural number. This is calculated by sorting all sections
+alphabetically (<b class="option">-dict</b>) ascending and assigning <b class="const">0</b>
+to the first section, <b class="const">-10</b> to the next, and so on.</p>
+<p>The generated section/category <b class="const">Miscellaneous</b> is
+given the number <b class="const">-10000</b> to force it to the end (bottom)
+of the help text, if it was generated.</p>
 </div>
 <div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain

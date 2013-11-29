@@ -150,6 +150,7 @@ detail.</p>
 <li><p><i class="term">Cmdr - Officer Specification Language</i></p></li>
 <li><p><i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i></p></li>
 </ol>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Language Reference</a></h2>
@@ -231,10 +232,10 @@ the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates).</p>
 <p>At runtime the framework will call the specified command prefix
 with a single argument, a script whose execution is equivalent to the
-phases &quot;Parsing&quot;, &quot;Completion&quot;, and &quot;Execution&quot; of the framework, as
-described in --TODO--(sectref:flow/phases)--. The handler <em>must</em>
-call this script, and can perform any application-specific actions
-before and after.</p>
+phases <i class="term">Parsing</i>, <i class="term">Completion</i>, and <i class="term">Execution</i> of the
+framework, as described in <i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i>.
+The handler <em>must</em> call this script, and can perform any
+application-specific actions before and after.</p>
 <p>This handler's main uses are two-fold:</p>
 <ol class="enumerated">
 <li><p>Capture and hande application-specific errors which should not
@@ -258,7 +259,9 @@ specification <i class="arg">script</i> of private commands
 when it is chosen.</p>
 <p>This command prefix is called with a single argument, the
 <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance holding the <i class="term">parameter</i>s of the
-private.</p></dd>
+private.</p>
+<p>For an example see section <i class="term">Simple backend</i>
+of <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i>.</p></dd>
 <dt><a name="9"><b class="cmd">undocumented</b></a></dt>
 <dd><p>This command excludes the <i class="term">officer</i> (and its subordinates) from
 the generated help.

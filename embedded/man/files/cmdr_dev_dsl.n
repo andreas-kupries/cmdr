@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr_help\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_dev_dsl\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
@@ -239,14 +239,12 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr::help" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr_dev~dsl" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
-cmdr::help \- Cmdr - (Internal) Utilities for help text formatting and setup
+cmdr_dev~dsl \- Cmdr - Internals of DSL handling
 .SH SYNOPSIS
-package require \fBcmdr::help \fR
-.sp
-\fB::cmdr::help\fR \fBauto\fR \fIactor\fR
+package require \fBcmdr \fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -255,64 +253,150 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This internal package implements the four standard help formats
-.IP [1]
-\fBfull\fR,
-.IP [2]
-\fBshort\fR,
-.IP [3]
-\fBlist\fR, and
-.IP [4]
-\fBby-category\fR\&.
+This internal document provides an overview on how the framework
+implements the specification languages for officers, privates,
+and parameters\&.
 .PP
+For more information about other internals of the framework
+please read \fICmdr - The Developer's Guide\fR\&.
+.SH "OFFICER DSL"
 .PP
-It provides a single utility command used by the other parts of
-the framework to add a \fBhelp\fR command to any
-\fBcmdr::actor\fR requiring such\&.
-.SH API
+The officer DSL is implemented in \fBcmdr::officer\fR\&.
+.PP
+While the specification is supplied with the instance
+constructor it is not processed immediately, but saved for when it is
+actually needed\&.
+.PP
+The internal instance method \fBSetup\fR is called at all
+places requiring access to the specification and processes it (once,
+on first call) to provide the necessary in-memory structures\&.
+.PP
+The DSL commands map to instance methods as shown below:
 .TP
-\fB::cmdr::help\fR \fBauto\fR \fIactor\fR
-When invoked this command extends the \fIactor\fR with a \fBhelp\fR
-command\&. The result of the command is the empty string\&.
-.sp
-The inserted command will accept all known format names as
-options, enabling the user to choose the form of the help\&. By default
-the format \fBby-category\fR will be used, except if a command name
-was given to \fBhelp\fR, then the default will be \fBfull\fR\&.
-.sp
-An additional option accepted by \fBhelp\fR is
-\fB--width\fR, giving the user control over the length of lines
-in the help\&. By default help will be formatted to the width of the
-terminal\&.
-.RS
+\fBalias\fR
+\fBAlias\fR
 .TP
-\fBcmdr::actor\fR \fIactor\fR
-The \fBcmdr::actor\fR instance to be extended with \fBhelp\fR\&.
-.RE
+\fBcommon\fR
+\fBcmdr::actor\fR \fBset\fR
+.TP
+\fBdefault\fR
+\fBDefault\fR
+.TP
+\fBdescription\fR
+\fBcmdr::actor\fR \fBdescription:\fR
+.TP
+\fBehandler\fR
+\fBehandler\fR
+.TP
+\fBofficer\fR
+\fBOfficer\fR, forward to \fBDefineAction\fR
+.TP
+\fBprivate\fR
+\fBPrivate\fR, forward to \fBDefineAction\fR
+.TP
+\fBundocumented\fR
+\fBcmdr::actor\fR \fBundocumented\fR
 .PP
-.SH "FORMAT NOTES"
-The format \fBby-category\fR looks for and uses the block
-\fB*category-order*\fR for when the user wishes to override the
-natural (alphabetical) order of display for the toplevel sections\&.
+.SH "PRIVATE DSL"
 .PP
-This block has to be defined by the user, in the root of
-the command hierarchy\&.
-Its value has to be a dictionary mapping from the names of toplevel
-sections/categories to an integer number\&. This is used to change
-the order of displaying these sections in the generated text\&.
+The private DSL is only partially implemented in
+\fBcmdr::private\fR\&.
+Most of the implementation is in \fBcmdr::config\fR\&.
 .PP
-Sections with higher/larger numbers are shown first, and
-lower/smaller numbers move towards the end\&. Negative numbers are
-possible\&.
+While the specification is supplied with the instance
+constructor it is not processed immediately, but saved for when it is
+actually needed\&.
 .PP
-Sections not mentioned in the dictionary are assigned their
-natural number\&. This is calculated by sorting all sections
-alphabetically (\fB-dict\fR) ascending and assigning \fB0\fR
-to the first section, \fB-10\fR to the next, and so on\&.
+The internal instance method \fBSetup\fR is called at all
+places requiring access to the specification and processes it (once,
+on first call) to provide the necessary in-memory structures\&. This
+then delegates to the embedded config instance\&.
 .PP
-The generated section/category \fBMiscellaneous\fR is
-given the number \fB-10000\fR to force it to the end (bottom)
-of the help text, if it was generated\&.
+The DSL commands map to \fIconfig\fR instance methods as shown below:
+.TP
+\fBdescription\fR
+\fBDescription\fR,  forward to \fBcmdr::actor\fR \fBdescription:\fR
+.TP
+\fBinput\fR
+\fBInput\fR,  forward to \fBDefineParameter\fR)
+.TP
+\fBinteractive\fR
+\fBInteractive\fR
+.TP
+\fBoption\fR
+\fBOption\fR, forward to \fBDefineParameter\fR)
+.TP
+\fBsection\fR
+\fBSection\fR
+.TP
+\fBstate\fR
+\fBState\fR,  forward to \fBDefineParameter\fR)
+.TP
+\fBundocumented\fR
+\fBUndocumented\fR, forward to \fBcmdr::actor\fR \fBundocumented\fR
+.TP
+\fBuse\fR
+\fBUse\fR
+.PP
+.SH "PARAMETER DSL"
+.PP
+The parameter DSL is implemented in \fBcmdr::parameter\fR\&.
+.PP
+The specification is supplied with the instance constructor and
+processed immediately\&. This is different from officers and privates
+which defer processing until use\&. When a parameter is declared the
+containing private is in use, and so is the parameter\&. Thus no delay\&.
+.PP
+The DSL commands map to instance methods as shown below:
+.TP
+\fBalias\fR
+\fBAlias\fR
+.TP
+\fBdefault\fR
+\fBDefault\fR
+.TP
+\fBdefered\fR
+\fBDefered\fR
+.TP
+\fBgenerate\fR
+\fBGenerate\fR
+.TP
+\fBimmediate\fR
+\fBImmediate\fR
+.TP
+\fBinteract\fR
+\fBInteract\fR
+.TP
+\fBlabel\fR
+\fBLabel\fR
+.TP
+\fBlist\fR
+\fBList\fR
+.TP
+\fBno-promotion\fR
+\fBNoPromote\fR
+.TP
+\fBoptional\fR
+\fBOptional\fR
+.TP
+\fBpresence\fR
+\fBPresence\fR
+.TP
+\fBtest\fR
+\fBTest\fR
+.TP
+\fBundocumented\fR
+\fBUndocumented\fR
+.TP
+\fBvalidate\fR
+\fBValidate\fR
+.TP
+\fBwhen-complete\fR
+\fBWhenComplete\fR
+.TP
+\fBwhen-set\fR
+\fBWhenSet\fR
+.PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems\&.

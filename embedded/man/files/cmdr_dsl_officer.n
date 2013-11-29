@@ -281,6 +281,8 @@ detail\&.
 \fICmdr - Private Specification Language\fR
 .IP [4]
 \fICmdr - Parameter Specification Language\fR
+.IP [5]
+\fICmdr - Runtime Processing Flow\fR
 .PP
 .SH "LANGUAGE REFERENCE"
 .TP
@@ -379,10 +381,10 @@ automatically propagate to all subordinates)\&.
 .sp
 At runtime the framework will call the specified command prefix
 with a single argument, a script whose execution is equivalent to the
-phases "Parsing", "Completion", and "Execution" of the framework, as
-described in --TODO--(sectref:flow/phases)--\&. The handler \fImust\fR
-call this script, and can perform any application-specific actions
-before and after\&.
+phases \fIParsing\fR, \fICompletion\fR, and \fIExecution\fR of the
+framework, as described in \fICmdr - Runtime Processing Flow\fR\&.
+The handler \fImust\fR call this script, and can perform any
+application-specific actions before and after\&.
 .sp
 This handler's main uses are two-fold:
 .RS
@@ -413,6 +415,9 @@ when it is chosen\&.
 This command prefix is called with a single argument, the
 \fBcmdr::config\fR instance holding the \fIparameter\fRs of the
 private\&.
+.sp
+For an example see section \fISimple backend\fR
+of \fICmdr - Introduction to the Specification Language\fR\&.
 .TP
 \fBundocumented\fR
 This command excludes the \fIofficer\fR (and its subordinates) from

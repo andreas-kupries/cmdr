@@ -118,6 +118,7 @@
 <ul>
 <li class="subsection"><a href="#subsection1">Basic private commands with inputs</a></li>
 <li class="subsection"><a href="#subsection2">Simple command nesting</a></li>
+<li class="subsection"><a href="#subsection3">Simple backend</a></li>
 </ul>
 </li>
 <li class="section"><a href="#section4">Language Reference</a></li>
@@ -141,6 +142,7 @@ provides links to the detailed reference documents.</p>
 <li><p><i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i></p></li>
 </ol>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Introductory examples</a></h2>
@@ -239,6 +241,63 @@ cmdr create ::foo foo {
 ...
 </pre>
 </div>
+<div id="subsection3" class="subsection"><h3><a name="subsection3">Simple backend</a></h3>
+<p>This example shows a possible implementation of the backend for
+the command hierarchies shown in the previous two sections.
+It is important to note, I believe, that this backend works for both
+command hierarchies, despite the changes to the command names (flat
+versus nesting) they do.</p>
+<p>Note further that while this example uses a
+<b class="cmd">namespace ensemble</b> to organize the backend other methods are
+possible too, i.e. all the various object systems for Tcl would be
+suitable as well.</p>
+<p>Lastly, for the sake of brevity this code is incomplete, not
+showing any utility commands we may have importet from somewhere else,
+nor the low-level workhorse procedures operating on the actual
+alias database or whatnot.</p>
+<pre class="example">
+# -*- tcl -*-
+# # ## ### ##### ######## ############# #####################
+namespace eval ::foo::backend::alias {
+    namespace export list add remove
+    namespace ensemble create
+}
+# # ## ### ##### ######## ############# #####################
+## Command implementations.
+proc ::foo::backend::alias::list {config} {
+    set aliases [manager known]
+    if {[$config @json]} {
+	puts [jmap aliases $aliases]
+	return
+    }
+    [table::do t {Alias Command} {
+	foreach {name command} $aliases {
+	    $t add $name $command
+	}
+    } show display]
+    return
+}
+proc ::foo::backend::alias::add {config} {
+    set name    [$config @name]
+    set command [$config @command]
+    manager add $name $command
+    say [color green &quot;Successfully aliased '$name' to '$command'&quot;]
+    return
+}
+proc ::foo::backend::alias::remove {config} {
+    set name [$config @name]
+    if {![manager has $name]} {
+	err [color red &quot;Unknown alias '$name'&quot;]
+    } else {
+	manager remove $name
+	say [color green &quot;Successfully unaliased '$name'&quot;]
+    }
+    return
+}
+# # ## ### ##### ######## ############# #####################
+package provide foo::backend::alias 0
+</pre>
+</div>
 </div>
 <div id="section4" class="section"><h2><a name="section4">Language Reference</a></h2>
 <p>With the examples behind us we can now go and specify the entire
@@ -256,8 +315,8 @@ Each <i class="term">private</i> is responsible for a single action and knows ho
 to perform it, and the set of <i class="term">parameter</i>s used to configure that
 action at runtime.</p>
 <p>The same model is graphically presented in the
-Entity-Relationship-Diagram below.
-<img alt="erd" src="../../image/erd.png"></p>
+Entity-Relationship-Diagram below.</p>
+<p><img alt="erd" src="../../image/erd.png"></p>
 <p>The <i class="term">actor</i> in that diagram is the common base class for the
 ensembles and commands and not directly relevant to users.</p>
 <p>The <i class="term">config</i> on the other hand is the second interface

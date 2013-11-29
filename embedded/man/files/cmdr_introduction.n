@@ -322,6 +322,9 @@ the complexity of the diagram below a few direct dependencies on
 other dependencies (i\&.e\&. through \fBcmdr::help\fR):
 .PP
 IMAGE: pkg_dependencies
+.SH "COMMAND HIERARCHY SPECIFICATIONS"
+This is a bit large for this document, and can be found in the
+separate \fICmdr - Introduction to the Specification Language\fR\&.
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR

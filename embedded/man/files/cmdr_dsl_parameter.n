@@ -295,6 +295,8 @@ detail\&.
 \fICmdr - Private Specification Language\fR
 .IP [4]
 \fICmdr - Parameter Specification Language\fR
+.IP [5]
+\fICmdr - Runtime Processing Flow\fR
 .PP
 .SH "LANGUAGE REFERENCE"
 .PP
@@ -393,7 +395,9 @@ This setting is only applicable to \fIinput\fRs, as
 This command is related to the above, switching the runtime from the
 standard regime for acceptance (based on counting and thresholds) to a
 different regime based on validation\&.
-The details are explained in --TODO--(sectref:flow/parsing,flow/optional)--\&.
+.sp
+More details are explained in section \fIParsing\fR of
+\fICmdr - Runtime Processing Flow\fR\&.
 .TP
 \fBundocumented\fR
 This command excludes the \fIparameter\fR from the generated help\&.
@@ -663,6 +667,8 @@ when-complete       |          |         | immediate   | defered
 --------------------+----------+---------+-------------+-----------
 
 .CE
+.PP
+Please continue reading with \fICmdr - Runtime Processing Flow\fR\&.
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
