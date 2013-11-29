@@ -148,6 +148,7 @@ domain-specific language for the specification of privates in detail.</p>
 <li><p><i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i></p></li>
 <li><p><i class="term">Cmdr - Private Specification Language</i></p></li>
 <li><p><i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i></p></li>
 </ol>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Language Reference</a></h2>
@@ -185,7 +186,10 @@ denoting part of the path to the section. This means that the last
 word is the section of the private, with the preceding words the
 sections it is nested in.</p>
 <p>Multiple calls are possible and accumulate. In other words,
-the private can be placed in more than one section/category.</p></dd>
+the private can be placed in more than one section/category.</p>
+<p>Note further that <i class="term">privates</i> not put into any section are
+automatically placed into a generated section named
+<b class="const">Miscellaneous</b>.</p></dd>
 <dt><a name="6"><b class="cmd">state</b> <i class="arg">name</i> <i class="arg">help</i> <i class="arg">script</i></a></dt>
 <dd><p>This command adds a <i class="term">state</i> (i.e. hidden) <i class="term">parameter</i> to the
 <i class="term">private</i>, with description <i class="arg">help</i> and its specification

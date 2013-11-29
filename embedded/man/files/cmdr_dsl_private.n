@@ -278,6 +278,8 @@ domain-specific language for the specification of privates in detail\&.
 \fICmdr - Private Specification Language\fR
 .IP [4]
 \fICmdr - Parameter Specification Language\fR
+.IP [5]
+\fICmdr - Runtime Processing Flow\fR
 .PP
 .SH "LANGUAGE REFERENCE"
 .PP
@@ -324,6 +326,10 @@ sections it is nested in\&.
 .sp
 Multiple calls are possible and accumulate\&. In other words,
 the private can be placed in more than one section/category\&.
+.sp
+Note further that \fIprivates\fR not put into any section are
+automatically placed into a generated section named
+\fBMiscellaneous\fR\&.
 .TP
 \fBstate\fR \fIname\fR \fIhelp\fR \fIscript\fR
 This command adds a \fIstate\fR (i\&.e\&. hidden) \fIparameter\fR to the

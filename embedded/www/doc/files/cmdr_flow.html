@@ -1,0 +1,359 @@
+
+<html><head>
+<title>cmdr-spec-flow - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_flow.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Andreas Kupries   -- Copyright &copy; 2013 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr-spec-flow.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr-spec-flow(n) 0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr-spec-flow - Cmdr - Runtime Processing Flow</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">Related Specification Documents</a></li>
+<li class="section"><a href="#section3">Dispatch</a></li>
+<li class="section"><a href="#section4">Parsing</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Example for Handling optional Inputs by Threshold</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section5">Completion</a></li>
+<li class="section"><a href="#section6">Execution</a></li>
+<li class="section"><a href="#section7">Related Documents</a></li>
+<li class="section"><a href="#section8">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This document is for users of the cmdr framework.
+If you have not read <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i> and the related documents
+yet, please do so.
+The explanations how the framework processes a command line at runtime
+guided by a specified command hierarchy presuppose knowledge of
+command-hierarchy specifications.</p>
+<p>A command line is processed in four distinct phases, namely
+<span class="sectref"><a href="#section3">Dispatch</a></span>, <span class="sectref"><a href="#section4">Parsing</a></span>, <span class="sectref"><a href="#section5">Completion</a></span>, and
+<span class="sectref"><a href="#section6">Execution</a></span>. Each is explained in more detail in the
+referenced sections.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">Related Specification Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i></p></li>
+<li><p><i class="term">Cmdr - Runtime Processing Flow</i></p></li>
+</ol>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Dispatch</a></h2>
+<p>The first phase determines the <b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance
+to use.  To this end it processes words from the command line and uses
+them to navigate the tree of <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> instances until a
+<i class="term">private</i> is reached.</p>
+<p>Each word of the command line is treated as the name of the
+<b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> instance to descend into.
+An error will be thrown when encountering a name for which there is no
+known actor (officer or private), and the current <i class="term">officer</i> has
+no <i class="term">default</i> declared for it.</p>
+<p>On the converse, when reaching the end of the command line but
+not reaching a <i class="term">private</i> the framework will not throw an
+error. It will start an interactive command line shell instead. This
+<i class="term">main shell</i> provides access to exactly the commands of the
+<b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> instance which was reached, plus two
+pseudo-commands to either exit this shell or gain help.</p>
+<p>Execution of the command tree specification, i.e. the
+generation of the in-memory command tree and the actor instances bound
+in it, is intertwined with this descent through the command tree.
+I.e. instead of processing the entire specification immediately in
+full it is lazily unfolded on demand, ignoring all parts which are not
+needed.
+Note that the generated data structures are not destroyed after
+<span class="sectref"><a href="#section6">Execution</a></span>, but kept, avoiding the need to re-parse the parts
+of the specification already used at least once when an interactive
+command line shell is active.</p>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Parsing</a></h2>
+<p>This is the most complex phase internally, as it has to assign
+the left-over words to the parameters of the chosen
+<b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance, taking into account the kind of
+parameters, their requiredness, listness, and other attributes.</p>
+<p>Generally processing the words from left to right
+<i class="term"><a href="../../index.html#key2">options</a></i> are detected in all positions, through their flags
+(primary, aliases, and all unique prefixes), followed by their
+(string) value to assign.</p>
+<p>When a word cannot be the flag for an option the positional
+<i class="term">inputs</i> are considered, in order of their declarations.
+For a mandatory <i class="term">input</i> the word is simply assigned as its string
+value and processing continues with the next word, and the next
+<i class="term">input</i>, if any.
+Operation becomes more complex when the <i class="term">input</i> under
+consideration is <i class="term">optional</i>.
+Now it is necessary to truly decide if the word should be assigned to
+this <i class="term">input</i> or the following.</p>
+<p>The standard method for this decision is to count words and
+compare to the count of mandatory <i class="term">inputs</i> left.
+If there are more words available than required to satisfy all
+mandatory <i class="term">inputs</i>, then we can and do assign the current word to
+the optional input.
+Otherwise the current <i class="term">input</i> is skipped and we consider the
+next.
+A set of condensed examples can be found in section
+<span class="sectref"><a href="#subsection1">Example for Handling optional Inputs by Threshold</a></span>.
+They demonstrate how a various numbers of argument words are assigned
+to a specific set of <i class="term">inputs</i>, <i class="term">optional</i> and non.
+This is called the <i class="term">threshold</i> algorithm.</p>
+<p>The non-triviality in the above description is in the phrase to
+<i class="term">count words</i>.
+We cannot simply count all words left on the command line.
+To get a proper count we have discard/ignore all words belonging to
+options.
+At this point the processor essentially works ahead, processing and
+removing all flags/options and their arguments from the command line
+before performing the comparison and making its decision.</p>
+<p>The whole behaviour however can be changed via <b class="cmd">test</b>
+(See section <i class="term">General control</i> of <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>).
+Instead of counting words the current word is run through the
+validation type of the current <i class="term">input</i>.
+On acceptance the value is assigned to it, otherwise that <i class="term">input</i>
+is skipped and the next one put under consideration.</p>
+<p>After all of the above the system will process any options
+found after the last word assigned to the last <i class="term">input</i> to
+consider.</p>
+<p>Errors are thrown if we either find more words than
+<i class="term">inputs</i> to assign to, or encounter an unknown option flag.
+Note that not having enough words for all required <i class="term">inputs</i> is
+not an error unless the framework is not allowed to start an
+interactive shell.
+In this <i class="term">mini shell</i> all parameters are mapped to shell
+commands taking a single argument, the string value of parameter to
+assign.
+Additional five pseudo commands are available to either abort, or
+commit to the action, or gain help (<b class="cmd">.ok</b>, <b class="cmd">.run</b>,
+<b class="cmd">.exit</b>, <b class="cmd">.cancel</b>, and <b class="cmd">.help</b>).</p>
+<p>Parameters marked as <i class="term">list</i>-valued also trigger special
+behaviours.
+For <i class="term"><a href="../../index.html#key2">options</a></i> the assigned values get accumulated instead of each
+new value overwriting the last.
+For <i class="term">inputs</i> only one such parameter can exist, and will be the
+last of the <i class="term">private</i>.
+The processor now takes all remaining words and assign them to this
+parameter.
+If the list is also optional then options may be processed ahead or
+not, depending on the chosen decision mode, as described for regular
+inputs above.</p>
+<p>Then are the <i class="term">boolean</i> and <i class="term">presence</i> <i class="term"><a href="../../index.html#key2">options</a></i>
+modifying the handling of flags and flag arguments.
+The details of this were already explained in section
+<i class="term">Validation</i> of <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Example for Handling optional Inputs by Threshold</a></h3>
+<p>The examples in this section demonstrate how the <i class="term">threshold</i>
+algorithm assigns a various number of argument words to a specific set
+of <i class="term">inputs</i>, <i class="term">optional</i> and non.</p>
+<pre class="example">
+ Parameter    | A? | B | C? | D? | E
+ #Required    |   2|   |   1|   1|
+--------------+----+---+----+----+----
+ 2 arguments: |    | a |    |    | b
+ 3 arguments: | a  | b |    |    | c
+ 4 arguments: | a  | b | c  |    | d
+ 5 arguments: | a  | b | c  | d  | e
+</pre>
+</div>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Completion</a></h2>
+<p>This phase is reached when all words of the command line have
+been processed and no error was thrown by the preceding phases.
+At this point we know the <b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance to use, and
+its parameters may have a string representation.</p>
+<p>All <i class="term">immediate</i>-mode parameters are now given their
+internal representation.
+The parameters marked as <i class="term">defered</i> are ignored here and will get
+theirs on first access by the backend.</p>
+<p>This completion of parameters is done in their order of
+declaration within the enclosing <i class="term">private</i> command.
+Note that when parameters have dependencies between them, i.e. the
+calculation of their internal representation requires the internal
+representation of another parameter, then this order may be violated
+as the requesting parameter triggers completion in the requested one
+on access.
+If this is behaviour not wanted then it is the responsibility of the
+user specifying the <i class="term">private</i> to place the parameters into an
+order where all parameters access only previously completed parameters
+during their own completion.</p>
+</div>
+<div id="section6" class="section"><h2><a name="section6">Execution</a></h2>
+<p>The last phase is also the most simple.</p>
+<p>It only invokes the Tcl command prefix associated with the
+chosen <b class="package"><a href="cmdr_private.html">cmdr::private</a></b> instance, providing it with the
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance holding the parameter information
+extracted from the command line as its single argument.</p>
+<p>For an example of very simple action implementations see
+section <i class="term">Simple backend</i> of <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i>.</p>
+<p>All parameters declared for a <i class="term">private</i> are made
+accessible through individual methods associated with each.
+As example, a parameter with system name <b class="variable">P</b> is mapped to the
+method <b class="method">@P</b>, with all instance methods provided by the
+<b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> class accessible as sub-methods.
+This general access to all methods may be removed in the future,
+restricting actions and callbacks to a safe subset.</p>
+<p>Another place providing information to actions is the root and
+other actors of the command hierarchy itself, via <b class="cmd">common</b> blocks
+whose value is managed by the system. Currently we have</p>
+<dl class="definitions">
+<dt><b class="const">*in-shell*</b></dt>
+<dd><p>This block is read-only, and only found in the root actor.
+Its value is managed by the framework.
+It is a boolean flag indicating if an interactive shell is currently
+active (<b class="const">true</b>) or not (<b class="const">false</b>).
+This can be used to modulate command messages and other
+context-dependent things.</p>
+<p><em>Note</em> that the block will not exist until after the first
+shell was active. This means that a missing <b class="const">*in-shell*</b> block
+should be treated like <b class="const">false</b>.</p></dd>
+<dt><b class="const">*prefix*</b></dt>
+<dd><p>This block is read-only and found in the private actor for the
+currently executing action command prefix, accessible through the
+<b class="package"><a href="cmdr_config.html">cmdr::config</a></b> instance method <b class="method">context</b>.
+Its value is managed by the framework.
+It is a list of the command names used to reach the <i class="term">private</i>
+instance.
+This is not the logical path in the command hierarchy, but the actual
+path taken, which may be through aliases.</p></dd>
+</dl>
+<p>Calling <b class="method">@P</b> without arguments is a shorthand for
+calling ``@P value'', i.e. the retrieval of the parameter's internal
+representation. Which may calculate the value if the call is the first
+access and the parameter specified as <i class="term">defered</i>.</p>
+</div>
+<div id="section7" class="section"><h2><a name="section7">Related Documents</a></h2>
+<ol class="enumerated">
+<li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_changes.html">Cmdr - Log of Changes</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_installation.html">Cmdr - The Installer's Guide</a></i></p></li>
+<li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
+</ol>
+</div>
+<div id="section8" class="section"><h2><a name="section8">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Andreas Kupries<br>
+Copyright &copy; 2013 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>

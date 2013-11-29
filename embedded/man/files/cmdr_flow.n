@@ -1,0 +1,507 @@
+'\"
+'\" Generated from file 'cmdr_flow\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2013 Andreas Kupries
+'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH "cmdr-spec-flow" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.BS
+.SH NAME
+cmdr-spec-flow \- Cmdr - Runtime Processing Flow
+.SH DESCRIPTION
+.PP
+Welcome to the Cmdr project, written by Andreas Kupries\&.
+.PP
+For availability please read \fICmdr - How To Get The Sources\fR\&.
+.PP
+This document is for users of the cmdr framework\&.
+If you have not read \fICmdr - Introduction to the Specification Language\fR and the related documents
+yet, please do so\&.
+The explanations how the framework processes a command line at runtime
+guided by a specified command hierarchy presuppose knowledge of
+command-hierarchy specifications\&.
+.PP
+A command line is processed in four distinct phases, namely
+\fBDispatch\fR, \fBParsing\fR, \fBCompletion\fR, and
+\fBExecution\fR\&. Each is explained in more detail in the
+referenced sections\&.
+.SH "RELATED SPECIFICATION DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the Specification Language\fR
+.IP [2]
+\fICmdr - Officer Specification Language\fR
+.IP [3]
+\fICmdr - Private Specification Language\fR
+.IP [4]
+\fICmdr - Parameter Specification Language\fR
+.IP [5]
+\fICmdr - Runtime Processing Flow\fR
+.PP
+.SH DISPATCH
+.PP
+The first phase determines the \fBcmdr::private\fR instance
+to use\&.  To this end it processes words from the command line and uses
+them to navigate the tree of \fBcmdr::officer\fR instances until a
+\fIprivate\fR is reached\&.
+.PP
+Each word of the command line is treated as the name of the
+\fBcmdr::officer\fR instance to descend into\&.
+An error will be thrown when encountering a name for which there is no
+known actor (officer or private), and the current \fIofficer\fR has
+no \fIdefault\fR declared for it\&.
+.PP
+On the converse, when reaching the end of the command line but
+not reaching a \fIprivate\fR the framework will not throw an
+error\&. It will start an interactive command line shell instead\&. This
+\fImain shell\fR provides access to exactly the commands of the
+\fBcmdr::officer\fR instance which was reached, plus two
+pseudo-commands to either exit this shell or gain help\&.
+.PP
+Execution of the command tree specification, i\&.e\&. the
+generation of the in-memory command tree and the actor instances bound
+in it, is intertwined with this descent through the command tree\&.
+I\&.e\&. instead of processing the entire specification immediately in
+full it is lazily unfolded on demand, ignoring all parts which are not
+needed\&.
+Note that the generated data structures are not destroyed after
+\fBExecution\fR, but kept, avoiding the need to re-parse the parts
+of the specification already used at least once when an interactive
+command line shell is active\&.
+.SH PARSING
+.PP
+This is the most complex phase internally, as it has to assign
+the left-over words to the parameters of the chosen
+\fBcmdr::private\fR instance, taking into account the kind of
+parameters, their requiredness, listness, and other attributes\&.
+.PP
+Generally processing the words from left to right
+\fIoptions\fR are detected in all positions, through their flags
+(primary, aliases, and all unique prefixes), followed by their
+(string) value to assign\&.
+.PP
+When a word cannot be the flag for an option the positional
+\fIinputs\fR are considered, in order of their declarations\&.
+For a mandatory \fIinput\fR the word is simply assigned as its string
+value and processing continues with the next word, and the next
+\fIinput\fR, if any\&.
+Operation becomes more complex when the \fIinput\fR under
+consideration is \fIoptional\fR\&.
+Now it is necessary to truly decide if the word should be assigned to
+this \fIinput\fR or the following\&.
+.PP
+The standard method for this decision is to count words and
+compare to the count of mandatory \fIinputs\fR left\&.
+If there are more words available than required to satisfy all
+mandatory \fIinputs\fR, then we can and do assign the current word to
+the optional input\&.
+Otherwise the current \fIinput\fR is skipped and we consider the
+next\&.
+A set of condensed examples can be found in section
+\fBExample for Handling optional Inputs by Threshold\fR\&.
+They demonstrate how a various numbers of argument words are assigned
+to a specific set of \fIinputs\fR, \fIoptional\fR and non\&.
+This is called the \fIthreshold\fR algorithm\&.
+.PP
+The non-triviality in the above description is in the phrase to
+\fIcount words\fR\&.
+We cannot simply count all words left on the command line\&.
+To get a proper count we have discard/ignore all words belonging to
+options\&.
+At this point the processor essentially works ahead, processing and
+removing all flags/options and their arguments from the command line
+before performing the comparison and making its decision\&.
+.PP
+The whole behaviour however can be changed via \fBtest\fR
+(See section \fIGeneral control\fR of \fICmdr - Parameter Specification Language\fR)\&.
+Instead of counting words the current word is run through the
+validation type of the current \fIinput\fR\&.
+On acceptance the value is assigned to it, otherwise that \fIinput\fR
+is skipped and the next one put under consideration\&.
+.PP
+After all of the above the system will process any options
+found after the last word assigned to the last \fIinput\fR to
+consider\&.
+.PP
+Errors are thrown if we either find more words than
+\fIinputs\fR to assign to, or encounter an unknown option flag\&.
+Note that not having enough words for all required \fIinputs\fR is
+not an error unless the framework is not allowed to start an
+interactive shell\&.
+In this \fImini shell\fR all parameters are mapped to shell
+commands taking a single argument, the string value of parameter to
+assign\&.
+Additional five pseudo commands are available to either abort, or
+commit to the action, or gain help (\fB\&.ok\fR, \fB\&.run\fR, \fB\&.exit\fR, \fB\&.cancel\fR, and \fB\&.help\fR)\&.
+.PP
+Parameters marked as \fIlist\fR-valued also trigger special
+behaviours\&.
+For \fIoptions\fR the assigned values get accumulated instead of each
+new value overwriting the last\&.
+For \fIinputs\fR only one such parameter can exist, and will be the
+last of the \fIprivate\fR\&.
+The processor now takes all remaining words and assign them to this
+parameter\&.
+If the list is also optional then options may be processed ahead or
+not, depending on the chosen decision mode, as described for regular
+inputs above\&.
+.PP
+Then are the \fIboolean\fR and \fIpresence\fR \fIoptions\fR
+modifying the handling of flags and flag arguments\&.
+The details of this were already explained in section
+\fIValidation\fR of \fICmdr - Parameter Specification Language\fR\&.
+.SS "EXAMPLE FOR HANDLING OPTIONAL INPUTS BY THRESHOLD"
+The examples in this section demonstrate how the \fIthreshold\fR
+algorithm assigns a various number of argument words to a specific set
+of \fIinputs\fR, \fIoptional\fR and non\&.
+.PP
+.CS
+
+
+ Parameter    | A? | B | C? | D? | E
+ #Required    |   2|   |   1|   1|
+--------------+----+---+----+----+----
+ 2 arguments: |    | a |    |    | b
+ 3 arguments: | a  | b |    |    | c
+ 4 arguments: | a  | b | c  |    | d
+ 5 arguments: | a  | b | c  | d  | e
+
+.CE
+.SH COMPLETION
+.PP
+This phase is reached when all words of the command line have
+been processed and no error was thrown by the preceding phases\&.
+At this point we know the \fBcmdr::private\fR instance to use, and
+its parameters may have a string representation\&.
+.PP
+All \fIimmediate\fR-mode parameters are now given their
+internal representation\&.
+The parameters marked as \fIdefered\fR are ignored here and will get
+theirs on first access by the backend\&.
+.PP
+This completion of parameters is done in their order of
+declaration within the enclosing \fIprivate\fR command\&.
+Note that when parameters have dependencies between them, i\&.e\&. the
+calculation of their internal representation requires the internal
+representation of another parameter, then this order may be violated
+as the requesting parameter triggers completion in the requested one
+on access\&.
+If this is behaviour not wanted then it is the responsibility of the
+user specifying the \fIprivate\fR to place the parameters into an
+order where all parameters access only previously completed parameters
+during their own completion\&.
+.SH EXECUTION
+.PP
+The last phase is also the most simple\&.
+.PP
+It only invokes the Tcl command prefix associated with the
+chosen \fBcmdr::private\fR instance, providing it with the
+\fBcmdr::config\fR instance holding the parameter information
+extracted from the command line as its single argument\&.
+.PP
+For an example of very simple action implementations see
+section \fISimple backend\fR of \fICmdr - Introduction to the Specification Language\fR\&.
+.PP
+All parameters declared for a \fIprivate\fR are made
+accessible through individual methods associated with each\&.
+As example, a parameter with system name \fBP\fR is mapped to the
+method \fB@P\fR, with all instance methods provided by the
+\fBcmdr::parameter\fR class accessible as sub-methods\&.
+This general access to all methods may be removed in the future,
+restricting actions and callbacks to a safe subset\&.
+.PP
+Another place providing information to actions is the root and
+other actors of the command hierarchy itself, via \fBcommon\fR blocks
+whose value is managed by the system\&. Currently we have
+.TP
+\fB*in-shell*\fR
+This block is read-only, and only found in the root actor\&.
+Its value is managed by the framework\&.
+It is a boolean flag indicating if an interactive shell is currently
+active (\fBtrue\fR) or not (\fBfalse\fR)\&.
+This can be used to modulate command messages and other
+context-dependent things\&.
+.sp
+\fINote\fR that the block will not exist until after the first
+shell was active\&. This means that a missing \fB*in-shell*\fR block
+should be treated like \fBfalse\fR\&.
+.TP
+\fB*prefix*\fR
+This block is read-only and found in the private actor for the
+currently executing action command prefix, accessible through the
+\fBcmdr::config\fR instance method \fBcontext\fR\&.
+Its value is managed by the framework\&.
+It is a list of the command names used to reach the \fIprivate\fR
+instance\&.
+This is not the logical path in the command hierarchy, but the actual
+path taken, which may be through aliases\&.
+.PP
+.PP
+Calling \fB@P\fR without arguments is a shorthand for
+calling ``@P value'', i\&.e\&. the retrieval of the parameter's internal
+representation\&. Which may calculate the value if the call is the first
+access and the parameter specified as \fIdefered\fR\&.
+.SH "RELATED DOCUMENTS"
+.IP [1]
+\fICmdr - Introduction to the project\fR
+.IP [2]
+\fICmdr - License\fR
+.IP [3]
+\fICmdr - Log of Changes\fR
+.IP [4]
+\fICmdr - How To Get The Sources\fR
+.IP [5]
+\fICmdr - The Installer's Guide\fR
+.IP [6]
+\fICmdr - The Developer's Guide\fR
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems\&.
+Please report such at
+\fICmdr Tickets\fR [https:/core\&.tcl\&.tk/akupries/cmdr]\&.
+.PP
+Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation\&.
+.SH KEYWORDS
+arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
+.SH COPYRIGHT
+.nf
+Copyright (c) 2013 Andreas Kupries
+Copyright (c) 2013 Documentation, Andreas Kupries
+
+.fi

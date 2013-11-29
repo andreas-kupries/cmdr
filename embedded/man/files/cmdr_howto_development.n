@@ -480,6 +480,46 @@ applies to the standard help formats of the framework (as listed in
 .SH "COMMAND LINE COMPLETION"
 The document \fICmdr - Internals of command line completion\fR describes the inner
 workings of the command line completion provided by the framework\&.
+.SH "COMMON BLOCKS"
+The framework reserves all blocks whose name begins with a star, i\&.e
+\fB*\fR, for its own use\&.
+Currently the following names are in use:
+.TP
+\fB*all*\fR
+Publicly documented for users, this block is expected to contain
+parameter specification commands\&. These commands are automatically
+added to all privates found in the command hierarchy containing the
+block\&.
+.sp
+The details are explained by the description of command
+\fBcommon\fR in \fICmdr - Officer Specification Language\fR\&.
+.TP
+\fB*category-order*\fR
+Publicly documented for users, this block is expected to contain a
+dictionary mapping from toplevel section/category names to an integer
+number to override the natural order of displaying these sections in
+the help\&.
+.sp
+The details are explained in section \fIFormat Notes\fR of
+\fICmdr - (Internal) Utilities for help text formatting and setup\fR\&.
+.TP
+\fB*prefix*\fR
+Publicly documented for users as read-only this block's value is
+managed by the framework\&.
+Set during the \fIDispatch\fR phase it provides to access to the
+actual command name used to invoke a \fIprivate\fR\&.
+.sp
+See also section \fIExecution\fR of \fICmdr - Runtime Processing Flow\fR\&.
+.TP
+\fB*in-shell*\fR
+Publicly documented for users as read-only this block's value is
+managed by the framework\&. Not set until the first main- or mini-shell
+was active its value is boolean flag indicating if an interactive
+shell is currently active (\fBtrue\fR) or not (\fBfalse\fR, or not
+existing)\&.
+.sp
+See also section \fIExecution\fR of \fICmdr - Runtime Processing Flow\fR\&.
+.PP
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR

@@ -272,6 +272,9 @@ doc
 \fBcmdr-spec-dsl-private\fR
 \fIfiles/cmdr_dsl_private\&.n\fR: Cmdr - Private Specification Language
 .TP
+\fBcmdr-spec-flow\fR
+\fIfiles/cmdr_flow\&.n\fR: Cmdr - Runtime Processing Flow
+.TP
 \fBcmdr-user-helpformats\fR
 \fIfiles/cmdr_helpformats\&.n\fR: Cmdr - Writing custom help formats
 .TP
@@ -316,3 +319,6 @@ doc
 .TP
 \fBcmdr_dev~completion\fR
 \fIfiles/cmdr_dev_completion\&.n\fR: Cmdr - Internals of command line completion
+.TP
+\fBcmdr_dev~dsl\fR
+\fIfiles/cmdr_dev_dsl\&.n\fR: Cmdr - Internals of DSL handling

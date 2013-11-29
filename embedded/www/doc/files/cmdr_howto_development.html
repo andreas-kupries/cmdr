@@ -121,8 +121,9 @@
 <li class="section"><a href="#section7">Validation Types</a></li>
 <li class="section"><a href="#section8">Help Formats</a></li>
 <li class="section"><a href="#section9">Command Line Completion</a></li>
-<li class="section"><a href="#section10">Related Documents</a></li>
-<li class="section"><a href="#section11">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section10">Common Blocks</a></li>
+<li class="section"><a href="#section11">Related Documents</a></li>
+<li class="section"><a href="#section12">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
@@ -298,7 +299,41 @@ applies to the standard help formats of the framework (as listed in
 <p>The document <i class="term"><a href="cmdr_dev_completion.html">Cmdr - Internals of command line completion</a></i> describes the inner
 workings of the command line completion provided by the framework.</p>
 </div>
-<div id="section10" class="section"><h2><a name="section10">Related Documents</a></h2>
+<div id="section10" class="section"><h2><a name="section10">Common Blocks</a></h2>
+<p>The framework reserves all blocks whose name begins with a star, i.e
+<b class="const">*</b>, for its own use.
+Currently the following names are in use:</p>
+<dl class="definitions">
+<dt><b class="const">*all*</b></dt>
+<dd><p>Publicly documented for users, this block is expected to contain
+parameter specification commands. These commands are automatically
+added to all privates found in the command hierarchy containing the
+block.</p>
+<p>The details are explained by the description of command
+<b class="cmd">common</b> in <i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i>.</p></dd>
+<dt><b class="const">*category-order*</b></dt>
+<dd><p>Publicly documented for users, this block is expected to contain a
+dictionary mapping from toplevel section/category names to an integer
+number to override the natural order of displaying these sections in
+the help.</p>
+<p>The details are explained in section <i class="term">Format Notes</i> of
+<i class="term"><a href="cmdr_help.html">Cmdr - (Internal) Utilities for help text formatting and setup</a></i>.</p></dd>
+<dt><b class="const">*prefix*</b></dt>
+<dd><p>Publicly documented for users as read-only this block's value is
+managed by the framework.
+Set during the <i class="term">Dispatch</i> phase it provides to access to the
+actual command name used to invoke a <i class="term">private</i>.</p>
+<p>See also section <i class="term">Execution</i> of <i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i>.</p></dd>
+<dt><b class="const">*in-shell*</b></dt>
+<dd><p>Publicly documented for users as read-only this block's value is
+managed by the framework. Not set until the first main- or mini-shell
+was active its value is boolean flag indicating if an interactive
+shell is currently active (<b class="const">true</b>) or not (<b class="const">false</b>, or not
+existing).</p>
+<p>See also section <i class="term">Execution</i> of <i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i>.</p></dd>
+</dl>
+</div>
+<div id="section11" class="section"><h2><a name="section11">Related Documents</a></h2>
 <ol class="enumerated">
 <li><p><i class="term"><a href="cmdr_introduction.html">Cmdr - Introduction to the project</a></i></p></li>
 <li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
@@ -308,7 +343,7 @@ workings of the command line completion provided by the framework.</p>
 <li><p><i class="term">Cmdr - The Developer's Guide</i></p></li>
 </ol>
 </div>
-<div id="section11" class="section"><h2><a name="section11">Bugs, Ideas, Feedback</a></h2>
+<div id="section12" class="section"><h2><a name="section12">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at
