@@ -325,6 +325,28 @@ IMAGE: pkg_dependencies
 .SH "COMMAND HIERARCHY SPECIFICATIONS"
 This is a bit large for this document, and can be found in the
 separate \fICmdr - Introduction to the Specification Language\fR\&.
+.SH EXTENSIBILITY
+While the framework as is should cover most to all of the common cases
+where is always the possibility of encountering unanticipated
+situations\&.
+Because of that the framework has two places where it can be extended
+to make it fit uncommon requirements\&.
+And while the DSL document chain referenced in the previous section
+does mention these as well in the appropriate places this is a bit
+hidden\&.
+So, for better visibility, an early mention:
+.IP [1]
+While the framework has a set of standard validation types for
+checking and converting inputs these handle only very generic types of
+input\&.
+Applications often have special input requiring bespoke validation\&.
+How to write such is explained in \fICmdr - Writing custom validation types\fR\&.
+.IP [2]
+Less often an application may require a special format for help
+generated from its command hierarchy, beyond the standard formats made
+available by the framework\&.
+How to write such is explained in \fICmdr - Writing custom help formats\fR\&.
+.PP
 .SH "RELATED DOCUMENTS"
 .IP [1]
 \fICmdr - Introduction to the project\fR
