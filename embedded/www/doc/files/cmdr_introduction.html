@@ -115,8 +115,9 @@
 <li class="section"><a href="#section1">Description</a></li>
 <li class="section"><a href="#section2">System Architecture</a></li>
 <li class="section"><a href="#section3">Command Hierarchy Specifications</a></li>
-<li class="section"><a href="#section4">Related Documents</a></li>
-<li class="section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#section4">Extensibility</a></li>
+<li class="section"><a href="#section5">Related Documents</a></li>
+<li class="section"><a href="#section6">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
 <li class="section"><a href="#copyright">Copyright</a></li>
 </ul>
@@ -169,7 +170,29 @@ other dependencies (i.e. through <b class="package"><a href="cmdr_help.html">cmd
 <p>This is a bit large for this document, and can be found in the
 separate <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i>.</p>
 </div>
-<div id="section4" class="section"><h2><a name="section4">Related Documents</a></h2>
+<div id="section4" class="section"><h2><a name="section4">Extensibility</a></h2>
+<p>While the framework as is should cover most to all of the common cases
+where is always the possibility of encountering unanticipated
+situations.
+Because of that the framework has two places where it can be extended
+to make it fit uncommon requirements.
+And while the DSL document chain referenced in the previous section
+does mention these as well in the appropriate places this is a bit
+hidden.
+So, for better visibility, an early mention:</p>
+<ol class="enumerated">
+<li><p>While the framework has a set of standard validation types for
+checking and converting inputs these handle only very generic types of
+input.
+Applications often have special input requiring bespoke validation.
+How to write such is explained in <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>.</p></li>
+<li><p>Less often an application may require a special format for help
+generated from its command hierarchy, beyond the standard formats made
+available by the framework.
+How to write such is explained in <i class="term"><a href="cmdr_helpformats.html">Cmdr - Writing custom help formats</a></i>.</p></li>
+</ol>
+</div>
+<div id="section5" class="section"><h2><a name="section5">Related Documents</a></h2>
 <ol class="enumerated">
 <li><p><i class="term">Cmdr - Introduction to the project</i></p></li>
 <li><p><i class="term"><a href="cmdr_license.html">Cmdr - License</a></i></p></li>
@@ -179,7 +202,7 @@ separate <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Spec
 <li><p><i class="term"><a href="cmdr_howto_development.html">Cmdr - The Developer's Guide</a></i></p></li>
 </ol>
 </div>
-<div id="section5" class="section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<div id="section6" class="section"><h2><a name="section6">Bugs, Ideas, Feedback</a></h2>
 <p>Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems.
 Please report such at
