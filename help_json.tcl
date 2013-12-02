@@ -5,7 +5,7 @@
 ## mdr::help heuristics see and automatically integrate the format.
 
 # @@ Meta Begin
-# Package cmdr::help::json 0.2
+# Package cmdr::help::json 1.0
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -201,4 +201,4 @@ proc ::cmdr::help::format::JSON::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::json 0.2
+package provide cmdr::help::json 1.0

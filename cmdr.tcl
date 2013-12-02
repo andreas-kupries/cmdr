@@ -75,4 +75,4 @@ proc ::cmdr::interactive? {} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr 0.14
+package provide cmdr 1.0

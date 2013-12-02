@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr::help::json" n 0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::help::json" n 1\&.0 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr::help::json \- Cmdr - Formatting help as JSON object

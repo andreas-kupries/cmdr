@@ -8,4 +8,4 @@
 [vset PTITLE Cmdr]
 [vset REPOSITORY https:/core.tcl.tk/akupries/cmdr]
 [vset VC_TYPE fossil]
-[vset VERSION 0]
+[vset VERSION 1.0]
