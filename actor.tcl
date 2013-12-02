@@ -313,4 +313,4 @@ oo::class create ::cmdr::actor {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::actor 0.14
+package provide cmdr::actor 1.0
