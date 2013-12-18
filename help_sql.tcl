@@ -15,8 +15,8 @@
 # Meta require {Tcl 8.5-}
 # Meta require debug
 # Meta require debug::caller
-# Meta require {cmdr::help 0.12}
-# Meta require {cmdr::util 0.12}
+# Meta require {cmdr::help 1}
+# Meta require {cmdr::util 1}
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -25,8 +25,8 @@
 package require Tcl 8.5
 package require debug
 package require debug::caller
-package require cmdr::help 0.12
-package require cmdr::util 0.12
+package require cmdr::help 1
+package require cmdr::util 1
 
 # # ## ### ##### ######## ############# #####################
 
