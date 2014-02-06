@@ -256,6 +256,8 @@ package require \fBcmdr::private \fR
 .sp
 \fB<private>\fR \fBehandler\fR \fIcmd\fR
 .sp
+\fB<private>\fR \fBfind\fR \fIpath\fR
+.sp
 \fB<private>\fR \fBhelp\fR ?\fIprefix\fR?
 .sp
 \fB<private>\fR \fBunknown\fR \fIm\fR ?\fIword\fR\&.\&.\&.?
@@ -360,6 +362,18 @@ prefix then has the responsbility to perform any custom cleanup action
 required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i\&.e\&. in
 an interactive shell run by the framework)\&.
+.RE
+.TP
+\fB<private>\fR \fBfind\fR \fIpath\fR
+This method returns the instance command of the sub-ordinate with the
+given \fIpath\fR of names\&. An error is thrown if such a sub-ordinate
+does not exist, i\&.e\&. always, as a private has no sub-ordinates,
+ever\&. See also method \fBfind\fR of \fBcdmr::officer\fR for the
+high-end of the recursion which may end in this method\&.
+.RS
+.TP
+string \fIpath\fR
+The path of names to the sub-ordinate to look for\&.
 .RE
 .TP
 \fB<private>\fR \fBhelp\fR ?\fIprefix\fR?

@@ -201,6 +201,17 @@ the framework.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd <officer>] [method find] [arg path]]
+
+This method returns the instance command of the sub-ordinate with the
+given [arg path] of names. An error is thrown if such a sub-ordinate
+does not exist. See also method [method has].
+
+[list_begin arguments]
+[arg_def string path] The path of names to the sub-ordinate to look for.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
 [call [cmd <officer>] [method has] [arg name]]
 
 This method returns a boolean value indicating if this officer has a

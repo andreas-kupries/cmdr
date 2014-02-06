@@ -45,7 +45,7 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::help {
-    namespace export query query-actor format auto
+    namespace export query format auto
     namespace ensemble create
 }
 
@@ -66,32 +66,7 @@ proc ::cmdr::help::query {actor words} {
 	set prefix [linsert $prefix 0 [$root name]]
     }
 
-    return [[query-actor $actor $words] help $prefix]
-}
-
-proc ::cmdr::help::query-actor {actor words} {
-    debug.cmdr/help {}
-    # Resolve chain of words (command name path) to the actor
-    # responsible for that command, starting from the specified actor.
-    # This is very much a convenience command.
-
-    set n -1
-    foreach word $words {
-	if {[info object class $actor] ne "::cmdr::officer"} {
-	    # Privates do not have subordinates to look up.
-	    # We now have a bad command name argument to help.
-
-	    set prefix [lrange $words 0 $n]
-	    return -code error \
-		-errorcode [list CMDR ACTION BAD $word] \
-		"The command \"$prefix\" has no sub-commands, unexpected word \"$word\""
-	}
-
-	set actor [$actor lookup $word]
-	incr n
-    }
-
-    return $actor
+    return [[$actor find $words] help $prefix]
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -161,7 +136,8 @@ proc ::cmdr::help::auto-help {actor config} {
     set format [$config @format]
 
     if {$format eq {}} {
-	# Default depends on the presence of additional arguments, i.e. if a specific command is asked for, or not.
+	# Default depends on the presence of additional arguments,
+	# i.e. if a specific command is asked for, or not.
 	if {[llength $words]} {
 	    set format full
 	} else {
@@ -169,7 +145,11 @@ proc ::cmdr::help::auto-help {actor config} {
 	}
     }
 
-    puts [format $format [$actor root] $width [cmdr util dictsort [query $actor $words]]]
+    puts [format $format \
+	      [$actor root] \
+	      $width \
+	      [cmdr util dictsort \
+		   [query $actor $words]]]
     return
 }
 
@@ -178,9 +158,6 @@ proc ::cmdr::help::auto-help {actor config} {
 namespace eval ::cmdr::help::format {
     namespace export full list short by-category
     namespace ensemble create
-
-    namespace import ::cmdr::help::query
-    namespace import ::cmdr::help::query-actor
 }
 
 # Alternate formats:
@@ -535,4 +512,4 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 1.0.1
+package provide cmdr::help 1.1

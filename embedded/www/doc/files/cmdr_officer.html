@@ -140,16 +140,17 @@
 <li><a href="#10"><b class="cmd">&lt;officer&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
 <li><a href="#11"><b class="cmd">&lt;officer&gt;</b> <b class="method">exit</b></a></li>
 <li><a href="#12"><b class="cmd">&lt;officer&gt;</b> <b class="method">extend</b> <i class="arg">path</i> <i class="arg">arguments</i> <i class="arg">action</i></a></li>
-<li><a href="#13"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></li>
-<li><a href="#14"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></li>
-<li><a href="#15"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
-<li><a href="#16"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></li>
-<li><a href="#17"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></li>
-<li><a href="#18"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></li>
-<li><a href="#19"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></li>
-<li><a href="#20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></li>
-<li><a href="#21"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></li>
-<li><a href="#22"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></li>
+<li><a href="#13"><b class="cmd">&lt;officer&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></li>
+<li><a href="#14"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></li>
+<li><a href="#15"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></li>
+<li><a href="#16"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
+<li><a href="#17"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></li>
+<li><a href="#18"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></li>
+<li><a href="#19"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></li>
+<li><a href="#20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></li>
+<li><a href="#21"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></li>
+<li><a href="#22"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></li>
+<li><a href="#23"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></li>
 </ul>
 </div>
 </div>
@@ -288,7 +289,15 @@ hidden <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> contai
 parameters. The result of the action, if there is any, is ignored by
 the framework.</p></dd>
 </dl></dd>
-<dt><a name="13"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></dt>
+<dt><a name="13"><b class="cmd">&lt;officer&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></dt>
+<dd><p>This method returns the instance command of the sub-ordinate with the
+given <i class="arg">path</i> of names. An error is thrown if such a sub-ordinate
+does not exist. See also method <b class="method">has</b>.</p>
+<dl class="arguments">
+<dt>string <i class="arg">path</i></dt>
+<dd><p>The path of names to the sub-ordinate to look for.</p></dd>
+</dl></dd>
+<dt><a name="14"><b class="cmd">&lt;officer&gt;</b> <b class="method">has</b> <i class="arg">name</i></a></dt>
 <dd><p>This method returns a boolean value indicating if this officer has a
 sub-ordinate of the given <i class="arg">name</i> (<b class="const">true</b>), or not
 (<b class="const">false</b>). See also method <b class="method">lookup</b>.</p>
@@ -296,11 +305,11 @@ sub-ordinate of the given <i class="arg">name</i> (<b class="const">true</b>), o
 <dt>string <i class="arg">name</i></dt>
 <dd><p>The name of the sub-ordinate to look for.</p></dd>
 </dl></dd>
-<dt><a name="14"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></dt>
+<dt><a name="15"><b class="cmd">&lt;officer&gt;</b> <b class="method">hasdefault</b></a></dt>
 <dd><p>This method returns a boolean value indicating if this officer has a
 default sub-ordinate (<b class="const">true</b>), or not (<b class="const">false</b>). See also
 method <b class="method">default</b>.</p></dd>
-<dt><a name="15"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
+<dt><a name="16"><b class="cmd">&lt;officer&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
 <dd><p>This method returns the help information for the officer and its
 subordinates. The <i class="arg">prefix</i>, if specified provides the name of the
 officer within the help data. It defaults to the empty string.
@@ -310,13 +319,13 @@ described in section <span class="sectref"><a href="#section4">Help Information<
 <dt>string <i class="arg">prefix</i></dt>
 <dd><p>The name to use for the officer within the generated help.</p></dd>
 </dl></dd>
-<dt><a name="16"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></dt>
+<dt><a name="17"><b class="cmd">&lt;officer&gt;</b> <b class="method">known</b></a></dt>
 <dd><p>This method returns a list containing the names of the subordinate
 actors managed by this officer.
 See also method <b class="method">children</b> which returns a list of instance
 commands.
 See also method <b class="method">lookup</b> to map names to instance commands.</p></dd>
-<dt><a name="17"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></dt>
+<dt><a name="18"><b class="cmd">&lt;officer&gt;</b> <b class="method">learn</b> <i class="arg">script</i></a></dt>
 <dd><p>This method takes a regular specification script and uses it to extend
 the set of subordinates known to this officer. This is the same type
 of script as used during construction, except here we dynamically
@@ -326,7 +335,7 @@ extend the officer.</p>
 <dd><p>The specification of the officer's additional subordinates.
 Please read <i class="term"><a href="cmdr_dsl_officer.html">Cmdr - Officer Specification Language</a></i> for the details.</p></dd>
 </dl></dd>
-<dt><a name="18"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></dt>
+<dt><a name="19"><b class="cmd">&lt;officer&gt;</b> <b class="method">lookup</b> <i class="arg">name</i></a></dt>
 <dd><p>This method returns the instance command of the sub-ordinate with the
 given <i class="arg">name</i>. An error is thrown if such a sub-ordinate does not
 exist. See also method <b class="method">has</b>.</p>
@@ -334,15 +343,15 @@ exist. See also method <b class="method">has</b>.</p>
 <dt>string <i class="arg">name</i></dt>
 <dd><p>The name of the sub-ordinate to look for.</p></dd>
 </dl></dd>
-<dt><a name="19"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></dt>
+<dt><a name="20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt1</b></a></dt>
 <dd><p>This hook-method for the main shell returns the primary prompt string
 to use.</p></dd>
-<dt><a name="20"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></dt>
+<dt><a name="21"><b class="cmd">&lt;officer&gt;</b> <b class="method">prompt2</b></a></dt>
 <dd><p>This hook-method for the main shell returns the secondary prompt
 string for use within a continuation. As the main shell does not
 support continuation lines it should not be invoked ever, and thus
 always throws an error should it be invoked.</p></dd>
-<dt><a name="21"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></dt>
+<dt><a name="22"><b class="cmd">&lt;officer&gt;</b> <b class="method">report</b> <i class="arg">what</i> <i class="arg">data</i></a></dt>
 <dd><p>This hook-method for the main shell is responsible for the reporting
 of the command results.</p>
 <p>Its result is the empty string.</p>
@@ -352,7 +361,7 @@ of the command results.</p>
 <dt>any <i class="arg">data</i></dt>
 <dd><p>The result of the command, or an error message in case of failure.</p></dd>
 </dl></dd>
-<dt><a name="22"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></dt>
+<dt><a name="23"><b class="cmd">&lt;officer&gt;</b> <b class="method">shell-exit</b> <i class="arg">config</i></a></dt>
 <dd><p>This is the backend for a private ending the main shell,
 be it automatically created by the pacge, or by a user.</p>
 <p>The argument is the <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>
