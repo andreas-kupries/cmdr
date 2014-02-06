@@ -75,6 +75,9 @@ oo::class create ::cmdr::private {
     }
 
     method _find {words prefix} {
+	if {![llength $words]} {
+	    return [self]
+	}
 	# Privates do not have subordinates to look up.
 	# We now have a bad command name argument to help.
 	set word  [lindex $words 0]

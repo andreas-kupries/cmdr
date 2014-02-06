@@ -204,8 +204,10 @@ the framework.
 [call [cmd <officer>] [method find] [arg path]]
 
 This method returns the instance command of the sub-ordinate with the
-given [arg path] of names. An error is thrown if such a sub-ordinate
-does not exist. See also method [method has].
+given [arg path] (a list) of names. An error is thrown if such a sub-ordinate
+does not exist. This is an extension of [method lookup] to paths of names.
+
+[para] An empty [arg path] is allowed and refers to the officer itself.
 
 [list_begin arguments]
 [arg_def string path] The path of names to the sub-ordinate to look for.

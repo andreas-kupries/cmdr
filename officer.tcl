@@ -145,6 +145,10 @@ oo::class create ::cmdr::officer {
     }
 
     method _find {words prefix} {
+	if {![llength $words]} {
+	    return [self]
+	}
+
 	set word [lindex $words 0]
 	if {[llength $words] <= 1} {
 	    return [my lookup $word]
