@@ -1,0 +1,20 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_HELP_TCL] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::help::tcl]
+[titledesc [vset TITLE_HELP_TCL]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a single command implementing the help format
+[const tcl]. This format generates help in the form of a nested Tcl
+data structure containing all details of the command hierarchy,
+including internals.
+
+[para] To activate the format simply [example {
+    package require cmdr::help::tcl
+}] it. Nothing more is needed.
+
+[include parts/feedback.inc]
+[manpage_end]

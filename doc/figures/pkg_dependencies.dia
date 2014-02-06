@@ -29,7 +29,13 @@ proc help_json {} {
 
 proc help_sql {} {
     box cmdr::help::sql width [grid 10] color blue stroke 2
-    group { down ; --- ; l ; --- 4 ; r ; ---> 14 ; # help
+    group { down ; --- ; l ; --- 4.25 ; r ; ---> 14 ; # help
+    }
+}
+
+proc help_tcl {} {
+    box cmdr::help::tcl width [grid 10] color blue stroke 2
+    group { down ; --- 2 ; l ; --- 9.5 ; r ; ---> 13 ; # help
     }
 }
 
@@ -69,6 +75,8 @@ proc layout {} {
     help_json
     move
     help_sql
+    move
+    help_tcl
     move
 }
 
