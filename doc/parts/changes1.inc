@@ -1,3 +1,4 @@
+[subsection {Changes for version 1}]
 
 This is the first release of [vset PROJECT].
 The changes therefore describe the initial features of the system.
