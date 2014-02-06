@@ -40,22 +40,22 @@ test cmdr-main-1.6 {new, wrong num args, too many} -body {
 # # ## ### ##### ######## ############# #####################
 ## Basic officer, knows nothing. create/new with proper arguments.
 
-test cmdr-main-2.0 {new, nothing but auto-help} -setup {
+test cmdr-main-2.0 {new, nothing but auto-help and -exit} -setup {
     set x [cmdr new foo {}]
 } -body {
     list [$x known] [$x hasdefault]
 } -cleanup {
     $x destroy
     unset x
-} -result {help 0}
+} -result {{help exit} 0}
 
-test cmdr-main-2.1 {create, nothing but auto-help} -setup {
+test cmdr-main-2.1 {create, nothing but auto-help and -exit} -setup {
     cmdr create x foo {}
 } -body {
     list [x known] [x hasdefault]
 } -cleanup {
     x destroy
-} -result {help 0}
+} -result {{help exit} 0}
 
 # # ## ### ##### ######## ############# #####################
 return
