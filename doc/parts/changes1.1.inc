@@ -21,8 +21,9 @@
        private, for immediate post-creation re-configuration.
 
 [enum] Extended system with new help format [term tcl], and associated
-       package [cmdr::help::tcl]. Similar to format [term json] the help
-       is printed as a nested data structure, just using Tcl syntax.
+       package [package cmdr::help::tcl]. Similar to format [term json]
+       the help is printed as a nested data structure, just using Tcl
+       syntax.
 
 [enum] Extended officers and privates with method [method find] for
        path lookup of sub-ordinates.

@@ -105,7 +105,7 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr::officer(n) 1.0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr::officer(n) 1.1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
 <p>cmdr::officer - Cmdr - (Internal) Aggregation of multiple commands for dispatch.</p>
 </div>
@@ -291,8 +291,9 @@ the framework.</p></dd>
 </dl></dd>
 <dt><a name="13"><b class="cmd">&lt;officer&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></dt>
 <dd><p>This method returns the instance command of the sub-ordinate with the
-given <i class="arg">path</i> of names. An error is thrown if such a sub-ordinate
-does not exist. See also method <b class="method">has</b>.</p>
+given <i class="arg">path</i> (a list) of names. An error is thrown if such a sub-ordinate
+does not exist. This is an extension of <b class="method">lookup</b> to paths of names.</p>
+<p>An empty <i class="arg">path</i> is allowed and refers to the officer itself.</p>
 <dl class="arguments">
 <dt>string <i class="arg">path</i></dt>
 <dd><p>The path of names to the sub-ordinate to look for.</p></dd>

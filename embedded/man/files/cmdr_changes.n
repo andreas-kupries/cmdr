@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr-changes" n 1\&.0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr-changes" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr-changes \- Cmdr - Log of Changes
@@ -252,6 +252,34 @@ For availability please read \fICmdr - How To Get The Sources\fR\&.
 This document provides an overview of the changes \fBcmdr\fR
 underwent from version to version\&.
 .SH CHANGES
+.SS "CHANGES FOR VERSION 1\&.1"
+.IP [1]
+Fixed broken requirement references in the meta data of packages
+\fBcmdr::help::json\fR and \fBcmdr::help::sql\fR\&.
+.IP [2]
+Fixed initialization issues in the help generator\&.
+.IP [3]
+Fixed generated help, added the application name to the output
+when in a cmdr shell\&.
+.IP [4]
+Fixed the generation of help format by-categorized, when
+encountering sections with sub-sections and no commands of their
+own\&.
+.IP [5]
+Fixed bad method scoping in method \fBextend\fR of officers\&.
+.IP [6]
+Extended officer method \fBextend\fR to return the created
+private, for immediate post-creation re-configuration\&.
+.IP [7]
+Extended system with new help format \fItcl\fR, and associated
+package \fBcmdr::help::tcl\fR\&. Similar to format \fIjson\fR
+the help is printed as a nested data structure, just using Tcl
+syntax\&.
+.IP [8]
+Extended officers and privates with method \fBfind\fR for
+path lookup of sub-ordinates\&.
+.PP
+.SS "CHANGES FOR VERSION 1"
 This is the first release of cmdr\&.
 The changes therefore describe the initial features of the system\&.
 .PP

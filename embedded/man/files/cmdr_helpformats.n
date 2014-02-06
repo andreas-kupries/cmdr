@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr-user-helpformats" n 1\&.0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr-user-helpformats" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr-user-helpformats \- Cmdr - Writing custom help formats
