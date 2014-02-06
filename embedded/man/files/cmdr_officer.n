@@ -239,7 +239,7 @@ Database Class:	\\fB\\$3\\fR
 .de UL
 \\$1\l'|0\(ul'\\$2
 ..
-.TH "cmdr::officer" n 1\&.0 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::officer" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .BS
 .SH NAME
 cmdr::officer \- Cmdr - (Internal) Aggregation of multiple commands for dispatch\&.
@@ -460,8 +460,10 @@ the framework\&.
 .TP
 \fB<officer>\fR \fBfind\fR \fIpath\fR
 This method returns the instance command of the sub-ordinate with the
-given \fIpath\fR of names\&. An error is thrown if such a sub-ordinate
-does not exist\&. See also method \fBhas\fR\&.
+given \fIpath\fR (a list) of names\&. An error is thrown if such a sub-ordinate
+does not exist\&. This is an extension of \fBlookup\fR to paths of names\&.
+.sp
+An empty \fIpath\fR is allowed and refers to the officer itself\&.
 .RS
 .TP
 string \fIpath\fR

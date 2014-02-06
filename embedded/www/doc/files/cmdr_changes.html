@@ -105,7 +105,7 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr-changes(n) 1.0 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr-changes(n) 1.1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
 <p>cmdr-changes - Cmdr - Log of Changes</p>
 </div>
@@ -113,7 +113,12 @@
 <ul class="toc">
 <li class="section"><a href="#toc">Table Of Contents</a></li>
 <li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#section2">Changes</a></li>
+<li class="section"><a href="#section2">Changes</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Changes for version 1.1</a></li>
+<li class="subsection"><a href="#subsection2">Changes for version 1</a></li>
+</ul>
+</li>
 <li class="section"><a href="#section3">Related Documents</a></li>
 <li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
 <li class="section"><a href="#keywords">Keywords</a></li>
@@ -127,6 +132,28 @@
 underwent from version to version.</p>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Changes</a></h2>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Changes for version 1.1</a></h3>
+<ol class="enumerated">
+<li><p>Fixed broken requirement references in the meta data of packages
+       <b class="package"><a href="cmdr_help_json.html">cmdr::help::json</a></b> and <b class="package"><a href="cmdr_help_sql.html">cmdr::help::sql</a></b>.</p></li>
+<li><p>Fixed initialization issues in the help generator.</p></li>
+<li><p>Fixed generated help, added the application name to the output
+       when in a cmdr shell.</p></li>
+<li><p>Fixed the generation of help format by-categorized, when
+       encountering sections with sub-sections and no commands of their
+       own.</p></li>
+<li><p>Fixed bad method scoping in method <b class="method">extend</b> of officers.</p></li>
+<li><p>Extended officer method <b class="method">extend</b> to return the created
+       private, for immediate post-creation re-configuration.</p></li>
+<li><p>Extended system with new help format <i class="term">tcl</i>, and associated
+       package <b class="package"><a href="cmdr_help_tcl.html">cmdr::help::tcl</a></b>. Similar to format <i class="term">json</i>
+       the help is printed as a nested data structure, just using Tcl
+       syntax.</p></li>
+<li><p>Extended officers and privates with method <b class="method">find</b> for
+       path lookup of sub-ordinates.</p></li>
+</ol>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">Changes for version 1</a></h3>
 <p>This is the first release of cmdr.
 The changes therefore describe the initial features of the system.</p>
 <p>In detail:</p>
@@ -147,6 +174,7 @@ The changes therefore describe the initial features of the system.</p>
        help for commands and parameters, based on the information provided
        in a specification.</p></li>
 </ol>
+</div>
 </div>
 <div id="section3" class="section"><h2><a name="section3">Related Documents</a></h2>
 <ol class="enumerated">
