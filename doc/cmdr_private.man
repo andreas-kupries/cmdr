@@ -121,6 +121,19 @@ an interactive shell run by the framework).
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd <private>] [method find] [arg path]]
+
+This method returns the instance command of the sub-ordinate with the
+given [arg path] of names. An error is thrown if such a sub-ordinate
+does not exist, i.e. always, as a private has no sub-ordinates,
+ever. See also method [method find] of [package cdmr::officer] for the
+high-end of the recursion which may end in this method.
+
+[list_begin arguments]
+[arg_def string path] The path of names to the sub-ordinate to look for.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
 [call [cmd <private>] [method help] [opt [arg prefix]]]
 
 This method returns the help information for the private and its

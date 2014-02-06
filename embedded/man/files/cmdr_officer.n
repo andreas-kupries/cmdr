@@ -270,6 +270,8 @@ package require \fBcmdr::officer \fR
 .sp
 \fB<officer>\fR \fBextend\fR \fIpath\fR \fIarguments\fR \fIaction\fR
 .sp
+\fB<officer>\fR \fBfind\fR \fIpath\fR
+.sp
 \fB<officer>\fR \fBhas\fR \fIname\fR
 .sp
 \fB<officer>\fR \fBhasdefault\fR
@@ -454,6 +456,16 @@ execution\&.  It takes a single argument, the instance command of the
 hidden \fBcmdr::config\fR container holding the private's
 parameters\&. The result of the action, if there is any, is ignored by
 the framework\&.
+.RE
+.TP
+\fB<officer>\fR \fBfind\fR \fIpath\fR
+This method returns the instance command of the sub-ordinate with the
+given \fIpath\fR of names\&. An error is thrown if such a sub-ordinate
+does not exist\&. See also method \fBhas\fR\&.
+.RS
+.TP
+string \fIpath\fR
+The path of names to the sub-ordinate to look for\&.
 .RE
 .TP
 \fB<officer>\fR \fBhas\fR \fIname\fR
