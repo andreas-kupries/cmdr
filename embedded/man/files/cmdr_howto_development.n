@@ -339,6 +339,9 @@ Package \fBcmdr::help::json\fR\&.
 "\fIhelp_sql\&.tcl\fR"
 Package \fBcmdr::help::sql\fR\&.
 .TP
+"\fIhelp_tcl\&.tcl\fR"
+Package \fBcmdr::help::tcl\fR\&.
+.TP
 "\fIofficer\&.tcl\fR"
 Package \fBcmdr::officer\fR\&.
 .TP

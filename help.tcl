@@ -188,7 +188,7 @@ namespace eval ::cmdr::help::format {
 # Short
 # By-Category
 # ... entirely different formats (json, .rst, docopts, ...)
-# ... See help_json.tcl, and help_sql.tcl for examples.
+# ... See help_json.tcl, help_sql.tcl, and help_tcl.tcl for examples.
 #
 
 # # ## ### ##### ######## ############# #####################

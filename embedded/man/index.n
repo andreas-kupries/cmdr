@@ -298,6 +298,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -381,6 +384,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -466,6 +472,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -549,6 +558,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -634,6 +646,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -717,6 +732,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -802,6 +820,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -885,6 +906,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -970,6 +994,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -1053,6 +1080,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -1138,6 +1168,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -1221,6 +1254,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
@@ -1306,6 +1342,9 @@ cmdr::help::json
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
 .TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
+.TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer
 .TP
@@ -1389,6 +1428,9 @@ cmdr::help::json
 .TP
 \fBfiles/cmdr_help_sql\&.n\fR
 cmdr::help::sql
+.TP
+\fBfiles/cmdr_help_tcl\&.n\fR
+cmdr::help::tcl
 .TP
 \fBfiles/cmdr_officer\&.n\fR
 cmdr::officer

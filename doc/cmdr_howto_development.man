@@ -70,6 +70,7 @@ The directory structure of the sources is as explained below:
 [def [file help.tcl]]      Package [package cmdr::help].
 [def [file help_json.tcl]] Package [package cmdr::help::json].
 [def [file help_sql.tcl]]  Package [package cmdr::help::sql].
+[def [file help_tcl.tcl]]  Package [package cmdr::help::tcl].
 [def [file officer.tcl]]   Package [package cmdr::officer].
 [def [file parameter.tcl]] Package [package cmdr::parameter].
 [def [file private.tcl]]   Package [package cmdr::private].
