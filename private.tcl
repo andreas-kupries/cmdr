@@ -74,6 +74,7 @@ oo::class create ::cmdr::private {
 	my _find $words {}
     }
 
+    export _find
     method _find {words prefix} {
 	if {![llength $words]} {
 	    return [self]
