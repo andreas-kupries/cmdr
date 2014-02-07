@@ -144,6 +144,7 @@ oo::class create ::cmdr::officer {
 	my _find $words {}
     }
 
+    export _find
     method _find {words prefix} {
 	if {![llength $words]} {
 	    return [self]
