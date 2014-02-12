@@ -32,7 +32,7 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::validate {
-    namespace export boolean integer identity pass str \
+    namespace export boolean integer double identity pass str \
 	rfile rwfile rdirectory rwdirectory rpath rwpath
     #namespace ensemble create
 
@@ -98,6 +98,30 @@ proc ::cmdr::validate::integer::validate {p x} {
     debug.cmdr/validate {}
     if {[string is integer -strict $x]} { return $x }
     fail $p INTEGER "an integer" $x
+}
+
+# # ## ### ##### ######## ############# #####################
+## Any float
+
+namespace eval ::cmdr::validate::double {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+}
+
+proc ::cmdr::validate::double::release  {p x} { return }
+proc ::cmdr::validate::double::default  {p}  {
+    debug.cmdr/validate {}
+    return 0
+}
+proc ::cmdr::validate::double::complete {p x} {
+    debug.cmdr/validate {} 10
+    return {}
+}
+proc ::cmdr::validate::double::validate {p x} {
+    debug.cmdr/validate {}
+    if {[string is double -strict $x]} { return $x }
+    fail $p DOUBLE "a double" $x
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -321,5 +345,5 @@ proc ::cmdr::validate::rwpath::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.1
+package provide cmdr::validate 1.2
 return
