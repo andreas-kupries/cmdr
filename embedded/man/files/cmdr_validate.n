@@ -278,7 +278,13 @@ str
 Infinite\&.    Accepts all strings\&.
 .TP
 integer
-Infinite\&.    Accepts a Tcl integer\&.
+Infinite\&.    Accepts a Tcl integer number\&.
+.TP
+double
+Infinite\&.    Accepts a Tcl double number\&.
+.TP
+percent
+Infinite\&.    Accepts a Tcl double number in the range [0,100]\&.
 .TP
 rdirectory
 Completable\&. Accepts a readable directory (path)\&.

@@ -32,8 +32,8 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::validate {
-    namespace export boolean integer double identity pass str \
-	rfile rwfile rdirectory rwdirectory rpath rwpath
+    namespace export boolean integer double percent identity \
+	pass str rfile rwfile rdirectory rwdirectory rpath rwpath
     #namespace ensemble create
 
     # For external v-types relying on them here.
@@ -101,7 +101,7 @@ proc ::cmdr::validate::integer::validate {p x} {
 }
 
 # # ## ### ##### ######## ############# #####################
-## Any float
+## Any double
 
 namespace eval ::cmdr::validate::double {
     namespace export default validate complete release
@@ -122,6 +122,32 @@ proc ::cmdr::validate::double::validate {p x} {
     debug.cmdr/validate {}
     if {[string is double -strict $x]} { return $x }
     fail $p DOUBLE "a double" $x
+}
+
+# # ## ### ##### ######## ############# #####################
+## Any double in [0,100]
+
+namespace eval ::cmdr::validate::percent {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+}
+
+proc ::cmdr::validate::percent::release  {p x} { return }
+proc ::cmdr::validate::percent::default  {p}  {
+    debug.cmdr/validate {}
+    return 0
+}
+proc ::cmdr::validate::percent::complete {p x} {
+    debug.cmdr/validate {} 10
+    return {}
+}
+proc ::cmdr::validate::percent::validate {p x} {
+    debug.cmdr/validate {}
+    if {[string is double -strict $x] &&
+	($x >= 0) &&
+	($x <= 100)} { return $x }
+    fail $p PERCENT "a percentage" $x
 }
 
 # # ## ### ##### ######## ############# #####################
