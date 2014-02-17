@@ -363,6 +363,8 @@ oo::class create ::cmdr::officer {
 	    # Drop into a shell where the user can enter her commands
 	    # interactively.
 
+	    debug.cmdr/officer {shell}
+
 	    set shell [linenoise::facade new [self]]
 	    set myreplexit 0 ; # Initialize stop signal, no stopping
 	    $shell history 1
@@ -370,10 +372,14 @@ oo::class create ::cmdr::officer {
 	    $shell repl
 	    [my root] set *in-shell* false
 	    $shell destroy
+
+	    debug.cmdr/officer {/done shell}
 	    return
 	}
 
 	my Do {*}$args
+
+	debug.cmdr/officer {/done}
 	return
     }
 
@@ -401,8 +407,12 @@ oo::class create ::cmdr::officer {
 
 	    # Delegate to the handler for a known command.
 	    if {[my Known $cmd]} {
+		debug.cmdr/officer {/known $cmd}
+
 		my lappend *prefix* $cmd
 		[my lookup $cmd] do {*}$remainder
+
+		debug.cmdr/officer {/done known}
 		return
 	    }
 
@@ -411,7 +421,11 @@ oo::class create ::cmdr::officer {
 
 	    if {[my hasdefault]} {
 		# prefix left as is.
-		return [[my lookup [my default]] do {*}$args]
+		debug.cmdr/officer {/default}
+
+		[my lookup [my default]] do {*}$args
+		debug.cmdr/officer {/done default}
+		return
 	    }
 
 	    if {[catch {
@@ -426,6 +440,8 @@ oo::class create ::cmdr::officer {
 	    }
 	    my unset *prefix*
 	}
+
+	debug.cmdr/officer {/done}
     }
 
     # # ## ### ##### ######## #############

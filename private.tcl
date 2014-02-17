@@ -70,6 +70,11 @@ oo::class create ::cmdr::private {
 
     # # ## ### ##### ######## #############
 
+    method children {} {
+	debug.cmdr/private {}
+	return {}
+    }
+
     method find {words} {
 	my internal_find $words {}
     }
@@ -124,6 +129,7 @@ oo::class create ::cmdr::private {
 	} else {
 	    my Run $args
 	}
+	debug.cmdr/private {/done}
     }
 
     method Run {words} {
@@ -151,6 +157,8 @@ oo::class create ::cmdr::private {
 	debug.cmdr/private {execute}
 	# Call actual command, hand it the filled configuration.
 	{*}$mycmd $myconfig 
+
+	debug.cmdr/private {/done}
     }
 
     method help {{prefix {}}} {
