@@ -136,10 +136,19 @@ proc ::cmdr::help::auto-help {actor config} {
     set format [$config @format]
 
     if {$format eq {}} {
-	# Default depends on the presence of additional arguments,
-	# i.e. if a specific command is asked for, or not.
+	# The chosen default format depends on the presence of
+	# additional arguments, i.e. if a specific command is asked
+	# for, or not, and the general context (root, leaf, inner
+	# node).
+
 	if {[llength $words]} {
-	    set format full
+	    set sub [$actor find $words]
+	    if {[llength [$sub children]]} {
+		# Interior command node
+		set format short
+	    } else {
+		set format full
+	    }
 	} else {
 	    set format by-category
 	}
