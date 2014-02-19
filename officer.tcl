@@ -80,6 +80,7 @@ oo::class create ::cmdr::officer {
 	set myactions   $actions ; # Action spec for future initialization
 	set myinit      no       ; # Dispatch map will be initialized lazily
 	set mymap       {}       ; # Action map starts knowing nothing
+	set mypmap      {}       ; # Ditto for the map of action abbreviations.
 	set mycommands  {}       ; # Ditto
 	set myccommands {}       ; # Ditto, derived cache, see method CCommands.
 	set mychildren  {}       ; # List of created subordinates.
@@ -127,12 +128,20 @@ oo::class create ::cmdr::officer {
     method lookup {name} {
 	debug.cmdr/officer {}
 	my Setup
-	if {![dict exists $mymap a,$name]} {
-	    return -code error \
-		-errorcode [list CMDR ACTION UNKNOWN $name] \
-		"Expected action name, got \"$name\""
+	# An exact action name has priority over any prefixes.
+	if {[dict exists $mymap a,$name]} {
+	    return [dict get $mymap a,$name]
 	}
-	return [dict get $mymap a,$name]
+	# Accept any unique prefix.
+	if {
+	    [dict exists $mypmap $name] &&
+	    ([llength [set hl [dict get $mypmap $name]]] == 1)
+	} {
+	    return [lindex $hl 0]
+	}
+	return -code error \
+	    -errorcode [list CMDR ACTION UNKNOWN $name] \
+	    "Expected action name, got \"$name\""
     }
 
     method find {words} {
@@ -319,8 +328,15 @@ oo::class create ::cmdr::officer {
     method Def {name handler} {
 	# Make an action known to the dispatcher.
 	dict set mymap last $name
-	dict set mymap   a,$name $handler
+	dict set mymap a,$name $handler
 	lappend mycommands $name
+
+	# Update the map of action prefixes
+	set prefix {}
+	foreach c [split $name {}] {
+	    append prefix $c
+	    dict lappend mypmap $prefix $handler
+	}
 	return
     }
 
@@ -340,7 +356,18 @@ oo::class create ::cmdr::officer {
     }
 
     method Known {name} {
-	return [dict exists $mymap a,$name]
+	debug.cmdr/officer {}
+	# Known exact action is good
+	if {[dict exists $mymap a,$name]} { return 1 }
+	debug.cmdr/officer {no action, maybe prefix}
+	# Unknown prefix is bad
+	if {![dict exists $mypmap $name]} { return 0 }
+	debug.cmdr/officer {prefix, maybe ambiguous}
+	# As is an ambiguous prefix
+	if {[llength [dict get $mypmap $name]] > 1} { return 0 }
+	debug.cmdr/officer {unique prefix}
+	# Known unique prefix is good.
+	return 1
     }
 
     # # ## ### ##### ######## #############
@@ -675,7 +702,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     variable myinit myactions mymap mycommands myccommands mychildren \
-	myreplexit myhandler
+	myreplexit myhandler mypmap
 
     # # ## ### ##### ######## #############
 }
