@@ -33,7 +33,8 @@ namespace eval ::cmdr {
 
 namespace eval ::cmdr::validate {
     namespace export boolean integer double percent identity \
-	pass str rfile rwfile rdirectory rwdirectory rpath rwpath
+	pass str rfile wfile rwfile rdirectory rwdirectory \
+	rpath rwpath rchan wchan rwchan
     #namespace ensemble create
 
     # For external v-types relying on them here.
@@ -219,6 +220,35 @@ proc ::cmdr::validate::rfile::Ok {path} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## File, existing and writable
+
+namespace eval ::cmdr::validate::wfile {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::wfile::release  {p x} { return }
+proc ::cmdr::validate::wfile::default  {p}   { return {} }
+proc ::cmdr::validate::wfile::complete {p x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::wfile::Ok $x
+}
+proc ::cmdr::validate::wfile::validate {p x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return $x }
+    fail $p WFILE "an existing writable file" $x
+}
+
+proc ::cmdr::validate::wfile::Ok {path} {
+    if {![file exists   $path]} {return 0}
+    if {![file isfile   $path]} {return 0}
+    if {![file writable $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
 ## File, existing and read/writable
 
 namespace eval ::cmdr::validate::rwfile {
@@ -366,6 +396,102 @@ proc ::cmdr::validate::rwpath::Ok {path} {
     if {![file exists      $path]} {return 0}
     if {![file readable    $path]} {return 0}
     if {![file writable    $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
+## Channel, for existing and readable file. Defaults to stdin.
+
+namespace eval ::cmdr::validate::rchan {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::rchan::release  {p x} {
+    if {$x eq "stdin"} return
+    close $x
+    return
+}
+proc ::cmdr::validate::rchan::default  {p}   { return stdin }
+proc ::cmdr::validate::rchan::complete {p x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::rchan::Ok $x
+}
+proc ::cmdr::validate::rchan::validate {p x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return [open $x r] }
+    fail $p RCHAN "an existing readable file" $x
+}
+
+proc ::cmdr::validate::rchan::Ok {path} {
+    if {![file exists   $path]} {return 0}
+    if {![file isfile   $path]} {return 0}
+    if {![file readable $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
+## Channel, for existing and writable file. Defaults to stdout.
+
+namespace eval ::cmdr::validate::wchan {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::wchan::release  {p x} {
+    if {$x eq "stdout"} return
+    close $x
+    return
+}
+proc ::cmdr::validate::wchan::default  {p}   { return stdout }
+proc ::cmdr::validate::wchan::complete {p x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::wchan::Ok $x
+}
+proc ::cmdr::validate::wchan::validate {p x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return [open $x w] }
+    fail $p WCHAN "an existing writable file" $x
+}
+
+proc ::cmdr::validate::wchan::Ok {path} {
+    if {![file exists   $path]} {return 0}
+    if {![file isfile   $path]} {return 0}
+    if {![file writable $path]} {return 0}
+    return 1
+}
+
+# # ## ### ##### ######## ############# #####################
+## Channel, for existing and read/writable file. No default.
+
+namespace eval ::cmdr::validate::rwchan {
+    namespace export default validate complete release
+    namespace ensemble create
+    namespace import ::cmdr::validate::common::fail
+    namespace import ::cmdr::validate::common::complete-glob
+}
+
+proc ::cmdr::validate::rwchan::release  {p x} { close $x }
+proc ::cmdr::validate::rwchan::default  {p}   { return {} }
+proc ::cmdr::validate::rwchan::complete {p x} {
+    debug.cmdr/validate {} 10
+    complete-glob ::cmdr::validate::rwchan::Ok $x
+}
+proc ::cmdr::validate::rwchan::validate {p x} {
+    debug.cmdr/validate {}
+    if {[Ok $x]} { return [open $x w+] }
+    fail $p RWCHAN "an existing read/writable file" $x
+}
+
+proc ::cmdr::validate::rwchan::Ok {path} {
+    if {![file exists   $path]} {return 0}
+    if {![file isfile   $path]} {return 0}
+    if {![file readable $path]} {return 0}
+    if {![file writable $path]} {return 0}
     return 1
 }
 
