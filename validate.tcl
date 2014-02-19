@@ -242,9 +242,37 @@ proc ::cmdr::validate::wfile::validate {p x} {
 }
 
 proc ::cmdr::validate::wfile::Ok {path} {
-    if {![file exists   $path]} {return 0}
+    if {![file exists $path]} {
+	# The file is allowed to not exist if its directory exists and
+	# is writable. This can apply recursively up the chain of
+	# directories.
+	return [OkDir [file dirname $path]]
+    }
     if {![file isfile   $path]} {return 0}
     if {![file writable $path]} {return 0}
+    return 1
+}
+
+proc ::cmdr::validate::wfile::OkDir {path} {
+    if {![file exists $path]} {
+	# The directory is allowed to not exist if its parent
+	# directory exists and is writable.
+	# Note: Block walking up the chain if the directory has no
+	# parent.
+	# Note: Switch to absolute notation if path is the relative
+	# name of the CWD (i.e. ".").
+	if {$path eq "."} {
+	    set path [pwd]
+	}
+	set up [file dirname $path]
+	if {$up eq $path} {
+	    # Reached root (/, x:, x:/), is missing, stop & fail.
+	    return 0
+	}
+	return [OkDir $up]
+    }
+    if {![file isdirectory $path]} {return 0}
+    if {![file writable    $path]} {return 0}
     return 1
 }
 
@@ -459,9 +487,37 @@ proc ::cmdr::validate::wchan::validate {p x} {
 }
 
 proc ::cmdr::validate::wchan::Ok {path} {
-    if {![file exists   $path]} {return 0}
+    if {![file exists $path]} {
+	# The file is allowed to not exist if its directory exists and
+	# is writable. This can apply recursively up the chain of
+	# directories.
+	return [OkDir [file dirname $path]]
+    }
     if {![file isfile   $path]} {return 0}
     if {![file writable $path]} {return 0}
+    return 1
+}
+
+proc ::cmdr::validate::wchan::OkDir {path} {
+    if {![file exists $path]} {
+	# The directory is allowed to not exist if its parent
+	# directory exists and is writable.
+	# Note: Block walking up the chain if the directory has no
+	# parent.
+	# Note: Switch to absolute notation if path is the relative
+	# name of the CWD (i.e. ".").
+	if {$path eq "."} {
+	    set path [pwd]
+	}
+	set up [file dirname $path]
+	if {$up eq $path} {
+	    # Reached root (/, x:, x:/), is missing, stop & fail.
+	    return 0
+	}
+	return [OkDir $up]
+    }
+    if {![file isdirectory $path]} {return 0}
+    if {![file writable    $path]} {return 0}
     return 1
 }
 
