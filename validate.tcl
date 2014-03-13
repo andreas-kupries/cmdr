@@ -11,6 +11,7 @@
 # Meta description Standard validation types for parameters.
 # Meta subject {command line}
 # Meta require {Tcl 8.5-}
+# Meta require {cmdr::validate::common 1.2}
 # Meta require debug
 # Meta require debug::caller
 # @@ Meta End
@@ -19,7 +20,7 @@
 ## Requisites
 
 package require Tcl 8.5
-package require cmdr::validate::common
+package require cmdr::validate::common 1.2
 package require debug
 package require debug::caller
 
@@ -227,6 +228,7 @@ namespace eval ::cmdr::validate::wfile {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::wfile::release  {p x} { return }
@@ -238,7 +240,7 @@ proc ::cmdr::validate::wfile::complete {p x} {
 proc ::cmdr::validate::wfile::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail $p WFILE "an existing writable file" $x
+    fail $p WFILE "a writable file" $x
 }
 
 proc ::cmdr::validate::wfile::Ok {path} {
@@ -246,33 +248,10 @@ proc ::cmdr::validate::wfile::Ok {path} {
 	# The file is allowed to not exist if its directory exists and
 	# is writable. This can apply recursively up the chain of
 	# directories.
-	return [OkDir [file dirname $path]]
+	return [ok-directory [file dirname $path]]
     }
     if {![file isfile   $path]} {return 0}
     if {![file writable $path]} {return 0}
-    return 1
-}
-
-proc ::cmdr::validate::wfile::OkDir {path} {
-    if {![file exists $path]} {
-	# The directory is allowed to not exist if its parent
-	# directory exists and is writable.
-	# Note: Block walking up the chain if the directory has no
-	# parent.
-	# Note: Switch to absolute notation if path is the relative
-	# name of the CWD (i.e. ".").
-	if {$path eq "."} {
-	    set path [pwd]
-	}
-	set up [file dirname $path]
-	if {$up eq $path} {
-	    # Reached root (/, x:, x:/), is missing, stop & fail.
-	    return 0
-	}
-	return [OkDir $up]
-    }
-    if {![file isdirectory $path]} {return 0}
-    if {![file writable    $path]} {return 0}
     return 1
 }
 
@@ -284,6 +263,7 @@ namespace eval ::cmdr::validate::rwfile {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::rwfile::release  {p x} { return }
@@ -295,11 +275,16 @@ proc ::cmdr::validate::rwfile::complete {p x} {
 proc ::cmdr::validate::rwfile::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return $x }
-    fail $p RWFILE "an existing read/writable file" $x
+    fail $p RWFILE "a read/writable file" $x
 }
 
 proc ::cmdr::validate::rwfile::Ok {path} {
-    if {![file exists   $path]} {return 0}
+    if {![file exists $path]} {
+	# The file is allowed to not exist if its directory exists and
+	# is writable. This can apply recursively up the chain of
+	# directories.
+	return [ok-directory [file dirname $path]]
+    }
     if {![file isfile   $path]} {return 0}
     if {![file readable $path]} {return 0}
     if {![file writable $path]} {return 0}
@@ -344,6 +329,7 @@ namespace eval ::cmdr::validate::rwdirectory {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::rwdirectory::release  {p x} { return }
@@ -360,7 +346,12 @@ proc ::cmdr::validate::rwdirectory::validate {p x} {
 }
 
 proc ::cmdr::validate::rwdirectory::Ok {path} {
-    if {![file exists      $path]} {return 0}
+    if {![file exists $path]} {
+	# The directory is allowed to not exist if its parent
+	# directory exists and is writable. This can apply recursively
+	# up the chain of directories.
+	return [ok-directory [file dirname $path]]
+    }
     if {![file isdirectory $path]} {return 0}
     if {![file readable    $path]} {return 0}
     if {![file writable    $path]} {return 0}
@@ -405,6 +396,7 @@ namespace eval ::cmdr::validate::rwpath {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::rwpath::release  {p x} { return }
@@ -421,7 +413,12 @@ proc ::cmdr::validate::rwpath::validate {p x} {
 }
 
 proc ::cmdr::validate::rwpath::Ok {path} {
-    if {![file exists      $path]} {return 0}
+    if {![file exists $path]} {
+	# The path is allowed to not exist if its directory exists and
+	# is writable. This can apply recursively up the chain of
+	# directories.
+	return [ok-directory [file dirname $path]]
+    }
     if {![file readable    $path]} {return 0}
     if {![file writable    $path]} {return 0}
     return 1
@@ -468,6 +465,7 @@ namespace eval ::cmdr::validate::wchan {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::wchan::release  {p x} {
@@ -483,7 +481,7 @@ proc ::cmdr::validate::wchan::complete {p x} {
 proc ::cmdr::validate::wchan::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return [open $x w] }
-    fail $p WCHAN "an existing writable file" $x
+    fail $p WCHAN "a writable file" $x
 }
 
 proc ::cmdr::validate::wchan::Ok {path} {
@@ -491,33 +489,10 @@ proc ::cmdr::validate::wchan::Ok {path} {
 	# The file is allowed to not exist if its directory exists and
 	# is writable. This can apply recursively up the chain of
 	# directories.
-	return [OkDir [file dirname $path]]
+	return [ok-directory [file dirname $path]]
     }
     if {![file isfile   $path]} {return 0}
     if {![file writable $path]} {return 0}
-    return 1
-}
-
-proc ::cmdr::validate::wchan::OkDir {path} {
-    if {![file exists $path]} {
-	# The directory is allowed to not exist if its parent
-	# directory exists and is writable.
-	# Note: Block walking up the chain if the directory has no
-	# parent.
-	# Note: Switch to absolute notation if path is the relative
-	# name of the CWD (i.e. ".").
-	if {$path eq "."} {
-	    set path [pwd]
-	}
-	set up [file dirname $path]
-	if {$up eq $path} {
-	    # Reached root (/, x:, x:/), is missing, stop & fail.
-	    return 0
-	}
-	return [OkDir $up]
-    }
-    if {![file isdirectory $path]} {return 0}
-    if {![file writable    $path]} {return 0}
     return 1
 }
 
@@ -529,6 +504,7 @@ namespace eval ::cmdr::validate::rwchan {
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::ok-directory
 }
 
 proc ::cmdr::validate::rwchan::release  {p x} { close $x }
@@ -540,11 +516,16 @@ proc ::cmdr::validate::rwchan::complete {p x} {
 proc ::cmdr::validate::rwchan::validate {p x} {
     debug.cmdr/validate {}
     if {[Ok $x]} { return [open $x w+] }
-    fail $p RWCHAN "an existing read/writable file" $x
+    fail $p RWCHAN "a read/writable file" $x
 }
 
 proc ::cmdr::validate::rwchan::Ok {path} {
-    if {![file exists   $path]} {return 0}
+    if {![file exists   $path]} {
+	# The file is allowed to not exist if its directory exists and
+	# is writable. This can apply recursively up the chain of
+	# directories.
+	return [ok-directory [file dirname $path]]
+    }
     if {![file isfile   $path]} {return 0}
     if {![file readable $path]} {return 0}
     if {![file writable $path]} {return 0}
@@ -553,5 +534,5 @@ proc ::cmdr::validate::rwchan::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.2
+package provide cmdr::validate 1.3
 return
