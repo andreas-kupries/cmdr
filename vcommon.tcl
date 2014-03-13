@@ -37,7 +37,7 @@ namespace eval ::cmdr::validate {
 }
 
 namespace eval ::cmdr::validate::common {
-    namespace export fail complete-enum complete-glob
+    namespace export fail complete-enum complete-glob ok-directory
     namespace ensemble create
 }
 
@@ -107,7 +107,31 @@ proc ::cmdr::validate::common::complete-glob {filter buffer} {
     return $candidates
 }
 
+proc ::cmdr::validate::common::ok-directory {path} {
+    if {![file exists $path]} {
+
+	# The directory is allowed to not exist if its parent
+	# directory exists and is writable.
+	# Note: Prevent us from walking up the chain if the directory
+	# has no parent.
+	# Note 2: Switch to absolute notation if path is the relative
+	# name of the CWD (i.e. ".").
+	if {$path eq "."} {
+	    set path [pwd]
+	}
+	set up [file dirname $path]
+	if {$up eq $path} {
+	    # Reached root (/, x:, x:/), found it missing, stop & fail.
+	    return 0
+	}
+	return [ok-directory $up]
+    }
+    if {![file isdirectory $path]} {return 0}
+    if {![file writable    $path]} {return 0}
+    return 1
+}
+
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::common 1.1
+package provide cmdr::validate::common 1.2
 return
