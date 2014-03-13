@@ -96,7 +96,13 @@ proc ::cmdr::validate::integer::complete {p x} {
 }
 proc ::cmdr::validate::integer::validate {p x} {
     debug.cmdr/validate {}
-    if {[string is integer -strict $x]} { return $x }
+
+    # While we accept integers in octal and hex we convert them into
+    # proper decimals for internal use, as our standard
+    # representation.
+    if {[string is integer -strict $x]} {
+	return [format %d $x]
+    }
     fail $p INTEGER "an integer" $x
 }
 
@@ -371,5 +377,5 @@ proc ::cmdr::validate::rwpath::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.2
+package provide cmdr::validate 1.2.1
 return
