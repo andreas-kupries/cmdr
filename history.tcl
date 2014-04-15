@@ -17,6 +17,11 @@
 # Meta require debug::caller
 # @@ Meta End
 
+# Limits 'n'
+# < 0 | History on.  Keep everything 
+# = 0 | History off. Keep nothing.
+# > 0 | History on.  Keep last n entries.
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
@@ -34,7 +39,7 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::history {
-    namespace export attach saveto
+    namespace export attach save-to initial-limit
     namespace ensemble create
 
     # Path to the file the history is stored in.
@@ -43,7 +48,7 @@ namespace eval ::cmdr::history {
 
     # State information about the history subsystem.
     variable loaded  0 ; # Boolean: Has the history file been loaded yet ?
-    variable limit   0 ; # What are the limits on commands to be saved ? (0 = unlimited)
+    variable limit  -1 ; # Limits. Default: active, no limits.
     variable cache  {} ; # In-memory list of the saved commands for easier limit handling.
 }
 
@@ -63,9 +68,15 @@ debug prefix cmdr/history {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::history::saveto {path} {
+proc ::cmdr::history::save-to {path} {
     debug.cmdr/history {}
     variable file $path
+    return
+}
+
+proc ::cmdr::history::initial-limit {new} {
+    debug.cmdr/history {}
+    variable limit $new
     return
 }
 
@@ -142,11 +153,12 @@ proc ::cmdr::history::attach {actor} {
 	}
 	input n {
 	    The number of commands to limit the history to.
-	    A value <= 0 disables all limits.
-	    Default is unlimited.
+	    For a value > 0 we keep that many commands in the history.
+	    For a value < 0 we keep all commands, i.e. unlimited history.
+	    For a value = 0 we keep nothing, i.e. no history.
 	} {
 	    optional
-	    default 0
+	    default -1
 	    validate integer
 	}
     } ::cmdr::history::Limit
@@ -180,6 +192,10 @@ proc ::cmdr::history::Add {command} {
     debug.cmdr/history {}
     Load
 
+    # Shortcircuit if we are not keeping any history.
+    variable limit
+    if {$limit == 0} return
+
     # Extend history
     variable cache
     lappend  cache $command
@@ -197,8 +213,8 @@ proc ::cmdr::history::Restrict {} {
     variable limit
     debug.cmdr/history {limit = $limit}
 
-    # No limits, nothing to do.
-    if {$limit <= 0} {
+    # There are no limits set, there is nothing to do.
+    if {$limit < 0} {
 	debug.cmdr/history {/no limit}
 	return 0
     }
@@ -210,13 +226,14 @@ proc ::cmdr::history::Restrict {} {
 
     debug.cmdr/history {delta = $delta}
 
-    # Amount of history is still under the imposed limit, nothing to do.
+    # The stored amount of history is still under the imposed limit,
+    # so there is nothing to do.
     if {$delta < 0} {
 	debug.cmdr/history {Under limit by [expr {- $delta}]}
 	return 0
     }
 
-    # Throw the <delta> oldest entries out
+    # Throw the <delta> oldest entries out. This may be all.
     set cache [lrange $cache $delta end]
 
     debug.cmdr/history {cache len = [llength $cache]}
@@ -246,15 +263,18 @@ proc ::cmdr::history::SaveAll {} {
     debug.cmdr/history {limit     = $limit}
     debug.cmdr/history {cache len = [llength $cache]}
 
-    if {$limit > 0} {
-	set prefix "#limit=$limit\n"
-    } else {
-	set prefix ""
+    set contents ""
+
+    if {$limit >= 0} {
+	# We need a marker for limited and disabled history.
+	append contents "#limit=$limit\n"
     }
 
-    debug.cmdr/history {prefix    = ($prefix)}
+    if {[llength $cache]} {
+	append contents "[join $cache \n]\n"
+    }
 
-    fileutil::writeFile $file "$prefix[join $cache \n]\n"
+    fileutil::writeFile $file $contents
     return
 }
 
@@ -271,6 +291,8 @@ proc ::cmdr::history::Load {} {
 
     if {![file exists $file]} {
 	# Initial memory defaults for cache and limit are good.
+	# Write the latter to external to keep it properly.
+	SaveAll
 	return
     }
 
@@ -279,11 +301,17 @@ proc ::cmdr::history::Load {} {
 
     # Detect and strip a leading limit clause from the contents.
     if {[regexp "#limit=(\\d+)\$" [lindex $lines 0] -> plimit]} {
-	set limit $plimit
 	set lines [lrange $lines 1 end]
+    } else {
+	set plimit -1
     }
 
+    set limit $plimit
     set cache $lines
+    # Apply the limit clause if the user tried to circumvent it by
+    # manually extending the history. Any changes we had to make are
+    # saved back.
+    if {[Restrict]} SaveAll
     return
 }
 
@@ -348,7 +376,7 @@ proc ::cmdr::history::Limit {config} {
 
     if {![$config @n set?]} {
 	# Show current limit
-	puts $limit
+	puts [Describe]
 	return
     }
 
@@ -356,7 +384,9 @@ proc ::cmdr::history::Limit {config} {
     # at last refresh the external state.
     debug.cmdr/history {current = $limit}
     set new [$config @n]
-    if {$new < 0 } { set new 0 }
+    if {$new < 0 } {
+	set new -1
+    }
 
     debug.cmdr/history {new     = $new}
 
@@ -369,8 +399,21 @@ proc ::cmdr::history::Limit {config} {
     Restrict
     SaveAll
 
-    puts "Changed limit to $new"
+    puts "Changed limit to: [Describe]"
     return
+}
+
+proc ::cmdr::history::Describe {} {
+    variable limit
+    if {$limit < 0} {
+	return "Keep an unlimited history"
+    } elseif {$limit == 0} {
+	return "Keep no history (off)"
+    } elseif {$limit == 1} {
+	return "Keep one entry"
+    } else {
+	return "Keep $limit entries"
+    }
 }
 
 # # ## ### ##### ######## ############# #####################
