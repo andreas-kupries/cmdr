@@ -66,5 +66,7 @@ proc ::foo::backend::alias::remove {config} {
 }
 
 # # ## ### ##### ######## ############# #####################
-package provide foo::backend::alias 0
+package provide \
+	foo::backend::alias 0
+# 2 lines, hidden from kettle scanner.
 }]
