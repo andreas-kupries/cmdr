@@ -124,6 +124,7 @@ oo::class create ::cmdr::private {
     # # ## ### ##### ######## #############
 
     method FullCmd {cmd} {
+	# See also officer::Do
 	if {[catch {
 	    set prefix "[my get *prefix*] "
 	}]} { set prefix "" }
