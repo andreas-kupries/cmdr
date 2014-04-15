@@ -146,7 +146,6 @@ proc ::cmdr::history::attach {actor} {
 
     $actor extend {history limit} {
 	section Introspection {Command history}
-	section Introspection
 	description {
 	    Limit the size of the history.
 	    If no limit is specified the current limit is shown.
