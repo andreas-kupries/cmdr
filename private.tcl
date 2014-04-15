@@ -99,6 +99,13 @@ oo::class create ::cmdr::private {
 	return
     }
 
+    method shandler {cmd} {
+	debug.cmdr/private {}
+	# Privates have no setup handler/hook.
+	# Ignoring the inherited definition.
+	return
+    }
+
     # # ## ### ##### ######## #############
     ## Internal. Argument processing. Defered until required.
     ## Core setup code runs only once.
@@ -116,9 +123,18 @@ oo::class create ::cmdr::private {
 
     # # ## ### ##### ######## #############
 
+    method FullCmd {cmd} {
+	if {[catch {
+	    set prefix "[my get *prefix*] "
+	}]} { set prefix "" }
+	return $prefix$cmd
+    }
+
     method do {args} {
 	debug.cmdr/private {}
 	my Setup
+
+	my history-add [my FullCmd $args]
 
 	if {[llength $myhandler]} {
 	    # The handler is expected to have a try/finally construct
@@ -195,4 +211,4 @@ oo::class create ::cmdr::private {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::private 1.1
+package provide cmdr::private 1.2
