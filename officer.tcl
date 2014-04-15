@@ -472,6 +472,7 @@ oo::class create ::cmdr::officer {
 		return
 	    }
 
+	    # See also private::FullCmd
 	    if {[catch {
 		set prefix " [my get *prefix*] "
 	    }]} { set prefix "" }

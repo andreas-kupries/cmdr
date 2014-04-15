@@ -187,6 +187,14 @@ oo::class create ::cmdr::actor {
 	return
     }
 
+    method unset-all {key} {
+	debug.cmdr/actor {}
+	dict unset mystore $key
+	if {$mysuper eq {}} return
+	$mysuper unset-all $key
+	return
+    }
+
     method history-via {cmd} {
 	debug.cmdr/actor {}
 	set myhistory $cmd
