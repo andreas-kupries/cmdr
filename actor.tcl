@@ -53,6 +53,10 @@ oo::class create ::cmdr::actor {
 	set mydocumented  yes
 	set mysuper       {}
 	set mystore       {}
+
+	set myhistory     {} ; # History handler, reporting commands just about
+	#                      # to be executed, and other events related to
+	#                      # history management.
 	return
     }
 
@@ -183,6 +187,33 @@ oo::class create ::cmdr::actor {
 	return
     }
 
+    method unset-all {key} {
+	debug.cmdr/actor {}
+	dict unset mystore $key
+	if {$mysuper eq {}} return
+	$mysuper unset-all $key
+	return
+    }
+
+    method history-via {cmd} {
+	debug.cmdr/actor {}
+	set myhistory $cmd
+	return
+    }
+
+    method history-setup {} {
+	debug.cmdr/actor {}
+	if {![llength $myhistory]} {return {}}
+	return [{*}$myhistory initialize [self]]
+    }
+
+    method history-add {cmd} {
+	debug.cmdr/actor {}
+	if {![llength $myhistory]} return
+	{*}$myhistory add [string trim $cmd]
+	return
+    }
+
     # # ## ### ##### ######## #############
     ## Public APIs:
     ## Overridden by sub-classes.
@@ -196,7 +227,8 @@ oo::class create ::cmdr::actor {
     ##
     # # ## ### ##### ######## #############
 
-    variable myname mydescription mydocumented mysuper mystore
+    variable myname mydescription mydocumented \
+	mysuper mystore myhistory
 
     # # ## ### ##### ######## #############
     ## Helper methods common to command completion in actors.
@@ -313,4 +345,4 @@ oo::class create ::cmdr::actor {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::actor 1.1
+package provide cmdr::actor 1.2
