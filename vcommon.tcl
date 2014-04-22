@@ -37,7 +37,10 @@ namespace eval ::cmdr::validate {
 }
 
 namespace eval ::cmdr::validate::common {
-    namespace export fail complete-enum complete-glob ok-directory
+    namespace export \
+	complete-enum complete-glob ok-directory \
+	fail fail-unknown-thing fail-known-thing \
+	p-name lead-in
     namespace ensemble create
 }
 
@@ -48,23 +51,64 @@ debug level  cmdr/validate/common
 debug prefix cmdr/validate/common {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
+## Different forms of validation failure messages
 
-proc ::cmdr::validate::common::fail {p code type x} {
+proc ::cmdr::validate::common::fail {p code type x {context {}}} {
+    # Generic failure: "Expected foo, got x".
     debug.cmdr/validate/common {}
 
-    # Determine type of p: state, option, or input.  Use this to
-    # choose a proper identifying string in the generated message.
+    append msg "Expected $type for [$p type] \"[p-name $p]\"$context,"
+    append msg " got \"$x\""
 
-    set ptype [$p type]
-
-    if {$ptype eq "option"} {
-	set name [$p flag]
-    } else {
-	set name [$p label]
-    }
-    return -code error -errorcode [list CMDR VALIDATE {*}$code] \
-	"Expected $type for $ptype \"$name\", got \"$x\""
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
 }
+
+proc ::cmdr::validate::common::fail-unknown-thing {p code type x {context {}}} {
+    # Specific failure for a named thing: Expected existence, found it missing.
+    debug.cmdr/validate/common {}
+
+    append msg "Found a problem with [$p type] \"[p-name $p]\":"
+    append msg " [lead-in $type] \"$x\" does not exist$context."
+    append msg " Please use a different value."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-known-thing {p code type x {context {}}} {
+    # Specific failure for a named thing: Expected non-existence, found a definition.
+    debug.cmdr/validate/common {}
+
+    append msg "Found a problem with [$p type] \"[p-name $p]\":"
+    append msg " [lead-in $type] named \"$x\" already exists$context."
+    append msg " Please use a different name."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+# # ## ### ##### ######## ############# #####################
+## Support commands for construction of messages.
+
+proc ::cmdr::validate::common::lead-in {type} {
+    if {[string match {A *}  $type] ||
+	[string match {An *} $type]} {
+	set lead {}
+    } elseif {[string match {[aeiouAEIOU]*} $type]} {
+	set lead {An }
+    } else {
+	set lead {A }
+    }
+    return $lead$type
+}
+
+proc ::cmdr::validate::common::p-name {p} {
+    if {[$p type] eq "option"} {
+	return [$p flag]
+    } else {
+	return [$p label]
+    }
+}
+
+# # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::validate::common::complete-enum {choices nocase buffer} {
     # As a helper function for command completion printing anything
