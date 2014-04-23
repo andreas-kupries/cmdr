@@ -40,7 +40,7 @@ namespace eval ::cmdr::validate::common {
     namespace export \
 	complete-enum complete-glob ok-directory \
 	fail fail-unknown-thing fail-known-thing \
-	p-name lead-in
+	lead-in
     namespace ensemble create
 }
 
@@ -57,7 +57,7 @@ proc ::cmdr::validate::common::fail {p code type x {context {}}} {
     # Generic failure: "Expected foo, got x".
     debug.cmdr/validate/common {}
 
-    append msg "Expected $type for [$p type] \"[p-name $p]\"$context,"
+    append msg "Expected $type for [$p type] \"[$p the-name]\"$context,"
     append msg " got \"$x\""
 
     return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
@@ -67,7 +67,7 @@ proc ::cmdr::validate::common::fail-unknown-thing {p code type x {context {}}} {
     # Specific failure for a named thing: Expected existence, found it missing.
     debug.cmdr/validate/common {}
 
-    append msg "Found a problem with [$p type] \"[p-name $p]\":"
+    append msg "Found a problem with [$p type] \"[$p the-name]\":"
     append msg " [lead-in $type] \"$x\" does not exist$context."
     append msg " Please use a different value."
 
@@ -78,7 +78,7 @@ proc ::cmdr::validate::common::fail-known-thing {p code type x {context {}}} {
     # Specific failure for a named thing: Expected non-existence, found a definition.
     debug.cmdr/validate/common {}
 
-    append msg "Found a problem with [$p type] \"[p-name $p]\":"
+    append msg "Found a problem with [$p type] \"[$p the-name]\":"
     append msg " [lead-in $type] named \"$x\" already exists$context."
     append msg " Please use a different name."
 
@@ -98,14 +98,6 @@ proc ::cmdr::validate::common::lead-in {type} {
 	set lead {A }
     }
     return $lead$type
-}
-
-proc ::cmdr::validate::common::p-name {p} {
-    if {[$p type] eq "option"} {
-	return [$p flag]
-    } else {
-	return [$p label]
-    }
 }
 
 # # ## ### ##### ######## ############# #####################
