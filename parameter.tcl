@@ -156,6 +156,15 @@ oo::class create ::cmdr::parameter {
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
     method label       {} { return $mylabel }
+
+    method the-name {} {
+	if {[my type] eq "option"} {
+	    return [my flag]
+	} else {
+	    return $mylabel
+	}
+    }
+
     method description {{detail {}}} {
 	if {($detail ne {}) && [dict exists $myflags $detail]} {
 	    switch -exact -- [dict get $myflags $detail] {
@@ -1207,4 +1216,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.1
+package provide cmdr::parameter 1.2
