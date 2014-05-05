@@ -5,7 +5,7 @@
 ## mdr::help heuristics see and automatically integrate the format.
 
 # @@ Meta Begin
-# Package cmdr::help::json 1.0
+# Package cmdr::help::json 1.0.1
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -85,9 +85,11 @@ proc ::cmdr::help::format::JSON::acategory {path cmds subc} {
 
     # With struct::list map we could then also re-use alist.
     set commands {}
-    foreach def [lsort -dict -unique [dict get $cmds $path]] {
-	lassign $def cname _
-	lappend commands [json::write string $cname]
+    if {[dict exists $cmds $path]} {
+	foreach def [lsort -dict -unique [dict get $cmds $path]] {
+	    lassign $def cname _
+	    lappend commands [json::write string $cname]
+	}
     }
 
     set sections {}
@@ -201,4 +203,4 @@ proc ::cmdr::help::format::JSON::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::json 1.0
+package provide cmdr::help::json 1.0.1
