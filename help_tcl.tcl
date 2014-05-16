@@ -5,7 +5,7 @@
 ## mdr::help heuristics see and automatically integrate the format.
 
 # @@ Meta Begin
-# Package cmdr::help::tcl 1.0
+# Package cmdr::help::tcl 1.0.1
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -81,8 +81,10 @@ proc ::cmdr::help::format::TCL::acategory {path cmds subc} {
 
     # With struct::list map we could then also re-use alist.
     set commands {}
-    foreach def [lsort -dict -unique [dict get $cmds $path]] {
-	lappend commands [lindex $def 0]
+    if {[dict exists $cmds $path]} {
+	foreach def [lsort -dict -unique [dict get $cmds $path]] {
+	    lappend commands [lindex $def 0]
+	}
     }
 
     set sections {}
@@ -180,4 +182,4 @@ proc ::cmdr::help::format::TCL::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::tcl 1.0
+package provide cmdr::help::tcl 1.0.1

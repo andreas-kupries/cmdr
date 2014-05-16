@@ -388,9 +388,8 @@ proc ::cmdr::validate::rpath::validate {p x} {
 }
 
 proc ::cmdr::validate::rpath::Ok {path} {
-    if {![file exists      $path]} {return 0}
-    if {![file isdirectory $path]} {return 0}
-    if {![file readable    $path]} {return 0}
+    if {![file exists   $path]} {return 0}
+    if {![file readable $path]} {return 0}
     return 1
 }
 
@@ -540,5 +539,5 @@ proc ::cmdr::validate::rwchan::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.3
+package provide cmdr::validate 1.3.1
 return
