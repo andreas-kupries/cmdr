@@ -58,8 +58,8 @@ namespace eval ::cmdr::validate::boolean {
     namespace import ::cmdr::validate::common::complete-enum
 }
 
-proc ::cmdr::validate::boolean::release  {p x} { return }
-proc ::cmdr::validate::boolean::default  {p}  {
+proc ::cmdr::validate::boolean::release {p x {undo 0}} { return }
+proc ::cmdr::validate::boolean::default {p}  {
     debug.cmdr/validate {}
     return no
 }
@@ -87,8 +87,8 @@ namespace eval ::cmdr::validate::integer {
     namespace import ::cmdr::validate::common::fail
 }
 
-proc ::cmdr::validate::integer::release  {p x} { return }
-proc ::cmdr::validate::integer::default  {p}  {
+proc ::cmdr::validate::integer::release {p x {undo 0}} { return }
+proc ::cmdr::validate::integer::default {p}  {
     debug.cmdr/validate {}
     return 0
 }
@@ -117,8 +117,8 @@ namespace eval ::cmdr::validate::double {
     namespace import ::cmdr::validate::common::fail
 }
 
-proc ::cmdr::validate::double::release  {p x} { return }
-proc ::cmdr::validate::double::default  {p}  {
+proc ::cmdr::validate::double::release {p x {undo 0}} { return }
+proc ::cmdr::validate::double::default {p}  {
     debug.cmdr/validate {}
     return 0
 }
@@ -141,8 +141,8 @@ namespace eval ::cmdr::validate::percent {
     namespace import ::cmdr::validate::common::fail
 }
 
-proc ::cmdr::validate::percent::release  {p x} { return }
-proc ::cmdr::validate::percent::default  {p}  {
+proc ::cmdr::validate::percent::release {p x {undo 0}} { return }
+proc ::cmdr::validate::percent::default {p}  {
     debug.cmdr/validate {}
     return 0
 }
@@ -166,7 +166,7 @@ namespace eval ::cmdr::validate::identity {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::identity::release  {p x} { return }
+proc ::cmdr::validate::identity::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::identity::default  {p}   { debug.cmdr/validate {}    ; return {} }
 proc ::cmdr::validate::identity::complete {p x} { debug.cmdr/validate {} 10 ; return {} }
 proc ::cmdr::validate::identity::validate {p x} { debug.cmdr/validate {}    ; return $x }
@@ -179,7 +179,7 @@ namespace eval ::cmdr::validate::pass {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::pass::release  {p x} { return }
+proc ::cmdr::validate::pass::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::pass::default  {p}   {debug.cmdr/validate {}    ; return {} }
 proc ::cmdr::validate::pass::complete {p x} {debug.cmdr/validate {} 10 ; return {} }
 proc ::cmdr::validate::pass::validate {p x} {debug.cmdr/validate {}    ; return $x }
@@ -192,7 +192,7 @@ namespace eval ::cmdr::validate::str {
     namespace ensemble create
 }
 
-proc ::cmdr::validate::str::release  {p x} { return }
+proc ::cmdr::validate::str::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::str::default  {p}   { debug.cmdr/validate {}    ; return {} }
 proc ::cmdr::validate::str::complete {p x} { debug.cmdr/validate {} 10 ; return {} }
 proc ::cmdr::validate::str::validate {p x} { debug.cmdr/validate {}    ; return $x }
@@ -207,7 +207,7 @@ namespace eval ::cmdr::validate::rfile {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rfile::release  {p x} { return }
+proc ::cmdr::validate::rfile::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rfile::default  {p}   { return {} }
 proc ::cmdr::validate::rfile::complete {p x} {
     debug.cmdr/validate {} 10
@@ -237,7 +237,7 @@ namespace eval ::cmdr::validate::wfile {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::wfile::release  {p x} { return }
+proc ::cmdr::validate::wfile::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::wfile::default  {p}   { return {} }
 proc ::cmdr::validate::wfile::complete {p x} {
     debug.cmdr/validate {} 10
@@ -272,7 +272,7 @@ namespace eval ::cmdr::validate::rwfile {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::rwfile::release  {p x} { return }
+proc ::cmdr::validate::rwfile::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rwfile::default  {p}   { return {} }
 proc ::cmdr::validate::rwfile::complete {p x} {
     debug.cmdr/validate {} 10
@@ -307,7 +307,7 @@ namespace eval ::cmdr::validate::rdirectory {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rdirectory::release  {p x} { return }
+proc ::cmdr::validate::rdirectory::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rdirectory::default  {p}   { return {} }
 proc ::cmdr::validate::rdirectory::complete {p x} {
     debug.cmdr/validate {} 10
@@ -338,7 +338,7 @@ namespace eval ::cmdr::validate::rwdirectory {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::rwdirectory::release  {p x} { return }
+proc ::cmdr::validate::rwdirectory::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rwdirectory::default  {p}   { return {} }
 proc ::cmdr::validate::rwdirectory::complete {p x} {
     debug.cmdr/validate {} 10
@@ -374,7 +374,7 @@ namespace eval ::cmdr::validate::rpath {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rpath::release  {p x} { return }
+proc ::cmdr::validate::rpath::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rpath::default  {p}   { return {} }
 proc ::cmdr::validate::rpath::complete {p x} {
     debug.cmdr/validate {} 10
@@ -404,7 +404,7 @@ namespace eval ::cmdr::validate::rwpath {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::rwpath::release  {p x} { return }
+proc ::cmdr::validate::rwpath::release  {p x {undo 0}} { return }
 proc ::cmdr::validate::rwpath::default  {p}   { return {} }
 proc ::cmdr::validate::rwpath::complete {p x} {
     debug.cmdr/validate {} 10
@@ -439,7 +439,7 @@ namespace eval ::cmdr::validate::rchan {
     namespace import ::cmdr::validate::common::complete-glob
 }
 
-proc ::cmdr::validate::rchan::release  {p x} {
+proc ::cmdr::validate::rchan::release {p x {undo 0}} {
     if {$x eq "stdin"} return
     close $x
     return
@@ -473,8 +473,9 @@ namespace eval ::cmdr::validate::wchan {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::wchan::release  {p x} {
+proc ::cmdr::validate::wchan::release {p x {undo 0}} {
     if {$x eq "stdout"} return
+    if {$undo} { file delete [$p string] }
     close $x
     return
 }
@@ -512,7 +513,10 @@ namespace eval ::cmdr::validate::rwchan {
     namespace import ::cmdr::validate::common::ok-directory
 }
 
-proc ::cmdr::validate::rwchan::release  {p x} { close $x }
+proc ::cmdr::validate::rwchan::release {p x {undo 0}} {
+    if {$undo} { file delete [$p string] }
+    close $x
+}
 proc ::cmdr::validate::rwchan::default  {p}   { return {} }
 proc ::cmdr::validate::rwchan::complete {p x} {
     debug.cmdr/validate {} 10
@@ -539,5 +543,5 @@ proc ::cmdr::validate::rwchan::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.3.1
+package provide cmdr::validate 1.4
 return
