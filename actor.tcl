@@ -167,8 +167,27 @@ oo::class create ::cmdr::actor {
 	    "Expected known key for get, got \"$key\""
     }
 
-    method set {key data} {
+    method set {key args} {
 	debug.cmdr/actor {}
+	set extend 0
+	while {[string match -* [lindex $args 0]]} {
+	    set args [lassign $args o]
+	    switch -exact -- $o {
+		-extend {set extend 1}
+		default {
+		    return -code error -errorcode {CMDR SET UNKNOWN OPTION} \
+			"Unknown option \"$o\", expcted -extend"
+		}
+	    }
+	}
+	if {[llength $args] != 1} {
+	    return -code error -errorcode {CMDR SET WRONG-ARGS} \
+		"Expected one argument."
+	}
+	set data [lindex $args 0]
+	if {$extend} {
+	    set data [my get $key]$data
+	}
 	dict set mystore $key $data
 	return
     }
@@ -345,4 +364,4 @@ oo::class create ::cmdr::actor {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::actor 1.2
+package provide cmdr::actor 1.3
