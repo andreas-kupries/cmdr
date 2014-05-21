@@ -1191,11 +1191,11 @@ oo::class create ::cmdr::parameter {
 	# 'value' and 'Take' (mode peek+test)).
 
 	if {$myislist} {
-	    foreach v $myvalue {
+	    foreach v $value {
 		{*}$myvalidate release [self] $v
 	    }
 	} else {
-	    {*}$myvalidate release [self] $myvalue
+	    {*}$myvalidate release [self] $value
 	}
 	return
     }
