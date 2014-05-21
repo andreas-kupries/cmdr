@@ -176,7 +176,7 @@ oo::class create ::cmdr::actor {
 		-extend {set extend 1}
 		default {
 		    return -code error -errorcode {CMDR SET UNKNOWN OPTION} \
-			"Unknown option \"$o\", expcted -extend"
+			"Unknown option \"$o\", expected -extend"
 		}
 	    }
 	}
