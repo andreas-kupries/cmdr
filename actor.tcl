@@ -181,8 +181,12 @@ oo::class create ::cmdr::actor {
 	    }
 	}
 	if {[llength $args] != 1} {
+	    # The method of getting the command name is so complicated
+	    # to account for calls from specifications, where this is
+	    # aliased as 'common'.
+	    set cmd [lindex [dict get [info frame -1] cmd] 0]
 	    return -code error -errorcode {CMDR SET WRONG-ARGS} \
-		"Expected one argument."
+		"wrong # args: should be \"$cmd key ?-extend? data\""
 	}
 	set data [lindex $args 0]
 	if {$extend} {
