@@ -1,0 +1,133 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::color package.
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support Tclx
+kt require support debug
+kt require support debug::caller
+kt require support linenoise
+kt require support try
+kt require support struct::matrix
+kt require support textutil::adjust
+
+kt local   support cmdr::tty
+kt local   support cmdr::color
+kt local   testing cmdr::ask
+
+# # ## ### ##### ######## ############# #####################
+## Basic wrong#args checks.
+
+test cmdr-ask-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask subcommand ?argument ...?"}
+
+test cmdr-ask-1.1 {ask, bogus sub-command, not enough args} -body {
+    cmdr ask foo
+} -returnCodes error \
+    -result {unknown or ambiguous subcommand "foo": must be choose, menu, string, string*, string/extended, or yn}
+
+# # ## ### ##### ######## ############# #####################
+## Go through the API commands.
+## yn, string, string*, string/extended, menu, choose
+#
+## Only basic args checks. Everything else goes into interaction,
+## which the tcltest is not suited for.
+#
+## Idea: Replace linenoise with a mockup command to record calls and
+## returns fixed results.
+
+# # ## ### ##### ######## ############# #####################
+## yn
+
+test cmdr-ask-yn-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask yn
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask yn query ?default?"}
+
+test cmdr-ask-yn-1.1 {ask, wrong num args, too many} -body {
+    cmdr ask yn Q D X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask yn query ?default?"}
+
+# # ## ### ##### ######## ############# #####################
+## string
+
+test cmdr-ask-string-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask string
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask string query ?default?"}
+
+test cmdr-ask-string-1.1 {ask, wrong num args, too many} -body {
+    cmdr ask string Q D X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask string query ?default?"}
+
+# # ## ### ##### ######## ############# #####################
+## string*
+
+test cmdr-ask-string*-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask string*
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask string* query"}
+
+test cmdr-ask-string*-1.1 {ask, wrong num args, too many} -body {
+    cmdr ask string* Q X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask string* query"}
+
+# # ## ### ##### ######## ############# #####################
+## string/extended
+
+test cmdr-ask-string/extended-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask string/extended
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask string/extended query ..."}
+
+# # ## ### ##### ######## ############# #####################
+## choose
+
+test cmdr-ask-choose-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask choose
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask choose query choices ?default?"}
+
+test cmdr-ask-choose-1.1 {ask, wrong num args, not enough} -body {
+    cmdr ask choose Q
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask choose query choices ?default?"}
+
+test cmdr-ask-choose-1.2 {ask, wrong num args, too many} -body {
+    cmdr ask choose Q C D X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask choose query choices ?default?"}
+
+# # ## ### ##### ######## ############# #####################
+## menu
+
+test cmdr-ask-menu-1.0 {ask, wrong num args, not enough} -body {
+    cmdr ask menu
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask menu header prompt choices ?default?"}
+
+test cmdr-ask-menu-1.1 {ask, wrong num args, not enough} -body {
+    cmdr ask menu H
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask menu header prompt choices ?default?"}
+
+test cmdr-ask-menu-1.2 {ask, wrong num args, not enough} -body {
+    cmdr ask menu H P
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask menu header prompt choices ?default?"}
+
+test cmdr-ask-menu-1.3 {ask, wrong num args, too many} -body {
+    cmdr ask menu H P C D X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr ask menu header prompt choices ?default?"}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
