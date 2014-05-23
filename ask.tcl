@@ -25,7 +25,7 @@
 ## Requisites
 
 package require Tcl 8.5
-#package require cmdr::color
+package require cmdr::color
 package require debug
 package require debug::caller
 package require linenoise
@@ -37,9 +37,10 @@ namespace eval ::cmdr {
     namespace export ask
 }
 namespace eval ::cmdr::ask {
-    #namespace import ::stackato::color
     namespace export string string/extended string* yn choose menu
     namespace create ensemble
+
+    namespace import ::cmdr::color
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -121,14 +122,9 @@ proc ::cmdr::ask::string* {query} {
 
 proc ::cmdr::ask::yn {query {default yes}} {
     debug.cmdr/ask {}
-    set dinfo [expr {$default
-		     ? " \[Yn\]: "
-		     : " \[yN\]: "}]
-    # Reactivate with color support.
-    if 0 {set dinfo [expr {$default
-			   ? " \[[color green Y]n\]: "
-			   : " \[y[color green N]\]: "}]}
-    append query $dinfo
+    append query [expr {$default
+			? " \[[color yes Y]n\]: "
+			: " \[y[color no N]\]: "}]
 
     lassign [Fit $query 5] header prompt
     while {1} {
@@ -158,9 +154,8 @@ proc ::cmdr::ask::choose {query choices {default {}}} {
 
     set lc [linsert [join $choices {, }] end-1 or]
     if {$hasdefault} {
-	# when we have color support, reactivate
-	#lappend map $default [color green $default]
-	#set lc [string map $map $lc]
+	lappend map $default [color good $default]
+	set lc [string map $map $lc]
     }
 
     append query " ($lc): "
@@ -193,7 +188,7 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
 
     set hasdefault [expr {$default in $choices}]
 
-    # Full list of choices is the choices themselves, plus the numeric
+    # Full list of choices is the choicces themselves, plus the numeric
     # indices we can address them by. This is for the prompt
     # completion callback below.
     set fullchoices $choices
@@ -203,11 +198,9 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
     M add columns 2
     set n 1
     foreach c $choices {
-	if 0 {if {$default eq $c} {
-	    M add row [list ${n}. [color green $c]]
-	} else {
-	    M add row [list ${n}. $c]
-	}}
+	if {$default eq $c} {
+	    set c [color good $c]
+	}
 
 	M add row [list ${n}. $c]
 	lappend fullchoices $n
@@ -308,8 +301,8 @@ proc ::cmdr::ask::Fit {prompt space} {
     set prompt [split $prompt \n]
     set header [join [lrange $prompt 0 end-1] \n]
     set prompt [lindex $prompt end]
-    # alt code for the same.
-    #set header [join [lreverse [lassign [lreverse [split $prompt \n]] prompt]] \n]
+    # Alternate code for the last 3 lines, more cryptic.
+    # set header [join [lreverse [lassign [lreverse [split $prompt \n]] prompt]] \n]
     append prompt { }
 
     return [list $header $prompt]
