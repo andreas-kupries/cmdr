@@ -38,7 +38,7 @@ namespace eval ::cmdr {
 }
 namespace eval ::cmdr::ask {
     namespace export string string/extended string* yn choose menu
-    namespace create ensemble
+    namespace ensemble create
 
     namespace import ::cmdr::color
 }
@@ -53,6 +53,14 @@ debug prefix cmdr/ask {[debug caller] | }
 
 proc ::cmdr::ask::string {query {default {}}} {
     debug.cmdr/ask {}
+
+    Chop query {: }
+    if {$default ne {}} {
+	append query " \[[color good $default]\]"
+    }
+    # TODO: allow customization (string prompt string)
+    append query {: }
+
     try {
 	set response [Interact {*}[Fit $query 10]]
     } on error {e o} {
@@ -75,6 +83,9 @@ proc ::cmdr::ask::string/extended {query args} {
 
     # for history ... integrate history load/save from file here?
     # -history is then not boolean, but path to history file.
+
+    Ensure query :   ;# TODO: allow customization (string prompt string)
+    append query { }
 
     set default {}
     set config {}
@@ -109,6 +120,10 @@ proc ::cmdr::ask::string/extended {query args} {
 
 proc ::cmdr::ask::string* {query} {
     debug.cmdr/ask {}
+
+    Ensure query :   ;# TODO: allow customization (string prompt string)
+    append query { }
+
     try {
 	set response [Interact {*}[Fit $query 10] -hidden 1]
     } on error {e o} {
@@ -122,9 +137,13 @@ proc ::cmdr::ask::string* {query} {
 
 proc ::cmdr::ask::yn {query {default yes}} {
     debug.cmdr/ask {}
+
+    Chop query {: }
     append query [expr {$default
-			? " \[[color yes Y]n\]: "
-			: " \[y[color no N]\]: "}]
+			? " \[[color yes Y]n\]"
+			: " \[y[color no N]\]"}]
+    # TODO: allow customization (bool prompt string)
+    append query {: }
 
     lassign [Fit $query 5] header prompt
     while {1} {
@@ -140,7 +159,7 @@ proc ::cmdr::ask::yn {query {default yes}} {
 	    return {*}${o} $e
 	}
 	if {$response eq {}} { set response $default }
-	if {[string is bool $response]} break
+	if {[::string is bool $response]} break
 	puts stdout [Wrap "You must choose \"yes\" or \"no\""]
     }
 
@@ -155,10 +174,13 @@ proc ::cmdr::ask::choose {query choices {default {}}} {
     set lc [linsert [join $choices {, }] end-1 or]
     if {$hasdefault} {
 	lappend map $default [color good $default]
-	set lc [string map $map $lc]
+	set lc [::string map $map $lc]
     }
 
-    append query " ($lc): "
+    Chop   query {: }
+    append query " ($lc)"
+    # TODO: allow customization (choose prompt string)
+    append query {: }
 
     lassign [Fit $query 5] header prompt
 
@@ -186,6 +208,10 @@ proc ::cmdr::ask::choose {query choices {default {}}} {
 proc ::cmdr::ask::menu {header prompt choices {default {}}} {
     debug.cmdr/ask {}
 
+    Chop   prompt {? }
+    # TODO: allow customization (menu prompt string)
+    append prompt {? }
+
     set hasdefault [expr {$default in $choices}]
 
     # Full list of choices is the choicces themselves, plus the numeric
@@ -194,7 +220,7 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
     set fullchoices $choices
 
     # Build table (2-column matrix)
-    struct::matrix [self namespace]::M
+    struct::matrix [namespace current]::M
     M add columns 2
     set n 1
     foreach c $choices {
@@ -233,7 +259,7 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
 
 	if {$response in $choices} break
 
-	if {[string is int $response]} {
+	if {[::string is int $response]} {
 	    # Inserting a dummy to handle indexing from 1...
 	    set response [lindex [linsert $choices 0 {}] $response]
 	    if {$response in $choices} break
@@ -255,12 +281,12 @@ proc ::cmdr::ask::Complete {choices nocase buffer} {
     }
 
     if {$nocase} {
-	set buffer [string tolower $buffer]
+	set buffer [::string tolower $buffer]
     }
 
     set candidates {}
     foreach c $choices {
-	if {![string match ${buffer}* $c]} continue
+	if {![::string match ${buffer}* $c]} continue
 	lappend candidates $c
     }
     return $candidates
@@ -293,7 +319,7 @@ proc ::cmdr::ask::Fit {prompt space} {
     set w [expr {[linenoise columns] - $space }]
     # we leave space for some characters to be entered.
 
-    if {[string length $prompt] < $w} {
+    if {[::string length $prompt] < $w} {
 	return [list {} $prompt]
     }
 
@@ -306,6 +332,19 @@ proc ::cmdr::ask::Fit {prompt space} {
     append prompt { }
 
     return [list $header $prompt]
+}
+
+proc ::cmdr::ask::Chop {var charset} {
+    upvar 1 $var text
+    set text [::string trimright $text $charset]
+    return
+}
+
+proc ::cmdr::ask::Ensure {var char} {
+    upvar 1 $var text
+    if {[::string index $text end] eq $char} return
+    append text $char
+    return
 }
 
 # # ## ### ##### ######## ############# #####################

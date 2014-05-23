@@ -1,0 +1,9 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::ask
+
+puts [cmdr ask yn {Is this ok ?}]
+puts [cmdr ask yn {Really ?} no]
+
+exit
