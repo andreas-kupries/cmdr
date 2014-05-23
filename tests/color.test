@@ -1,0 +1,401 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::color package.
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support Tclx
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::tty
+kt local   testing cmdr::color
+
+set thecolors {advisory bad bg-black bg-blue bg-cyan bg-default bg-green bg-magenta bg-red bg-white bg-yellow black blink blue bold confirm cyan default dim error good green hidden italic magenta name neutral no no-blink no-bold no-dim no-hidden no-italic no-revers no-strike no-underline note number prompt red reset revers strike underline unknown warning white yellow yes}
+
+set thechars {
+    advisory	{\033[33m}
+    bad		{\033[31m}
+    bg-black	{\033[40m}
+    bg-blue	{\033[44m}
+    bg-cyan	{\033[46m}
+    bg-default	{\033[49m}
+    bg-green	{\033[42m}
+    bg-magenta	{\033[45m}
+    bg-red	{\033[41m}
+    bg-white	{\033[47m}
+    bg-yellow	{\033[43m}
+    black	{\033[30m}
+    blink	{\033[5m}
+    blue	{\033[34m}
+    bold	{\033[1m}
+    confirm	{\033[31m}
+    cyan	{\033[36m}
+    default	{\033[39m}
+    dim		{\033[2m}
+    error	{\033[35m}
+    good	{\033[32m}
+    green	{\033[32m}
+    hidden	{\033[8m}
+    italic	{\033[3m}
+    magenta	{\033[35m}
+    name	{\033[34m}
+    neutral	{\033[34m}
+    no		{\033[31m}
+    no-blink	{\033[25m}
+    no-bold	{\033[22m}
+    no-dim	{\033[__m}
+    no-hidden	{\033[28m}
+    no-italic	{\033[23m}
+    no-revers	{\033[27m}
+    no-strike	{\033[29m}
+    no-underline {\033[24m}
+    note	{\033[34m}
+    number	{\033[32m}
+    prompt	{\033[34m}
+    red		{\033[31m}
+    reset	{\033[0m}
+    revers	{\033[7m}
+    strike	{\033[9m}
+    underline	{\033[4m}
+    unknown	{\033[36m}
+    warning	{\033[33m}
+    white	{\033[37m}
+    yellow	{\033[33m}
+    yes		{\033[32m}
+}
+
+set thedefs {
+    advisory	=yellow
+    bad		=red
+    bg-black	{\033[40m}
+    bg-blue	{\033[44m}
+    bg-cyan	{\033[46m}
+    bg-default	{\033[49m}
+    bg-green	{\033[42m}
+    bg-magenta	{\033[45m}
+    bg-red	{\033[41m}
+    bg-white	{\033[47m}
+    bg-yellow	{\033[43m}
+    black	{\033[30m}
+    blink	{\033[5m}
+    blue	{\033[34m}
+    bold	{\033[1m}
+    confirm	=red
+    cyan	{\033[36m}
+    default	{\033[39m}
+    dim		{\033[2m}
+    error	=magenta
+    good	=green
+    green	{\033[32m}
+    hidden	{\033[8m}
+    italic	{\033[3m}
+    magenta	{\033[35m}
+    name	=blue
+    neutral	=blue
+    no		=red
+    no-blink	{\033[25m}
+    no-bold	{\033[22m}
+    no-dim	{\033[__m}
+    no-hidden	{\033[28m}
+    no-italic	{\033[23m}
+    no-revers	{\033[27m}
+    no-strike	{\033[29m}
+    no-underline {\033[24m}
+    note	=blue
+    number	=green
+    prompt	=blue
+    red		{\033[31m}
+    reset	{\033[0m}
+    revers	{\033[7m}
+    strike	{\033[9m}
+    underline	{\033[4m}
+    unknown	=cyan
+    warning	=yellow
+    white	{\033[37m}
+    yellow	{\033[33m}
+    yes		=green
+}
+
+# # ## ### ##### ######## ############# #####################
+## Basic wrong#args checks.
+
+test cmdr-color-1.0 {color, wrong num args, not enough} -body {
+    cmdr color
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color subcommand ?argument ...?"}
+
+test cmdr-color-1.1 {color, bogus sub-command, not enough args} -body {
+    cmdr color foo
+} -returnCodes error \
+    -result {wrong # args: should be "::cmdr::color::Unknown cmd codes text"}
+
+test cmdr-color-1.2 {color, bogus sub-command, bogus color name} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color foo text
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -returnCodes error -result {Expected a color name, got "foo"}
+
+test cmdr-color-2.0 {color, formatting, single code} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color red text
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result "\033\[31mtext\033\[0m"
+
+test cmdr-color-2.1 {color, formatting, multi-code} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color {bold red} text
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result "\033\[1m\033\[31mtext\033\[0m"
+
+# # ## ### ##### ######## ############# #####################
+## Go through the API commands.
+## active, activate, names, get, get-def, define, exists
+
+# # ## ### ##### ######## ############# #####################
+## active
+
+test cmdr-color-active-1.0 {color active, wrong num args, too many} -body {
+    cmdr color active X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color active"}
+
+test cmdr-color-active-1.1 {color active, default} -body {
+    cmdr color active
+} -result [cmdr tty stdout]
+
+# # ## ### ##### ######## ############# #####################
+## activate
+
+test cmdr-color-activate-1.0 {color activate, wrong num args, too many} -body {
+    cmdr color activate 0 X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color activate ?flag?"}
+
+test cmdr-color-activate-1.1 {color activate, activate explicit} -body {
+    cmdr color activate 1
+    cmdr color active
+} -result 1
+
+test cmdr-color-activate-1.2 {color activate, deactivate} -body {
+    cmdr color activate 0
+    cmdr color active
+} -result 0
+
+test cmdr-color-activate-1.3 {color activate, activate, implicit} -body {
+    cmdr color activate
+    cmdr color active
+} -result 1
+
+# # ## ### ##### ######## ############# #####################
+## names
+
+test cmdr-color-names-1.0 {color names, wrong num args, too many} -body {
+    cmdr color names X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color names"}
+
+test cmdr-color-names-1.0 {color names, wrong num args, too many} -body {
+    lsort -dict [cmdr color names]
+} -result $thecolors
+
+# # ## ### ##### ######## ############# #####################
+## unset
+
+test cmdr-color-unset-1.0 {color unset, wrong num args, not enough} -body {
+    cmdr color unset
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color unset name"}
+
+test cmdr-color-unset-1.1 {color unset, wrong num args, too many} -body {
+    cmdr color unset N X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color unset name"}
+
+test cmdr-color-unset-1.2 {color unset, bogus color} -body {
+    cmdr color unset foo
+} -returnCodes error \
+    -result {Expected a color name, got "foo"}
+
+test cmdr-color-unset-1.2 {color unset, known color} -setup {
+    cmdr color define foo =red
+} -body {
+    cmdr color unset foo
+} -result {}
+
+# # ## ### ##### ######## ############# #####################
+## get
+
+test cmdr-color-get-1.0 {color get, wrong num args, not enough} -body {
+    cmdr color get
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color get name"}
+
+test cmdr-color-get-1.1 {color get, wrong num args, too many} -body {
+    cmdr color get N X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color get name"}
+
+test cmdr-color-get-1.2 {color get, bogus color} -body {
+    cmdr color get foo
+} -returnCodes error \
+    -result {Expected a color name, got "foo"}
+
+set n 0
+foreach color $thecolors {
+    incr n
+    test cmdr-color-get-2.$n "color get, $color" -body {
+	cmdr color get $color
+    } -result [subst -nocommands -novariables \
+		   [dict get $thechars $color]]
+}
+
+# # ## ### ##### ######## ############# #####################
+## get-def
+
+test cmdr-color-get-def-1.0 {color get-def, wrong num args, not enough} -body {
+    cmdr color get-def
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color get-def name"}
+
+test cmdr-color-get-def-1.1 {color get-def, wrong num args, too many} -body {
+    cmdr color get-def N X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color get-def name"}
+
+test cmdr-color-get-def-1.2 {color get-def, bogus color} -body {
+    cmdr color get-def foo
+} -returnCodes error \
+    -result {Expected a color name, got "foo"}
+
+set n 0
+foreach color $thecolors {
+    incr n
+    test cmdr-color-get-def-2.$n "color get-def, $color" -body {
+	cmdr color get-def $color
+    } -result [subst -nocommands -novariables \
+		   [dict get $thedefs $color]]
+}
+
+# # ## ### ##### ######## ############# #####################
+## exists
+
+test cmdr-color-exists-1.0 {color exists, wrong num args, not enough} -body {
+    cmdr color exists
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color exists name"}
+
+test cmdr-color-exists-1.1 {color exists, wrong num args, too many} -body {
+    cmdr color exists N X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color exists name"}
+
+test cmdr-color-exists-2.0 {color exists, unknown} -body {
+    cmdr color exists foo
+} -result 0
+
+set n 0
+foreach color $thecolors {
+    incr n
+    test cmdr-color-exists-2.$n "color exists, $color" -body {
+	cmdr color exists $color
+    } -result 1
+}
+
+# # ## ### ##### ######## ############# #####################
+## define
+
+test cmdr-color-define-1.0 {color define, wrong num args, not enough} -body {
+    cmdr color define
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color define name spec"}
+
+test cmdr-color-define-1.1 {color define, wrong num args, not enough} -body {
+    cmdr color define N
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color define name spec"}
+
+test cmdr-color-define-1.2 {color define, wrong num args, too many} -body {
+    cmdr color define N S X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr color define name spec"}
+
+test cmdr-color-define-2.0 {color define, bad reference} -body {
+    cmdr color define aname =bogus
+} -returnCodes error \
+    -result {Expected a color name, got "bogus"}
+
+test cmdr-color-define-2.1 {color define, bad reference, cyclic} -body {
+    cmdr color define aname =aname
+} -returnCodes error \
+    -result {Rejected self-referential definition of "aname"}
+
+test cmdr-color-define-2.2 {color define, reference} -body {
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color define aname =red]
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color get aname]
+    lappend r [cmdr color get-def aname]
+} -cleanup {
+    cmdr color unset aname
+    unset r
+} -result [list 0 {} 1 \033\[31m =red]
+
+test cmdr-color-define-3.0 {color define, bad rgb, syntax} -body {
+    cmdr color define aname %foo
+} -returnCodes error \
+    -result {Expected an RGB tuple, got "foo"}
+
+test cmdr-color-define-3.1 {color define, bad rgb, range R} -body {
+    cmdr color define aname %7,3,3
+} -returnCodes error \
+    -result {RGB channel R out of range, got 7}
+
+test cmdr-color-define-3.2 {color define, bad rgb, range G} -body {
+    cmdr color define aname %3,7,3
+} -returnCodes error \
+    -result {RGB channel G out of range, got 7}
+
+test cmdr-color-define-3.3 {color define, bad rgb, range B} -body {
+    cmdr color define aname %3,3,7
+} -returnCodes error \
+    -result {RGB channel B out of range, got 7}
+
+test cmdr-color-define-3.4 {color define, rgb} -body {
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color define aname %2,4,3]
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color get aname]
+    lappend r [cmdr color get-def aname]
+} -cleanup {
+    cmdr color unset aname
+    unset r
+} -result [list 0 {} 1 \033\[115m %2,4,3]
+
+test cmdr-color-define-4.0 {color define, raw control} -body {
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color define aname blimfizzle]
+    lappend r [cmdr color exists aname]
+    lappend r [cmdr color get aname]
+    lappend r [cmdr color get-def aname]
+} -cleanup {
+    cmdr color unset aname
+    unset r
+} -result [list 0 {} 1 blimfizzle blimfizzle]
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
