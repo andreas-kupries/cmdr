@@ -1,0 +1,38 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::tty package.
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support Tclx
+kt require support debug
+kt require support debug::caller
+
+kt local   testing cmdr::tty
+
+# # ## ### ##### ######## ############# #####################
+## Basic wrong#args checks.
+
+test cmdr-tty-1.0 {tty, wrong num args, not enough} -body {
+    cmdr tty
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr tty subcommand ?argument ...?"}
+
+test cmdr-tty-1.1 {tty, bogus sub-command} -body {
+    cmdr tty foo
+} -returnCodes error \
+    -result {unknown or ambiguous subcommand "foo": must be stdout}
+
+test cmdr-tty-1.2 {tty stdout, wrong num args, too many} -body {
+    cmdr tty stdout X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr tty stdout"}
+
+# # ## ### ##### ######## ############# #####################
+## No other checks, as we cannot really assume whether the tests run
+## from a terminal or not.
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
