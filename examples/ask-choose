@@ -1,0 +1,16 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::ask
+
+lappend fruit apple
+lappend fruit cherry
+lappend fruit plum
+lappend fruit peach
+lappend fruit banana
+lappend fruit pear
+
+set rand [lindex $fruit [expr {int(0.1+(rand()*([llength $fruit])))}]]
+
+puts [cmdr ask choose {Which fruit} $fruit $rand]
+exit

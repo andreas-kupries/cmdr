@@ -1,0 +1,9 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::ask
+
+puts [cmdr ask string  Hostname [info hostname]]
+puts [cmdr ask string  Footer]
+puts [cmdr ask string* Password]
+exit
