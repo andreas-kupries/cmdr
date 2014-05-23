@@ -230,7 +230,7 @@ test cmdr-officer-6.1 {officer/action DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common key data\""
+    -result "wrong # args: should be \"common key ...\""
 
 test cmdr-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
     cmdr create x foo {
@@ -241,7 +241,7 @@ test cmdr-officer-6.2 {officer/action DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common key data\""
+    -result "wrong # args: should be \"common key ?-extend? data\""
 
 test cmdr-officer-6.3 {officer/action DSL, common, wrong\#args} -setup {
     cmdr create x foo {
@@ -252,7 +252,19 @@ test cmdr-officer-6.3 {officer/action DSL, common, wrong\#args} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result "wrong # args: should be \"common key data\""
+    -result "wrong # args: should be \"common key ?-extend? data\""
+
+
+test cmdr-officer-6.4 {officer/action DSL, common, bogus option} -setup {
+    cmdr create x foo {
+	common KEY -bogus DATA
+    }
+} -body {
+    x known
+} -cleanup {
+    x destroy
+} -returnCodes error \
+    -result {Unknown option "-bogus", expected -extend}
 
 # # ## ### ##### ######## ############# #####################
 return
