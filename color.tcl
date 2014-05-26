@@ -36,12 +36,18 @@ namespace eval ::cmdr::color {
     namespace export \
 	activate active names get get-def define exists unset
     namespace ensemble create \
-	-unknown [namespace current]::Unknown
-    # Note, the option ensures that all unknown methods are treated as
-    # (list of) color codes to apply to some text, effectively
-    # creating the virtual command
+	-unknown [namespace current]::Unknown \
+	-prefixes 0
+
+    # Note, the -unknown option ensures that all unknown methods are
+    # treated as (list of) color codes to apply to some text,
+    # effectively creating the virtual command
     #
     #    ::cmdr::color <codelist> <text>
+    #
+    # The -prefix 0 option ensures that we canuse the 'name'
+    # color-code, without it will go to 'names' and then fail with
+    # wrong#args due to the different expected syntax.
     ##
 
     namespace import ::cmdr::tty
