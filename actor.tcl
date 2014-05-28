@@ -173,10 +173,16 @@ oo::class create ::cmdr::actor {
 	while {[string match -* [lindex $args 0]]} {
 	    set args [lassign $args o]
 	    switch -exact -- $o {
-		-extend {set extend 1}
+		-- {
+		    # Stop option processing. Next argument must be the data.
+		    break
+		}
+		-extend {
+		    set extend 1
+		}
 		default {
 		    return -code error -errorcode {CMDR SET UNKNOWN OPTION} \
-			"Unknown option \"$o\", expected -extend"
+			"Unknown option \"$o\", expected -extend, or --"
 		}
 	    }
 	}

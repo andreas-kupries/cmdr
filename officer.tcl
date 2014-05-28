@@ -432,7 +432,8 @@ oo::class create ::cmdr::officer {
 	debug.cmdr/officer {}
 	set reset 0
 	if {![my exists *command*]} {
-	    my set *command* $args
+	    # Prevent handling of application-specific options here.
+	    my set *command* -- $args
 	    set reset 1
 	}
 	try {
