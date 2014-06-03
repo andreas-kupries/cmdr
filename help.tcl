@@ -95,7 +95,9 @@ proc ::cmdr::help::auto {actor} {
 	    }}]
     }
 
-    # Standard option for line width to format against.
+    # Standard options
+    # - line width to format against.
+    # - disable paging
     lappend options {
 	option width {
 	    The line width to format the help for.
@@ -106,6 +108,9 @@ proc ::cmdr::help::auto {actor} {
 	    validate integer ;# better: integer > 0, or even > 10
 	    generate [lambda {p} { linenoise columns }]
 	}
+	option no-pager {
+	    Disable use of paging.
+	} { presence }
     }
     lappend map @formats@ [linsert [join $formats {, }] end-1 and]
     lappend map @options@ [join $options \n]
@@ -135,6 +140,7 @@ proc ::cmdr::help::auto-help {actor config} {
     debug.cmdr/help {}
 
     set width  [$config @width]
+    set nopage [$config @no-pager]
     set words  [$config @cmdname]
     set format [$config @format]
 
@@ -165,7 +171,7 @@ proc ::cmdr::help::auto-help {actor config} {
 
     # Determine how to show the help, in a pager, or not ?
 
-    if {![tty stdout]} {
+    if {$nopage || ![tty stdout]} {
 	# Not a terminal, no pager possible.
 	# This is also the case handling windows.
 	puts $text
