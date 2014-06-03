@@ -17,6 +17,7 @@
 # Meta require linenoise
 # Meta require textutil::adjust
 # Meta require cmdr::util
+# Meta require cmdr::pager
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -29,7 +30,7 @@ package require lambda
 package require linenoise
 package require textutil::adjust
 package require cmdr::util
-package require cmdr::tty
+package require cmdr::pager
 
 # # ## ### ##### ######## ############# #####################
 
@@ -171,60 +172,13 @@ proc ::cmdr::help::auto-help {actor config} {
 
     # Determine how to show the help, in a pager, or not ?
 
-    if {$nopage || ![tty stdout]} {
-	# Not a terminal, no pager possible.
-	# This is also the case handling windows.
+    if {$nopage} {
 	puts $text
     } else {
-	# Terminal
-	if {[catch {
-	    set height [linenoise lines]
-	}]} {
-	    # Unable to get the terminal height.
-	    # Don't do paging.
-	    puts $text
-	} else {
-	    # Compare the help's height to the terminal.
-	    set lines [llength [split $text \n]]
-	    if {$lines <= $height} {
-		# The help fits fully into the terminal, no pager
-		# needed.
-		puts $text
-	    } else {
-		# The help is too high, and does not fit into the
-		# current terminal.
-		set pager [Pager]
-		if {![llength $pager]} {
-		    # We found no pager, and give up on trying to use
-		    # one.
-		    puts $text
-		} else {
-		    # We needed and have a pager, run it with the help.
-		    # as input.
-		    set    pipe [open "|$pager" w]
-		    puts  $pipe $text
-		    # This waits until the pager exits.
-		    close $pipe
-		}
-	    }
-	}
+	cmdr pager $text
     }
+
     return
-}
-
-proc ::cmdr::help::Pager {} {
-    global env
-    if {[info exists env(PAGER)]} {
-	lappend pager $env(PAGER)
-    }
-    lappend pager less
-    lappend pager more
-
-    foreach p $pager {
-	set cmd [auto_execok $p]
-	if {[llength $cmd]} break
-    }
-    return $cmd
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -587,7 +541,6 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 
     return $categories
 }
-
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
