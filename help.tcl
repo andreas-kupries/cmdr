@@ -206,7 +206,7 @@ proc ::cmdr::help::auto-help {actor config} {
     return
 }
 
-proc ::cmdr::help::format::Pager {} {
+proc ::cmdr::help::Pager {} {
     global env
     if {[info exists env(PAGER)]} {
 	lappend pager $env(PAGER)
