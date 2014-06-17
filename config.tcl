@@ -266,26 +266,30 @@ oo::class create ::cmdr::config {
 	if {$myinforce} return
 	set myinforce yes
 
-	foreach name $mynames {
-	    set para [dict get $mymap $name]
+	try {
+	    foreach name $mynames {
+		set para [dict get $mymap $name]
 
-	    # Ignore parameters which defer value generation until
-	    # actual use, except if we are forced to compute them.
-	    if {!$forcedefered && [$para defered]} continue
+		# Ignore parameters which defer value generation until
+		# actual use, except if we are forced to compute them.
+		if {!$forcedefered && [$para defered]} continue
 
-	    if {!$allowinteract} {
-		$para dontinteract
+		if {!$allowinteract} {
+		    $para dontinteract
+		}
+		try {
+		    $para value
+		} trap {CMDR PARAMETER UNDEFINED} {e o} {
+		    # Ignore when a parameter was not defined.
+		    # Note that this is transparent to validation
+		    # errors.
+		}
 	    }
-	    try {
-		$para value
-	    } trap {CMDR PARAMETER UNDEFINED} {e o} {
-		# Ignore when a parameter was not defined.
-		# Note that this is transparent to validation
-		# errors.
-	    }
+	} finally {
+	    # Do not leave the flag behind in case of error.
+	    # Would influence following uses.
+	    set myinforce no
 	}
-
-	set myinforce no
 	return
     }
 
@@ -1365,4 +1369,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 1.1
+package provide cmdr::config 1.1.1
