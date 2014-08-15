@@ -162,7 +162,7 @@ proc ::cmdr::color::define {name spec} {
     if {[regexp {^[eE](.*)$} $spec -> codes]} {
 	if {![regexp {^(\d+)(,\d+)*$} $codes]} {
 	    return -code error \
-		-errorcode [list CMDR COLOR BAD-ESCAPE SYNTAX $rgb] \
+		-errorcode [list CMDR COLOR BAD-ESCAPE SYNTAX $spec] \
 		"Expected a comma-separated list of codes, got \"$spec\""
 	}
 	set codes [Code {*}[split $codes ,]]
@@ -207,11 +207,11 @@ proc ::cmdr::color::define {name spec} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::color::Unknown {cmd codes text} {
+proc ::cmdr::color::Unknown {cmd codes {text {}}} {
     list [namespace current]::Apply $codes
 }
 
-proc ::cmdr::color::Apply {codes text} {
+proc ::cmdr::color::Apply {codes {text {}}} {
     debug.cmdr/color {}
 
     variable active
@@ -229,8 +229,10 @@ proc ::cmdr::color::Apply {codes text} {
 	}
 	append r [dict get $char $c]
     }
-    append r $text
-    append r [dict get $char reset]
+    if {$text ne {}} {
+	append r $text
+	append r [dict get $char reset]
+    }
 
     debug.cmdr/color {/done}
     return $r
