@@ -138,7 +138,8 @@ proc ::cmdr::color::define {name spec} {
     # Syntax:
     # (1) ref := =<name>
     # (2) rgb := %<r>,<g>,<b>
-    # (3) raw := anything else
+    # (3) esc := [Ee]<code>(,...)?
+    # (4) raw := anything else
 
     if {[regexp {^=(.*)$} $spec -> ref]} {
 	if {$ref eq $name} {
@@ -156,6 +157,19 @@ proc ::cmdr::color::define {name spec} {
 	    dict set char $name $raw
 	    return
 	}
+    }
+
+    if {[regexp {^[eE](.*)$} $spec -> codes]} {
+	if {![regexp {^(\d+)(,\d+)*$} $codes]} {
+	    return -code error \
+		-errorcode [list CMDR COLOR BAD-ESCAPE SYNTAX $rgb] \
+		"Expected a comma-separated list of codes, got \"$spec\""
+	}
+	set codes [Code {*}[split $codes ,]]
+	debug.cmdr/color {ESC encoded => [Quote $codes]}
+	dict set def  $name $spec
+	dict set char $name $codes
+	return
     }
 
     if {[regexp {^%(.*)$} $spec -> rgb]} {
@@ -255,49 +269,49 @@ namespace eval ::cmdr::color {
     variable char {}
 
     # Colors. Foreground/Text.
-    define  black        [Code 30]  ; # Black  
-    define  red          [Code 31]  ; # Red    
-    define  green        [Code 32]  ; # Green  
-    define  yellow       [Code 33]  ; # Yellow 
-    define  blue         [Code 34]  ; # Blue   
-    define  magenta      [Code 35]  ; # Magenta
-    define  cyan         [Code 36]  ; # Cyan   
-    define  white        [Code 37]  ; # White  
-    define  default      [Code 39]  ; # Default (Black)
+    define  black        e30  ; # Black  
+    define  red          e31  ; # Red    
+    define  green        e32  ; # Green  
+    define  yellow       e33  ; # Yellow 
+    define  blue         e34  ; # Blue   
+    define  magenta      e35  ; # Magenta
+    define  cyan         e36  ; # Cyan   
+    define  white        e37  ; # White  
+    define  default      e39  ; # Default (Black)
 
     # Colors. Background.
-    define  bg-black     [Code 40]  ; # Black  
-    define  bg-red       [Code 41]  ; # Red    
-    define  bg-green     [Code 42]  ; # Green  
-    define  bg-yellow    [Code 43]  ; # Yellow 
-    define  bg-blue      [Code 44]  ; # Blue   
-    define  bg-magenta   [Code 45]  ; # Magenta
-    define  bg-cyan      [Code 46]  ; # Cyan   
-    define  bg-white     [Code 47]  ; # White  
-    define  bg-default   [Code 49]  ; # Default (Transparent)
+    define  bg-black     e40  ; # Black  
+    define  bg-red       e41  ; # Red    
+    define  bg-green     e42  ; # Green  
+    define  bg-yellow    e43  ; # Yellow 
+    define  bg-blue      e44  ; # Blue   
+    define  bg-magenta   e45  ; # Magenta
+    define  bg-cyan      e46  ; # Cyan   
+    define  bg-white     e47  ; # White  
+    define  bg-default   e49  ; # Default (Transparent)
 
     # Non-color attributes. Activation.
-    define  bold         [Code  1]  ; # Bold  
-    define  dim          [Code  2]  ; # Dim
-    define  italic       [Code  3]  ; # Italics      
-    define  underline    [Code  4]  ; # Underscore   
-    define  blink        [Code  5]  ; # Blink
-    define  revers       [Code  7]  ; # Reverse      
-    define  hidden       [Code  8]  ; # Hidden
-    define  strike       [Code  9]  ; # StrikeThrough
+    define  bold         e1   ; # Bold  
+    define  dim          e2   ; # Dim
+    define  italic       e3   ; # Italics      
+    define  underline    e4   ; # Underscore   
+    define  blink        e5   ; # Blink
+    define  revers       e7   ; # Reverse      
+    define  hidden       e8   ; # Hidden
+    define  strike       e9   ; # StrikeThrough
 
     # Non-color attributes. Deactivation.
-    define  no-bold      [Code 22]  ; # Bold  
-    define  no-dim       [Code __]  ; # Dim
-    define  no-italic    [Code 23]  ; # Italics      
-    define  no-underline [Code 24]  ; # Underscore   
-    define  no-blink     [Code 25]  ; # Blink
-    define  no-revers    [Code 27]  ; # Reverse      
-    define  no-hidden    [Code 28]  ; # Hidden
-    define  no-strike    [Code 29]  ; # StrikeThrough
+    define  no-bold      e21  ; # Bold  
+    define  no-dim       e22  ; # Dim
+    define  no-italic    e23  ; # Italics      
+    define  no-underline e24  ; # Underscore   
+    define  no-blink     e25  ; # Blink
+    define  no-revers    e27  ; # Reverse      
+    define  no-hidden    e28  ; # Hidden
+    define  no-strike    e29  ; # StrikeThrough
 
     # Remainder
-    define  reset        [Code  0]  ; # Reset
+    define  reset        e 0  ; # Reset
 
     # And now the standard symbolic names
     define  advisory =yellow
