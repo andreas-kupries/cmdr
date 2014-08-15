@@ -311,7 +311,7 @@ namespace eval ::cmdr::color {
     define  no-strike    e29  ; # StrikeThrough
 
     # Remainder
-    define  reset        e 0  ; # Reset
+    define  reset        e0   ; # Reset
 
     # And now the standard symbolic names
     define  advisory =yellow
