@@ -43,6 +43,7 @@ package require oo::util 1.2 ;# link helper.
 package require cmdr::actor
 package require cmdr::private
 package require cmdr::help
+package require cmdr::config
 
 # # ## ### ##### ######## ############# #####################
 
@@ -87,6 +88,7 @@ oo::class create ::cmdr::officer {
 	set myhandler   {}       ; # Handler around cmd parsing and execution.
 	set myshandler  {}       ; # Setup handler, run after regular object
 	#                          # initialization from its definition.
+	set myconfig    {}
 	return
     }
 
@@ -188,6 +190,12 @@ oo::class create ::cmdr::officer {
 	return $mychildren
     }
 
+    # Make the parameter container accessible.
+    method config {} {
+	debug.cmdr/officer {}
+	return $myconfig
+    }
+
     # # ## ### ##### ######## #############
     ## Internal. Dispatcher setup. Defered until required.
     ## Core setup code runs only once.
@@ -198,6 +206,12 @@ oo::class create ::cmdr::officer {
 	set myinit 1
 	debug.cmdr/officer {}
 
+	set super [my super]
+	if {$super ne {}} {
+	    set super [$super config]
+	}
+
+	set myconfig [cmdr::config create config [self] {} $super]
 	my learn $myactions
 
 	# Auto-create a 'help' command when possible, i.e not in
@@ -242,7 +256,9 @@ oo::class create ::cmdr::officer {
 	    {alias       Alias} \
 	    {description description:} \
 	    undocumented \
-	    {common      set}
+	    {common      set} \
+	    {option      Option} \
+	    {state       State}
 	eval $script
 
 	# Postprocessing.
@@ -274,6 +290,9 @@ oo::class create ::cmdr::officer {
 
     # # ## ### ##### ######## #############
     ## Implementation of the action specification language.
+
+    forward Option  config make-option
+    forward State   config make-state
 
     # common      => set          (super cmdr::actor)
     # description => description: (super cmdr::actor)
@@ -720,7 +739,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     variable myinit myactions mymap mycommands myccommands mychildren \
-	myreplexit myhandler mypmap myshandler
+	myreplexit myhandler mypmap myshandler myconfig
 
     # # ## ### ##### ######## #############
 }
