@@ -129,8 +129,12 @@ oo::class create ::cmdr::config {
 	set splat no
 
 	# Auto inherit common options, state, arguments.
-	# May not be defined.
-	catch { use *all* }
+	# May not be defined. Pass any other issues.
+	try {
+	    use *all*
+	} trap {CMDR STORE UNKNOWN} {e o} {
+	    # Swallow possibility of a missing *all*.
+	}
 	eval $spec
 
 	# Postprocessing
