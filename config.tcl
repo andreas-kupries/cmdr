@@ -30,6 +30,9 @@
 ##   a command line against the definition, filling values,
 ##   issuing errors on mismatches, etc.
 
+## TODO: Replace the direct ansi color references in state dumps with
+##       "cmdr::color" and its symbolic names.
+
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
@@ -85,8 +88,8 @@ oo::class create ::cmdr::config {
     # Make self accessible.
     method self {} { self }
 
-    constructor {context spec} {
-	debug.cmdr/config {}
+    constructor {context spec {super {}}} {
+	debug.cmdr/config {[context fullname]}
 
 	classvariable ourinteractive
 	if {![info exists ourinteractive]} { set ourinteractive 0 }
@@ -114,6 +117,15 @@ oo::class create ::cmdr::config {
 	set mysections {}
 	set myinforce  no
 
+	# Updated in Import and DefineParameter, called from the $spec
+	set splat no
+
+	# Import from the 'super', if specified. This is done before
+	# the specification is run, as these have priority.
+	if {$super ne {}} {
+	    my Import $super
+	}
+
 	# Import the DSL commands.
 	link \
 	    {undocumented Undocumented} \
@@ -125,13 +137,19 @@ oo::class create ::cmdr::config {
 	    {state        State} \
 	    {section      Section}
 
-	# Updated in my DefineParameter, called from the $spec
-	set splat no
-
-	# Auto inherit common options, state, arguments.
-	# May not be defined.
-	catch { use *all* }
-	eval $spec
+	if {$spec ne {}} {
+	    debug.cmdr/config {==== eval spec begin ====}
+	    # Auto inherit common options, state, arguments.
+	    # May not be defined. Only done if the context
+	    # has a specification (=> i.e. is private). For officers we start out empty.
+	    try {
+		use *all*
+	    } trap {CMDR STORE UNKNOWN} {e o} {
+		# Swallow possibility of a misisng *all*.
+	    }
+	    eval $spec
+	    debug.cmdr/config {==== eval spec done =====}
+	}
 
 	# Postprocessing
 
@@ -507,6 +525,19 @@ oo::class create ::cmdr::config {
 	return
     }
 
+    # Externally visible variant of the 'Option' specification command.
+    method make-option {args} {
+	# Splat is a dummy for this.
+	set splat no
+	my DefineParameter 0 1 0 0 {*}$args
+    }
+    # Externally visible variant of the 'State' specification command.
+    method make-state {args} {
+	# Splat is a dummy for this.
+	set splat no
+	my DefineParameter 0 0 1 1 {*}$args
+    }
+
     # Parameter definition itself.
     # order, cmdline, required, defered (O C R D) name ?spec?
     forward Input     my DefineParameter 1 1 1 0
@@ -533,6 +564,17 @@ oo::class create ::cmdr::config {
 		      $order $cmdline $required $defered \
 		      $name $desc $spec]
 
+	my LinkPara $para
+	return
+    }
+
+    method LinkPara {para} {
+	debug.cmdr/config {}
+	upvar 1 splat splat
+
+	set name  [$para name]
+	set order [$para ordered]
+
 	# Map parameter name to handler object.
 	dict set mymap $name $para
 
@@ -556,12 +598,36 @@ oo::class create ::cmdr::config {
 	# And the list of all parameters in declaration order, for use
 	# in 'force'.
 	lappend mynames $name
+
+	debug.cmdr/config {/done $name}
+	return
+    }
+
+    method Import {other} {
+	debug.cmdr/config {from [$other context fullname]}
+
+	upvar 1 splat splat
+	# Import the parameters from another config instance
+	# into ourselves.
+
+	# This is similar to DefineParameter, except that the
+	# parameter instances are not created. They already exist and
+	# simply have to be linked into the local data structures.
+
+	foreach name [$other names] {
+	    debug.cmdr/config {importing $name}
+	    my LinkPara [$other lookup $name]
+	}
+
+	debug.cmdr/config {/done}
 	return
     }
 
     method ValidateAsUnknown {name} {
 	debug.cmdr/config {}
 	if {![dict exists $mymap $name]} return
+
+	debug.cmdr/config {DUP}
 	return -code error -errorcode {CMDR CONFIG KNOWN} \
 	    "Duplicate parameter \"[context fullname]: $name\", already specified."
     }
