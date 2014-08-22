@@ -26,7 +26,7 @@
 # Meta require try
 # Meta require {Tcl 8.5-}
 # Meta require {oo::util 1.2}
-# Meta require {string::token::shell 1.1}
+# Meta require {string::token::shell 1.2}
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -36,7 +36,7 @@ package require Tcl 8.5
 package require debug
 package require debug::caller
 package require linenoise::facade
-package require string::token::shell 1.1
+package require string::token::shell 1.2
 package require try
 package require TclOO
 package require oo::util 1.2 ;# link helper.
@@ -213,6 +213,7 @@ oo::class create ::cmdr::officer {
 
 	set myconfig [cmdr::config create config [self] {} $super]
 	my learn $myactions
+	$myconfig complete-definitions
 
 	# Auto-create a 'help' command when possible, i.e not in
 	# conflict with a user-specified command.
@@ -456,6 +457,10 @@ oo::class create ::cmdr::officer {
 	    set reset 1
 	}
 	try {
+	    # Process any options we may find. The first non-option
+	    # will be the command to dispatch on.
+	    set arg [config parse-head-options {*}$args]
+
 	    # Empty command. Delegate to the default, if we have any.
 	    # Otherwise fail.
 	    if {![llength $args]} {
@@ -537,7 +542,7 @@ oo::class create ::cmdr::officer {
 	    # i.e not in conflict with a user-specified command.
 	    set myreplexit 1 ; return
 	}
-	my Do {*}[string token shell $cmd]
+	my Do {*}[string token shell -- $cmd]
     }
 
     method report {what data} {
