@@ -89,7 +89,7 @@ oo::class create ::cmdr::config {
     method self {} { self }
 
     constructor {context spec {super {}}} {
-	debug.cmdr/config {[context fullname]}
+	debug.cmdr/config {owner=([$context fullname])}
 
 	classvariable ourinteractive
 	if {![info exists ourinteractive]} { set ourinteractive 0 }
@@ -152,15 +152,20 @@ oo::class create ::cmdr::config {
 	}
 
 	# Postprocessing
-
-	my SetThresholds
-	my UniquePrefixes
-	my CompletionGraph
+	my complete-definitions
 
 	set mypq [struct::queue P] ;# actual parameters
 	if {[llength $myargs]} {
 	    set myaq [struct::queue A] ;# formal argument parameters
 	}
+	return
+    }
+
+    method complete-definitions {} {
+	debug.cmdr/config {}
+	my SetThresholds
+	my UniquePrefixes
+	my CompletionGraph
 	return
     }
 
@@ -876,6 +881,40 @@ oo::class create ::cmdr::config {
 	return
     }
 
+    method parse-head-options {args} {
+	debug.cmdr/config {}
+
+	# - Reset the state values (we might be in an interactive shell, multiple commands).
+	# - Stash the parameters into a queue for processing.
+	# - Stash the (ordered) arguments into a second queue.
+	# - Operate on parameter and arg queues until empty,
+	#   dispatching the words to handlers as needed.
+
+	if {![llength $args]} { return {} }
+
+	my reset
+	P clear
+	P put {*}$args
+
+	debug.cmdr/config {options only}
+	while {[P size]} {
+	    set word [P peek]
+	    debug.cmdr/config {[P size] ? $word}
+	    if {![string match -* $word]} break
+	    my ProcessOption
+	}
+	# Non-option found, or end of words reached.
+	# Return the remainder.
+	set n [P size]
+	if {!$n} {
+	    return {}
+	} elseif {$n == 1} {
+	    return [list [P get]]
+	} else {
+	    return [P get $n]
+	}
+    }
+
     method parse {args} {
 	debug.cmdr/config {}
 
@@ -1008,6 +1047,7 @@ oo::class create ::cmdr::config {
 	# Non special option gets dispatched to handler (cmdr::parameter instance).
 	# The handler is responsible for retrieved the option's value.
 	set option [P get]
+	debug.cmdr/config {taking ($option)}
 
 	# Handle general special forms:
 	#
@@ -1017,6 +1057,8 @@ oo::class create ::cmdr::config {
 	if {[regexp {^(-[^=]+)=(.*)$} $option --> option value]} {
 	    P unget $value
 	}
+
+	debug.cmdr/config {having ($option)}
 
 	# Validate existence of the option
 	if {![dict exists $myfullopt $option]} {
