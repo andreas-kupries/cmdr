@@ -545,7 +545,7 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 	}
 	# Special treatment of generated categories, move to end.
 	set end -10000
-	foreach $c generated {
+	foreach c $generated {
 	    if {$c ni $categories} continue
 	    dict set map $c $end
 	    incr end -10000
