@@ -16,7 +16,7 @@
 **	This means that sub-ordinates _cannot_ specify their own
 	options with the same name.
 
-TODO	An exception is the generation of help, where the options of
+**	An exception is the generation of help, where the options of
 	the officer are only seen by the officer itself, and none of
 	the sub-ordinates. This will unclutter the individual commands
 	which otherwise would show all the .use'd options.
@@ -37,7 +37,7 @@ TODO	An exception is the generation of help, where the options of
 		error if not.
 
 (3) Help
-TODO	(a)	Imported parameters of an officer or private are
+**	(a)	Imported parameters of an officer or private are
 		excluded from the generated help.
 
 TODO	(b)	The help structure is extended so that officers can
