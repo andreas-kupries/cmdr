@@ -738,6 +738,10 @@ oo::class create ::cmdr::officer {
 	    if {![$actor documented]} continue
 	    set help [dict merge $help [$actor help $cname]]
 	}
+
+	# Add the officer itself, to provide its shared options.
+	dict set help $prefix [config help]
+
 	return $help
     }
 

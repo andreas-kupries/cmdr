@@ -62,7 +62,7 @@ proc ::cmdr::help::format::tcl {root width help} {
     # cmdr::help::format::by-category, and re-uses its frontend helper
     # commands.
 
-    lassign [SectionTree $help 0] subc cmds
+    lassign [SectionTree $help \000 0] subc cmds
     foreach c [SectionOrder $root $subc] {
 	lappend sections [TCL::acategory [::list $c] $cmds $subc]
     }
@@ -108,7 +108,10 @@ proc ::cmdr::help::format::TCL {command} {
     dict with command {}
     # -> action, desc, options, arguments, parameters, states, sections
 
-    lappend dict action      $action
+    if {[info exists action]} {
+	# Missing for officers.
+	lappend dict action $action
+    }
     lappend dict arguments   $arguments
     lappend dict description [TCL::astring $desc]
     lappend dict opt2para    [::cmdr util dictsort $opt2para]
@@ -182,4 +185,4 @@ proc ::cmdr::help::format::TCL::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::tcl 1.0.1
+package provide cmdr::help::tcl 1.1
