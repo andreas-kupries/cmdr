@@ -116,8 +116,10 @@ oo::class create ::cmdr::private {
 	debug.cmdr/private {}
 	set myinit 1
 
-	# Create and fill the parameter collection
-	set myconfig [cmdr::config create config [self] $myarguments]
+	# Create and fill the parameter collection.
+	set myconfig [cmdr::config create config [self] \
+			  $myarguments \
+			  [[my super] config]]
 	return
     }
 
@@ -212,4 +214,4 @@ oo::class create ::cmdr::private {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::private 1.2
+package provide cmdr::private 1.3
