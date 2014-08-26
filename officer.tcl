@@ -459,7 +459,7 @@ oo::class create ::cmdr::officer {
 	try {
 	    # Process any options we may find. The first non-option
 	    # will be the command to dispatch on.
-	    set arg [config parse-head-options {*}$args]
+	    set args [config parse-head-options {*}$args]
 
 	    # Empty command. Delegate to the default, if we have any.
 	    # Otherwise fail.
