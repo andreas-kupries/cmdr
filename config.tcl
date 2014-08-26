@@ -192,6 +192,11 @@ oo::class create ::cmdr::config {
 	set optpara {}
 
 	dict for {o para} $myoption {
+
+	    # Ignore options imported from the parent.
+	    # These are documented where defined.
+	    if {[$para config] ne [self]} continue
+
 	    # in interactive mode undocumented options can be shown in
 	    # the help if they already have a value defined for them.
 	    if {![$para documented] &&
@@ -221,6 +226,11 @@ oo::class create ::cmdr::config {
 
 	foreach p [lsort -dict $mynames] {
 	    set para [dict get $mymap $p]
+
+	    # Ignore all parameters imported from the parent.
+	    # These are documented where defined.
+	    if {[$para config] ne [self]} continue
+
 	    dict set parameters $p [$para help]
 
 	    if {![$para is state]} continue
@@ -1477,4 +1487,4 @@ oo::class create ::cmdr::config {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::config 1.1.1
+package provide cmdr::config 1.2
