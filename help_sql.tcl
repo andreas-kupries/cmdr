@@ -101,8 +101,15 @@ proc ::cmdr::help::format::SQL {name command} {
 
     dict with command {} ; # -> action, desc, options, arguments, parameters, states
 
-    set cid [SQL::++ commands cno [SQL::astring $name] \
-		 [SQL::astring $desc] [SQL::astring $action]]
+    if {[info exists action]} {
+	set action [SQL::astring $action]
+    } {
+	set action NULL
+    }
+    set cid [SQL::++ commands cno \
+		 [SQL::astring $name] \
+		 [SQL::astring $desc] \
+		 $action]
 
     set sequence 0
     foreach {pname param} $parameters {
@@ -293,4 +300,4 @@ proc ::cmdr::help::format::SQL::schema {} {
 }
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::sql 1.0
+package provide cmdr::help::sql 1.1

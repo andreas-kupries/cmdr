@@ -66,7 +66,7 @@ proc ::cmdr::help::format::json {root width help} {
     # cmdr::help::format::by-category, and re-uses its frontend helper
     # commands.
 
-    lassign [SectionTree $help 0] subc cmds
+    lassign [SectionTree $help \000 0] subc cmds
     foreach c [SectionOrder $root $subc] {
 	lappend sections [JSON::acategory [::list $c] $cmds $subc]
     }
@@ -114,7 +114,10 @@ proc ::cmdr::help::format::JSON {command} {
     # -> action, desc, options, arguments, parameters, states, sections
 
     lappend dict description [JSON::astring    $desc]
-    lappend dict action      [JSON::alist      $action]
+    if {[info exists action]} {
+	# Missing for officers.
+	lappend dict action [JSON::alist $action]
+    }
     lappend dict arguments   [JSON::alist      $arguments]
     lappend dict options     [JSON::adict      $options]
     lappend dict opt2para    [JSON::adict      $opt2para]
@@ -203,4 +206,4 @@ proc ::cmdr::help::format::JSON::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::json 1.0.1
+package provide cmdr::help::json 1.1

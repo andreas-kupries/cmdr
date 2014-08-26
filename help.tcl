@@ -327,12 +327,12 @@ proc ::cmdr::help::format::Short {width name command} {
 ## Show help by category/ies
 
 proc ::cmdr::help::format::by-category {root width help} {
-    debug.cmdr/help {}
+    debug.cmdr/help {name ([$root name])}
 
     # I. Extract the category information from the help structure and
     #    generate the tree of categories with their commands.
 
-    lassign [SectionTree $help] subc cmds
+    lassign [SectionTree $help [$root name]] subc cmds
 
     # II. Order the main categories. Allow for user influences.
     set categories [SectionOrder $root $subc]
@@ -451,8 +451,9 @@ proc ::cmdr::help::format::HasOptions {options} {
     }
 }
 
-proc ::cmdr::help::format::SectionTree {help {fmtname 1}} {
+proc ::cmdr::help::format::SectionTree {help root {fmtname 1}} {
 
+    array set opts {} ;# cmd -> option -> odesc
     array set subc {} ;# category path -> list (child category path)
     array set cmds {} ;# category path -> list (cmd)
     #                    cmd = tuple (label description)
@@ -465,6 +466,15 @@ proc ::cmdr::help::format::SectionTree {help {fmtname 1}} {
 	    continue
 	}
 
+	# Exclude officers from the categorized help. They can only be
+	# a source of shared options. Shared options are collected in
+	# a separate structure.
+	if {![info exists action] && [dict size $options]} {
+	    set opts($name) $options
+	    continue
+	}
+
+
 	if {![llength $sections]} {
 	    lappend sections Miscellaneous
 	}
@@ -473,7 +483,7 @@ proc ::cmdr::help::format::SectionTree {help {fmtname 1}} {
 	    append name " " [Arguments $arguments $parameters]
 	}
 	set    desc [lindex [split $desc .] 0]
-	set    cmd  [::list $name $desc]
+	set    cmd  [::list [string trim $name] $desc]
 
 	foreach category $sections {
 	    lappend cmds($category) $cmd
@@ -481,8 +491,28 @@ proc ::cmdr::help::format::SectionTree {help {fmtname 1}} {
 	}
     }
 
-    #parray subc
-    #parray cmds
+    # Options for the root => global options, put into the section tree.
+    # We are ignoring deeper shared options.
+
+    if {[info exists opts($root)]} {
+	set options $opts($root)
+
+	set category {Global Options}
+	lappend sections $category
+	set category [::list $category]
+	foreach {o d} $options {
+	    lappend cmds($category) [::list $o [string trim $d]]
+	    LinkParent $category
+	}
+
+	unset opts($root)
+    }
+
+    # puts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # parray subc
+    # parray cmds
+    # parray opts
+    # puts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     ::list [array get subc] [array get cmds]
 }
@@ -500,6 +530,11 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
     # IIa. Natural order first.
     set categories [lsort -dict -unique [dict get $subc {}]]
 
+    set generated {
+	Miscellaneous
+	{Global Options}
+    }
+
     # IIb. Look for and apply user overrides.
     if {[$root exists *category-order*]} {
 	# Record natural order
@@ -508,12 +543,15 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 	    dict set map $c $n
 	    incr n -10
 	}
-	# Special treatment of generated category, move to end.
-	if {"Miscellaneous" in $categories} {
-	    dict set map Miscellaneous -10000
+	# Special treatment of generated categories, move to end.
+	set end -10000
+	foreach $c generated {
+	    if {$c ni $categories} continue
+	    dict set map $c $end
+	    incr end -10000
 	}
 	# Overwrite natural with custom ordering.
-	dict for {c n}  [$root get *category-order*] {
+	dict for {c n} [$root get *category-order*] {
 	    if {$c ni $categories} continue
 	    dict set map $c $n
 	}
@@ -531,11 +569,12 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 	    lappend categories [lindex $item 1]
 	}
     } else {
-	# Without bespoke ordering only the generated category gets
+	# Without a bespoke ordering only the generated categories are
 	# treated specially.
-	set pos [lsearch -exact $categories Miscellaneous]
-	if {$pos >= 0} {
-	    set categories [linsert [lreplace $categories $pos $pos] end Miscellaneous]
+	foreach c $generated {
+	    set pos [lsearch -exact $categories $c]
+	    if {$pos < 0} continue
+	    set categories [linsert [lreplace $categories $pos $pos] end $c]
 	}
     }
 
