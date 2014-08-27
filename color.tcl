@@ -346,4 +346,4 @@ apply {{} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::color 0
+package provide cmdr::color 1
