@@ -121,8 +121,8 @@ proc ::cmdr::ask::string/extended {query args} {
 proc ::cmdr::ask::string* {query} {
     debug.cmdr/ask {}
 
-    Ensure query :   ;# TODO: allow customization (string prompt string)
-    append query { }
+    Chop   query {: }
+    append query {: }   ;# TODO: allow customization (string prompt string)
 
     try {
 	set response [Interact {*}[Fit $query 10] -hidden 1]
@@ -335,18 +335,27 @@ proc ::cmdr::ask::Fit {prompt space} {
 }
 
 proc ::cmdr::ask::Chop {var charset} {
+    debug.cmdr/ask {}
     upvar 1 $var text
     set text [::string trimright $text $charset]
+
+    debug.cmdr/ask {/done ==> ($text)}
     return
 }
 
 proc ::cmdr::ask::Ensure {var char} {
+    debug.cmdr/ask {}
     upvar 1 $var text
-    if {[::string index $text end] eq $char} return
+    if {[::string index $text end] eq $char} {
+	debug.cmdr/ask {/done, no change}
+	return
+    }
     append text $char
+
+    debug.cmdr/ask {/done ==> ($text)}
     return
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::ask 0
+package provide cmdr::ask 1
