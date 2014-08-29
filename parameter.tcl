@@ -48,8 +48,9 @@ oo::class create ::cmdr::parameter {
     ## Lifecycle.
 
     constructor {theconfig order cmdline required defered name desc valuespec} {
-	set myname  $name		; # [R1]
-	set mylabel $name
+	set myname     $name		; # [R1]
+	set mylabel    $name
+	set myarglabel $name
 
 	# Import the whole collection of parameters this one is a part
 	# of into our namespace, as the fixed command "config", for
@@ -156,6 +157,7 @@ oo::class create ::cmdr::parameter {
     # Identification and help. Add context name into it?
     method name        {} { return $myname }
     method label       {} { return $mylabel }
+    method arglabel    {} { return $myarglabel }
 
     method the-name {} {
 	if {[my type] eq "option"} {
@@ -240,6 +242,7 @@ oo::class create ::cmdr::parameter {
 		    interactive $myinteractive  \
 		    isbool      [my isbool]     \
 		    label       $mylabel        \
+		    arglabel    $myarglabel     \
 		    list        $myislist       \
 		    ordered     $myisordered    \
 		    presence    $myonlypresence \
@@ -278,6 +281,7 @@ oo::class create ::cmdr::parameter {
 	    {immediate     Immediate} \
 	    {interact      Interact} \
 	    {label         Label} \
+	    {argument      ArgLabel} \
 	    {list          List} \
 	    {no-promotion  NoPromote} \
 	    {optional      Optional} \
@@ -315,6 +319,11 @@ oo::class create ::cmdr::parameter {
 
     method Label {name} {
 	set mylabel $name
+	return
+    }
+
+    method ArgLabel {name} {
+	set myarglabel $name
 	return
     }
 
@@ -1202,7 +1211,7 @@ oo::class create ::cmdr::parameter {
 
     # # ## ### ##### ######## #############
 
-    variable myname mylabel mydescription \
+    variable myname mylabel myarglabel mydescription \
 	myisordered myiscmdline myislist myisrequired \
 	myinteractive myprompt mydefault myhasdefault \
 	mywhencomplete mywhenset mygenerate myvalidate \
@@ -1216,4 +1225,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.2
+package provide cmdr::parameter 1.3

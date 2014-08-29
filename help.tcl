@@ -242,8 +242,11 @@ proc ::cmdr::help::format::Full {width name command} {
 	    set pname [dict get $opt2para $oname]
 	    set vt    [dict get $parameters $pname validator]
 	    if {$vt ne "::cmdr::validate::boolean"} {
-		# FUTURE: Make the argument label specifiable.
-		set plabel [dict get $parameters $pname label]
+		if {[dict exists $parameters $pname arglabel]} {
+		    set plabel [dict get $parameters $pname arglabel]
+		} else {
+		    set plabel [dict get $parameters $pname label]
+		}
 		append oname " [string toupper $plabel]"
 	    }
 
