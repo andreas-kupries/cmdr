@@ -236,6 +236,17 @@ proc ::cmdr::help::format::Full {width name command} {
 	set onames {}
 	set odefs  {}
 	foreach {oname ohelp} [::cmdr util dictsort $options] {
+	    # Inspect the parameter and determine of the option
+	    # requires an argument. If yes, suitably extend the
+	    # definition key of the option list.
+	    set pname [dict get $opt2para $oname]
+	    set vt    [dict get $parameters $pname validator]
+	    if {$vt ne "::cmdr::validate::boolean"} {
+		# FUTURE: Make the argument label specifiable.
+		set plabel [dict get $parameters $pname label]
+		append oname " [string toupper $plabel]"
+	    }
+
 	    lappend onames $oname
 	    lappend odefs  $ohelp
 	}
