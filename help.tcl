@@ -236,20 +236,7 @@ proc ::cmdr::help::format::Full {width name command} {
 	set onames {}
 	set odefs  {}
 	foreach {oname ohelp} [::cmdr util dictsort $options] {
-	    # Inspect the parameter and determine of the option
-	    # requires an argument. If yes, suitably extend the
-	    # definition key of the option list.
-	    set pname [dict get $opt2para $oname]
-	    set vt    [dict get $parameters $pname validator]
-	    if {$vt ne "::cmdr::validate::boolean"} {
-		if {[dict exists $parameters $pname arglabel]} {
-		    set plabel [dict get $parameters $pname arglabel]
-		} else {
-		    set plabel [dict get $parameters $pname label]
-		}
-		append oname " [string toupper $plabel]"
-	    }
-
+	    set oname [OptionName $oname parameters opt2para]
 	    lappend onames $oname
 	    lappend odefs  $ohelp
 	}
@@ -375,7 +362,7 @@ proc ::cmdr::help::format::ShowCategory {width lv path indent} {
     set names {}
     set descs {}
     if {[dict exists $cmds $path]} {
-	foreach def [lsort -dict -unique [dict get $cmds $path]] {
+	foreach def [lsort -dict -unique -index 0 [dict get $cmds $path]] {
 	    lassign $def syntax desc
 	    lappend names $syntax
 	    lappend descs $desc
@@ -484,7 +471,7 @@ proc ::cmdr::help::format::SectionTree {help root {fmtname 1}} {
 	# a source of shared options. Shared options are collected in
 	# a separate structure.
 	if {![info exists action] && [dict size $options]} {
-	    set opts($name) $options
+	    set opts($name) [::list $options $parameters $opt2para]
 	    continue
 	}
 
@@ -509,12 +496,13 @@ proc ::cmdr::help::format::SectionTree {help root {fmtname 1}} {
     # We are ignoring deeper shared options.
 
     if {[info exists opts($root)]} {
-	set options $opts($root)
+	lassign $opts($root) options parameters opt2para
 
 	set category {Global Options}
 	lappend sections $category
 	set category [::list $category]
-	foreach {o d} $options {
+	foreach {o d} [::cmdr util dictsort $options] {
+	    set o [OptionName $o parameters opt2para]
 	    lappend cmds($category) [::list $o [string trim $d]]
 	    LinkParent $category
 	}
@@ -529,6 +517,28 @@ proc ::cmdr::help::format::SectionTree {help root {fmtname 1}} {
     # puts ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     ::list [array get subc] [array get cmds]
+}
+
+proc ::cmdr::help::format::OptionName {oname pv ov} {
+    upvar 1 $pv parameters $ov opt2para
+
+    # Inspect the parameter and determine of the option
+    # requires an argument. If yes, suitably extend the
+    # definition key of the option list.
+
+    set pname [dict get $opt2para $oname]
+    set vt    [dict get $parameters $pname validator]
+
+    if {$vt ne "::cmdr::validate::boolean"} {
+	if {[dict exists $parameters $pname arglabel]} {
+	    set plabel [dict get $parameters $pname arglabel]
+	} else {
+	    set plabel [dict get $parameters $pname label]
+	}
+	append oname " [string toupper $plabel]"
+    }
+
+    return $oname
 }
 
 proc ::cmdr::help::format::LinkParent {category} {
