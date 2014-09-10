@@ -412,6 +412,10 @@ oo::class create ::cmdr::officer {
 	debug.cmdr/officer {}
 	my Setup
 
+	# Process any options we may find. The first non-option
+	# will be the command to dispatch on.
+	set args [config parse-head-options {*}$args]
+
 	# No command specified, what should we do ?
 	# (1) If there is a default, we can go on (Do will call on it).
 	# (2) Without default we must enter an interactive shell.
@@ -457,10 +461,6 @@ oo::class create ::cmdr::officer {
 	    set reset 1
 	}
 	try {
-	    # Process any options we may find. The first non-option
-	    # will be the command to dispatch on.
-	    set args [config parse-head-options {*}$args]
-
 	    # Empty command. Delegate to the default, if we have any.
 	    # Otherwise fail.
 	    if {![llength $args]} {
@@ -755,4 +755,4 @@ oo::class create ::cmdr::officer {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::officer 1.4
+package provide cmdr::officer 1.4.1
