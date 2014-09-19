@@ -88,13 +88,13 @@ oo::class create ::cmdr::parameter {
 	set myonlypresence no ;# options only, no argument when true.
 	set myhasdefault   no ;# flag for default existence
 	set mydefault      {} ;# default value - raw
-	set mygenerate     {} ;# generator command
+	set mygenerate     {} ;# generator command prefix
 	set myinteractive  no ;# no interactive query of value
 	set myprompt       "Enter ${name}: " ;# standard prompt for interaction
 
-	set myvalidate     {} ;# validation command
-	set mywhencomplete {} ;# action-on-int-rep-creation command.
-	set mywhenset      {} ;# action-on-set(-from-parse) command.
+	set myvalidate     {} ;# validation command prefix
+	set mywhencomplete {} ;# list of action-on-int-rep-creation command prefixes
+	set mywhenset      {} ;# list of action-on-set(-from-parse) command prefixes
 
 	set mythreshold    {} ;# threshold for optional arguments
 	#                     ;# empty: Undefined
@@ -290,7 +290,11 @@ oo::class create ::cmdr::parameter {
 	    {undocumented  Undocumented} \
 	    {validate      Validate} \
 	    {when-complete WhenComplete} \
-	    {when-set      WhenSet}
+	    {when-set      WhenSet} \
+	    \
+	    {touch    Touch} \
+	    {touch?   TouchIfExists} \
+	    {disallow Disallow}
 	eval $valuespec
 
 	# Postprocessing ... Fill in validation and other defaults
@@ -312,6 +316,29 @@ oo::class create ::cmdr::parameter {
 	my C7_DefaultGeneratorConflict
 
 	return
+    }
+
+    # # ## ### ##### ######## #############
+    ## Utility functionality for easy setup of exclusions and data
+    ## propagation
+
+    method Touch {attr val} {
+	lambda {attr val p x} {
+	    $p config $attr set $val
+	} $attr $val
+    }
+
+    method TouchIfExists {attr val} {
+	lambda {attr val p x} {
+	    if {![$p config has $attr]} return
+	    $p config $attr set $val
+	} $attr $val
+    }
+
+    method Disallow {attr} {
+	lambda {attr excluder p args} {
+	    $p config $attr lock $excluder
+	} $attr [my the-name]
     }
 
     # # ## ### ##### ######## #############
@@ -437,12 +464,12 @@ oo::class create ::cmdr::parameter {
     }
 
     method WhenComplete {cmd} {
-	set mywhencomplete $cmd
+	lappend mywhencomplete $cmd
 	return
     }
 
     method WhenSet {cmd} {
-	set mywhenset $cmd
+	lappend mywhenset $cmd
 	return
     }
 
@@ -730,13 +757,10 @@ oo::class create ::cmdr::parameter {
 	} else {
 	    set mystring [$queue get]
 	}
+
 	set myhasstring yes
-
 	my forget
-
-	if {[llength $mywhenset]} {
-	    {*}$mywhenset [self] $mystring
-	}
+	my RunWhenSetHooks
 	return
     }
 
@@ -748,13 +772,10 @@ oo::class create ::cmdr::parameter {
 	} else {
 	    set mystring $value
 	}
+
 	set myhasstring yes
-
 	my forget
-
-	if {[llength $mywhenset]} {
-	    {*}$mywhenset [self] $mystring
-	}
+	my RunWhenSetHooks
 	return
     }
 
@@ -777,7 +798,7 @@ oo::class create ::cmdr::parameter {
 	debug.cmdr/parameter {}
 	return -code error \
 	    -errorcode {CMDR PARAMETER LOCKED} \
-	    "You cannot use \"[my name]\" together with \"$mylocker\"."
+	    "You cannot use \"[my the-name]\" together with \"$mylocker\"."
     }
 
     method process {detail queue} {
@@ -1183,11 +1204,10 @@ oo::class create ::cmdr::parameter {
 
     method Value: {v} {
 	debug.cmdr/parameter {}
-	if {[llength $mywhencomplete]} {
-	    {*}$mywhencomplete [self] $v
-	}
+
 	set myvalue $v
 	set myhasvalue yes
+	my RunWhenCompleteHooks
 
 	# Return value, abort caller!
 	return -code return $myvalue
@@ -1209,6 +1229,26 @@ oo::class create ::cmdr::parameter {
 	return
     }
 
+    method RunWhenSetHooks {} {
+	if {![llength $mywhenset]} return
+	set self [self]
+	foreach cmd $mywhenset {
+	    if {![llength $cmd]} continue
+	    {*}$cmd $self $mystring
+	}
+	return
+    }
+
+    method RunWhenCompleteHooks {} {
+	if {![llength $mywhencomplete]} return
+	set self [self]
+	foreach cmd $mywhencomplete {
+	    if {![llength $cmd]} continue
+	    {*}$cmd $self $myvalue
+	}
+	return
+    }
+
     # # ## ### ##### ######## #############
 
     variable myname mylabel myarglabel mydescription \
@@ -1225,4 +1265,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.3
+package provide cmdr::parameter 1.4
