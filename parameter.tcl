@@ -187,6 +187,9 @@ oo::class create ::cmdr::parameter {
     }
 
     # Core classification properties
+    method inherited {config} {
+	expr {$config ne [my config]}
+    }
     method ordered      {} { return $myisordered }
     method cmdline      {} { return $myiscmdline }
     method required     {} { return $myisrequired }
