@@ -1388,7 +1388,7 @@ oo::class create ::cmdr::config {
 	foreach label $labels para $plist {
 	    set para [my lookup $para]
 
-	    set label    [string totitle $label 0 0]
+	    #set label    [string totitle $label 0 0]
 	    set required [$para required]
 	    set islist   [$para list]
 	    set defined  [$para set?]
@@ -1418,6 +1418,7 @@ oo::class create ::cmdr::config {
 
 	    if {$full} {
 		append label " ("
+		append label [expr {[$para inherited [self]] ? "^":"-"}]
 		append label [expr {[$para ordered]    ? "o":"-"}]
 		append label [expr {[$para cmdline]    ? "c":"-"}]
 		append label [expr {[$para list]       ? "L":"-"}]
@@ -1425,11 +1426,9 @@ oo::class create ::cmdr::config {
 		append label [expr {[$para documented] ? "d":"-"}]
 		append label [expr {[$para isbool]     ? "B":"-"}]
 		append label [expr {[$para hasdefault] ? "D":"-"}]
-		append label [expr {[$para set?]   ? "!":"-"}]
+		append label [expr {[$para set?]       ? "!":"-"}]
 		append label [expr {[$para defered]    ? ">":"-"}]
-
-		append label [expr {[$para required] ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
-
+		append label [expr {[$para required]   ? "/.." : [$para threshold] < 0 ? "/pt":"/th"}]
 		append label ")"
 		set sfx {              }
 	    } else {
