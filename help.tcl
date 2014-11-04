@@ -376,6 +376,12 @@ proc ::cmdr::help::format::ShowCategory {width lv path indent} {
 
     regsub -all {[^\t]}  "$indent[lindex $labels 0]$sep" { } blank
     set w [expr {$width - [string length $blank]}]
+    if {$w < 10} {
+	# Force a minimum size for the description. This will cause
+	# either cutting at the terminal width, and/or wrapping into
+	# the next line, depending on the terminal.
+	set w 10
+    }
 
     # Print the commands, final formatting.
     set commands 0
@@ -607,4 +613,4 @@ proc ::cmdr::help::format::SectionOrder {root subc} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help 1.3.1
+package provide cmdr::help 1.3.2
