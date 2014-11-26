@@ -190,6 +190,7 @@ proc ::cmdr::help::format::SQL::para {def} {
 	    generator -
 	    validator -
 	    label -
+	    arglabel -
 	    @string {
 		set value [astring $xdef]
 	    }
@@ -300,4 +301,4 @@ proc ::cmdr::help::format::SQL::schema {} {
 }
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::sql 1.1
+package provide cmdr::help::sql 1.1.1

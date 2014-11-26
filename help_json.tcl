@@ -157,6 +157,7 @@ proc ::cmdr::help::format::JSON::parameters {parameters} {
 		prompt -
 		type -
 		label -
+		arglabel -
 		@string {
 		    set value [astring $xdef]
 		}
@@ -206,4 +207,4 @@ proc ::cmdr::help::format::JSON::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::json 1.1
+package provide cmdr::help::json 1.1.1

@@ -152,6 +152,7 @@ proc ::cmdr::help::format::TCL::parameters {parameters} {
 		prompt -
 		type -
 		label -
+		arglabel -
 		@string {
 		    set value [astring $xdef]
 		}
@@ -185,4 +186,4 @@ proc ::cmdr::help::format::TCL::astring {string} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::help::tcl 1.1
+package provide cmdr::help::tcl 1.1.1
