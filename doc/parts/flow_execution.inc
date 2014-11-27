@@ -40,6 +40,23 @@ context-dependent things.
 shell was active. This means that a missing [const *in-shell*] block
 should be treated like [const false].
 
+[def [const *config*]]
+
+This block is read-only, and only found in the root actor.
+
+Its value is managed by the framework, specifically by privates.
+
+[para] It is a command name, i.e. object handle, to the active
+instance of [class cmdr::config]. For regular parameters that is the
+same handle given to them in their various callbacks. For a global
+parameter however the active config object is what the parameter is
+currently used by, whereas the callback argument is where it was
+defined in and inherited from.
+
+[para] This distinction is important when the global parameter has to
+look at and work with non-global parameters of the active
+private. These can only be found in the active context.
+
 [def [const *prefix*]]
 
 This block is read-only and found in the private actor for the
