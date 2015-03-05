@@ -145,7 +145,7 @@ oo::class create ::cmdr::config {
 	    try {
 		use *all*
 	    } trap {CMDR STORE UNKNOWN} {e o} {
-		# Swallow possibility of a misisng *all*.
+		# Swallow possibility of a missing *all*.
 	    }
 	    eval $spec
 	    debug.cmdr/config {==== eval spec done =====}
