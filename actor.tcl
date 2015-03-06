@@ -196,7 +196,11 @@ oo::class create ::cmdr::actor {
 	}
 	set data [lindex $args 0]
 	if {$extend} {
-	    set data [my get $key]$data
+	    if {[my has $key]} {
+		set data [my get $key]$data
+	    }
+	    # Note how -extend is a no-op if the block to extend does
+	    # not exist yet, and falls back to plain 'set'.
 	}
 	dict set mystore $key $data
 	return
@@ -374,4 +378,4 @@ oo::class create ::cmdr::actor {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::actor 1.3
+package provide cmdr::actor 1.3.1
