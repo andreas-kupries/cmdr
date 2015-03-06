@@ -247,6 +247,7 @@ proc ::cmdr::history::SaveLast {} {
     debug.cmdr/history {file      = $file}
     debug.cmdr/history {cache len = [llength $cache]}
 
+    file mkdir [file dirname $file]
     fileutil::appendToFile $file [lindex $cache end]\n
     return
 }
@@ -273,6 +274,7 @@ proc ::cmdr::history::SaveAll {} {
 	append contents "[join $cache \n]\n"
     }
 
+    file mkdir [file dirname $file]
     fileutil::writeFile $file $contents
     return
 }
@@ -417,5 +419,5 @@ proc ::cmdr::history::Describe {} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::history 0
+package provide cmdr::history 0.1
 return
