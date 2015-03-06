@@ -3,7 +3,7 @@
 ## CMDR - Validate::Time - Supporting validation type - iso times.
 
 # @@ Meta Begin
-# Package cmdr::validate::time 0
+# Package cmdr::validate::time 1
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -14,6 +14,8 @@
 # Meta require {cmdr::validate::common 1.2}
 # Meta require debug
 # Meta require debug::caller
+# Meta require try
+# Meta require clock::iso8601
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -39,7 +41,7 @@ namespace eval ::cmdr::validate {
     namespace ensemble create
 }
 namespace eval ::cmdr::validate::time {
-    namespace export default validate complete release
+    namespace export default validate complete release 2external
     namespace ensemble create
 
     namespace import ::cmdr::validate::common::fail
@@ -54,11 +56,16 @@ debug prefix cmdr/validate/time {[debug caller] | }
 # # ## ### ##### ######## ############# #####################
 ## Times as parsed by clock::iso86
 
+proc ::cmdr::validate::time::2external {x}  {
+    debug.cmdr/validate/time {}
+    return [clock format $x -format {%H:%M:%S}]
+}
+
 proc ::cmdr::validate::time::release  {p x} { return }
 proc ::cmdr::validate::time::default  {p}  {
     debug.cmdr/validate/time {}
     # Today.
-    return [clock format [clock seconds] -format {%Y-%m-%d}]
+    return [clock seconds]
 }
 proc ::cmdr::validate::time::complete {p x} {
     debug.cmdr/validate/time {} 10

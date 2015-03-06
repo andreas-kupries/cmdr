@@ -3,7 +3,7 @@
 ## CMDR - Validate::Date - Supporting validation type - iso dates.
 
 # @@ Meta Begin
-# Package cmdr::validate::date 0
+# Package cmdr::validate::date 1
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
@@ -14,6 +14,8 @@
 # Meta require {cmdr::validate::common 1.2}
 # Meta require debug
 # Meta require debug::caller
+# Meta require try
+# Meta require clock::iso8601
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -39,7 +41,7 @@ namespace eval ::cmdr::validate {
     namespace ensemble create
 }
 namespace eval ::cmdr::validate::date {
-    namespace export default validate complete release
+    namespace export default validate complete release 2external
     namespace ensemble create
 
     namespace import ::cmdr::validate::common::fail
@@ -54,11 +56,16 @@ debug prefix cmdr/validate/date {[debug caller] | }
 # # ## ### ##### ######## ############# #####################
 ## Dates as parsed by clock::iso86
 
+proc ::cmdr::validate::date::2external {x}  {
+    debug.cmdr/validate/date {}
+    return [clock format $x -format {%Y-%m-%d}]
+}
+
 proc ::cmdr::validate::date::release  {p x} { return }
 proc ::cmdr::validate::date::default  {p}  {
     debug.cmdr/validate/date {}
     # Today.
-    return [clock format [clock seconds] -format {%Y-%m-%d}]
+    return [clock seconds]
 }
 proc ::cmdr::validate::date::complete {p x} {
     debug.cmdr/validate/date {} 10
