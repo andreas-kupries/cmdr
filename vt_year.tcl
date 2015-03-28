@@ -69,15 +69,20 @@ proc ::cmdr::validate::year::validate {p x} {
     # Accept short and long year numbers
 
     set xa [string tolower $x]
-    foreach pattern {%Y %y} {
+    foreach pattern {%Y-%m-%d %y-%m-%d} {
 	try {
-	    set epoch [clock scan $xa -format $pattern]
+	    # Note how we add fake month and day to both input and
+	    # pattern (see above) to ensure proper behaviour from
+	    # 'clock scan'.
+	    set epoch [clock scan ${xa}-01-01 -format $pattern]
 	} trap {CLOCK badInputString} {e o} {
 	    continue
 	} on ok {e o} {
 	    # We have an epoch value.
 	    # Format it back to a full numeric year
-	    return [clock format $epoch -format %Y]
+	    set y [clock format $epoch -format %Y]
+	    debug.cmdr/validate/year {($xa) $pattern ==> ($epoch) ==> $y}
+	    return $y
 	}
     }
     fail $p YEAR "a year" $x
