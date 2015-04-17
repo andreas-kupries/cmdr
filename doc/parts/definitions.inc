@@ -34,6 +34,12 @@
 [vset TITLE_VCOMMON       "[vset PTITLE] - Utilities for Validation Types"]
 [vset TITLE_FLOW          "[vset PTITLE] - Runtime Processing Flow"]
 
+[vset TITLE_VT_YEAR       "[vset PTITLE] - Validation type for years"]
+[vset TITLE_VT_WEEKDAY    "[vset PTITLE] - Validation type for weekday names"]
+[vset TITLE_VT_TIME       "[vset PTITLE] - Validation type for times"]
+[vset TITLE_VT_POSINT     "[vset PTITLE] - Validation type for positive integers"]
+[vset TITLE_VT_DATE       "[vset PTITLE] - Validation type for dates"]
+
 [comment {- Miscellanea ............. - - -- --- ----- --------}]
 [vset LABEL_INTRO         [vset PROJECT]-introduction]
 [vset LABEL_LICENSE       [vset PROJECT]-license]
@@ -68,3 +74,9 @@
 [vset LABEL_VALIDATE      [vset PROJECT]::validate]
 [vset LABEL_VCOMMON       [vset PROJECT]::validate::common]
 [vset LABEL_FLOW          [vset PROJECT]-spec-flow]
+
+[vset LABEL_VT_YEAR       [vset PROJECT]::validate::year]
+[vset LABEL_VT_WEEKDAY    [vset PROJECT]::validate::weekday]
+[vset LABEL_VT_TIME       [vset PROJECT]::validate::time]
+[vset LABEL_VT_POSINT     [vset PROJECT]::validate::posint]
+[vset LABEL_VT_DATE       [vset PROJECT]::validate::date]

@@ -38,9 +38,9 @@ namespace eval ::cmdr::validate {
 
 namespace eval ::cmdr::validate::common {
     namespace export \
-	complete-enum complete-glob ok-directory \
-	fail fail-unknown-thing fail-known-thing \
-	lead-in
+	complete-enum complete-glob complete-substr \
+	ok-directory lead-in fail fail-unknown-thing \
+	fail-known-thing
     namespace ensemble create
 }
 
@@ -112,13 +112,37 @@ proc ::cmdr::validate::common::complete-enum {choices nocase buffer} {
 	return $choices
     }
 
-    if {$nocase} {
+    if {($nocase eq "nocase") || $nocase} {
 	set buffer [string tolower $buffer]
     }
 
     set candidates {}
     foreach c $choices {
 	if {![string match ${buffer}* $c]} continue
+	lappend candidates $c
+    }
+
+    debug.cmdr/validate/common {= [join $candidates "\n= "]} 10
+    return $candidates
+}
+
+proc ::cmdr::validate::common::complete-substr {choices nocase buffer} {
+    # As a helper function for validation printing anything
+    # here would mix with the output of linenoise. Do that only on
+    # explicit request (level 10).
+    debug.cmdr/validate/common {} 10
+
+    if {$buffer eq {}} {
+	return $choices
+    }
+
+    if {($nocase eq "nocase") || $nocase} {
+	set buffer [string tolower $buffer]
+    }
+
+    set candidates {}
+    foreach c $choices {
+	if {![string match *${buffer}* $c]} continue
 	lappend candidates $c
     }
 
@@ -145,7 +169,6 @@ proc ::cmdr::validate::common::complete-glob {filter buffer} {
 
 proc ::cmdr::validate::common::ok-directory {path} {
     if {![file exists $path]} {
-
 	# The directory is allowed to not exist if its parent
 	# directory exists and is writable.
 	# Note: Prevent us from walking up the chain if the directory
