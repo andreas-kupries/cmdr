@@ -1,7 +1,7 @@
 '\"
 '\" Generated from file 'cmdr_vt_date\&.man' by tcllib/doctools with format 'nroff'
-'\" Copyright (c) 2013 Andreas Kupries
-'\" Copyright (c) 2013 Documentation, Andreas Kupries
+'\" Copyright (c) 2013-2015 Andreas Kupries
+'\" Copyright (c) 2013-2015 Documentation, Andreas Kupries
 '\"
 .TH "cmdr::validate::date" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
@@ -322,7 +322,7 @@ either package(s) and/or documentation\&.
 arguments, command hierarchy, command line completion, command line handling, command tree, editing command line, help for command line, hierarchy of commands, interactive command shell, optional arguments, options, parameters, processing command line, tree of commands
 .SH COPYRIGHT
 .nf
-Copyright (c) 2013 Andreas Kupries
-Copyright (c) 2013 Documentation, Andreas Kupries
+Copyright (c) 2013-2015 Andreas Kupries
+Copyright (c) 2013-2015 Documentation, Andreas Kupries
 
 .fi
