@@ -360,6 +360,21 @@ doc
 \fBcmdr::validate::common\fR
 \fIfiles/cmdr_vcommon\&.n\fR: Cmdr - Utilities for Validation Types
 .TP
+\fBcmdr::validate::date\fR
+\fIfiles/cmdr_vt_date\&.n\fR: Cmdr - Validation type for dates
+.TP
+\fBcmdr::validate::posint\fR
+\fIfiles/cmdr_vt_posint\&.n\fR: Cmdr - Validation type for positive integers
+.TP
+\fBcmdr::validate::time\fR
+\fIfiles/cmdr_vt_time\&.n\fR: Cmdr - Validation type for times
+.TP
+\fBcmdr::validate::weekday\fR
+\fIfiles/cmdr_vt_weekday\&.n\fR: Cmdr - Validation type for weekday names
+.TP
+\fBcmdr::validate::year\fR
+\fIfiles/cmdr_vt_year\&.n\fR: Cmdr - Validation type for years
+.TP
 \fBcmdr_development\fR
 \fIfiles/cmdr_howto_development\&.n\fR: Cmdr - The Developer's Guide
 .TP
