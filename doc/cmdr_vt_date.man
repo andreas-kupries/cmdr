@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
+[vset VERSION 1]
 [manpage_begin [vset LABEL_VT_DATE] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require try]

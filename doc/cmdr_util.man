@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
+[vset VERSION 1.1]
 [manpage_begin [vset LABEL_UTIL] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::util]
