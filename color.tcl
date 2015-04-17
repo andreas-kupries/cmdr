@@ -45,7 +45,7 @@ namespace eval ::cmdr::color {
     #
     #    ::cmdr::color <codelist> <text>
     #
-    # The -prefix 0 option ensures that we canuse the 'name'
+    # The -prefix 0 option ensures that we can use the 'name'
     # color-code, without it will go to 'names' and then fail with
     # wrong#args due to the different expected syntax.
     ##
@@ -66,7 +66,7 @@ debug prefix cmdr/color {[debug caller] | }
 proc ::cmdr::color::activate {{flag 1}} {
     debug.cmdr/color {}
     variable active $flag
-    return
+    return $active
 }
 
 proc ::cmdr::color::active {} {

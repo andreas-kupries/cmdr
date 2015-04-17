@@ -86,7 +86,7 @@ and re-prompt.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::ask] [method choose] [arg query] [arg choices] [opt [arg default]]
+[call [cmd ::cmdr::ask] [method choose] [arg query] [arg choices] [opt [arg default]]]
 
 When invoked this command prompts the user with [arg query] for one of the
 [arg choices], entered as string. Prompt and input happen on a single line.
@@ -106,9 +106,9 @@ The user is supported in entry by an internal completion callback.
 
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::ask] [method menu] [arg header] [arg prompt] [arg choices] [opt [arg default]]
+[call [cmd ::cmdr::ask] [method menu] [arg header] [arg prompt] [arg choices] [opt [arg default]]]
 
-Similar to [cmd {::cmdr::ask choice}], except that the [arg choices] are shown
+Similar to [cmd {::cmdr::ask choose}], except that the [arg choices] are shown
 as an enumerated menu, one per line, with a leading [arg header].
 
 Furthermore the command accepts not only the choices as input, but also their
