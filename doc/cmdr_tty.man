@@ -1,0 +1,26 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_TTY] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require Tclx]
+[require cmdr::tty]
+[titledesc [vset TITLE_TTY]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a single utility command testing if the
+[const stdout] [term channel] is a tty or not, and reporting
+the result.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::tty] [method stdout]]
+
+When invoked this command returns a boolean value indicating
+if the [const stdout] [term channel] is a tty ([const true]),
+or not ([const false]).
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]
