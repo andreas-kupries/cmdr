@@ -1,0 +1,23 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_VT_YEAR] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::validate::year]
+[titledesc [vset TITLE_VT_YEAR]]
+[description]
+[include parts/welcome.inc]
+
+[para] This package provides the validation type
+[cmd ::cmdr::validate::year] which accepts both short (2 digit) and
+long (4 digit) year numbers.
+
+[para] The internal representation is the full number of the validated
+input, i.e always 4 digits.
+
+[para] The type has no input completion.
+
+[para] The details of the exported API can be found in
+[term [vset TITLE_DEV_VT]]. The chosen default is the "current year".
+
+[include parts/feedback.inc]
+[manpage_end]
