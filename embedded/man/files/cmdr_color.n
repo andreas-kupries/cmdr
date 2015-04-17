@@ -1,9 +1,9 @@
 '\"
-'\" Generated from file 'cmdr_changes\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_color\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
-.TH "cmdr-changes" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::color" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,82 +273,270 @@ Database Class:	\\fB\\$3\\fR
 ..
 .BS
 .SH NAME
-cmdr-changes \- Cmdr - Log of Changes
+cmdr::color \- Cmdr - Terminal colors
+.SH SYNOPSIS
+package require \fBcmdr::tty \fR
+.sp
+package require \fBcmdr::color \fR
+.sp
+\fB::cmdr::color\fR \fBactivate\fR ?\fIenable\fR?
+.sp
+\fB::cmdr::color\fR \fBactive\fR
+.sp
+\fB::cmdr::color\fR \fBnames\fR
+.sp
+\fB::cmdr::color\fR \fBget\fR \fIname\fR
+.sp
+\fB::cmdr::color\fR \fBget-def\fR \fIname\fR
+.sp
+\fB::cmdr::color\fR \fBdefine\fR \fIname\fR \fIspec\fR
+.sp
+\fB::cmdr::color\fR \fBexists\fR \fIname\fR
+.sp
+\fB::cmdr::color\fR \fBunset\fR \fIname\fR
+.sp
+\fB::cmdr::color\fR \fB\&.\&.\&.\fR \fItext\fR
+.sp
+.BE
 .SH DESCRIPTION
 .PP
 Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This document provides an overview of the changes \fBcmdr\fR
-underwent from version to version\&.
-.SH CHANGES
-.SS "CHANGES FOR VERSION 1\&.1"
-.IP [1]
-Fixed broken requirement references in the meta data of packages
-\fBcmdr::help::json\fR and \fBcmdr::help::sql\fR\&.
-.IP [2]
-Fixed initialization issues in the help generator\&.
-.IP [3]
-Fixed generated help, added the application name to the output
-when in a cmdr shell\&.
-.IP [4]
-Fixed the generation of help format by-categorized, when
-encountering sections with sub-sections and no commands of their
-own\&.
-.IP [5]
-Fixed bad method scoping in method \fBextend\fR of officers\&.
-.IP [6]
-Extended officer method \fBextend\fR to return the created
-private, for immediate post-creation re-configuration\&.
-.IP [7]
-Extended system with new help format \fItcl\fR, and associated
-package \fBcmdr::help::tcl\fR\&. Similar to format \fIjson\fR
-the help is printed as a nested data structure, just using Tcl
-syntax\&.
-.IP [8]
-Extended officers and privates with method \fBfind\fR for
-path lookup of sub-ordinates\&.
+This package provides a few utility commands implementing
+the management of terminal colors\&.
+.SH API
+.TP
+\fB::cmdr::color\fR \fBactivate\fR ?\fIenable\fR?
+When invoked this command enables or disables color handling,
+as per the boolean flag \fIenable\fR\&. If \fIenable\fR is not
+specified the action defaults to activation\&.
+.sp
+The result of the command is the new activation state\&.
+.sp
+The default activation state of the package after loading
+depends on \fBstdout\fR\&. The package is active if \fBstdout\fR
+is a terminal, and inactive otherwise\&.
+.RS
+.TP
+boolean \fIenable\fR
+If set, enable color handling, else disable it\&.
+.RE
+.TP
+\fB::cmdr::color\fR \fBactive\fR
+The result of this command is the current activation state
+of the package\&.
+.sp
+The default activation state of the package after loading
+depends on \fBstdout\fR\&. The package is active if \fBstdout\fR
+is a terminal, and inactive otherwise\&.
+.TP
+\fB::cmdr::color\fR \fBnames\fR
+When invoked this command returns a list of the symbolic color
+names known to the package\&.
+.TP
+\fB::cmdr::color\fR \fBget\fR \fIname\fR
+When invoked this command returns the character sequence
+associated with the symbolic color \fIname\fR\&. An error
+is thrown if \fIname\fR is not a known symbol\&.
+.TP
+\fB::cmdr::color\fR \fBget-def\fR \fIname\fR
+When invoked this command returns the specification
+associated with the symbolic color \fIname\fR\&. An error
+is thrown if \fIname\fR is not a known symbol\&.
+.TP
+\fB::cmdr::color\fR \fBdefine\fR \fIname\fR \fIspec\fR
+When invoked this command defines the color \fIname\fR\&. If \fIname\fR
+exists already its previous specification is overwritten\&.
+The command accepts four forms of \fIspec\fRifications, namely:
+.RS
+.TP
+=\fBrname\fR
+The \fIrname\fR must be the name of a known color\&.
+The \fIname\fR itself is not allowed, i\&.e\&. self-references are forbidden\&.
+.TP
+%\fBR\fR,\fBG\fR,\fBB\fR
+The \fIR\fR, \fIG\fR, and \fIB\fR values are integers in the range
+\fB0\fR\&.\&.\&.\fB5\fR directly specifying the chosen color\&. These
+specifications may not work if the terminal is not configured to
+support 256 colors\&.
+.TP
+[Ee]\fBcode\fR(,\&.\&.\&.)
+The value is a comma-separated list of ANSI color control characters\&.
+.TP
+*
+Any other string is acceptable too, and used as is\&.
+.RE
+.TP
+\fB::cmdr::color\fR \fBexists\fR \fIname\fR
+When invoked this command tests if the symbolic color \fIname\fR
+is known, returns the boolean value \fBtrue\fR if so, and
+\fBfalse\fR else\&.
+.TP
+\fB::cmdr::color\fR \fBunset\fR \fIname\fR
+When invoked this command deletes the symbolic color \fIname\fR\&.
+An error is thrown if \fIname\fR is not a known symbol\&.
+The command returns the empty string as its result\&.
+.TP
+\fB::cmdr::color\fR \fB\&.\&.\&.\fR \fItext\fR
+When \fB::cmdr::color\fR is invoked with an unknown method name
+then this name is expected to be and treated as a list of known
+symbolic color names\&. These colors are applied to the \fItext\fR
+and the modified text is returned as the result of the command\&.
+.sp
+An error is thrown if any of the specified color symbols
+are not known\&.
 .PP
-.SS "CHANGES FOR VERSION 1"
-This is the first release of cmdr\&.
-The changes therefore describe the initial features of the system\&.
-.PP
-In detail:
-.IP [1]
-cmdr requires Tcl 8\&.5 or higher\&.
-Tcl 8\&.4 or less is not supported\&.
-.IP [2]
-The framework provides a DSL for the declaration of a hierarchy
-of commands and their parameters (named options, positional
-arguments, hidden state), with help texts, type information, and
-various callbacks (command actions, parameter definition,
-parameter completion, type validation, command completion, etc\&.)
-.IP [3]
-At runtime the framework provides parsing and processing of command
-lines per specifications written in that DSL, determining the command
-to run, and the mapping from command line words to its parameters\&.
-.IP [4]
-The framework also provides shells for the interactive entry of
-commands and parameters, with command line completion\&.
-.IP [5]
-Last, but not least is the automatic generation of command line
-help for commands and parameters, based on the information provided
-in a specification\&.
-.PP
-.SH "RELATED DOCUMENTS"
-.IP [1]
-\fICmdr - Introduction to the project\fR
-.IP [2]
-\fICmdr - License\fR
-.IP [3]
-\fICmdr - Log of Changes\fR
-.IP [4]
-\fICmdr - How To Get The Sources\fR
-.IP [5]
-\fICmdr - The Installer's Guide\fR
-.IP [6]
-\fICmdr - The Developer's Guide\fR
+.SH "PREDEFINED COLORS"
+The following colors are defined by the package itself:
+.TP
+black
+e30
+.TP
+red
+e31
+.TP
+green
+e32
+.TP
+yellow
+e33
+.TP
+blue
+e34
+.TP
+magenta
+e35
+.TP
+cyan
+e36
+.TP
+white
+e37
+.TP
+default
+e39
+.TP
+bg-black
+e40
+.TP
+bg-red
+e41
+.TP
+bg-green
+e42
+.TP
+bg-yellow
+e43
+.TP
+bg-blue
+e44
+.TP
+bg-magenta
+e45
+.TP
+bg-cyan
+e46
+.TP
+bg-white
+e47
+.TP
+bg-default
+e49
+.TP
+bold
+e1
+.TP
+dim
+e2
+.TP
+italic
+e3
+.TP
+underline
+e4
+.TP
+blink
+e5
+.TP
+revers
+e7
+.TP
+hidden
+e8
+.TP
+strike
+e9
+.TP
+no-bold
+e21
+.TP
+no-dim
+e22
+.TP
+no-italic
+e23
+.TP
+no-underline
+e24
+.TP
+no-blink
+e25
+.TP
+no-revers
+e27
+.TP
+no-hidden
+e28
+.TP
+no-strike
+e29
+.TP
+reset
+e0
+.TP
+advisory
+=yellow
+.TP
+bad
+=red
+.TP
+confirm
+=red
+.TP
+error
+=magenta
+.TP
+good
+=green
+.TP
+name
+=blue
+.TP
+neutral
+=blue
+.TP
+no
+=red
+.TP
+note
+=blue
+.TP
+number
+=green
+.TP
+prompt
+=blue
+.TP
+unknown
+=cyan
+.TP
+warning
+=yellow
+.TP
+yes
+=green
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
