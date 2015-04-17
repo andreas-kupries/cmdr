@@ -1,0 +1,53 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_COLOR] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::tty]
+[require cmdr::color]
+[titledesc [vset TITLE_COLOR]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a few utility commands implementing
+the management of terminal colors.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+When invoked this command 
+
+[para] The ... is returned as the result of the command.
+
+[list_begin arguments]
+[arg_def list list] ...
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] ...]
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]
