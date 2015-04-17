@@ -1,0 +1,58 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 0.1]
+[manpage_begin [vset LABEL_HISTORY] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require fileutil]
+[require cmdr::history]
+[titledesc [vset TITLE_HISTORY]]
+[description]
+[include parts/welcome.inc]
+
+This package provides utility commands to manage a command history.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::history] [method attach] [arg actor]]
+
+When invoked this command extends the [arg actor] instance
+(an officer) with the necessary commands (a [cmd history] officer) and
+settings to record a history of commands entered for this actor and
+its subordinate commands, and allow the user to manage this history.
+
+[para] The result of the command is the empty string.
+
+[list_begin arguments]
+[arg_def cmdr::officer actor] The officer to extend with history
+management commands.
+[list_end]
+
+After attachment the actor will accept the following 3 commands:
+
+[example {
+    history list ?n?  - Show last n history entries. Defaults to all.
+    history clear     - Drop all history entries
+    history limit ?n? - Limit history to 'n' entries (n >= 0). Unlimited for n < 0.
+}]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::history] [method save-to] [arg path]]
+
+When invoked this command sets the package-wide history save file used
+by the commands to the [arg path].
+
+[para] The result of the command is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::history] [method initial-limit] [arg limit]]
+
+When invoked this command sets the package-wide limit on history size
+to [arg limit]. A value less than zero means "no limit".
+
+[para] The result of the command is the empty string.
+
+[list_end]
+
+[include parts/feedback.inc]
+[manpage_end]
