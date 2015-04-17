@@ -1,0 +1,333 @@
+
+<html><head>
+<title>cmdr::color - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_color.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013-2015 Andreas Kupries   -- Copyright &copy; 2013-2015 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr::color.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr::color(n) 1.1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr::color - Cmdr - Terminal colors</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">API</a></li>
+<li class="section"><a href="#section3">Predefined colors</a></li>
+<li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::tty</b></li>
+<li>package require <b class="pkgname">cmdr::color</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::color</b> <b class="method">activate</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::color</b> <b class="method">active</b></a></li>
+<li><a href="#3"><b class="cmd">::cmdr::color</b> <b class="method">names</b></a></li>
+<li><a href="#4"><b class="cmd">::cmdr::color</b> <b class="method">get</b> <i class="arg">name</i></a></li>
+<li><a href="#5"><b class="cmd">::cmdr::color</b> <b class="method">get-def</b> <i class="arg">name</i></a></li>
+<li><a href="#6"><b class="cmd">::cmdr::color</b> <b class="method">define</b> <i class="arg">name</i> <i class="arg">spec</i></a></li>
+<li><a href="#7"><b class="cmd">::cmdr::color</b> <b class="method">exists</b> <i class="arg">name</i></a></li>
+<li><a href="#8"><b class="cmd">::cmdr::color</b> <b class="method">unset</b> <i class="arg">name</i></a></li>
+<li><a href="#9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <i class="arg">text</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This package provides a few utility commands implementing
+the management of terminal colors.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">API</a></h2>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::color</b> <b class="method">activate</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>When invoked this command enables or disables color handling,
+as per the boolean flag <i class="arg">enable</i>. If <i class="arg">enable</i> is not
+specified the action defaults to activation.</p>
+<p>The result of the command is the new activation state.</p>
+<p>The default activation state of the package after loading
+depends on <b class="const">stdout</b>. The package is active if <b class="const">stdout</b>
+is a terminal, and inactive otherwise.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">enable</i></dt>
+<dd><p>If set, enable color handling, else disable it.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::cmdr::color</b> <b class="method">active</b></a></dt>
+<dd><p>The result of this command is the current activation state
+of the package.</p>
+<p>The default activation state of the package after loading
+depends on <b class="const">stdout</b>. The package is active if <b class="const">stdout</b>
+is a terminal, and inactive otherwise.</p></dd>
+<dt><a name="3"><b class="cmd">::cmdr::color</b> <b class="method">names</b></a></dt>
+<dd><p>When invoked this command returns a list of the symbolic color
+names known to the package.</p></dd>
+<dt><a name="4"><b class="cmd">::cmdr::color</b> <b class="method">get</b> <i class="arg">name</i></a></dt>
+<dd><p>When invoked this command returns the character sequence
+associated with the symbolic color <i class="arg">name</i>. An error
+is thrown if <i class="arg">name</i> is not a known symbol.</p></dd>
+<dt><a name="5"><b class="cmd">::cmdr::color</b> <b class="method">get-def</b> <i class="arg">name</i></a></dt>
+<dd><p>When invoked this command returns the specification
+associated with the symbolic color <i class="arg">name</i>. An error
+is thrown if <i class="arg">name</i> is not a known symbol.</p></dd>
+<dt><a name="6"><b class="cmd">::cmdr::color</b> <b class="method">define</b> <i class="arg">name</i> <i class="arg">spec</i></a></dt>
+<dd><p>When invoked this command defines the color <i class="arg">name</i>. If <i class="arg">name</i>
+exists already its previous specification is overwritten.
+The command accepts four forms of <i class="arg">spec</i>ifications, namely:</p>
+<dl class="definitions">
+<dt>=<b class="variable">rname</b></dt>
+<dd><p>The <i class="arg">rname</i> must be the name of a known color.
+The <i class="arg">name</i> itself is not allowed, i.e. self-references are forbidden.</p></dd>
+<dt>%<b class="variable">R</b>,<b class="variable">G</b>,<b class="variable">B</b></dt>
+<dd><p>The <i class="arg">R</i>, <i class="arg">G</i>, and <i class="arg">B</i> values are integers in the range
+<b class="const">0</b>...<b class="const">5</b> directly specifying the chosen color. These
+specifications may not work if the terminal is not configured to
+support 256 colors.</p></dd>
+<dt>[Ee]<b class="variable">code</b>(,...)</dt>
+<dd><p>The value is a comma-separated list of ANSI color control characters.</p></dd>
+<dt>*</dt>
+<dd><p>Any other string is acceptable too, and used as is.</p></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">::cmdr::color</b> <b class="method">exists</b> <i class="arg">name</i></a></dt>
+<dd><p>When invoked this command tests if the symbolic color <i class="arg">name</i>
+is known, returns the boolean value <b class="const">true</b> if so, and
+<b class="const">false</b> else.</p></dd>
+<dt><a name="8"><b class="cmd">::cmdr::color</b> <b class="method">unset</b> <i class="arg">name</i></a></dt>
+<dd><p>When invoked this command deletes the symbolic color <i class="arg">name</i>.
+An error is thrown if <i class="arg">name</i> is not a known symbol.
+The command returns the empty string as its result.</p></dd>
+<dt><a name="9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <i class="arg">text</i></a></dt>
+<dd><p>When <b class="cmd">::cmdr::color</b> is invoked with an unknown method name
+then this name is expected to be and treated as a list of known
+symbolic color names. These colors are applied to the <i class="arg">text</i>
+and the modified text is returned as the result of the command.</p>
+<p>An error is thrown if any of the specified color symbols
+are not known.</p></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Predefined colors</a></h2>
+<p>The following colors are defined by the package itself:</p>
+<dl class="definitions">
+<dt>black</dt>
+<dd><p>e30</p></dd>
+<dt>red</dt>
+<dd><p>e31</p></dd>
+<dt>green</dt>
+<dd><p>e32</p></dd>
+<dt>yellow</dt>
+<dd><p>e33</p></dd>
+<dt>blue</dt>
+<dd><p>e34</p></dd>
+<dt>magenta</dt>
+<dd><p>e35</p></dd>
+<dt>cyan</dt>
+<dd><p>e36</p></dd>
+<dt>white</dt>
+<dd><p>e37</p></dd>
+<dt>default</dt>
+<dd><p>e39</p></dd>
+<dt>bg-black</dt>
+<dd><p>e40</p></dd>
+<dt>bg-red</dt>
+<dd><p>e41</p></dd>
+<dt>bg-green</dt>
+<dd><p>e42</p></dd>
+<dt>bg-yellow</dt>
+<dd><p>e43</p></dd>
+<dt>bg-blue</dt>
+<dd><p>e44</p></dd>
+<dt>bg-magenta</dt>
+<dd><p>e45</p></dd>
+<dt>bg-cyan</dt>
+<dd><p>e46</p></dd>
+<dt>bg-white</dt>
+<dd><p>e47</p></dd>
+<dt>bg-default</dt>
+<dd><p>e49</p></dd>
+<dt>bold</dt>
+<dd><p>e1</p></dd>
+<dt>dim</dt>
+<dd><p>e2</p></dd>
+<dt>italic</dt>
+<dd><p>e3</p></dd>
+<dt>underline</dt>
+<dd><p>e4</p></dd>
+<dt>blink</dt>
+<dd><p>e5</p></dd>
+<dt>revers</dt>
+<dd><p>e7</p></dd>
+<dt>hidden</dt>
+<dd><p>e8</p></dd>
+<dt>strike</dt>
+<dd><p>e9</p></dd>
+<dt>no-bold</dt>
+<dd><p>e21</p></dd>
+<dt>no-dim</dt>
+<dd><p>e22</p></dd>
+<dt>no-italic</dt>
+<dd><p>e23</p></dd>
+<dt>no-underline</dt>
+<dd><p>e24</p></dd>
+<dt>no-blink</dt>
+<dd><p>e25</p></dd>
+<dt>no-revers</dt>
+<dd><p>e27</p></dd>
+<dt>no-hidden</dt>
+<dd><p>e28</p></dd>
+<dt>no-strike</dt>
+<dd><p>e29</p></dd>
+<dt>reset</dt>
+<dd><p>e0</p></dd>
+<dt>advisory</dt>
+<dd><p>=yellow</p></dd>
+<dt>bad</dt>
+<dd><p>=red</p></dd>
+<dt>confirm</dt>
+<dd><p>=red</p></dd>
+<dt>error</dt>
+<dd><p>=magenta</p></dd>
+<dt>good</dt>
+<dd><p>=green</p></dd>
+<dt>name</dt>
+<dd><p>=blue</p></dd>
+<dt>neutral</dt>
+<dd><p>=blue</p></dd>
+<dt>no</dt>
+<dd><p>=red</p></dd>
+<dt>note</dt>
+<dd><p>=blue</p></dd>
+<dt>number</dt>
+<dd><p>=green</p></dd>
+<dt>prompt</dt>
+<dd><p>=blue</p></dd>
+<dt>unknown</dt>
+<dd><p>=cyan</p></dd>
+<dt>warning</dt>
+<dd><p>=yellow</p></dd>
+<dt>yes</dt>
+<dd><p>=green</p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013-2015 Andreas Kupries<br>
+Copyright &copy; 2013-2015 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>
