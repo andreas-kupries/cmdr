@@ -1,0 +1,46 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_PAGER] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require linenoise]
+[require cmdr::tty]
+[require cmdr::pager]
+[titledesc [vset TITLE_PAGER]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a single utility command to manage the automatic
+paging of long output, like [vset PROJECT]'s automatic help.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::pager] [method text]]
+
+When invoked this command either simply prints the [arg text] to stdout,
+or invokes an external pager application to manage the output.
+
+[para] The pager is only invoked when
+
+[list_begin enumerated]
+[enum] Stdout is a terminal, and
+[enum] The text does not fit into the height of the terminal, and
+[enum] a pager application could be found.
+[list_end]
+
+[para] If any of the above conditions fail the text is simply printed.
+
+[para] When the command comes to the third condition above it will look
+for the pager specified in the environment variable [const PAGER] first,
+and then [const less] and [const more], in this order.
+
+[list_begin arguments]
+[arg_def string text]
+The text to print or page.
+[list_end]
+
+[para] The result of the command is the empty string.
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]

@@ -1,9 +1,9 @@
 '\"
-'\" Generated from file 'cmdr_changes\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_pager\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
-.TH "cmdr-changes" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::pager" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,82 +273,53 @@ Database Class:	\\fB\\$3\\fR
 ..
 .BS
 .SH NAME
-cmdr-changes \- Cmdr - Log of Changes
+cmdr::pager \- Cmdr - Paging long output
+.SH SYNOPSIS
+package require \fBlinenoise \fR
+.sp
+package require \fBcmdr::tty \fR
+.sp
+package require \fBcmdr::pager \fR
+.sp
+\fB::cmdr::pager\fR \fBtext\fR
+.sp
+.BE
 .SH DESCRIPTION
 .PP
 Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This document provides an overview of the changes \fBcmdr\fR
-underwent from version to version\&.
-.SH CHANGES
-.SS "CHANGES FOR VERSION 1\&.1"
+This package provides a single utility command to manage the automatic
+paging of long output, like cmdr's automatic help\&.
+.SH API
+.TP
+\fB::cmdr::pager\fR \fBtext\fR
+When invoked this command either simply prints the \fItext\fR to stdout,
+or invokes an external pager application to manage the output\&.
+.sp
+The pager is only invoked when
+.RS
 .IP [1]
-Fixed broken requirement references in the meta data of packages
-\fBcmdr::help::json\fR and \fBcmdr::help::sql\fR\&.
+Stdout is a terminal, and
 .IP [2]
-Fixed initialization issues in the help generator\&.
+The text does not fit into the height of the terminal, and
 .IP [3]
-Fixed generated help, added the application name to the output
-when in a cmdr shell\&.
-.IP [4]
-Fixed the generation of help format by-categorized, when
-encountering sections with sub-sections and no commands of their
-own\&.
-.IP [5]
-Fixed bad method scoping in method \fBextend\fR of officers\&.
-.IP [6]
-Extended officer method \fBextend\fR to return the created
-private, for immediate post-creation re-configuration\&.
-.IP [7]
-Extended system with new help format \fItcl\fR, and associated
-package \fBcmdr::help::tcl\fR\&. Similar to format \fIjson\fR
-the help is printed as a nested data structure, just using Tcl
-syntax\&.
-.IP [8]
-Extended officers and privates with method \fBfind\fR for
-path lookup of sub-ordinates\&.
-.PP
-.SS "CHANGES FOR VERSION 1"
-This is the first release of cmdr\&.
-The changes therefore describe the initial features of the system\&.
-.PP
-In detail:
-.IP [1]
-cmdr requires Tcl 8\&.5 or higher\&.
-Tcl 8\&.4 or less is not supported\&.
-.IP [2]
-The framework provides a DSL for the declaration of a hierarchy
-of commands and their parameters (named options, positional
-arguments, hidden state), with help texts, type information, and
-various callbacks (command actions, parameter definition,
-parameter completion, type validation, command completion, etc\&.)
-.IP [3]
-At runtime the framework provides parsing and processing of command
-lines per specifications written in that DSL, determining the command
-to run, and the mapping from command line words to its parameters\&.
-.IP [4]
-The framework also provides shells for the interactive entry of
-commands and parameters, with command line completion\&.
-.IP [5]
-Last, but not least is the automatic generation of command line
-help for commands and parameters, based on the information provided
-in a specification\&.
-.PP
-.SH "RELATED DOCUMENTS"
-.IP [1]
-\fICmdr - Introduction to the project\fR
-.IP [2]
-\fICmdr - License\fR
-.IP [3]
-\fICmdr - Log of Changes\fR
-.IP [4]
-\fICmdr - How To Get The Sources\fR
-.IP [5]
-\fICmdr - The Installer's Guide\fR
-.IP [6]
-\fICmdr - The Developer's Guide\fR
+a pager application could be found\&.
+.RE
+.sp
+If any of the above conditions fail the text is simply printed\&.
+.sp
+When the command comes to the third condition above it will look
+for the pager specified in the environment variable \fBPAGER\fR first,
+and then \fBless\fR and \fBmore\fR, in this order\&.
+.RS
+.TP
+string \fItext\fR
+The text to print or page\&.
+.RE
+.sp
+The result of the command is the empty string\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
