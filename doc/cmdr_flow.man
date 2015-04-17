@@ -1,5 +1,5 @@
 [include parts/definitions.inc]
-[manpage_begin [vset LABEL_FLOW] [vset MAN_SECTION] [vset VERSION]]
+[manpage_begin [vset LABEL_FLOW] [vset MAN_SECTION] [vset PROJ_VERSION]]
 [include parts/module.inc]
 [titledesc [vset TITLE_FLOW]]
 [description]

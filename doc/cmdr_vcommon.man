@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
+[vset VERSION 1.2]
 [manpage_begin [vset LABEL_VCOMMON] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::validate::common]

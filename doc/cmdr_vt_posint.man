@@ -1,0 +1,24 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 1]
+[manpage_begin [vset LABEL_VT_POSINT] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::validate::posint]
+[titledesc [vset TITLE_VT_POSINT]]
+[description]
+[include parts/welcome.inc]
+
+[para] This package provides the validation type
+[cmd ::cmdr::validate::posint] which accepts any positive integer
+number, i.e. any integer greater than zero.
+
+[para] The internal representation is the decimal representation of
+the validated input.
+
+[para] The type has no input completion.
+
+[para] The details of the exported API can be found in
+[term [vset TITLE_DEV_VT]]. The chosen default is [const 1].
+
+[include parts/feedback.inc]
+[manpage_end]

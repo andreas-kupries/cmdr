@@ -1,0 +1,182 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 1]
+[manpage_begin [vset LABEL_COLOR] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::tty]
+[require cmdr::color]
+[titledesc [vset TITLE_COLOR]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a few utility commands implementing
+the management of terminal colors.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method activate] [opt [arg enable]]]
+
+When invoked this command enables or disables color handling,
+as per the boolean flag [arg enable]. If [arg enable] is not
+specified the action defaults to activation.
+
+[para] The result of the command is the new activation state.
+
+[para] The default activation state of the package after loading
+depends on [const stdout]. The package is active if [const stdout]
+is a terminal, and inactive otherwise.
+
+[list_begin arguments]
+[arg_def boolean enable] If set, enable color handling, else disable it.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method active]]
+
+The result of this command is the current activation state
+of the package.
+
+[para] The default activation state of the package after loading
+depends on [const stdout]. The package is active if [const stdout]
+is a terminal, and inactive otherwise.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method names]]
+
+When invoked this command returns a list of the symbolic color
+names known to the package.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method get] [arg name]]
+
+When invoked this command returns the character sequence
+associated with the symbolic color [arg name]. An error
+is thrown if [arg name] is not a known symbol.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method get-def] [arg name]]
+
+When invoked this command returns the specification
+associated with the symbolic color [arg name]. An error
+is thrown if [arg name] is not a known symbol.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method define] [arg name] [arg spec]]
+
+When invoked this command defines the color [arg name]. If [arg name]
+exists already its previous specification is overwritten.
+
+The command accepts four forms of [arg spec]ifications, namely:
+
+[list_begin definitions]
+[def "=[var rname]"]
+The [arg rname] must be the name of a known color.
+The [arg name] itself is not allowed, i.e. self-references are forbidden.
+
+[def "%[var R],[var G],[var B]"]
+
+The [arg R], [arg G], and [arg B] values are integers in the range
+[const 0]...[const 5] directly specifying the chosen color. These
+specifications may not work if the terminal is not configured to
+support 256 colors.
+
+[def "[lb]Ee[rb][var code](,...)"]
+The value is a comma-separated list of ANSI color control characters.
+
+[def "*"]
+Any other string is acceptable too, and used as is.
+
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method exists] [arg name]]
+
+When invoked this command tests if the symbolic color [arg name]
+is known, returns the boolean value [const true] if so, and
+[const false] else.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method unset] [arg name]]
+
+When invoked this command deletes the symbolic color [arg name].
+An error is thrown if [arg name] is not a known symbol.
+
+The command returns the empty string as its result.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::color] [method ...] [arg text]]
+
+When [cmd ::cmdr::color] is invoked with an unknown method name
+then this name is expected to be and treated as a list of known
+symbolic color names. These colors are applied to the [arg text]
+and the modified text is returned as the result of the command.
+
+[para] An error is thrown if any of the specified color symbols
+are not known.
+
+[list_end]
+
+[section {Predefined colors}]
+
+The following colors are defined by the package itself:
+
+[list_begin definitions]
+[def black  ] e30
+[def red    ] e31
+[def green  ] e32
+[def yellow ] e33
+[def blue   ] e34
+[def magenta] e35
+[def cyan   ] e36
+[def white  ] e37
+[def default] e39
+
+[def bg-black  ] e40
+[def bg-red    ] e41
+[def bg-green  ] e42
+[def bg-yellow ] e43
+[def bg-blue   ] e44
+[def bg-magenta] e45
+[def bg-cyan   ] e46
+[def bg-white  ] e47
+[def bg-default] e49
+
+[def bold     ] e1
+[def dim      ] e2
+[def italic   ] e3
+[def underline] e4
+[def blink    ] e5
+[def revers   ] e7
+[def hidden   ] e8
+[def strike   ] e9
+
+[def no-bold     ] e21
+[def no-dim      ] e22
+[def no-italic   ] e23
+[def no-underline] e24
+[def no-blink    ] e25
+[def no-revers   ] e27
+[def no-hidden   ] e28
+[def no-strike   ] e29
+
+[def reset] e0
+
+[def advisory] =yellow
+[def bad     ] =red
+[def confirm ] =red
+[def error   ] =magenta
+[def good    ] =green
+[def name    ] =blue
+[def neutral ] =blue
+[def no      ] =red
+[def note    ] =blue
+[def number  ] =green
+[def prompt  ] =blue
+[def unknown ] =cyan
+[def warning ] =yellow
+[def yes     ] =green
+[list_end]
+
+[include parts/feedback.inc]
+[manpage_end]

@@ -1,0 +1,39 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 1]
+[manpage_begin [vset LABEL_VT_WEEKDAY] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require try]
+[require clock::iso8601]
+[require cmdr::validate::common]
+[require cmdr::validate::weekday]
+[titledesc [vset TITLE_VT_WEEKDAY]]
+[description]
+[include parts/welcome.inc]
+
+[para] This package provides the validation type
+[cmd ::cmdr::validate::weekday] which accepts weekdays as names and
+numbers.
+
+[para] The internal representation is the numeric weekday for the
+validated input where [const 1] to [const 7] map to Monday to Sunday.
+
+[para] The type has no input completion.
+
+[para] The details of the exported standard API can be found in
+[term [vset TITLE_DEV_VT]]. The chosen default is "today's weekday".
+
+[para] A single non-standard method is provided:
+
+[list_begin definitions][comment {-- begin api definitions --}]
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::time] [method 2external] [arg weekday]]
+
+This method converts the numeric weekday to the form %A and returns
+the conversion result as its own.
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[list_end][comment {-- end api definitions --}]
+
+[include parts/feedback.inc]
+[manpage_end]
