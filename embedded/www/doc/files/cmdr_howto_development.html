@@ -320,6 +320,18 @@ number to override the natural order of displaying these sections in
 the help.</p>
 <p>The details are explained in section <i class="term">Format Notes</i> of
 <i class="term"><a href="cmdr_help.html">Cmdr - (Internal) Utilities for help text formatting and setup</a></i>.</p></dd>
+<dt><b class="const">*config*</b></dt>
+<dd><p>Publicly documented for users as read-only this block's value is
+managed by the framework, and only found in the root actor.</p>
+<p>It is a command name, i.e. object handle, to the active
+instance of <b class="class">cmdr::config</b>. For regular parameters that is the
+same handle given to them in their various callbacks. For a global
+parameter however the active config object is what the parameter is
+currently used by, whereas the callback argument is where it was
+defined in and inherited from.</p>
+<p>This distinction is important when the global parameter has to
+look at and work with non-global parameters of the active
+private. These can only be found in the active context.</p></dd>
 <dt><b class="const">*prefix*</b></dt>
 <dd><p>Publicly documented for users as read-only this block's value is
 managed by the framework.
