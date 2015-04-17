@@ -1,9 +1,9 @@
 '\"
-'\" Generated from file 'cmdr_changes\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_ask\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013 Andreas Kupries
 '\" Copyright (c) 2013 Documentation, Andreas Kupries
 '\"
-.TH "cmdr-changes" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::ask" n 1\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,82 +273,143 @@ Database Class:	\\fB\\$3\\fR
 ..
 .BS
 .SH NAME
-cmdr-changes \- Cmdr - Log of Changes
+cmdr::ask \- Cmdr - Terminal-based simple user interactions
+.SH SYNOPSIS
+package require \fBcmdr::color \fR
+.sp
+package require \fBlinenoise \fR
+.sp
+package require \fBstruct::matrix \fR
+.sp
+package require \fBtextutil::adjust \fR
+.sp
+package require \fBtry \fR
+.sp
+package require \fBcmdr::ask \fR
+.sp
+\fB::cmdr::ask\fR \fBstring\fR \fIquery\fR ?\fIdefault\fR?
+.sp
+\fB::cmdr::ask\fR \fBstring/extended\fR \fIquery\fR ?options\&.\&.\&.?
+.sp
+\fB::cmdr::ask\fR \fBstring*\fR \fIquery\fR
+.sp
+\fB::cmdr::ask\fR \fByn\fR \fIquery\fR ?\fIdefault\fR?
+.sp
+\fB::cmdr::ask\fR \fBchoose\fR \fIquery\fR \fIchoices\fR ?\fIdefault\fR?
+.sp
+\fB::cmdr::ask\fR \fBmenu\fR \fIheader\fR \fIprompt\fR \fIchoices\fR ?\fIdefault\fR?
+.sp
+.BE
 .SH DESCRIPTION
 .PP
 Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This document provides an overview of the changes \fBcmdr\fR
-underwent from version to version\&.
-.SH CHANGES
-.SS "CHANGES FOR VERSION 1\&.1"
-.IP [1]
-Fixed broken requirement references in the meta data of packages
-\fBcmdr::help::json\fR and \fBcmdr::help::sql\fR\&.
-.IP [2]
-Fixed initialization issues in the help generator\&.
-.IP [3]
-Fixed generated help, added the application name to the output
-when in a cmdr shell\&.
-.IP [4]
-Fixed the generation of help format by-categorized, when
-encountering sections with sub-sections and no commands of their
-own\&.
-.IP [5]
-Fixed bad method scoping in method \fBextend\fR of officers\&.
-.IP [6]
-Extended officer method \fBextend\fR to return the created
-private, for immediate post-creation re-configuration\&.
-.IP [7]
-Extended system with new help format \fItcl\fR, and associated
-package \fBcmdr::help::tcl\fR\&. Similar to format \fIjson\fR
-the help is printed as a nested data structure, just using Tcl
-syntax\&.
-.IP [8]
-Extended officers and privates with method \fBfind\fR for
-path lookup of sub-ordinates\&.
-.PP
-.SS "CHANGES FOR VERSION 1"
-This is the first release of cmdr\&.
-The changes therefore describe the initial features of the system\&.
-.PP
-In detail:
-.IP [1]
-cmdr requires Tcl 8\&.5 or higher\&.
-Tcl 8\&.4 or less is not supported\&.
-.IP [2]
-The framework provides a DSL for the declaration of a hierarchy
-of commands and their parameters (named options, positional
-arguments, hidden state), with help texts, type information, and
-various callbacks (command actions, parameter definition,
-parameter completion, type validation, command completion, etc\&.)
-.IP [3]
-At runtime the framework provides parsing and processing of command
-lines per specifications written in that DSL, determining the command
-to run, and the mapping from command line words to its parameters\&.
-.IP [4]
-The framework also provides shells for the interactive entry of
-commands and parameters, with command line completion\&.
-.IP [5]
-Last, but not least is the automatic generation of command line
-help for commands and parameters, based on the information provided
-in a specification\&.
-.PP
-.SH "RELATED DOCUMENTS"
-.IP [1]
-\fICmdr - Introduction to the project\fR
-.IP [2]
-\fICmdr - License\fR
-.IP [3]
-\fICmdr - Log of Changes\fR
-.IP [4]
-\fICmdr - How To Get The Sources\fR
-.IP [5]
-\fICmdr - The Installer's Guide\fR
-.IP [6]
-\fICmdr - The Developer's Guide\fR
+This package provides a few utility commands implementing a few simple
+terminal-based interactions with the user\&.
+.SH API
+.TP
+\fB::cmdr::ask\fR \fBstring\fR \fIquery\fR ?\fIdefault\fR?
+When invoked this command prompts the user with \fIquery\fR for a string\&.
+If the \fIdefault\fR is specified and not the empty string it is also
+shown as part of the prompt\&. Note that \fIdefault\fR defaults to the
+empty string\&.
+.sp
+The interactively entered string is returned as the result of the
+command\&. The \fIdefault\fR is returned as the result if the user entered
+an empty string and the \fIdefault\fR is not empty\&.
+.RS
+.TP
+string \fIquery\fR
+The prompt to show to the user before interaction begins\&.
+.TP
+string \fIdefault\fR
+The default to return if the user enters nothing\&.
+.RE
+.TP
+\fB::cmdr::ask\fR \fBstring/extended\fR \fIquery\fR ?options\&.\&.\&.?
+This command is similar to \fB::cmdr::ask string\fR, except it allows for
+more customization of the interaction through options\&.
+.sp
+The accepted options are
+.RS
+.TP
+\fB-history\fR boolean
+If \fBtrue\fR, save user input into \fBlinenoise\fR's in-memory history\&. Default is \fBfalse\fR\&.
+.TP
+\fB-hidden\fR boolean
+If \fBtrue\fR, input is hidden\&. Default is \fBfalse\fR, visible echo\&.
+.TP
+\fB-complete\fR cmdprefix
+If not empty, installed as completion callback\&.
+.TP
+\fB-default\fR string
+If not empty the string to return if the user enters the empty string\&.
+.RE
+.RS
+.TP
+string \fIquery\fR
+The prompt to show to the user before interaction begins\&.
+.RE
+.TP
+\fB::cmdr::ask\fR \fBstring*\fR \fIquery\fR
+Behaves like \fB::cmdr::ask string\fR without a default, except that the user's
+input is not echoed back to the terminal\&. This command is for the entry of hidden
+strings, i\&.e\&. passwords, and the like\&.
+.RS
+.TP
+string \fIquery\fR
+The prompt to show to the user before interaction begins\&.
+.RE
+.TP
+\fB::cmdr::ask\fR \fByn\fR \fIquery\fR ?\fIdefault\fR?
+When invoked this command prompts the user with \fIquery\fR for a \fIboolean\fR
+value/string\&. If the \fIdefault\fR is specified and not the empty string it is
+also shown as part of the prompt\&. Note that \fIdefault\fR defaults to the empty
+string\&.
+.sp
+The interactively entered boolean is returned as the result of the command\&.
+The \fIdefault\fR boolean is returned as the result if the user entered an empty
+string and the \fIdefault\fR is not empty\&.
+.sp
+Note that the command will not return until the user entered a valid
+boolean value\&. Entering a non-boolean string causes the command to loop internally
+and re-prompt\&.
+.RS
+.TP
+string \fIquery\fR
+The prompt to show to the user before interaction begins\&.
+.TP
+string \fIdefault\fR
+The default boolean to return if the user enters nothing\&.
+.RE
+.TP
+\fB::cmdr::ask\fR \fBchoose\fR \fIquery\fR \fIchoices\fR ?\fIdefault\fR?
+When invoked this command prompts the user with \fIquery\fR for one of the
+\fIchoices\fR, entered as string\&. Prompt and input happen on a single line\&.
+.sp
+The interactively entered choice is returned as the result of the command\&.
+The \fIdefault\fR choice is returned as the result if the user entered an empty
+string and the \fIdefault\fR is not empty\&.
+.sp
+Note that the command will not return until the user entered a valid
+choice\&. Entering a non-choice causes the command to loop internally and re-prompt\&.
+The user is supported in entry by an internal completion callback\&.
+.RS
+.TP
+string \fIquery\fR
+The prompt to show to the user before interaction begins\&.
+.TP
+string \fIdefault\fR
+The default boolean to return if the user enters nothing\&.
+.RE
+.TP
+\fB::cmdr::ask\fR \fBmenu\fR \fIheader\fR \fIprompt\fR \fIchoices\fR ?\fIdefault\fR?
+Similar to \fB::cmdr::ask choose\fR, except that the \fIchoices\fR are shown
+as an enumerated menu, one per line, with a leading \fIheader\fR\&.
+Furthermore the command accepts not only the choices as input, but also their
+numeric indices in the menu\&. The result however is always the relevant chosen string\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain

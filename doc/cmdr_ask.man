@@ -1,0 +1,119 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[manpage_begin [vset LABEL_ASK] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::color]
+[require linenoise]
+[require struct::matrix]
+[require textutil::adjust]
+[require try]
+[require cmdr::ask]
+[titledesc [vset TITLE_ASK]]
+[description]
+[include parts/welcome.inc]
+
+This package provides a few utility commands implementing a few simple
+terminal-based interactions with the user.
+
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method string] [arg query] [opt [arg default]]]
+
+When invoked this command prompts the user with [arg query] for a string.
+If the [arg default] is specified and not the empty string it is also
+shown as part of the prompt. Note that [arg default] defaults to the
+empty string.
+
+[para] The interactively entered string is returned as the result of the
+command. The [arg default] is returned as the result if the user entered
+an empty string and the [arg default] is not empty.
+
+[list_begin arguments]
+[arg_def string query] The prompt to show to the user before interaction begins.
+[arg_def string default] The default to return if the user enters nothing.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method string/extended] [arg query] [opt options...]]
+
+This command is similar to [cmd {::cmdr::ask string}], except it allows for
+more customization of the interaction through options.
+
+[para] The accepted options are
+[list_begin options]
+[opt_def -history  boolean]   If [const true], save user input into [package linenoise]'s in-memory history. Default is [const false].
+[opt_def -hidden   boolean]   If [const true], input is hidden. Default is [const false], visible echo.
+[opt_def -complete cmdprefix] If not empty, installed as completion callback.
+[opt_def -default  string]    If not empty the string to return if the user enters the empty string.
+[list_end]
+
+[list_begin arguments]
+[arg_def string query] The prompt to show to the user before interaction begins.
+[list_end]
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method string*] [arg query]]
+
+Behaves like [cmd {::cmdr::ask string}] without a default, except that the user's
+input is not echoed back to the terminal. This command is for the entry of hidden
+strings, i.e. passwords, and the like.
+
+[list_begin arguments]
+[arg_def string query] The prompt to show to the user before interaction begins.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method yn] [arg query] [opt [arg default]]]
+
+When invoked this command prompts the user with [arg query] for a [emph boolean]
+value/string. If the [arg default] is specified and not the empty string it is
+also shown as part of the prompt. Note that [arg default] defaults to the empty
+string.
+
+[para] The interactively entered boolean is returned as the result of the command.
+The [arg default] boolean is returned as the result if the user entered an empty
+string and the [arg default] is not empty.
+
+[para] Note that the command will not return until the user entered a valid
+boolean value. Entering a non-boolean string causes the command to loop internally
+and re-prompt.
+
+[list_begin arguments]
+[arg_def string query] The prompt to show to the user before interaction begins.
+[arg_def string default] The default boolean to return if the user enters nothing.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method choose] [arg query] [arg choices] [opt [arg default]]]
+
+When invoked this command prompts the user with [arg query] for one of the
+[arg choices], entered as string. Prompt and input happen on a single line.
+
+[para] The interactively entered choice is returned as the result of the command.
+The [arg default] choice is returned as the result if the user entered an empty
+string and the [arg default] is not empty.
+
+[para] Note that the command will not return until the user entered a valid
+choice. Entering a non-choice causes the command to loop internally and re-prompt.
+The user is supported in entry by an internal completion callback.
+
+[list_begin arguments]
+[arg_def string query] The prompt to show to the user before interaction begins.
+[arg_def string default] The default boolean to return if the user enters nothing.
+[list_end]
+
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::ask] [method menu] [arg header] [arg prompt] [arg choices] [opt [arg default]]]
+
+Similar to [cmd {::cmdr::ask choose}], except that the [arg choices] are shown
+as an enumerated menu, one per line, with a leading [arg header].
+
+Furthermore the command accepts not only the choices as input, but also their
+numeric indices in the menu. The result however is always the relevant chosen string.
+
+[list_end]
+[include parts/feedback.inc]
+[manpage_end]
