@@ -57,4 +57,4 @@ if {$::tcl_platform(platform) eq "windows"} {
 }
 
 # # ## ### ##### ######## #############
-package provide cmdr::tty 0
+package provide cmdr::tty 1

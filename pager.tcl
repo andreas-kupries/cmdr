@@ -118,4 +118,4 @@ proc ::cmdr::pager::Locate {text} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::pager 0
+package provide cmdr::pager 1
