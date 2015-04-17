@@ -169,7 +169,6 @@ proc ::cmdr::validate::common::complete-glob {filter buffer} {
 
 proc ::cmdr::validate::common::ok-directory {path} {
     if {![file exists $path]} {
-
 	# The directory is allowed to not exist if its parent
 	# directory exists and is writable.
 	# Note: Prevent us from walking up the chain if the directory

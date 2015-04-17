@@ -277,11 +277,21 @@ cmdr::validate::common \- Cmdr - Utilities for Validation Types
 .SH SYNOPSIS
 package require \fBcmdr::validate::common \fR
 .sp
-\fB::cmdr::validate::common\fR \fBfail\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR
+\fB::cmdr::validate::common\fR \fBfail\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-unknown-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-known-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
 .sp
 \fB::cmdr::validate::common\fR \fBcomplete-enum\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR
 .sp
+\fB::cmdr::validate::common\fR \fBcomplete-substr\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR
+.sp
 \fB::cmdr::validate::common\fR \fBcomplete-glob\fR \fIfilter\fR \fIbuffer\fR
+.sp
+\fB::cmdr::validate::common\fR \fBok-directory\fR \fIpath\fR
+.sp
+\fB::cmdr::validate::common\fR \fBlead-in\fR \fItext\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -296,10 +306,18 @@ The standard validation types defined in package
 \fBcmdr::validate\fR make use of these commands\&.
 .SH API
 .TP
-\fB::cmdr::validate::common\fR \fBfail\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR
+\fB::cmdr::validate::common\fR \fBfail\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
 When invoked this command throws an error indicating a validation type
 failure\&. The arguments provide the information used to construct both
 error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    Expected $type for $p\&.type "$x"$context, got "$x"
+
+.CE
 .RS
 .TP
 \fBcmdr::parameter\fR \fIp\fR
@@ -317,6 +335,81 @@ triggering the error\&.
 .TP
 string \fIx\fR
 The string value failing the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&. Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-unknown-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    Found a problem with $p\&.type "$p\&.the-name":
+    A(n) $type named "$x" does not exist$context\&.
+    Please use a different value\&.
+
+.CE
+.RS
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&. The
+error message will contain this parameter's type and label (flag in
+case of an option)\&.
+.TP
+list \fIcode\fR
+A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error\&.
+.TP
+string \fItype\fR
+A string providing the human-readable name of the validation type
+triggering the error\&.
+.TP
+string \fIx\fR
+The string value failing the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&. Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-known-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    Found a problem with $p\&.type "$p\&.the-name":
+    A(n) $type named "$x" already exists$context\&.
+    Please use a different name\&.
+
+.CE
+.RS
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&. The
+error message will contain this parameter's type and label (flag in
+case of an option)\&.
+.TP
+list \fIcode\fR
+A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error\&.
+.TP
+string \fItype\fR
+A string providing the human-readable name of the validation type
+triggering the error\&.
+.TP
+string \fIx\fR
+The string value failing the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&. Defaults to the empty string\&.
 .RE
 .TP
 \fB::cmdr::validate::common\fR \fBcomplete-enum\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR
@@ -331,7 +424,25 @@ The list of values which can complete the data in \fIbuffer\fR\&.
 .TP
 boolean \fInocase\fR
 A boolean flag specifying if the completion is done ignoring
-letter-case (\fBtrue\fR), or not (\fBfalse\fR))\&.
+letter-case (\fBtrue\fR, \fBnocase\fR), or not (\fBfalse\fR))\&.
+.TP
+string \fIbuffer\fR
+The string to complete via the list of \fIchoices\fR\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBcomplete-substr\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR
+When invoked this command returns a list of strings containing just
+the elements of \fIchoices\fR the value of \fIbuffer\fR is a substring
+of\&. When \fInocase\fR is set the command will ignore letter case and
+treat the string in \fIbuffer\fR as all-lowercase\&.
+.RS
+.TP
+list \fIchoices\fR
+The list of values which can complete the data in \fIbuffer\fR\&.
+.TP
+boolean \fInocase\fR
+A boolean flag specifying if the completion is done ignoring
+letter-case (\fBtrue\fR, \fBnocase\fR), or not (\fBfalse\fR))\&.
 .TP
 string \fIbuffer\fR
 The string to complete via the list of \fIchoices\fR\&.
@@ -354,6 +465,56 @@ it\&.
 .TP
 string \fIbuffer\fR
 The string, a partial path, to complete\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBok-directory\fR \fIpath\fR
+When invoked this command checks if the specified \fIpath\fR is
+suitable as a directory and returns the boolean value \fBtrue\fR if
+so, and \fBfalse\fR else\&.
+.sp
+for the \fIpath\fR to be suitable the following conditions must hold:
+.RS
+.IP [1]
+If the \fIpath\fR exists:
+.RS
+.IP [1]
+The path has to refer to a directory\&.
+.IP [2]
+The referenced directory must be writable\&.
+.RE
+.IP [2]
+Else:
+.RS
+.IP [1]
+The parent path has to pass \fBok-directory\fR\&.
+.IP [2]
+The above recursion stops at the root directory, and then fails\&.
+.RE
+.RE
+.RS
+.TP
+string \fIpath\fR
+The path to check\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBlead-in\fR \fItext\fR
+A utility command supporting the construction of error messages\&. Given the
+\fItext\fR the command returns a modified text with a proper prefix of
+either \fBA\fR or \fBAn\fR\&.
+.sp
+The basic heuristics is to use \fBAn\fR if \fItext\fR begins with
+a vocal, and \fBA\fR otherwise\&. This heuristic is bypassed if the the
+\fItext\fR already has a prefix of \fBAn\fR or \fBA\fR separated by a
+space from the remainder of the string\&. In that case the \fItext\fR is
+returned as-is\&.
+.sp
+This command is used by \fBfail\fR, \fBfail-known-thing\fR and
+\fBfail-unknown-thing\fR provided by this package\&. All apply it to their
+\fItype\fR argument\&.
+.RS
+.TP
+string \fItext\fR
+The string to prefix with a leading \fBA\fR or \fBAn\fR\&.
 .RE
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"

@@ -14,13 +14,20 @@ The standard validation types defined in package
 [package cmdr::validate] make use of these commands.
 
 [section API]
-[list_begin definitions]
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::validate::common] [method fail] [arg p] [arg code] [arg type] [arg x]]
+[list_begin definitions][comment {-- begin api definitions --}]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail] \
+     [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
 When invoked this command throws an error indicating a validation type
 failure. The arguments provide the information used to construct both
 error message and code.
+
+[para] The generated string has the form:
+[example {
+    Expected $type for $p.type "$x"$context, got "$x"
+}]
 
 [list_begin arguments]
 [arg_def [package cmdr::parameter] p]
@@ -38,11 +45,86 @@ triggering the error.
 
 [arg_def string x]
 The string value failing the validation.
+
+[arg_def string context]
+Additional context to show in the message. Defaults to the empty string.
 [list_end]
 
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-unknown-thing] \
+     [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::validate::common] [method complete-enum] [arg choices] [arg nocase] [arg buffer]]
+When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.
+
+[para] The generated string has the form:
+[example {
+    Found a problem with $p.type "$p.the-name":
+    A(n) $type named "$x" does not exist$context.
+    Please use a different value.
+}]
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+The [package cmdr::parameter] instance whose validation failed. The
+error message will contain this parameter's type and label (flag in
+case of an option).
+
+[arg_def list code]
+A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error.
+
+[arg_def string type]
+A string providing the human-readable name of the validation type
+triggering the error.
+
+[arg_def string x]
+The string value failing the validation.
+
+[arg_def string context]
+Additional context to show in the message. Defaults to the empty string.
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-known-thing] \
+     [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
+
+When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.
+
+[para] The generated string has the form:
+[example {
+    Found a problem with $p.type "$p.the-name":
+    A(n) $type named "$x" already exists$context.
+    Please use a different name.
+}]
+
+[list_begin arguments]
+[arg_def [package cmdr::parameter] p]
+The [package cmdr::parameter] instance whose validation failed. The
+error message will contain this parameter's type and label (flag in
+case of an option).
+
+[arg_def list code]
+A list providing additional elements for the error code, detailing the
+internal name of the validation type triggering the error.
+
+[arg_def string type]
+A string providing the human-readable name of the validation type
+triggering the error.
+
+[arg_def string x]
+The string value failing the validation.
+
+[arg_def string context]
+Additional context to show in the message. Defaults to the empty string.
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method complete-enum] \
+     [arg choices] [arg nocase] [arg buffer]]
 
 When invoked this command returns a list of strings containing just
 the elements of [arg choices] the value of [arg buffer] is a prefix
@@ -55,15 +137,36 @@ The list of values which can complete the data in [arg buffer].
 
 [arg_def boolean nocase]
 A boolean flag specifying if the completion is done ignoring
-letter-case ([const true]), or not ([const false])).
+letter-case ([const true], [const nocase]), or not ([const false])).
 
 [arg_def string buffer]
 The string to complete via the list of [arg choices].
-
 [list_end]
 
-[comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::validate::common] [method complete-glob] [arg filter] [arg buffer]]
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method complete-substr] \
+     [arg choices] [arg nocase] [arg buffer]]
+
+When invoked this command returns a list of strings containing just
+the elements of [arg choices] the value of [arg buffer] is a substring
+of. When [arg nocase] is set the command will ignore letter case and
+treat the string in [arg buffer] as all-lowercase.
+
+[list_begin arguments]
+[arg_def list choices]
+The list of values which can complete the data in [arg buffer].
+
+[arg_def boolean nocase]
+A boolean flag specifying if the completion is done ignoring
+letter-case ([const true], [const nocase]), or not ([const false])).
+
+[arg_def string buffer]
+The string to complete via the list of [arg choices].
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method complete-glob] \
+     [arg filter] [arg buffer]]
 
 When invoked this command returns a list of strings, the paths in the
 filesystem the value of [arg buffer] is a prefix of, and not rejected
@@ -83,6 +186,57 @@ it.
 The string, a partial path, to complete.
 [list_end]
 
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method ok-directory] \
+     [arg path]]
+
+When invoked this command checks if the specified [arg path] is
+suitable as a directory and returns the boolean value [const true] if
+so, and [const false] else.
+
+[para] for the [arg path] to be suitable the following conditions must hold:
+[list_begin enumerated]
+[enum] If the [arg path] exists:
+[list_begin enumerated]
+[enum] The path has to refer to a directory.
+[enum] The referenced directory must be writable.
 [list_end]
+[enum] Else: 
+[list_begin enumerated]
+[enum] The parent path has to pass [cmd ok-directory].
+[enum] The above recursion stops at the root directory, and then fails.
+[list_end]
+[list_end]
+
+[list_begin arguments]
+[arg_def string path]
+The path to check.
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method lead-in] \
+     [arg text]]
+
+A utility command supporting the construction of error messages. Given the
+[arg text] the command returns a modified text with a proper prefix of
+either [const A] or [const An].
+
+[para] The basic heuristics is to use [const An] if [arg text] begins with
+a vocal, and [const A] otherwise. This heuristic is bypassed if the the
+[arg text] already has a prefix of [const An] or [const A] separated by a
+space from the remainder of the string. In that case the [arg text] is
+returned as-is.
+
+[para] This command is used by [cmd fail], [cmd fail-known-thing] and
+[cmd fail-unknown-thing] provided by this package. All apply it to their
+[arg type] argument.
+
+[list_begin arguments]
+[arg_def string text]
+The string to prefix with a leading [const A] or [const An].
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[list_end][comment {-- end api definitions --}]
 [include parts/feedback.inc]
 [manpage_end]
