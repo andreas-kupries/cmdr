@@ -1,0 +1,24 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+# progress counter.
+set B [cmdr say progress-counter 100]
+set i 0
+cmdr say add "upload ... "
+cmdr say lock-prefix
+while {$i < 100} {
+    #
+    # fake upload, sync ... actual use:
+    # - fcopy callback,
+    # - http progress-callback
+    # - tcllib transfer callback
+    after 100
+    #
+    cmdr say rewind
+    incr i
+    $B step $i
+}
+
+exit

@@ -1,0 +1,34 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+# scanner
+set B [cmdr say animate -phases {
+    {[***      ]}
+    {[** *     ]}
+    {[ ** *    ]}
+    {[  ** *   ]}
+    {[   ** *  ]}
+    {[    ** * ]}
+    {[     ** *]}
+    {[      ***]}
+    {[     * **]}
+    {[    * ** ]}
+    {[   * **  ]}
+    {[  * **   ]}
+    {[ * **    ]}
+    {[* **     ]}
+}]
+while {1} {
+    after 100
+    cmdr say rewind
+    $B step
+
+    # NOTE: putting the rewind after the step means that we will
+    # see the animation output only for a split second and the
+    # erased/empty line for the 100 milli delay => the terminal
+    # will look empty, with nothing happening.
+}
+
+exit

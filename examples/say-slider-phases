@@ -1,0 +1,8 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+puts |[join [cmdr say slider-phases 9 ***] |\n|]|
+
+exit

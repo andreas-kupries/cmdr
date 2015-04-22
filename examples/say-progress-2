@@ -1,0 +1,37 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+# percent progress bar, full width
+set C [cmdr say percent -max 1000]
+
+set  n [string length "upload ... \[\] "]
+incr n [$C width]
+
+set B [cmdr say progress -max 1000 -width -$n]
+set i 0
+cmdr say add "upload ... "
+cmdr say lock-prefix
+while {$i < 1000} {
+    #
+    # fake upload, sync ... actual use:
+    # - fcopy callback,
+    # - http progress-callback
+    # - tcllib transfer callback
+    after 10
+    #
+    cmdr say rewind
+    incr i
+    $C step $i
+    cmdr say add { }
+
+    cmdr say add \[
+    $B step $i
+    cmdr say add \]
+}
+after 1000
+cmdr say rewind
+cmdr say line { OK}
+
+exit
