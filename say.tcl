@@ -41,7 +41,9 @@ namespace eval ::cmdr::say {
 	operation \
 	\
 	auto-width barber-phases progress-phases larson-phases \
-	slider-phases pulse-phases
+	slider-phases pulse-phases \
+	\
+	to
 
     namespace ensemble create
     namespace import ::cmdr::color
@@ -49,6 +51,10 @@ namespace eval ::cmdr::say {
     # State for "add", "lock-prefix", "clear-prefix", and "rewind"
     variable prefix {}
     variable pre    {}
+
+    # Channel to write to. Default is stdout. Mainly to allow
+    # redirection during testing.
+    variable to
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -56,6 +62,19 @@ namespace eval ::cmdr::say {
 debug define cmdr/say
 debug level  cmdr/say
 debug prefix cmdr/say {[debug caller] | }
+
+# # ## ### ##### ######## ############# #####################
+## output redirection
+
+proc ::cmdr::say::to {{chan {}}} {
+    debug.cmdr/say {}
+    variable to
+    if {[llength [info level 0]] == 1} {
+	return $chan
+    }
+    set to $chan
+    return
+}
 
 # # ## ### ##### ######## ############# #####################
 ## cursor movement
