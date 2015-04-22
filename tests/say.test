@@ -1,0 +1,90 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::say package.
+#
+# We are explicitly specifying the -width in all commands taking this
+# option and do not use widths < 0. This is done to avoid all code
+# paths actually requiring linenoise and interaction with the
+# terminal.
+#
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support TclOO
+kt require support linenoise
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::tty
+kt local   support cmdr::color
+kt local   testing cmdr::say
+
+# # ## ### ##### ######## ############# #####################
+
+proc setup {} {
+    cmdr say to [open TEST w]
+    return
+}
+
+proc see {} {
+    close [cmdr say to]
+    cmdr say to {}
+    set chan [open TEST rb]
+    set d    [read $chan]
+    close $chan
+    return $d
+}
+
+proc cleanup {} {
+    cmdr say to {}
+    return
+}
+
+# # ## ### ##### ######## ############# #####################
+
+test cmdr-say-to-1.0 {to, wrong num args, too many} -body {
+    cmdr say to C X
+} -returnCodes error \
+    -result {}
+
+# # ## ### ##### ######## ############# #####################
+## cursor movement
+
+foreach {n move response1 response2} {
+    0 up   \033\[1A \033\[2A
+    1 down \033\[1B \033\[2B
+    2 forw \033\[1C \033\[2C
+    3 back \033\[1D \033\[2D
+} {
+    test cmdr-say-${move}-1.0 "$move, wrong num args, too many" -body {
+	cmdr say $move N X
+    } -returnCodes error \
+	-result {}
+
+    test cmdr-say-${move}-1.1 "$move, default" -body {
+	cmdr say $move
+	see
+    } -setup setup -cleanup cleanup -result $response1
+
+    test cmdr-say-${move}-1.2 "$move, explicit" -body {
+	cmdr say $move 2
+	see
+    } -setup setup -cleanup cleanup -result $response2
+}
+
+# # ## ### ##### ######## ############# #####################
+## erase screen
+
+# # ## ### ##### ######## ############# #####################
+## erase line
+
+# # ## ### ##### ######## ############# #####################
+## absolute moves
+
+# # ## ### ##### ######## ############# #####################
+## animations
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
