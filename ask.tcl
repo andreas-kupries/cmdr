@@ -170,6 +170,10 @@ proc ::cmdr::ask::yn {query {default yes}} {
 	after 1000
 	say rewind
 	say up
+
+	# Clear header to prevent redisplay, this part is fixed above
+	# the actual input line.
+	set header {}
     }
 
     return $response
@@ -215,6 +219,10 @@ proc ::cmdr::ask::choose {query choices {default {}}} {
 	after 1000
 	say rewind
 	say up
+
+	# Clear header to prevent redisplay, this part is fixed above
+	# the actual input line.
+	set header {}
     }
 
     return $response
@@ -286,6 +294,10 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
 	after 1000
 	say rewind
 	say up
+
+	# Clear header to prevent redisplay, this part is fixed above
+	# the actual input line.
+	set pheader {}
     }
 
     return $response
