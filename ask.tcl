@@ -15,6 +15,7 @@
 # Meta require debug
 # Meta require debug::caller
 # Meta require cmdr::color
+# Meta require cmdr::say
 # Meta require try
 # Meta require linenoise
 # Meta require struct::matrix
@@ -26,6 +27,7 @@
 
 package require Tcl 8.5
 package require cmdr::color
+package require cmdr::say
 package require debug
 package require debug::caller
 package require linenoise
@@ -41,6 +43,7 @@ namespace eval ::cmdr::ask {
     namespace ensemble create
 
     namespace import ::cmdr::color
+    namespace import ::cmdr::say
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -160,7 +163,13 @@ proc ::cmdr::ask::yn {query {default yes}} {
 	}
 	if {$response eq {}} { set response $default }
 	if {[::string is bool $response]} break
-	puts stdout [Wrap "You must choose \"yes\" or \"no\""]
+
+	# Show error for a second, then move back to the interaction
+	# line and retry (which overwrites the old string).
+	say add [color bad [Wrap "You must choose \"yes\" or \"no\""]]
+	after 1000
+	say rewind
+	say up
     }
 
     return $response
@@ -199,7 +208,13 @@ proc ::cmdr::ask::choose {query choices {default {}}} {
 	    set response $default
 	}
 	if {$response in $choices} break
-	puts stdout [Wrap "You must choose one of $lc"]
+
+	# Show error for a second, then move back to the interaction
+	# line and retry (which overwrites the old string).
+	say add [color bad [Wrap "You must choose one of $lc"]]
+	after 1000
+	say rewind
+	say up
     }
 
     return $response
@@ -238,11 +253,11 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
     # Format the prompt
     lassign [Fit $prompt 5] pheader prompt
 
+    if {$header ne {}} { say line $header }
+    say line $Mstr
+
     # Interaction loop
     while {1} {
-	if {$header ne {}} {puts stdout $header}
-	puts stdout $Mstr
-
 	try {
 	    set response \
 		[Interact $pheader $prompt \
@@ -265,7 +280,12 @@ proc ::cmdr::ask::menu {header prompt choices {default {}}} {
 	    if {$response in $choices} break
 	}
 
-	puts stdout [Wrap "You must choose one of the above"]
+	# Show error for a second, then move back to the interaction
+	# line and retry (which overwrites the old string).
+	say add [color bad [Wrap "You must choose one of the above"]]
+	after 1000
+	say rewind
+	say up
     }
 
     return $response
@@ -294,7 +314,7 @@ proc ::cmdr::ask::Complete {choices nocase buffer} {
 
 proc ::cmdr::ask::Interact {header prompt args} {
     debug.cmdr/ask {}
-    if {$header ne {}} { puts $header }
+    if {$header ne {}} { say line $header }
     return [linenoise prompt {*}$args -prompt $prompt]
 }
 
