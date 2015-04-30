@@ -28,20 +28,22 @@ package require debug
 package require debug::caller
 package require linenoise
 package require TclOO
+package require try
 
 namespace eval ::cmdr {
     namespace export say
 }
 namespace eval ::cmdr::say {
-    namespace export up down forw back \
+    namespace export \
+	up down forw back \
 	erase-screen erase-up erase-down \
 	erase-line erase-back erase-forw \
 	goto home line add line rewind lock-prefix clear-prefix \
-	next animate barberpole percent progress-counter progress \
-	operation \
+	next next* animate barberpole percent progress-counter progress \
+	ping pulse turn operation \
 	\
 	auto-width barber-phases progress-phases larson-phases \
-	slider-phases pulse-phases \
+	slider-phases pulse-phases turn-phases \
 	\
 	to
 
@@ -221,16 +223,96 @@ proc ::cmdr::say::next {} {
     return
 }
 
+proc ::cmdr::say::next* {} {
+    debug.cmdr/say {}
+    puts  stdout ""
+    flush stdout
+    return
+}
+
 # # ## ### ##### ######## ############# #####################
 
-proc ::cmdr::say::operation {lead script} {
+proc ::cmdr::say::operation {lead script args} {
     debug.cmdr/say {}
+
+    set cmd {}
+    set delay 100
+    while {1} {
+	set o [lindex $args 0]
+	switch -glob -- $o {
+	    -every {
+		set delay [lindex $args 1]
+		set args  [lrange $args 2 end]
+	    }
+	    -play {
+		set cmd  [lindex $args 1]
+		set args [lrange $args 2 end]
+	    }
+	    -* {
+		return -code error \
+		    -errorcode {CMD SAY BAD-OPTION} \
+		    "Unknown option $o, expected -a, or -d"
+	    }
+	    default break
+	}
+    }
+
     add $lead
+    lock-prefix
 
-    uplevel 1 $script
+    if {[llength $cmd]} {
+	set animation [uplevel 1 $cmd]
+	$animation run $delay
+    }
 
-    line [color good OK]
-    return
+    try {
+	uplevel 1 $script
+    } {*}$args on error {e o} {
+	# General error => close line, and pass.
+	line ""
+	return {*}$o $e
+    } on ok {e o} {
+	rewind ; # remove animation output, leave only the lead
+	line [color good OK]
+    } finally {
+	# Stop ongoing animation, if any
+	if {[llength $cmd]} {
+	    $animation done
+	}
+    }
+    return $e
+}
+
+# # ## ### ##### ######## ############# #####################
+## Animation helper class (timer driven auto-step).
+
+oo::class create ::cmdr::say::Auto {
+    variable mytimer
+
+    method run {delay} {
+	debug.cmdr/say {}
+	my stop ;# Kill a running timer, this allows us to call sequences of runs without worrying about the system state.
+
+	cmdr say rewind
+	my step
+
+	set mytimer [after $delay [info level 0]]
+	return
+    }
+
+    method stop {} {
+	debug.cmdr/say {}
+	catch {
+	    after cancel $mytimer
+	}
+	set mytimer {}
+	return
+    }
+
+    destructor {
+	debug.cmdr/say {}
+	my stop
+    }
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -244,6 +326,7 @@ proc ::cmdr::say::animate {args} {
 }
 
 oo::class create ::cmdr::say::animate::Im {
+    superclass ::cmdr::say::Auto
     variable myphases myphase mywidth
 
     constructor {args} {
@@ -309,6 +392,36 @@ proc ::cmdr::say::barberpole {args} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## pulse animation
+
+proc ::cmdr::say::pulse {args} {
+    debug.cmdr/say {}
+
+    array set config {
+	-width   {}
+	-stem    .
+    }
+    array set config $args
+
+    set phases [pulse-phases \
+		    [auto-width $config(-width)] \
+		    $config(-stem)]
+
+    # Run the animation via the general class.
+    return [animate::Im new -phases $phases]
+}
+
+# # ## ### ##### ######## ############# #####################
+## turn animation
+
+proc ::cmdr::say::turn {} {
+    debug.cmdr/say {}
+    set phases [turn-phases]
+    # Run the animation via the general class.
+    return [animate::Im new -phases $phases]
+}
+
+# # ## ### ##### ######## ############# #####################
 ## progress counter, n of max.
 
 proc ::cmdr::say::progress-counter {max} {
@@ -317,6 +430,7 @@ proc ::cmdr::say::progress-counter {max} {
 }
 
 oo::class create ::cmdr::say::progress-counter::Im {
+    superclass ::cmdr::say::Auto
     variable mywidth myformat mymax
 
     constructor {max} {
@@ -361,6 +475,7 @@ proc ::cmdr::say::percent {args} {
 }
 
 oo::class create ::cmdr::say::percent::Im {
+    superclass ::cmdr::say::Auto
     variable mywidth myformat mymax
 
     constructor {max digits} {
@@ -442,6 +557,130 @@ oo::class create ::cmdr::say::progress::Im {
     method done {} {
 	debug.cmdr/say {}
 	my destroy
+    }
+}
+
+
+# # ## ### ##### ######## ############# #####################
+## ping
+
+proc ::cmdr::say::ping {args} {
+    debug.cmdr/say {}
+
+    # Options
+    # -head  string - Show in front of the ping characters.
+    # -map   dict   - Map moduli to characters, when reached.
+    #                 Order relevant, largest moduli first.
+    #                 End with modulus 1, always matching!
+    #                 (System will internally add such to close the map).
+    # -width int    - Amount of space to use for the moving ping+head
+    # -wrap  bool   - Wrapping keeps the moving part within the current line.
+    #                 Without wrap a wrap goes to the next line using next*.
+
+    array set config {
+	-wrap 0
+	-head &
+	-map {
+	    100000 @
+	    10000  \#
+	    1000   %
+	    100    |
+	    10     *
+	    1      .
+	}
+	-width {}
+    }
+    array set config $args
+
+    return [ping::Im new \
+		$config(-wrap) \
+		$config(-head) \
+		$config(-map) \
+		[auto-width $config(-width)]]
+}
+
+oo::class create ::cmdr::say::ping::Im {
+    superclass ::cmdr::say::Auto
+    variable mywrap myhead mymap mywidth myphase mybuffer myewidth mytrail
+
+    constructor {wrap head map width} {
+	debug.cmdr/say {}
+
+	# close map, if user forgot. No-op if user closed it.
+	lappend map 1 _ ;# default char configurable ?
+
+	set mywrap   $wrap
+	set myhead   $head
+	set mymap    $map
+	set mywidth  $width
+	set myewidth [expr {$mywidth - [string length $head]}] ;# effective width.
+	set myphase  0
+	set mybuffer ""
+	if {$mywrap} {
+	    set mytrail [string repeat { } $myewidth]
+	} else {
+	    set mytrail {}
+	}
+	return
+    }
+
+    method width {} { return $mywidth }
+
+    method step {} {
+	debug.cmdr/say {}
+
+	set ch [my Next]
+
+	# Create a buffer to print, from the previous state.
+	# First attempt. Without a head leading the pings.
+
+	append  mybuffer $ch
+	set str $mybuffer
+
+	if {$mywrap} {
+	    set mytrail [string range $mytrail 1 end]
+	}
+
+	if {[string length $str] < $myewidth} {
+	    # Still fits. Simply print.
+	    cmdr say add $str$myhead$mytrail
+	} else {
+	    # Too long. Split into a fitting piece and overshot.
+	    set fit  [string range $str 0          ${myewidth}-1]
+	    set over [string range $str ${myewidth} end]
+
+	    # Print the fitting piece first to complete the line,
+	    # then move to the next line and print the overshot.
+	    cmdr say add $fit
+
+	    if {!$mywrap} {
+		cmdr say next*      ;# no-wrap: next line, keep current prefix.
+	    } else {
+		cmdr say rewind     ;# wrap:    rewind/clear line and continue
+	    }
+	    cmdr say add $over$myhead$mytrail
+
+	    # Set state for next call.
+	    set mybuffer $over
+	    if {$mywrap} {
+		set mytrail $fit
+	    }
+	}
+	return
+    }
+
+    method done {} {
+	debug.cmdr/say {}
+	my destroy
+    }
+
+    method Next {} {
+	incr myphase
+	foreach {mod char} $mymap {
+	    if {($myphase % $mod) != 0} continue
+	    return $char
+	}
+	return -code error -errorcode ... ""
     }
 }
 
@@ -601,6 +840,10 @@ proc ::cmdr::say::pulse-phases {width stem} {
 	lappend phases [string repeat $stem $i]
     }
     return [Fill $phases]
+}
+
+proc ::cmdr::say::turn-phases {} {
+    return [list | / - \\]
 }
 
 # # ## ### ##### ######## ############# #####################

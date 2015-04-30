@@ -1,0 +1,11 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+cmdr say operation {Upload } {
+    after 5000 {set ::done ok}
+    vwait ::done
+} -play {cmdr say ping -width 31 -wrap 1}
+
+exit
