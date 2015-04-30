@@ -1,0 +1,33 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+package require Tcl 8.5
+package require cmdr::say
+
+# ping bar
+#set B [cmdr say ping -width 17]
+#set B [cmdr say ping -width 17 -wrap 1]
+set B [cmdr say ping -width 41 -wrap 1 -head {} -map {	    100000 @
+	    10000  \#
+	    1000   %
+	    100    |
+	    10     *
+    1      {}
+}]
+#set B [cmdr say ping -width -8 -wrap 1]
+#set B [cmdr say ping -width -8]
+#set B [cmdr say ping -width Inf]
+cmdr say add "upload "
+cmdr say lock-prefix
+while {1} {
+    #
+    # fake upload, sync ... actual use:
+    # - fcopy callback,
+    # - http progress-callback
+    # - tcllib transfer callback
+    after 10
+    #
+    cmdr say rewind
+    $B step
+}
+
+exit

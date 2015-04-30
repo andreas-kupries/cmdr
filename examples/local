@@ -1,0 +1,9 @@
+#!/usr/bin/env tclsh
+# -*- tcl -*-
+
+#lappend auto_path [file dirname [file dirname [file normalize [info script]]]]
+#puts "= [join $auto_path "\n= "]"
+source  [file dirname [file dirname [file normalize [info script]]]]/say.tcl
+
+source [lindex $argv 0]
+exit
