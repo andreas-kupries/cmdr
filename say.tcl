@@ -38,9 +38,9 @@ namespace eval ::cmdr::say {
 	up down forw back \
 	erase-screen erase-up erase-down \
 	erase-line erase-back erase-forw \
-	goto home line add line rewind lock-prefix clear-prefix \
+	goto home line add trouble rewind lock-prefix clear-prefix \
 	next next* animate barberpole percent progress-counter progress \
-	ping pulse turn larson slider operation \
+	ping pulse turn larson slider operation header banner \
 	\
 	auto-width barber-phases progress-phases larson-phases \
 	slider-phases pulse-phases turn-phases \
@@ -195,6 +195,13 @@ proc ::cmdr::say::line {text} {
     return
 }
 
+proc ::cmdr::say::trouble {text} {
+    debug.cmdr/say {}
+    puts  stderr $text
+    flush stderr
+    return
+}
+
 proc ::cmdr::say::rewind {} {
     debug.cmdr/say {}
     variable prefix
@@ -231,6 +238,18 @@ proc ::cmdr::say::next* {} {
 }
 
 # # ## ### ##### ######## ############# #####################
+
+proc ::cmdr::say::header {text {filler -}} {
+    debug.cmdr/say {}
+    line \n${text}\n[string repeat $filler [string length $text]]
+    return
+}
+
+proc ::cmdr::say::banner {text} {
+    debug.cmdr/say {}
+    line \n$text
+    return
+}
 
 proc ::cmdr::say::operation {lead script args} {
     debug.cmdr/say {}
