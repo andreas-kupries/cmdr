@@ -20,6 +20,43 @@
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
+##
+
+# Notes on things to work on ...
+
+# - "operation" is possibly mis-named. Its main topic looks to be
+#   about animation which is green-threaded around its code-block.
+#
+# - Animation, or in general, "animated feedback" needs flags and
+#   acessors to disable it, for example when stdout is not a
+#   tty. Similar to how the color commands become no-ops in that case.
+#
+#   Because usually we do not wish to clutter a log file with the
+#   mixture of strings and terminal control sequences used to implement
+#   the animations.
+#
+# - Strongly consider moving "operation" and the various animation
+#   classes into a separate package operating on top of this one,
+#   i.e. "cmdr::say". This would have the flag control as well.
+#
+# - Regarding base animation classes have to implement compositing
+#   classes (wrapper for fixed header/trailer strings around an
+#   animation, sequence of animations (must have matching 'step'
+#   signature) - Interesting case for sequences: How much can we
+#   automate (derive) the individual -width specifications from an
+#   overall setting and knowledge of fixed sizes ?
+#
+# - Animation implementation base class => configure|cget API
+#
+# - Two common use-cases for the animations:
+#
+#   (a) Timer-driven animation, usually for an operation not
+#       generating (usable) feedback.
+#
+#   (b) Progress-driven animation, usually for an operation generating
+#       proper feedback we can use to drive it.
+
+# # ## ### ##### ######## ############# #####################
 ## Requisites
 
 package require Tcl 8.5
