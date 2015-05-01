@@ -40,7 +40,7 @@ namespace eval ::cmdr::say {
 	erase-line erase-back erase-forw \
 	goto home line add line rewind lock-prefix clear-prefix \
 	next next* animate barberpole percent progress-counter progress \
-	ping pulse turn operation \
+	ping pulse turn larson slider operation \
 	\
 	auto-width barber-phases progress-phases larson-phases \
 	slider-phases pulse-phases turn-phases \
@@ -235,23 +235,33 @@ proc ::cmdr::say::next* {} {
 proc ::cmdr::say::operation {lead script args} {
     debug.cmdr/say {}
 
-    set cmd {}
-    set delay 100
+    set cmd     {}  ;# -play
+    set delay   100 ;# -every
+    set trailer OK  ;# -trailer, -no-trailer
+
     while {1} {
 	set o [lindex $args 0]
 	switch -glob -- $o {
-	    -every {
+	    -every { ;# int number argument
 		set delay [lindex $args 1]
 		set args  [lrange $args 2 end]
 	    }
-	    -play {
+	    -play { ;# cmd prefix argument
 		set cmd  [lindex $args 1]
 		set args [lrange $args 2 end]
+	    }
+	    -no-trailer { ;# no argument
+		set trailer {}
+		set args    [lrange $args 1 end]
+	    }
+	    -trailer { ;# string argument
+		set trailer [lindex $args 1]
+		set args    [lrange $args 2 end]
 	    }
 	    -* {
 		return -code error \
 		    -errorcode {CMD SAY BAD-OPTION} \
-		    "Unknown option $o, expected -a, or -d"
+		    "Unknown option $o, expected -every, -play, or -(no-)trailer"
 	    }
 	    default break
 	}
@@ -273,7 +283,9 @@ proc ::cmdr::say::operation {lead script args} {
 	return {*}$o $e
     } on ok {e o} {
 	rewind ; # remove animation output, leave only the lead
-	line [color good OK]
+	if {$trailer ne {}} {
+	    line [color good $trailer]
+	}
     } finally {
 	# Stop ongoing animation, if any
 	if {[llength $cmd]} {
@@ -417,6 +429,46 @@ proc ::cmdr::say::pulse {args} {
 proc ::cmdr::say::turn {} {
     debug.cmdr/say {}
     set phases [turn-phases]
+    # Run the animation via the general class.
+    return [animate::Im new -phases $phases]
+}
+
+# # ## ### ##### ######## ############# #####################
+## slider animation
+
+proc ::cmdr::say::slider {args} {
+    debug.cmdr/say {}
+
+    array set config {
+	-width   {}
+	-pattern ***
+    }
+    array set config $args
+
+    set phases [slider-phases \
+		    [auto-width $config(-width)] \
+		    $config(-pattern)]
+
+    # Run the animation via the general class.
+    return [animate::Im new -phases $phases]
+}
+
+# # ## ### ##### ######## ############# #####################
+## larson scanner animation
+
+proc ::cmdr::say::larson {args} {
+    debug.cmdr/say {}
+
+    array set config {
+	-width   {}
+	-pattern ***
+    }
+    array set config $args
+
+    set phases [larson-phases \
+		    [auto-width $config(-width)] \
+		    $config(-pattern)]
+
     # Run the animation via the general class.
     return [animate::Im new -phases $phases]
 }
