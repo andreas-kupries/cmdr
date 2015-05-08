@@ -44,8 +44,8 @@ set thechars {
     neutral	{\033[34m}
     no		{\033[31m}
     no-blink	{\033[25m}
-    no-bold	{\033[22m}
-    no-dim	{\033[__m}
+    no-bold	{\033[21m}
+    no-dim	{\033[22m}
     no-hidden	{\033[28m}
     no-italic	{\033[23m}
     no-revers	{\033[27m}
@@ -69,52 +69,52 @@ set thechars {
 set thedefs {
     advisory	=yellow
     bad		=red
-    bg-black	{\033[40m}
-    bg-blue	{\033[44m}
-    bg-cyan	{\033[46m}
-    bg-default	{\033[49m}
-    bg-green	{\033[42m}
-    bg-magenta	{\033[45m}
-    bg-red	{\033[41m}
-    bg-white	{\033[47m}
-    bg-yellow	{\033[43m}
-    black	{\033[30m}
-    blink	{\033[5m}
-    blue	{\033[34m}
-    bold	{\033[1m}
+    bg-black	e40
+    bg-blue	e44
+    bg-cyan	e46
+    bg-default	e49
+    bg-green	e42
+    bg-magenta	e45
+    bg-red	e41
+    bg-white	e47
+    bg-yellow	e43
+    black	e30
+    blink	e5
+    blue	e34
+    bold	e1
     confirm	=red
-    cyan	{\033[36m}
-    default	{\033[39m}
-    dim		{\033[2m}
+    cyan	e36
+    default	e39
+    dim		e2
     error	=magenta
     good	=green
-    green	{\033[32m}
-    hidden	{\033[8m}
-    italic	{\033[3m}
-    magenta	{\033[35m}
+    green	e32
+    hidden	e8
+    italic	e3
+    magenta	e35
     name	=blue
     neutral	=blue
     no		=red
-    no-blink	{\033[25m}
-    no-bold	{\033[22m}
-    no-dim	{\033[__m}
-    no-hidden	{\033[28m}
-    no-italic	{\033[23m}
-    no-revers	{\033[27m}
-    no-strike	{\033[29m}
-    no-underline {\033[24m}
+    no-blink	e25
+    no-bold	e21
+    no-dim	e22
+    no-hidden	e28
+    no-italic	e23
+    no-revers	e27
+    no-strike	e29
+    no-underline e24
     note	=blue
     number	=green
     prompt	=blue
-    red		{\033[31m}
-    reset	{\033[0m}
-    revers	{\033[7m}
-    strike	{\033[9m}
-    underline	{\033[4m}
+    red		e31
+    reset	e0
+    revers	e7
+    strike	e9
+    underline	e4
     unknown	=cyan
     warning	=yellow
-    white	{\033[37m}
-    yellow	{\033[33m}
+    white	e37
+    yellow	e33
     yes		=green
 }
 
@@ -126,20 +126,20 @@ test cmdr-color-1.0 {color, wrong num args, not enough} -body {
 } -returnCodes error \
     -result {wrong # args: should be "cmdr color subcommand ?argument ...?"}
 
-test cmdr-color-1.1 {color, bogus sub-command, not enough args} -body {
-    cmdr color foo
+test cmdr-color-1.1 {color, wrong num args, too many} -body {
+    cmdr color red text X
 } -returnCodes error \
-    -result {wrong # args: should be "::cmdr::color::Unknown cmd codes text"}
+    -result {wrong # args: should be "::cmdr::color::Unknown cmd codes ?text?"}
 
-test cmdr-color-1.2 {color, bogus sub-command, bogus color name} -setup {
-    set save [cmdr color active]
-    cmdr color activate 1
-} -body {
-    cmdr color foo text
-} -cleanup {
-    cmdr color activate $save
-    unset save
+test cmdr-color-1.2 {color, bogus sub-command, bogus color name, no text} -body {
+    cmdr color foo
 } -returnCodes error -result {Expected a color name, got "foo"}
+
+test cmdr-color-1.3 {color, bogus sub-command, bogus color name, with text} -body {
+    cmdr color foo text
+} -returnCodes error -result {Expected a color name, got "foo"}
+
+# # ## ### ##### ######## ############# #####################
 
 test cmdr-color-2.0 {color, formatting, single code} -setup {
     set save [cmdr color active]
@@ -160,6 +160,26 @@ test cmdr-color-2.1 {color, formatting, multi-code} -setup {
     cmdr color activate $save
     unset save
 } -result "\033\[1m\033\[31mtext\033\[0m"
+
+test cmdr-color-2.2 {color, formatting, single code, no text} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color red
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result "\033\[31m"
+
+test cmdr-color-2.3 {color, formatting, multi-code, no text} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color {bold red}
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result "\033\[1m\033\[31m"
 
 # # ## ### ##### ######## ############# #####################
 ## Go through the API commands.

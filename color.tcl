@@ -208,18 +208,16 @@ proc ::cmdr::color::define {name spec} {
 # # ## ### ##### ######## ############# #####################
 
 proc ::cmdr::color::Unknown {cmd codes {text {}}} {
+    debug.cmdr/color {}
     list [namespace current]::Apply $codes
 }
 
 proc ::cmdr::color::Apply {codes {text {}}} {
     debug.cmdr/color {}
 
-    variable active
-    if {!$active} {
-	debug.cmdr/color {not active}
-	return $text
-    }
-
+    # Check codes first. Even if not active! IOW do not stop catching
+    # the use of bad/unknown codes just because we switched off the
+    # colorization.
     variable char
     foreach c $codes {
 	if {![dict exists $char $c]} {
@@ -227,6 +225,16 @@ proc ::cmdr::color::Apply {codes {text {}}} {
 		-errorcode [list CMDR COLOR UNKNOWN $c] \
 		"Expected a color name, got \"$c\""
 	}
+    }
+
+    variable active
+    if {!$active} {
+	debug.cmdr/color {not active}
+	return $text
+    }
+
+    # Apply chosen colors. Validation happend already.
+    foreach c $codes {
 	append r [dict get $char $c]
     }
     if {$text ne {}} {
