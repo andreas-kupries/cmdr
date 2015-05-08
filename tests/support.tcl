@@ -252,6 +252,9 @@ proc DumpPrivate {o} {
 	    }
 	}
 	lappend result "        flags \[[$c options]\]"
+	foreach o [$c options] {
+	    lappend result "            $o = [$c flag-type $o]"
+	}
 	lappend result "        ge ([$c generator])"
 	lappend result "        va ([$c validator])"
 	lappend result "        wd ([$c when-complete])"

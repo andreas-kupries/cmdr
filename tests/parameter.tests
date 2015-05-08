@@ -48,6 +48,9 @@ test cmdr-parameter-1.3 {parameter DSL, option, alias} -body {
             unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-A -A -X]
+                no-A inverted
+                A primary
+                X alias
             ge ()
             va (::cmdr::validate::boolean)
             wd ()
@@ -79,12 +82,54 @@ test cmdr-parameter-1.5 {parameter DSL, negative option, alias} -body {
             unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-A -A -X]
+                no-A primary
+                A inverted
+                X alias
             ge ()
             va (::cmdr::validate::boolean)
             wd ()
         }
     }
 }
+
+test cmdr-parameter-1.6 {parameter DSL, option, negative alias} -body {
+    NiceParamSpec option { neg-alias X }
+} -result {
+    foo bar = {
+        description: ''
+        option (--no-A) = A
+        option (-A) = A
+        option (-X) = A
+        map --n --> (--no-A)
+        map --no --> (--no-A)
+        map --no- --> (--no-A)
+        map --no-A --> (--no-A)
+        map -A --> (-A)
+        map -X --> (-X)
+        para (A) {
+            description: '-'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--no-A -A -X]
+                no-A primary
+                A inverted
+                X inverted
+            ge ()
+            va (::cmdr::validate::boolean)
+            wd ()
+        }
+    }
+}
+
+test cmdr-parameter-1.7 {parameter DSL, option, non-boolean, negative alias} -body {
+    BadParamSpec option { default 2 ; neg-alias X }
+} -returnCodes error \
+    -result {Non-boolean option "A" cannot have negated alias}
+
+test cmdr-parameter-1.8 {parameter DSL, option, presence, negative alias} -body {
+    BadParamSpec option { presence ; neg-alias X }
+} -returnCodes error \
+    -result {Presence option "A" cannot have negated alias}
 
 # # ## ### ##### ######## ############# #####################
 ## Parameter DSL: 'default' across parameters (input, option, state)
