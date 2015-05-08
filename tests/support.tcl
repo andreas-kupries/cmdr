@@ -66,7 +66,7 @@ proc HelpSmall {format {n 50}} {
 proc Help {def format n} {
     try {
 	cmdr create x foo $def
-	cmdr help format $format x $n [x help]
+	string trimright [cmdr help format $format x $n [x help]] \n
     } finally {
 	x destroy
     }

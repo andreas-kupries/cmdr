@@ -302,6 +302,8 @@ test cmdr-help-1.1 {help structure, inverted boolean option} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
+	    } --no-pager {
+	        Disable use of paging.
 	    } --short {
 		Activate short form of the help.
 	    } --width {
@@ -353,12 +355,13 @@ bar help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -366,6 +369,8 @@ bar help [OPTIONS] [<cmdname>...]
 
 bar exit
     Exit the shell. No-op if not in a shell.
+
+bar
 
 snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     hawaii
@@ -386,12 +391,13 @@ snafu help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -399,6 +405,8 @@ snafu help [OPTIONS] [<cmdname>...]
 
 snafu exit
     Exit the shell. No-op if not in a shell.
+
+snafu
 
 tool pliers help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -409,12 +417,13 @@ tool pliers help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -423,11 +432,13 @@ tool pliers help [OPTIONS] [<cmdname>...]
 tool pliers exit
     Exit the shell. No-op if not in a shell.
 
+tool pliers
+
 tool hammer nail [OPTIONS] [<supply>...]
     workbench
 
-    --driver force
-    --force  Alias of --driver.
+    --driver DRIVER force
+    --force DRIVER  Alias of --driver.
 
     supply magazine
 
@@ -440,12 +451,13 @@ tool hammer help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -453,6 +465,8 @@ tool hammer help [OPTIONS] [<cmdname>...]
 
 tool hammer exit
     Exit the shell. No-op if not in a shell.
+
+tool hammer
 
 tool help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -463,12 +477,13 @@ tool help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -477,11 +492,13 @@ tool help [OPTIONS] [<cmdname>...]
 tool exit
     Exit the shell. No-op if not in a shell.
 
+tool
+
 hammer nail [OPTIONS] [<supply>...]
     workbench
 
-    --driver force
-    --force  Alias of --driver.
+    --driver DRIVER force
+    --force DRIVER  Alias of --driver.
 
     supply magazine
 
@@ -494,12 +511,13 @@ hammer help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -507,6 +525,8 @@ hammer help [OPTIONS] [<cmdname>...]
 
 hammer exit
     Exit the shell. No-op if not in a shell.
+
+hammer
 
 help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -517,12 +537,13 @@ help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -530,7 +551,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 test cmdr-help-2.1 {full formatting - help structure, inverted boolean option} -body {
     HelpSmall full
@@ -551,12 +574,13 @@ help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -564,7 +588,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 # # ## ### ##### ######## ############# #####################
 
@@ -581,6 +607,8 @@ bar help [OPTIONS] [<cmdname>...]
 bar exit
     Exit the shell. No-op if not in a shell.
 
+bar
+
 snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     hawaii
 
@@ -592,6 +620,8 @@ snafu help [OPTIONS] [<cmdname>...]
 snafu exit
     Exit the shell. No-op if not in a shell.
 
+snafu
+
 tool pliers help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -599,6 +629,8 @@ tool pliers help [OPTIONS] [<cmdname>...]
 
 tool pliers exit
     Exit the shell. No-op if not in a shell.
+
+tool pliers
 
 tool hammer nail [OPTIONS] [<supply>...]
     workbench
@@ -611,6 +643,8 @@ tool hammer help [OPTIONS] [<cmdname>...]
 tool hammer exit
     Exit the shell. No-op if not in a shell.
 
+tool hammer
+
 tool help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -618,6 +652,8 @@ tool help [OPTIONS] [<cmdname>...]
 
 tool exit
     Exit the shell. No-op if not in a shell.
+
+tool
 
 hammer nail [OPTIONS] [<supply>...]
     workbench
@@ -630,6 +666,8 @@ hammer help [OPTIONS] [<cmdname>...]
 hammer exit
     Exit the shell. No-op if not in a shell.
 
+hammer
+
 help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -637,7 +675,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 test cmdr-help-3.1 {short formatting - help structure, inverted boolean option} -body {
     HelpSmall short
@@ -651,7 +691,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 # # ## ### ##### ######## ############# #####################
 
@@ -660,19 +702,25 @@ test cmdr-help-4.0 {list - formatting help structure} -body {
 } -result {    bar aloha [OPTIONS] <yoyo> [<jump>] <run>...
     bar help [OPTIONS] [<cmdname>...]
     bar exit
+    bar
     snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     snafu help [OPTIONS] [<cmdname>...]
     snafu exit
+    snafu
     tool pliers help [OPTIONS] [<cmdname>...]
     tool pliers exit
+    tool pliers
     tool hammer nail [OPTIONS] [<supply>...]
     tool hammer help [OPTIONS] [<cmdname>...]
     tool hammer exit
+    tool hammer
     tool help [OPTIONS] [<cmdname>...]
     tool exit
+    tool
     hammer nail [OPTIONS] [<supply>...]
     hammer help [OPTIONS] [<cmdname>...]
     hammer exit
+    hammer
     help [OPTIONS] [<cmdname>...]
     exit}
 
