@@ -1,0 +1,50 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: integer).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::integer
+set vtdef 0
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected an integer for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
+    $vtype validate P {}
+} -returnCodes error -result {Expected an integer for T "P", got ""}
+
+test vt-${vtype}-validate-2.2 "$vtype validate, ok, decimal" -body {
+    $vtype validate P 33
+} -result 33
+
+test vt-${vtype}-validate-2.3 "$vtype validate, ok, octal" -body {
+    $vtype validate P 010
+} -result 8
+
+test vt-${vtype}-validate-2.4 "$vtype validate, ok, hex" -body {
+    $vtype validate P 0xff
+} -result 255
+
+test vt-${vtype}-validate-2.5 "$vtype validate, ok, negative" -body {
+    $vtype validate P -2
+} -result -2
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

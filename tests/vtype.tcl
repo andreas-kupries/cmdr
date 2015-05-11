@@ -10,17 +10,35 @@
 #
 # File API variables
 #
-# - "vtype"  - command for the validation type.
-# - "vtparm" - name of the parameter variable used by all VT API commands.
-# - "vtval"  - name of the value variable used by the all VT API commands except "default".
+# - "vtype"  - Command for the validation type.
+# - "vtdef"  - Default value of the validation type.
+# - "vtparm" - Name of the parameter variable used by all VT API commands.
+# - "vtval"  - Name of the value variable used by the all VT API commands except "default".
 #
 # The last two can be left unspecified, and will default to "p" and "x", respectively.
+# The first two must be defined.
 
 if {![info exists vtparm]} { set vtparm p }
 if {![info exists vtval]}  { set vtval  x }
 
 if {![info exists vtype]} {
     # TODO: kt ... - Abort testsuite
+}
+
+if {![info exists vtdef]} {
+    # TODO: kt ... - Abort testsuite
+}
+
+# # ## ### ##### ######## ############# #####################
+## Pseudo/Fake parameter object to satisfy a validation type.
+## More specifically the command used inside to generate failure
+## messages.
+
+namespace eval P {
+    namespace export type the-name
+    namespace ensemble create
+    proc type     {} { return T }
+    proc the-name {} { return P }
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -33,6 +51,10 @@ test vt-${vtype}-default-1.0 "$vtype default, wrong args, not enough" -body {
 test vt-${vtype}-default-1.1 "$vtype default, wrong args, too many" -body {
     $vtype default P X
 } -returnCodes error -result "wrong # args: should be \"$vtype default $vtparm\""
+
+test vt-${vtype}-default-2.0 "$vtype default, value" -body {
+    $vtype default P
+} -result $vtdef
 
 # # ## ### ##### ######## ############# #####################
 ## validate
