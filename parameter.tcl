@@ -566,18 +566,17 @@ oo::class create ::cmdr::parameter {
 
     forward C10_ForbiddenInvertedAlias \
 	my Assert {
-	    ($myiscmdline && !$myisordered &&
-	    ($myvalidate ne "::cmdr::validate::boolean")) ||
-	    $myhasinverted
-	} \
-	{Non-boolean option "@" cannot have negated alias}
+	    !$myiscmdline || $myisordered ||
+	    ($myvalidate eq "::cmdr::validate::boolean") ||
+	    !$myhasinverted
+	} {Non-boolean option "@" cannot have negated alias}
 
     forward C11_ForbiddenInvertedAlias \
 	my Assert {
-	    ($myiscmdline && !$myisordered && $myonlypresence) ||
-	    $myhasinverted
-	} \
-	{Presence option "@" cannot have negated alias}
+	    !$myiscmdline || $myisordered ||
+	    !$myonlypresence ||
+	    !$myhasinverted
+	} {Presence option "@" cannot have negated alias}
 
     # # ## ### ##### ######## #############
     ## Internal: DSL support. Syntax constraints.
