@@ -1,6 +1,6 @@
 # -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
 # # ## ### ##### ######## ############# #####################
-## Testing the cmdr::color package.
+## Testing the cmdr::ask package.
 
 kt check Tcl     8.5
 kt check tcltest 2
@@ -34,7 +34,7 @@ test cmdr-ask-1.1 {ask, bogus sub-command, not enough args} -body {
 ## Go through the API commands.
 ## yn, string, string*, string/extended, menu, choose
 #
-## Only basic args checks. Everything else goes into interaction,
+## Only basic args checks at the moment. Everything else goes into interaction,
 ## which the tcltest is not suited for.
 #
 ## Idea: Replace linenoise with a mockup command to record calls and
