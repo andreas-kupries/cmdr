@@ -15,10 +15,26 @@ kt local   testing cmdr::validate
 ## Basic API.
 
 set vtype cmdr::validate::boolean
+set vtdef no
 kt source vtype.tcl
 
 # # ## ### ##### ######## ############# #####################
-## Specific behaviour
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected a boolean for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, ok, true" -body {
+    $vtype validate P yes
+} -result 1
+
+test vt-${vtype}-validate-2.2 "$vtype validate, ok, false" -body {
+    $vtype validate P no
+} -result 0
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - completion
 
 # # ## ### ##### ######## ############# #####################
 cleanupTests
