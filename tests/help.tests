@@ -43,7 +43,7 @@ test cmdr-help-1.0 {help structure} -body {
     regsub -all {::oo::Obj\d+::} [x help] {ZZZ::}
 } -cleanup {
     x destroy
-} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} opt2para {--lulu lulu --no-lulu lulu} arguments {yoyo jump run} states {} parameters {jump {cmdline 1 code ? default {} defered 0 description gate documented yes flags {} generator {} interactive no isbool 0 label jump list no ordered 1 presence no prompt {Enter jump: } required no threshold 1 type input validator ::cmdr::validate::identity} lulu {cmdline 1 code ? default no defered 0 description loop documented yes flags {--lulu primary --no-lulu inverted} generator {} interactive no isbool 1 label lulu list no ordered 0 presence no prompt {Enter lulu: } required 0 threshold {} type option validator ::cmdr::validate::boolean} run {cmdline 1 code +* default {} defered 0 description lane documented yes flags {} generator {} interactive no isbool 0 label run list yes ordered 1 presence no prompt {Enter run: } required 1 threshold {} type input validator ::cmdr::validate::identity} yoyo {cmdline 1 code + default {} defered 0 description height documented yes flags {} generator {} interactive no isbool 0 label yoyo list no ordered 1 presence no prompt {Enter yoyo: } required 1 threshold {} type input validator ::cmdr::validate::identity}} sections {} action ::hula} {bar help} {desc {Retrieve help for a command or command set.
+} -result {{bar aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} opt2para {--lulu lulu --no-lulu lulu} arguments {yoyo jump run} states {} parameters {jump {cmdline 1 code ? default {} defered 0 description gate documented yes flags {} generator {} interactive no isbool 0 label jump arglabel jump list no ordered 1 presence no prompt {Enter jump: } required no threshold 1 type input validator ::cmdr::validate::identity} lulu {cmdline 1 code ? default no defered 0 description loop documented yes flags {--lulu primary --no-lulu inverted} generator {} interactive no isbool 1 label lulu arglabel lulu list no ordered 0 presence no prompt {Enter lulu: } required 0 threshold {} type option validator ::cmdr::validate::boolean} run {cmdline 1 code +* default {} defered 0 description lane documented yes flags {} generator {} interactive no isbool 0 label run arglabel run list yes ordered 1 presence no prompt {Enter run: } required 1 threshold {} type input validator ::cmdr::validate::identity} yoyo {cmdline 1 code + default {} defered 0 description height documented yes flags {} generator {} interactive no isbool 0 label yoyo arglabel yoyo list no ordered 1 presence no prompt {Enter yoyo: } required 1 threshold {} type input validator ::cmdr::validate::identity}} sections {} action ::hula} {bar help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -51,33 +51,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_bar}} {bar exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} opt2para {--lulu lulu --no-lulu lulu} arguments {yoyo jump run} states {} parameters {jump {cmdline 1 code ? default {} defered 0 description gate documented yes flags {} generator {} interactive no isbool 0 label jump list no ordered 1 presence no prompt {Enter jump: } required no threshold 1 type input validator ::cmdr::validate::identity} lulu {cmdline 1 code ? default no defered 0 description loop documented yes flags {--lulu primary --no-lulu inverted} generator {} interactive no isbool 1 label lulu list no ordered 0 presence no prompt {Enter lulu: } required 0 threshold {} type option validator ::cmdr::validate::boolean} run {cmdline 1 code +* default {} defered 0 description lane documented yes flags {} generator {} interactive no isbool 0 label run list yes ordered 1 presence no prompt {Enter run: } required 1 threshold {} type input validator ::cmdr::validate::identity} yoyo {cmdline 1 code + default {} defered 0 description height documented yes flags {} generator {} interactive no isbool 0 label yoyo list no ordered 1 presence no prompt {Enter yoyo: } required 1 threshold {} type input validator ::cmdr::validate::identity}} sections {} action ::hula} {snafu help} {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_bar}} {bar exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} bar {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} {snafu aloha} {desc hawaii options {--lulu loop --no-lulu {Complementary alias of --lulu.}} opt2para {--lulu lulu --no-lulu lulu} arguments {yoyo jump run} states {} parameters {jump {cmdline 1 code ? default {} defered 0 description gate documented yes flags {} generator {} interactive no isbool 0 label jump arglabel jump list no ordered 1 presence no prompt {Enter jump: } required no threshold 1 type input validator ::cmdr::validate::identity} lulu {cmdline 1 code ? default no defered 0 description loop documented yes flags {--lulu primary --no-lulu inverted} generator {} interactive no isbool 1 label lulu arglabel lulu list no ordered 0 presence no prompt {Enter lulu: } required 0 threshold {} type option validator ::cmdr::validate::boolean} run {cmdline 1 code +* default {} defered 0 description lane documented yes flags {} generator {} interactive no isbool 0 label run arglabel run list yes ordered 1 presence no prompt {Enter run: } required 1 threshold {} type input validator ::cmdr::validate::identity} yoyo {cmdline 1 code + default {} defered 0 description height documented yes flags {} generator {} interactive no isbool 0 label yoyo arglabel yoyo list no ordered 1 presence no prompt {Enter yoyo: } required 1 threshold {} type input validator ::cmdr::validate::identity}} sections {} action ::hula} {snafu help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -85,33 +89,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_bar}} {snafu exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {tool pliers help} {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_bar}} {snafu exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} snafu {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} {tool pliers help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -119,33 +127,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_pliers}} {tool pliers exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {tool hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} opt2para {--driver driver --force driver} arguments supply states context parameters {context {cmdline 0 code {} default {} defered 1 description orientation documented yes flags {} generator {} interactive no isbool 0 label context list no ordered 0 presence no prompt {Enter context: } required 1 threshold {} type state validator ::cmdr::validate::identity} driver {cmdline 1 code ?* default 0 defered 0 description force documented yes flags {--force alias --driver primary} generator {} interactive no isbool 0 label driver list yes ordered 0 presence no prompt {Enter driver: } required 0 threshold {} type option validator adouble} supply {cmdline 1 code ?* default {} defered 0 description magazine documented yes flags {} generator {} interactive no isbool 0 label supply list yes ordered 1 presence no prompt {Enter supply: } required no threshold 0 type input validator ::cmdr::validate::identity}} sections {} action ::wall} {tool hammer help} {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_pliers}} {tool pliers exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {tool pliers} {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} {tool hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} opt2para {--driver driver --force driver} arguments supply states context parameters {context {cmdline 0 code {} default {} defered 1 description orientation documented yes flags {} generator {} interactive no isbool 0 label context arglabel context list no ordered 0 presence no prompt {Enter context: } required 1 threshold {} type state validator ::cmdr::validate::identity} driver {cmdline 1 code ?* default 0 defered 0 description force documented yes flags {--force alias --driver primary} generator {} interactive no isbool 0 label driver arglabel driver list yes ordered 0 presence no prompt {Enter driver: } required 0 threshold {} type option validator adouble} supply {cmdline 1 code ?* default {} defered 0 description magazine documented yes flags {} generator {} interactive no isbool 0 label supply arglabel supply list yes ordered 1 presence no prompt {Enter supply: } required no threshold 0 type input validator ::cmdr::validate::identity}} sections {} action ::wall} {tool hammer help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -153,33 +165,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_hammer}} {tool hammer exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {tool help} {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_hammer}} {tool hammer exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {tool hammer} {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} {tool help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -187,33 +203,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_tool}} {tool exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} opt2para {--driver driver --force driver} arguments supply states context parameters {context {cmdline 0 code {} default {} defered 1 description orientation documented yes flags {} generator {} interactive no isbool 0 label context list no ordered 0 presence no prompt {Enter context: } required 1 threshold {} type state validator ::cmdr::validate::identity} driver {cmdline 1 code ?* default 0 defered 0 description force documented yes flags {--force alias --driver primary} generator {} interactive no isbool 0 label driver list yes ordered 0 presence no prompt {Enter driver: } required 0 threshold {} type option validator adouble} supply {cmdline 1 code ?* default {} defered 0 description magazine documented yes flags {} generator {} interactive no isbool 0 label supply list yes ordered 1 presence no prompt {Enter supply: } required no threshold 0 type input validator ::cmdr::validate::identity}} sections {} action ::wall} {hammer help} {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_tool}} {tool exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} tool {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} {hammer nail} {desc workbench options {--driver force --force {Alias of --driver.}} opt2para {--driver driver --force driver} arguments supply states context parameters {context {cmdline 0 code {} default {} defered 1 description orientation documented yes flags {} generator {} interactive no isbool 0 label context arglabel context list no ordered 0 presence no prompt {Enter context: } required 1 threshold {} type state validator ::cmdr::validate::identity} driver {cmdline 1 code ?* default 0 defered 0 description force documented yes flags {--force alias --driver primary} generator {} interactive no isbool 0 label driver arglabel driver list yes ordered 0 presence no prompt {Enter driver: } required 0 threshold {} type option validator adouble} supply {cmdline 1 code ?* default {} defered 0 description magazine documented yes flags {} generator {} interactive no isbool 0 label supply arglabel supply list yes ordered 1 presence no prompt {Enter supply: } required no threshold 0 type input validator ::cmdr::validate::identity}} sections {} action ::wall} {hammer help} {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -221,33 +241,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_hammer}} {hammer exit} {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} help {desc {Retrieve help for a command or command set.
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ZZZ::officer_hammer}} {hammer exit} {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} hammer {desc {} options {} opt2para {} arguments {} states {} parameters {} sections {}} help {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -255,33 +279,37 @@ test cmdr-help-1.0 {help structure} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ::x}} exit {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}}}
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ::x}} exit {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {} {desc TEST options {} opt2para {} arguments {} states {} parameters {} sections {}}}
 
 test cmdr-help-1.1 {help structure, inverted boolean option} -body {
     cmdr create x foo {
@@ -291,10 +319,11 @@ test cmdr-help-1.1 {help structure, inverted boolean option} -body {
 	    option no-driver force { list ; alias force }
 	} ::wall
     }
-    x help
+
+    regsub -all {::oo::Obj\d+::} [x help] {ZZZ::}
 } -cleanup {
     x destroy
-} -result {nail {desc workbench options {--driver {Complementary alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} opt2para {--driver no-driver --force no-driver --no-driver no-driver} arguments {} states {} parameters {no-driver {cmdline 1 code ?* default {} defered 0 description force documented yes flags {--force alias --no-driver primary --driver inverted} generator {} interactive no isbool 1 label no-driver list yes ordered 0 presence no prompt {Enter no-driver: } required 0 threshold {} type option validator ::cmdr::validate::boolean}} sections {} action ::wall} help {desc {Retrieve help for a command or command set.
+} -result {nail {desc workbench options {--driver {Complementary alias of --no-driver.} --force {Alias of --no-driver.} --no-driver force} opt2para {--driver no-driver --force no-driver --no-driver no-driver} arguments {} states {} parameters {no-driver {cmdline 1 code ?* default {} defered 0 description force documented yes flags {--force alias --no-driver primary --driver inverted} generator {} interactive no isbool 1 label no-driver arglabel no-driver list yes ordered 0 presence no prompt {Enter no-driver: } required 0 threshold {} type option validator ::cmdr::validate::boolean}} sections {} action ::wall} help {desc {Retrieve help for a command or command set.
 	    Without arguments help for all commands is given.
 	    The default format is --full.} options {--by-category {
 		Activate by-category form of the help.
@@ -302,33 +331,37 @@ test cmdr-help-1.1 {help structure, inverted boolean option} -body {
 		Activate full form of the help.
 	    } --list {
 		Activate list form of the help.
-	    } --short {
+	    } --no-pager {
+	    Disable use of paging.
+	} --short {
 		Activate short form of the help.
 	    } --width {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
+	} -w {Alias of --width.}} opt2para {--by-category by-category --full full --list list --no-pager no-pager --short short --width width -w width} arguments cmdname states format parameters {by-category {cmdline 1 code ? default no defered 0 description {
 		Activate by-category form of the help.
-	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
+	    } documented yes flags {--by-category primary} generator {} interactive no isbool 1 label by-category arglabel by-category list no ordered 0 presence yes prompt {Enter by-category: } required 0 threshold {} type option validator ::cmdr::validate::boolean} cmdname {cmdline 1 code ?* default {} defered 0 description {
 	    The entire command line, the name of the
 	    command to get help for. This can be several
 	    words.
-	} documented yes flags {} generator {} interactive no isbool 0 label cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label cmdname arglabel cmdname list yes ordered 1 presence no prompt {Enter cmdname: } required no threshold 0 type input validator ::cmdr::validate::identity} format {cmdline 0 code {} default {} defered 1 description {
 	    Format of the help to generate.
 	    This field is fed by the options --by-category, --full, --list, and --short.
-	} documented yes flags {} generator {} interactive no isbool 0 label format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
+	} documented yes flags {} generator {} interactive no isbool 0 label format arglabel format list no ordered 0 presence no prompt {Enter format: } required 1 threshold {} type state validator ::cmdr::validate::identity} full {cmdline 1 code ? default no defered 0 description {
 		Activate full form of the help.
-	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--full primary} generator {} interactive no isbool 1 label full arglabel full list no ordered 0 presence yes prompt {Enter full: } required 0 threshold {} type option validator ::cmdr::validate::boolean} list {cmdline 1 code ? default no defered 0 description {
 		Activate list form of the help.
-	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
+	    } documented yes flags {--list primary} generator {} interactive no isbool 1 label list arglabel list list no ordered 0 presence yes prompt {Enter list: } required 0 threshold {} type option validator ::cmdr::validate::boolean} no-pager {cmdline 1 code ? default no defered 0 description {
+	    Disable use of paging.
+	} documented yes flags {--no-pager primary} generator {} interactive no isbool 1 label no-pager arglabel no-pager list no ordered 0 presence yes prompt {Enter no-pager: } required 0 threshold {} type option validator ::cmdr::validate::boolean} short {cmdline 1 code ? default no defered 0 description {
 		Activate short form of the help.
-	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
+	    } documented yes flags {--short primary} generator {} interactive no isbool 1 label short arglabel short list no ordered 0 presence yes prompt {Enter short: } required 0 threshold {} type option validator ::cmdr::validate::boolean} width {cmdline 1 code ? default {} defered 0 description {
 	    The line width to format the help for.
 	    Defaults to the terminal width, or 80 when
 	    no terminal is available.
-	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ::x}} exit {desc {Exit the shell.
-		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {::oo::Obj973::my shell-exit}}}
+	} documented yes flags {-w alias --width primary} generator {::apply {p { linenoise columns }}} interactive no isbool 0 label width arglabel width list no ordered 0 presence no prompt {Enter width: } required 0 threshold {} type option validator ::cmdr::validate::integer}} sections *AutoGenerated* action {::cmdr::help::auto-help ::x}} exit {desc {Exit the shell.
+		    No-op if not in a shell.} options {} opt2para {} arguments {} states {} parameters {} sections *AutoGenerated* action {ZZZ::my shell-exit}} {} {desc TEST options {} opt2para {} arguments {} states {} parameters {} sections {}}}
 
 # # ## ### ##### ######## ############# #####################
 
@@ -353,12 +386,13 @@ bar help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -366,6 +400,8 @@ bar help [OPTIONS] [<cmdname>...]
 
 bar exit
     Exit the shell. No-op if not in a shell.
+
+bar
 
 snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     hawaii
@@ -386,12 +422,13 @@ snafu help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -399,6 +436,8 @@ snafu help [OPTIONS] [<cmdname>...]
 
 snafu exit
     Exit the shell. No-op if not in a shell.
+
+snafu
 
 tool pliers help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -409,12 +448,13 @@ tool pliers help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -423,11 +463,13 @@ tool pliers help [OPTIONS] [<cmdname>...]
 tool pliers exit
     Exit the shell. No-op if not in a shell.
 
+tool pliers
+
 tool hammer nail [OPTIONS] [<supply>...]
     workbench
 
-    --driver force
-    --force  Alias of --driver.
+    --driver DRIVER force
+    --force DRIVER  Alias of --driver.
 
     supply magazine
 
@@ -440,12 +482,13 @@ tool hammer help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -453,6 +496,8 @@ tool hammer help [OPTIONS] [<cmdname>...]
 
 tool hammer exit
     Exit the shell. No-op if not in a shell.
+
+tool hammer
 
 tool help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -463,12 +508,13 @@ tool help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -477,11 +523,13 @@ tool help [OPTIONS] [<cmdname>...]
 tool exit
     Exit the shell. No-op if not in a shell.
 
+tool
+
 hammer nail [OPTIONS] [<supply>...]
     workbench
 
-    --driver force
-    --force  Alias of --driver.
+    --driver DRIVER force
+    --force DRIVER  Alias of --driver.
 
     supply magazine
 
@@ -494,12 +542,13 @@ hammer help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -507,6 +556,8 @@ hammer help [OPTIONS] [<cmdname>...]
 
 hammer exit
     Exit the shell. No-op if not in a shell.
+
+hammer
 
 help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
@@ -517,12 +568,13 @@ help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -530,7 +582,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 test cmdr-help-2.1 {full formatting - help structure, inverted boolean option} -body {
     HelpSmall full
@@ -551,12 +605,13 @@ help [OPTIONS] [<cmdname>...]
                   help.
     --full        Activate full form of the help.
     --list        Activate list form of the help.
+    --no-pager    Disable use of paging.
     --short       Activate short form of the help.
-    --width       The line width to format the
+    --width WIDTH The line width to format the
                   help for. Defaults to the
                   terminal width, or 80 when no
                   terminal is available.
-    -w            Alias of --width.
+    -w WIDTH      Alias of --width.
 
     cmdname The entire command line, the name of
             the command to get help for. This can
@@ -564,7 +619,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 # # ## ### ##### ######## ############# #####################
 
@@ -581,6 +638,8 @@ bar help [OPTIONS] [<cmdname>...]
 bar exit
     Exit the shell. No-op if not in a shell.
 
+bar
+
 snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     hawaii
 
@@ -592,6 +651,8 @@ snafu help [OPTIONS] [<cmdname>...]
 snafu exit
     Exit the shell. No-op if not in a shell.
 
+snafu
+
 tool pliers help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -599,6 +660,8 @@ tool pliers help [OPTIONS] [<cmdname>...]
 
 tool pliers exit
     Exit the shell. No-op if not in a shell.
+
+tool pliers
 
 tool hammer nail [OPTIONS] [<supply>...]
     workbench
@@ -611,6 +674,8 @@ tool hammer help [OPTIONS] [<cmdname>...]
 tool hammer exit
     Exit the shell. No-op if not in a shell.
 
+tool hammer
+
 tool help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -618,6 +683,8 @@ tool help [OPTIONS] [<cmdname>...]
 
 tool exit
     Exit the shell. No-op if not in a shell.
+
+tool
 
 hammer nail [OPTIONS] [<supply>...]
     workbench
@@ -630,6 +697,8 @@ hammer help [OPTIONS] [<cmdname>...]
 hammer exit
     Exit the shell. No-op if not in a shell.
 
+hammer
+
 help [OPTIONS] [<cmdname>...]
     Retrieve help for a command or command set.
     Without arguments help for all commands is
@@ -637,7 +706,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 test cmdr-help-3.1 {short formatting - help structure, inverted boolean option} -body {
     HelpSmall short
@@ -651,7 +722,9 @@ help [OPTIONS] [<cmdname>...]
 
 exit
     Exit the shell. No-op if not in a shell.
-}
+
+
+    TEST}
 
 # # ## ### ##### ######## ############# #####################
 
@@ -660,19 +733,25 @@ test cmdr-help-4.0 {list - formatting help structure} -body {
 } -result {    bar aloha [OPTIONS] <yoyo> [<jump>] <run>...
     bar help [OPTIONS] [<cmdname>...]
     bar exit
+    bar
     snafu aloha [OPTIONS] <yoyo> [<jump>] <run>...
     snafu help [OPTIONS] [<cmdname>...]
     snafu exit
+    snafu
     tool pliers help [OPTIONS] [<cmdname>...]
     tool pliers exit
+    tool pliers
     tool hammer nail [OPTIONS] [<supply>...]
     tool hammer help [OPTIONS] [<cmdname>...]
     tool hammer exit
+    tool hammer
     tool help [OPTIONS] [<cmdname>...]
     tool exit
+    tool
     hammer nail [OPTIONS] [<supply>...]
     hammer help [OPTIONS] [<cmdname>...]
     hammer exit
+    hammer
     help [OPTIONS] [<cmdname>...]
     exit}
 

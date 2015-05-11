@@ -264,7 +264,7 @@ test cmdr-officer-6.4 {officer/action DSL, common, bogus option} -setup {
 } -cleanup {
     x destroy
 } -returnCodes error \
-    -result {Unknown option "-bogus", expected -extend}
+    -result {Unknown option "-bogus", expected -extend, or --}
 
 # # ## ### ##### ######## ############# #####################
 return
