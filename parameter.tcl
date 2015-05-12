@@ -86,6 +86,7 @@ oo::class create ::cmdr::parameter {
 	set myislist       no ;# scalar vs list parameter
 	set myisdocumented yes
 	set myonlypresence no ;# options only, no argument when true.
+	set myhasinverted  no ;# options only, presence of negative aliases.
 	set myhasdefault   no ;# flag for default existence
 	set mydefault      {} ;# default value - raw
 	set mygenerate     {} ;# generator command prefix
@@ -176,6 +177,10 @@ oo::class create ::cmdr::parameter {
 	    }
 	}
 	return $mydescription
+    }
+
+    method flag-type {detail} {
+	return [dict get $myflags $detail]
     }
 
     method primary {option} {
@@ -278,6 +283,8 @@ oo::class create ::cmdr::parameter {
 	# Import the DSL commands to translate the specification.
 	link \
 	    {alias         Alias} \
+	    {!alias        NegAlias} \
+	    {neg-alias     NegAlias} \
 	    {default       Default} \
 	    {defered       Defered} \
 	    {generate      Generate} \
@@ -317,6 +324,8 @@ oo::class create ::cmdr::parameter {
 	my C6_RequiredArgumentForbiddenGenerator
 	my C6_RequiredArgumentForbiddenInteract
 	my C7_DefaultGeneratorConflict
+	my C10_ForbiddenInvertedAlias
+	my C11_ForbiddenInvertedAlias
 
 	return
     }
@@ -380,6 +389,13 @@ oo::class create ::cmdr::parameter {
     method Alias {name} {
 	my Alias_Option
 	dict set myflags [my Option $name] alias
+	return
+    }
+
+    method NegAlias {name} {
+	my Alias_Option
+	dict set myflags [my Option $name] inverted
+	set myhasinverted yes
 	return
     }
 
@@ -534,19 +550,33 @@ oo::class create ::cmdr::parameter {
 
     forward C9_ForbiddenPresence \
 	my Assert {(!$myhasdefault && ![llength $mygenerate] && ![llength $myvalidate]) || !$myonlypresence} \
-	{Customized option cannot be presence-only}
+	{Customized option "@" cannot be presence-only}
 
     forward C9_PresenceDefaultConflict \
 	my Assert {!$myonlypresence} \
-	{Presence-only option cannot have custom default value}
+	{Presence-only option "@" cannot have custom default value}
 
     forward C9_PresenceGeneratorConflict \
 	my Assert {!$myonlypresence} \
-	{Presence-only option cannot have custom generator command}
+	{Presence-only option "@" cannot have custom generator command}
 
     forward C9_PresenceValidateConflict \
 	my Assert {!$myonlypresence} \
-	{Presence-only option cannot have custom validation type}
+	{Presence-only option "@" cannot have custom validation type}
+
+    forward C10_ForbiddenInvertedAlias \
+	my Assert {
+	    !$myiscmdline || $myisordered ||
+	    ($myvalidate eq "::cmdr::validate::boolean") ||
+	    !$myhasinverted
+	} {Non-boolean option "@" cannot have negated alias}
+
+    forward C11_ForbiddenInvertedAlias \
+	my Assert {
+	    !$myiscmdline || $myisordered ||
+	    !$myonlypresence ||
+	    !$myhasinverted
+	} {Presence option "@" cannot have negated alias}
 
     # # ## ### ##### ######## #############
     ## Internal: DSL support. Syntax constraints.
@@ -673,6 +703,7 @@ oo::class create ::cmdr::parameter {
 	}
 
 	dict set myflags [my Option $alternate] inverted
+	set myhasinverted yes
 	return
     }
 
@@ -863,7 +894,7 @@ oo::class create ::cmdr::parameter {
 	    # --foo    non-boolean-value ==> --foo YES non-boolean-value
 	    # --no-foo non-boolean-value ==> --foo NO  non-boolean-value
 
-	    # Invert meaning of option.
+	    # Invert meaning of option (inverted aliases, std, and user).
 	    # --no-foo YES ==> --foo NO
 	    # --no-foo NO  ==> --foo YES
 
@@ -876,7 +907,7 @@ oo::class create ::cmdr::parameter {
 	    }
 
 	    # Invert meaning, if so requested.
-	    if {[string match --no-* $flag]} {
+	    if {[dict get $myflags $flag] eq "inverted"} {
 		set value [expr {!$value}]
 	    }
 	} else {
@@ -1261,11 +1292,11 @@ oo::class create ::cmdr::parameter {
 	myflags mythreshold myhasstring mystring \
 	myhasvalue myvalue mylocker mystopinteraction \
 	myisdocumented myonlypresence myisdefered \
-	myisundefined mynopromote
+	myisundefined mynopromote myhasinverted
 
     # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.4
+package provide cmdr::parameter 1.5
