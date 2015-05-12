@@ -279,6 +279,10 @@ cmdr-spec-dsl-parameter \- Cmdr - Parameter Specification Language
 .sp
 \fBalias\fR \fIname\fR
 .sp
+\fBneg-alias\fR \fIname\fR
+.sp
+\fB!alias\fR \fIname\fR
+.sp
 \fBno-promotion\fR
 .sp
 \fBoptional\fR
@@ -389,6 +393,19 @@ If that is not enough for a specific \fIoption\fR this command allows
 the specification of any number additional flags to be recognized\&.
 .sp
 Note however that the framework automatically recognizes not
+only the specified flag(s), but also all their unique prefixes,
+obviating the need for this command in many cases\&.
+.TP
+\fBneg-alias\fR \fIname\fR
+.TP
+\fB!alias\fR \fIname\fR
+This command applies only to \fIboolean\fR \fIoption\fRs\&. For them it allows
+the specification of any number additional flags to be recognized, which are
+aliases of its \fIinverted\fR form, i\&.e\&. of \fB--no-FOO\fR for an option \fBFOO\fR\&.
+.sp
+This in contrast to \fBalias\fRes, which are for the regular form of the option\&.
+.sp
+Note further that the framework automatically recognizes not
 only the specified flag(s), but also all their unique prefixes,
 obviating the need for this command in many cases\&.
 .PP
