@@ -1087,7 +1087,8 @@ oo::class create ::cmdr::config {
 	# let it deal with the remaining things, including retrieval
 	# of the option argument (if any), validation, etc.
 
-	[dict get $myoption [lindex $options 0]] process $option $mypq
+	set full [lindex $options 0]
+	[dict get $myoption $full] process $full $mypq
 	return
     }
 

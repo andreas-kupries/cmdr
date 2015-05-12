@@ -56,6 +56,8 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
             unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-OPTION --OPTION]
+                --no-OPTION = inverted
+                --OPTION = primary
             ge ()
             va (::cmdr::validate::boolean)
             wd ()
@@ -240,6 +242,8 @@ test cmdr-private-3.3 {private, option, defaults} -setup {
             unordered, cmdline, single, optional, silent, immediate
             default: 'no'
             flags [--no-A -A]
+                --no-A = inverted
+                -A = primary
             ge ()
             va (::cmdr::validate::boolean)
             wd ()
