@@ -624,5 +624,48 @@ test cmdr-runtime-7.2 {validation errors} -body {
     -result {Expected an integer for input "B", got "X"}
 
 # # ## ### ##### ######## ############# #####################
+## Options, negative aliases
+
+test cmdr-runtime-8.0 {options, simple, boolean, special forms II} -body {
+    Parse {
+	option A -
+	option B -
+	option C -
+	option D -
+	option E -
+	option F -
+	option G - { validate identity }
+    } -A -G=X --no-B -G=X -C=1 -D=0 --no-E=1 --no-F=0
+} -result {
+    A = 'yes' v'1'
+    B = '0'   v'0'
+    C = '1'   v'1'
+    D = '0'   v'0'
+    E = '0'   v'0'
+    F = '1'   v'1'
+    G = 'X'   v'X'
+}
+
+test cmdr-runtime-8.1 {options, boolean, aliases} -body {
+    Parse {
+	option A - { alias     X }
+	option B - { neg-alias Y }
+    } -X -Y
+} -result {
+    A = 'yes' v'1'
+    B = '0'   v'0'
+}
+
+test cmdr-runtime-8.2 {options, boolean, aliases, special forms} -body {
+    Parse {
+	option A - { alias     X }
+	option B - { neg-alias Y }
+    } -X=0 -Y=0
+} -result {
+    A = '0' v'0'
+    B = '1' v'1'
+}
+
+# # ## ### ##### ######## ############# #####################
 
 return
