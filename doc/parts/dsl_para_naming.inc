@@ -48,6 +48,20 @@ the specification of any number additional flags to be recognized.
 only the specified flag(s), but also all their unique prefixes,
 obviating the need for this command in many cases.
 
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd neg-alias] [arg name]]
+[call [cmd !alias] [arg name]]
+
+This command applies only to [term boolean] [term option]s. For them it allows
+the specification of any number additional flags to be recognized, which are
+aliases of its [emph inverted] form, i.e. of [const --no-FOO] for an option [const FOO].
+
+[para] This in contrast to [cmd alias]es, which are for the regular form of the option.
+
+[para] Note further that the framework automatically recognizes not
+only the specified flag(s), but also all their unique prefixes,
+obviating the need for this command in many cases.
+
 [list_end]
 
 
