@@ -354,4 +354,4 @@ apply {{} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::color 1
+package provide cmdr::color 1.0.1
