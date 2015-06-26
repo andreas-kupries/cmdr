@@ -813,6 +813,13 @@ oo::class create ::cmdr::parameter {
 	return
     }
 
+    method acceptable {} {
+	debug.cmdr/parameter {}
+	# Ask the validation type of the parameter for text about
+	# acceptable values.
+	return [{*}$myvalidate acceptable [self]]
+    }
+
     method accept {x} {
 	debug.cmdr/parameter {}
 	try {
@@ -1299,4 +1306,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.5
+package provide cmdr::parameter 1.6

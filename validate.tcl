@@ -52,7 +52,7 @@ debug prefix cmdr/validate {[debug caller] | }
 # # ## ### ##### ######## ############# #####################
 
 namespace eval ::cmdr::validate::boolean {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-enum
@@ -62,6 +62,11 @@ proc ::cmdr::validate::boolean::release  {p x} { return }
 proc ::cmdr::validate::boolean::default  {p}  {
     debug.cmdr/validate {}
     return no
+}
+
+proc ::cmdr::validate::boolean::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return "Expected one of: yes, no, false, true, on, off, 0, or 1"
 }
 
 proc ::cmdr::validate::boolean::complete {p x} {
@@ -136,9 +141,14 @@ proc ::cmdr::validate::double::validate {p x} {
 ## Any double in [0,100]
 
 namespace eval ::cmdr::validate::percent {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
+}
+
+proc ::cmdr::validate::percent::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return "Expected a value in the range \[0...100\]."
 }
 
 proc ::cmdr::validate::percent::release  {p x} { return }
@@ -201,10 +211,16 @@ proc ::cmdr::validate::str::validate {p x} { debug.cmdr/validate {}    ; return 
 ## File, existing and readable
 
 namespace eval ::cmdr::validate::rfile {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
+}
+
+proc ::cmdr::validate::rfile::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "readable file" ::cmdr::validate::rfile::Ok]
 }
 
 proc ::cmdr::validate::rfile::release  {p x} { return }
@@ -230,11 +246,17 @@ proc ::cmdr::validate::rfile::Ok {path} {
 ## File, existing and writable
 
 namespace eval ::cmdr::validate::wfile {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::wfile::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "writable file" ::cmdr::validate::wfile::Ok]
 }
 
 proc ::cmdr::validate::wfile::release  {p x} { return }
@@ -265,11 +287,17 @@ proc ::cmdr::validate::wfile::Ok {path} {
 ## File, existing and read/writable
 
 namespace eval ::cmdr::validate::rwfile {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::rwfile::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "read/writeable file" ::cmdr::validate::rwfile::Ok]
 }
 
 proc ::cmdr::validate::rwfile::release  {p x} { return }
@@ -301,10 +329,16 @@ proc ::cmdr::validate::rwfile::Ok {path} {
 ## Directory, existing and readable.
 
 namespace eval ::cmdr::validate::rdirectory {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
+}
+
+proc ::cmdr::validate::rdirectory::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "readable directory" ::cmdr::validate::rdirectory::Ok]
 }
 
 proc ::cmdr::validate::rdirectory::release  {p x} { return }
@@ -331,11 +365,17 @@ proc ::cmdr::validate::rdirectory::Ok {path} {
 ## Directory, existing and read/writable.
 
 namespace eval ::cmdr::validate::rwdirectory {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::rwdirectory::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "read/writable directory" ::cmdr::validate::rwdirectory::Ok]
 }
 
 proc ::cmdr::validate::rwdirectory::release  {p x} { return }
@@ -368,10 +408,16 @@ proc ::cmdr::validate::rwdirectory::Ok {path} {
 ## Any path, existing and readable.
 
 namespace eval ::cmdr::validate::rpath {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
+}
+
+proc ::cmdr::validate::rpath::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "readable path" ::cmdr::validate::rpath::Ok]
 }
 
 proc ::cmdr::validate::rpath::release  {p x} { return }
@@ -397,11 +443,17 @@ proc ::cmdr::validate::rpath::Ok {path} {
 ## Any path, existing and read/writable.
 
 namespace eval ::cmdr::validate::rwpath {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::rwpath::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "read/writable path" ::cmdr::validate::rwpath::Ok]
 }
 
 proc ::cmdr::validate::rwpath::release  {p x} { return }
@@ -433,10 +485,16 @@ proc ::cmdr::validate::rwpath::Ok {path} {
 ## Channel, for existing and readable file. Defaults to stdin.
 
 namespace eval ::cmdr::validate::rchan {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
+}
+
+proc ::cmdr::validate::rchan::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "readable file" ::cmdr::validate::rchan::Ok]
 }
 
 proc ::cmdr::validate::rchan::release  {p x} {
@@ -466,11 +524,17 @@ proc ::cmdr::validate::rchan::Ok {path} {
 ## Channel, for existing and writable file. Defaults to stdout.
 
 namespace eval ::cmdr::validate::wchan {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::wchan::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "writable file" ::cmdr::validate::wchan::Ok]
 }
 
 proc ::cmdr::validate::wchan::release  {p x} {
@@ -478,6 +542,7 @@ proc ::cmdr::validate::wchan::release  {p x} {
     close $x
     return
 }
+
 proc ::cmdr::validate::wchan::default  {p}   { return stdout }
 proc ::cmdr::validate::wchan::complete {p x} {
     debug.cmdr/validate {} 10
@@ -505,11 +570,17 @@ proc ::cmdr::validate::wchan::Ok {path} {
 ## Channel, for existing and read/writable file. No default.
 
 namespace eval ::cmdr::validate::rwchan {
-    namespace export default validate complete release
+    namespace export default validate complete release acceptable
     namespace ensemble create
     namespace import ::cmdr::validate::common::fail
     namespace import ::cmdr::validate::common::complete-glob
+    namespace import ::cmdr::validate::common::one-path
     namespace import ::cmdr::validate::common::ok-directory
+}
+
+proc ::cmdr::validate::rwchan::acceptable {p} {
+    debug.cmdr/validate {} 10
+    return [one-path "read/writable file" ::cmdr::validate::rwchan::Ok]
 }
 
 proc ::cmdr::validate::rwchan::release  {p x} { close $x }
@@ -539,5 +610,5 @@ proc ::cmdr::validate::rwchan::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.3.1
+package provide cmdr::validate 1.4
 return

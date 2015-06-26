@@ -40,7 +40,7 @@ namespace eval ::cmdr::validate::common {
     namespace export \
 	complete-enum complete-glob complete-substr \
 	ok-directory lead-in fail fail-unknown-thing \
-	fail-known-thing
+	fail-known-thing one-of one-path expected
     namespace ensemble create
 }
 
@@ -69,8 +69,23 @@ proc ::cmdr::validate::common::fail-unknown-thing {p code type x {context {}}} {
 
     append msg "Found a problem with [$p type] \"[$p the-name]\":"
     append msg " [lead-in $type] \"$x\" does not exist$context."
-    append msg " Please use a different value."
 
+    # Ping the parameter for knowledge of acceptable values and use
+    # the information when available. Fall back to a generic text if
+    # the parameter doesn't know anything.
+    if {[catch {
+	set acceptable [$p acceptable]
+	# This calls, indirectly, on method 'acceptable' of p's
+	# validation type.
+    }]} {
+	debug.cmdr/validate/common {fail accept: $::errorInfo}
+
+	append msg " Please use a different value."
+    } else {
+	debug.cmdr/validate/common {accept: $acceptable}
+
+	append msg " " $acceptable
+    }
     return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
 }
 
@@ -98,6 +113,42 @@ proc ::cmdr::validate::common::lead-in {type} {
 	set lead {A }
     }
     return $lead$type
+}
+
+proc ::cmdr::validate::common::one-path {label filter} {
+    set matches [complete-glob $filter *]
+    if {![llength $matches]} {
+	return "No ${label} found here."
+    }
+    return "Expected one of\n[one-of $matches yes]"
+}
+
+proc ::cmdr::validate::common::one-of {enum {multi no}} {
+    if {$multi} {
+	set n [string length [expr {1+[llength $enum]}]]
+	set m {}
+	set i 0
+	foreach w $enum { incr i ; append m "[format %${n}d $i]. $w\n" }
+    } elseif {[llength $enum] < 2} {
+	set m "\"[lindex $enum 0]\""
+    } else {
+	set m {}
+	foreach w [lrange $enum 0 end-1] {
+	    append m "\"$w\", "
+	}
+	append m "or \"[lindex $enum end]\""
+    }
+    return $m
+}
+
+proc ::cmdr::validate::common::expected {enum} {
+    if {![llength $enum]} {
+	return "Nothing acceptable found"
+    }
+    set multi [expr {[llength $enum] <= 20}]
+    set sep [expr {$multi ? "\n" : ": "}]
+    set sfx [expr {$multi ? "" : "."}]
+    return "Expected one of$sep[one-of $enum $multi]$sfx"
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -192,5 +243,5 @@ proc ::cmdr::validate::common::ok-directory {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::common 1.2
+package provide cmdr::validate::common 1.3
 return
