@@ -75,7 +75,7 @@ proc ::cmdr::validate::boolean::validate {p x} {
 	# Double inverse keeps value, and makes it canonical.
 	return [expr {!!$x}]
     }
-    fail $p BOOLEAN "a boolean" $x
+    fail $p BOOLEAN "a boolean (yes, no, false, true, on, off, 0, or 1)" $x
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -155,7 +155,7 @@ proc ::cmdr::validate::percent::validate {p x} {
     if {[string is double -strict $x] &&
 	($x >= 0) &&
 	($x <= 100)} { return $x }
-    fail $p PERCENT "a percentage" $x
+    fail $p PERCENT "a percentage (\[0...100\])" $x
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -539,5 +539,5 @@ proc ::cmdr::validate::rwchan::Ok {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate 1.3.1
+package provide cmdr::validate 1.3.2
 return
