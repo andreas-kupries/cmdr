@@ -7,8 +7,8 @@
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
-# Meta summary     Standard parameter validation type for times
-# Meta description Standard parameter validation type for times
+# Meta summary     Standard parameter validation type for times (down to seconds)
+# Meta description Standard parameter validation type for times (down to seconds)
 # Meta subject {command line}
 # Meta require {Tcl 8.5-}
 # Meta require {cmdr::validate::common 1.2}
