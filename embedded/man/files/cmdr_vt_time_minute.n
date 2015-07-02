@@ -1,9 +1,9 @@
 '\"
-'\" Generated from file 'cmdr_vt_time\&.man' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_vt_time_minute\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013-2015 Andreas Kupries
 '\" Copyright (c) 2013-2015 Documentation, Andreas Kupries
 '\"
-.TH "cmdr::validate::time" n 1 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::validate::time::minute" n 1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,7 +273,7 @@ Database Class:	\\fB\\$3\\fR
 ..
 .BS
 .SH NAME
-cmdr::validate::time \- Cmdr - Validation type for times (to the second)
+cmdr::validate::time::minute \- Cmdr - Validation type for times to the minute
 .SH SYNOPSIS
 package require \fBtry \fR
 .sp
@@ -294,22 +294,23 @@ For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 .PP
 This package provides the validation type
-\fB::cmdr::validate::time\fR which accepts timestamps in ISO 8601
-syntax\&.
+\fB::cmdr::validate::time::minute\fR which accepts timestamps with
+minute precision in ISO 8601 syntax (limited to without seconds), or
+as integer offset in minutes from midnight (modulo 24 hours)\&.
 .PP
-The internal representation is the epoch for the validated
-input\&.
+The internal representation is the offset in minutes from
+midnight for the validated input\&.
 .PP
 The type has no input completion\&.
 .PP
 The details of the exported standard API can be found in
-\fICmdr - Writing custom validation types\fR\&. The chosen default is "now"\&.
+\fICmdr - Writing custom validation types\fR\&. The chosen default is "now" to the minute\&.
 .PP
 A single non-standard method is provided:
 .TP
 \fB::cmdr::validate::time\fR \fB2external\fR \fIepoch\fR
-This method converts the epoch of a time to the form %H:%M:%S and
-returns the conversion result as its own\&.
+This method converts the offset in minutes from midnight of a time to
+the form %H:%M and returns the conversion result as its own\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
