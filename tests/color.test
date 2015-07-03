@@ -181,6 +181,26 @@ test cmdr-color-2.3 {color, formatting, multi-code, no text} -setup {
     unset save
 } -result "\033\[1m\033\[31m"
 
+test cmdr-color-2.4 {color, formatting, single code, empty string} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color red {}
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result ""
+
+test cmdr-color-2.5 {color, formatting, multi-code, empty string} -setup {
+    set save [cmdr color active]
+    cmdr color activate 1
+} -body {
+    cmdr color {bold red} {}
+} -cleanup {
+    cmdr color activate $save
+    unset save
+} -result ""
+
 # # ## ### ##### ######## ############# #####################
 ## Go through the API commands.
 ## active, activate, names, get, get-def, define, exists
