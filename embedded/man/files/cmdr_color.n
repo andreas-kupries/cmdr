@@ -3,7 +3,7 @@
 '\" Copyright (c) 2013-2015 Andreas Kupries
 '\" Copyright (c) 2013-2015 Documentation, Andreas Kupries
 '\"
-.TH "cmdr::color" n 1 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::color" n 1\&.0\&.2 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -295,7 +295,7 @@ package require \fBcmdr::color \fR
 .sp
 \fB::cmdr::color\fR \fBunset\fR \fIname\fR
 .sp
-\fB::cmdr::color\fR \fB\&.\&.\&.\fR \fItext\fR
+\fB::cmdr::color\fR \fB\&.\&.\&.\fR ?\fItext\fR?
 .sp
 .BE
 .SH DESCRIPTION
@@ -379,11 +379,19 @@ When invoked this command deletes the symbolic color \fIname\fR\&.
 An error is thrown if \fIname\fR is not a known symbol\&.
 The command returns the empty string as its result\&.
 .TP
-\fB::cmdr::color\fR \fB\&.\&.\&.\fR \fItext\fR
-When \fB::cmdr::color\fR is invoked with an unknown method name
-then this name is expected to be and treated as a list of known
-symbolic color names\&. These colors are applied to the \fItext\fR
-and the modified text is returned as the result of the command\&.
+\fB::cmdr::color\fR \fB\&.\&.\&.\fR ?\fItext\fR?
+When \fB::cmdr::color\fR is invoked with an unknown method name then
+this name is expected to be and treated as a list of known symbolic
+color names\&. These colors are applied to the \fItext\fR, with a return
+to base after, and the modified text is returned as the result of the
+command\&.
+.sp
+Note however, if the \fItext\fR is the empty string, then that
+string is returned, as the colorization would a \fBno-op\fR,
+i\&.e\&. superfluous\&.
+.sp
+If the \fItext\fR is not specified at all then the method
+returns just the application of the colors (without return to base)\&.
 .sp
 An error is thrown if any of the specified color symbols
 are not known\&.

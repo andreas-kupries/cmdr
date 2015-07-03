@@ -1,6 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
 [include parts/definitions.inc]
-[vset VERSION 1]
+[vset VERSION 1.0.2]
 [manpage_begin [vset LABEL_COLOR] [vset MAN_SECTION] [vset VERSION]]
 [include parts/module.inc]
 [require cmdr::tty]
@@ -105,12 +105,20 @@ An error is thrown if [arg name] is not a known symbol.
 The command returns the empty string as its result.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd ::cmdr::color] [method ...] [arg text]]
+[call [cmd ::cmdr::color] [method ...] [opt [arg text]]]
 
-When [cmd ::cmdr::color] is invoked with an unknown method name
-then this name is expected to be and treated as a list of known
-symbolic color names. These colors are applied to the [arg text]
-and the modified text is returned as the result of the command.
+When [cmd ::cmdr::color] is invoked with an unknown method name then
+this name is expected to be and treated as a list of known symbolic
+color names. These colors are applied to the [arg text], with a return
+to base after, and the modified text is returned as the result of the
+command.
+
+[para] Note however, if the [arg text] is the empty string, then that
+string is returned, as the colorization would a [const no-op],
+i.e. superfluous.
+
+[para] If the [arg text] is not specified at all then the method
+returns just the application of the colors (without return to base).
 
 [para] An error is thrown if any of the specified color symbols
 are not known.
