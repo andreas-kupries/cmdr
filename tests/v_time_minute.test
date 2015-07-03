@@ -1,0 +1,89 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: posint (integer > 0)).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::time::minute
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::time::minute
+set vtdef [expr {([clock seconds] / 60) % 1440}] ;# (**)
+kt source vtype.tcl
+
+# (Ad **) Possible race condition here if the tests cross a minute
+# boundary (59 -> 00). Then a bogus failure may appear in the standard
+# API tests.
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected a time to the minute for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
+    $vtype validate P {}
+} -returnCodes error -result {Expected a time to the minute for T "P", got ""}
+
+test vt-${vtype}-validate-2.2 "$vtype validate, fail, negative" -body {
+    $vtype validate P -2
+} -returnCodes error -result {Expected a time to the minute for T "P", got "-2"}
+
+test vt-${vtype}-validate-2.3 "$vtype validate, fail, negative" -body {
+    $vtype validate P -1
+} -returnCodes error -result {Expected a time to the minute for T "P", got "-1"}
+
+test vt-${vtype}-validate-2.4 "$vtype validate, fail, " -body {
+    $vtype validate P -1:-3
+} -returnCodes error -result {Expected a time to the minute for T "P", got "-1:-3"}
+
+test vt-${vtype}-validate-2.5 "$vtype validate, fail, " -body {
+    $vtype validate P -1:23
+} -returnCodes error -result {Expected a time to the minute for T "P", got "-1:23"}
+
+# # ## ### ##### ######## ############# #####################
+## Valid inputs, minute offset and hour:minute data
+
+foreach {n expected input external} {
+     0    0     0 00:00
+     1    0 00:00 00:00
+     2  180   180 03:00
+     3  180 03:00 03:00
+     4  251   251 04:11
+     5  251 04:11 04:11
+     6    0  1440 00:00
+     7    1  1441 00:01
+     8 1234  1234 20:34
+     9 1234 20:34 20:34
+    10  564 33:24 09:24
+} {
+    test vt-${vtype}-validate-3.$n "$vtype validate, ok $input" -body {
+	$vtype validate P $input
+    } -result $expected
+
+    # # ## ### ##### ######## ############# #####################
+
+    test vt-${vtype}-2external-4.$n "$vtype 2external $expected" -body {
+	$vtype 2external $expected
+    } -result $external
+}
+
+test vt-${vtype}-validate-5.0 "$vtype validate, ok, octal" -body {
+    $vtype validate P 010
+} -result 8
+
+test vt-${vtype}-validate-5.1 "$vtype validate, ok, hex" -body {
+    $vtype validate P 0xff
+} -result 255
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
