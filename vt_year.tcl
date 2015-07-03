@@ -51,7 +51,7 @@ debug level  cmdr/validate/year
 debug prefix cmdr/validate/year {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
-## Years as parsed by clock::iso86
+## Years as parsed by clock::iso8601
 
 proc ::cmdr::validate::year::release  {p x} { return }
 proc ::cmdr::validate::year::default  {p}  {
