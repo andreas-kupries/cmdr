@@ -9,88 +9,83 @@ kt require support debug
 kt require support debug::caller
 
 kt local   support cmdr::validate::common
-kt local   testing cmdr::validate::year
+kt local   testing cmdr::validate::weekday
 
 # # ## ### ##### ######## ############# #####################
 ## Basic API.
 
-set vtype cmdr::validate::year
-set vtdef [clock format [clock seconds] -format %Y] ;# current year. [**]
+set vtype cmdr::validate::weekday
+set vtdef [clock format [clock seconds] -format %u] ;# current weekday. [**]
 kt source vtype.tcl
 
 # (Ad **): Race condition possible in the tests, here. If the tests
-# are run across a tear border (Dec 31 into Jan 1 Midnight) bogus
-# failure will appear in the standard API tests.
+# are run across a day border (23:59 -> 00:00) bogus failure will
+# appear in the standard API tests.
 
 # # ## ### ##### ######## ############# #####################
 ## Specific behaviour - validation
 
-## Print table of short years, to determine where the border
-## current/previous lies.
-# for {set i 0} {$i <99} {incr i} { puts  "SHORT $i == [$vtype validate P $i]" }
-# Border 37/38
+## Inputs: 0-sun,1...6,7-sun
+## long an short names.
 
 test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
     $vtype validate P bogus
-} -returnCodes error -result {Expected a year for T "P", got "bogus"}
+} -returnCodes error -result {Expected a weekday for T "P", got "bogus"}
 
 test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
     $vtype validate P {}
-} -returnCodes error -result {Expected a year for T "P", got ""}
+} -returnCodes error -result {Expected a weekday for T "P", got ""}
 
 test vt-${vtype}-validate-2.2 "$vtype validate, fail, octal" -body {
     $vtype validate P 010
-} -returnCodes error -result {Expected a year for T "P", got "010"}
+} -returnCodes error -result {Expected a weekday for T "P", got "010"}
 
 test vt-${vtype}-validate-2.3 "$vtype validate, fail, hex" -body {
     $vtype validate P 0xff
-} -returnCodes error -result {Expected a year for T "P", got "0xff"}
+} -returnCodes error -result {Expected a weekday for T "P", got "0xff"}
 
 test vt-${vtype}-validate-2.4 "$vtype validate, fail, negative" -body {
     $vtype validate P -2
-} -returnCodes error -result {Expected a year for T "P", got "-2"}
+} -returnCodes error -result {Expected a weekday for T "P", got "-2"}
 
 test vt-${vtype}-validate-2.5 "$vtype validate, fail, negative" -body {
     $vtype validate P -1
-} -returnCodes error -result {Expected a year for T "P", got "-1"}
+} -returnCodes error -result {Expected a weekday for T "P", got "-1"}
 
-test vt-${vtype}-validate-2.6 "$vtype validate, fail, neither short nor long year" -body {
-    $vtype validate P 333
-} -returnCodes error -result {Expected a year for T "P", got "333"}
-
-test vt-${vtype}-validate-2.7 "$vtype validate, fail, neither short nor long year" -body {
-    $vtype validate P 33333
-} -returnCodes error -result {Expected a year for T "P", got "33333"}
+test vt-${vtype}-validate-2.6 "$vtype validate, fail, too large" -body {
+    $vtype validate P 8
+} -returnCodes error -result {Expected a weekday for T "P", got "8"}
 
 # # ## ### ##### ######## ############# #####################
 
-test vt-${vtype}-validate-2.8 "$vtype validate, ok, zero, short year, current century" -body {
-    $vtype validate P 0
-} -result 2000
+foreach {wdaye wdayi shortname longname} {
+    0 7 sun sunday
+    1 1 mon monday
+    2 2 tue tuesday
+    3 3 wed wednesday
+    4 4 thu thursday
+    5 5 fri friday
+    6 6 sat saturday
+    7 7 sun sunday
+} {
+    test vt-${vtype}-validate-3.$wdaye "$vtype validate, ok, weekday number" -body {
+	$vtype validate P $wdaye
+    } -result $wdayi
 
-test vt-${vtype}-validate-2.9 "$vtype validate, ok, positive, short year, current century" -body {
-    $vtype validate P 1
-} -result 2001
+    test vt-${vtype}-validate-4.$wdaye "$vtype validate, ok, short weekday name" -body {
+	$vtype validate P $shortname
+    } -result $wdayi
 
-test vt-${vtype}-validate-2.10 "$vtype validate, ok, positive, short year, current century" -body {
-    $vtype validate P 33
-} -result 2033
+    test vt-${vtype}-validate-5.$wdaye "$vtype validate, ok, long weekday name" -body {
+	$vtype validate P $longname
+    } -result $wdayi
 
-test vt-${vtype}-validate-2.11 "$vtype validate, ok, positive, short year, previous century" -body {
-    $vtype validate P 37
-} -result 2037
+    # # ## ### ##### ######## ############# #####################
 
-test vt-${vtype}-validate-2.12 "$vtype validate, ok, positive, short year, previous century" -body {
-    $vtype validate P 38
-} -result 1938
-
-test vt-${vtype}-validate-2.13 "$vtype validate, ok, positive, short year, previous century" -body {
-    $vtype validate P 99
-} -result 1999
-
-test vt-${vtype}-validate-2.14 "$vtype validate, ok, positive, long year" -body {
-    $vtype validate P 1923
-} -result 1923
+    test vt-${vtype}-2external-6.$wdaye "$vtype 2external, ok, long weekday name" -body {
+	$vtype 2external $wdayi
+    } -result [string totitle $longname]
+}
 
 # # ## ### ##### ######## ############# #####################
 cleanupTests
