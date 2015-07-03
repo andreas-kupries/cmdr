@@ -23,7 +23,7 @@ kt source vtype.tcl
 
 test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
     $vtype validate P bogus
-} -returnCodes error -result {Expected a boolean for T "P", got "bogus"}
+} -returnCodes error -result {Expected a boolean (yes, no, false, true, on, off, 0, or 1) for T "P", got "bogus"}
 
 test vt-${vtype}-validate-2.1 "$vtype validate, ok, true" -body {
     $vtype validate P yes
