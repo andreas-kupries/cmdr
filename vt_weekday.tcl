@@ -78,6 +78,8 @@ proc ::cmdr::validate::weekday::validate {p x} {
     foreach pattern {%A %a %u %w} {
 	try {
 	    set epoch [clock scan $xa -format $pattern]
+	} trap {CLOCK badDayOfWeek} {e o} {
+	    continue
 	} trap {CLOCK badInputString} {e o} {
 	    continue
 	} on ok {e o} {
