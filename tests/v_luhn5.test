@@ -1,0 +1,61 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::luhn5).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::luhn5
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::luhn5
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {luhn5 validation failure, bad char} -body {
+    $vtype validate P A
+} -returnCodes error \
+    -result {Not a LUHN5 number, expected only digits}
+
+foreach {n in} {
+    1  49999999
+    2  37
+    3  49927398717 
+    4  1234567812345678
+} {
+    test vt-${vtype}-validate-2.1.$n {luhn5 validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a LUHN5 number, the check digit is incorrect}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check0 check5} {
+    1          4999999 8 3
+    2                3 4 9
+    3               35 6 1
+    4       4992739871 6 1
+    5  123456781234567 0 5
+} {
+    test vt-${vtype}-validate-4.$n.10 {luhn5 validation 0 % 10} -body {
+	$vtype validate P $in$check0
+    } -result $in$check0
+
+    test vt-${vtype}-validate-4.$n.5 {luhn5 validation 5 % 10} -body {
+	$vtype validate P $in$check5
+    } -result $in$check5
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

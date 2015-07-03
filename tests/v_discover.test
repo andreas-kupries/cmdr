@@ -1,0 +1,76 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::ean13).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::creditcard::discover
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::creditcard::discover
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {creditcard discover validation failure, bad char} -body {
+    $vtype validate P 65A3456274910463
+} -returnCodes error \
+    -result {Not a CREDITCARD DISCOVER number, expected only digits}
+
+foreach {n in} {
+    1  03064061545
+    2  97803064
+} {
+    test vt-${vtype}-validate-2.1.$n {creditcard discover validation failure, bad length} -body {
+    $vtype validate P $in
+    } -returnCodes error \
+        -result {Not a CREDITCARD DISCOVER number, incorrect length, expected 16 characters}
+}
+
+foreach {n in} {
+    1  6011234567890124
+    2  6543210987654325
+    3  6011273987175596
+    4  6512345678123457
+} {
+    test vt-${vtype}-validate-2.2.$n {creditcard discover validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD DISCOVER number, the check digit is incorrect}
+}
+
+foreach {n in} {
+    1  9772890458925574
+    2  8285298475847568
+} {
+    test vt-${vtype}-validate-2.3.$n {creditcard discover validation failure, bad prefix} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD DISCOVER number, incorrect prefix, expected one of 6011, or 65}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1  650123456789012 0
+    2  601198765432100 1
+    3  659927398717534 3
+    4  601134567812348 3
+} {
+    test vt-${vtype}-validate-4.$n {creditcard discover validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

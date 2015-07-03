@@ -1,0 +1,4 @@
+[comment {--- doctools --- manpage, uses template}]
+[vset VERSION 1]
+[vset VALTYPE usnpi]
+[include parts/valtype.inc]

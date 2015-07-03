@@ -1,0 +1,61 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::usnpi).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::usnpi
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::usnpi
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {usnpi validation failure, bad char} -body {
+    $vtype validate P A000000000
+} -returnCodes error \
+    -result {Not an US-NPI number, expected only digits}
+
+test vt-${vtype}-validate-2.1 {usnpi validation failure, bad char} -body {
+    $vtype validate P 32
+} -returnCodes error \
+    -result {Not an US-NPI number, incorrect length, expected 10 characters}
+
+foreach {n in} {
+    1  4999999932
+    2  3747589238
+    3  4992739871
+    4  0123456789
+} {
+    test vt-${vtype}-validate-2.2.$n {usnpi validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not an US-NPI number, the check digit is incorrect}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1  499999993 4
+    2  374758923 7
+    3  499273987 3
+    4  012345678 3
+} {
+    test vt-${vtype}-validate-4.$n {usnpi validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

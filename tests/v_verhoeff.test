@@ -1,0 +1,57 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::verhoeff).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::verhoeff
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::verhoeff
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {verhoeff validation failure, bad char} -body {
+    $vtype validate P A
+} -returnCodes error \
+    -result {Not a VERHOEFF number, expected only digits}
+
+foreach {n in} {
+    1  49999999
+    2  37
+    3  49927398717 
+    4  1234567812345678
+} {
+    test vt-${vtype}-validate-2.1 {verhoeff validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a VERHOEFF number, the check digit is incorrect}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1          4999999 6
+    2                3 6
+    3               35 5
+    4       4992739871 3
+    5  123456781234567 5
+} {
+    test vt-${vtype}-validate-4.$n {verhoeff validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

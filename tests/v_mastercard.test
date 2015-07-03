@@ -1,0 +1,76 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::ean13).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::creditcard::mastercard
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::creditcard::mastercard
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {creditcard mastercard validation failure, bad char} -body {
+    $vtype validate P 54A3456274910467
+} -returnCodes error \
+    -result {Not a CREDITCARD MASTERCARD number, expected only digits}
+
+foreach {n in} {
+    1  03064061545
+    2  97803064
+} {
+    test vt-${vtype}-validate-2.1.$n {creditcard mastercard validation failure, bad length} -body {
+    $vtype validate P $in
+    } -returnCodes error \
+        -result {Not a CREDITCARD MASTERCARD number, incorrect length, expected 16 characters}
+}
+
+foreach {n in} {
+    1  5340123456789012
+    2  5344321098765432
+    3  5379927398717557
+    4  5371234567812345
+} {
+    test vt-${vtype}-validate-2.2.$n {creditcard mastercard validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD MASTERCARD number, the check digit is incorrect}
+}
+
+foreach {n in} {
+    1  9772890458925573
+    2  8285298475847569
+} {
+    test vt-${vtype}-validate-2.3.$n {creditcard mastercard validation failure, bad prefix} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD MASTERCARD number, incorrect prefix, expected 5}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1  534012345678901 3
+    2  534109876543210 0
+    3  537992739871753 4
+    4  537123456781234 7
+} {
+    test vt-${vtype}-validate-4.$n {creditcard mastercard validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
