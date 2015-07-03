@@ -1,0 +1,62 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: posint (integer > 0)).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::posint
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::posint
+set vtdef 1
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected a positive integer for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
+    $vtype validate P {}
+} -returnCodes error -result {Expected a positive integer for T "P", got ""}
+
+test vt-${vtype}-validate-2.2 "$vtype validate, fail, negative" -body {
+    $vtype validate P -2
+} -returnCodes error -result {Expected a positive integer for T "P", got "-2"}
+
+test vt-${vtype}-validate-2.3 "$vtype validate, fail, negative" -body {
+    $vtype validate P -1
+} -returnCodes error -result {Expected a positive integer for T "P", got "-1"}
+
+test vt-${vtype}-validate-2.4 "$vtype validate, fail, zero" -body {
+    $vtype validate P 0
+} -returnCodes error -result {Expected a positive integer for T "P", got "0"}
+
+test vt-${vtype}-validate-2.5 "$vtype validate, ok, positive" -body {
+    $vtype validate P 1
+} -result 1
+
+test vt-${vtype}-validate-2.6 "$vtype validate, ok, decimal" -body {
+    $vtype validate P 33
+} -result 33
+
+test vt-${vtype}-validate-2.7 "$vtype validate, ok, octal" -body {
+    $vtype validate P 010
+} -result 8
+
+test vt-${vtype}-validate-2.8 "$vtype validate, ok, hex" -body {
+    $vtype validate P 0xff
+} -result 255
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
