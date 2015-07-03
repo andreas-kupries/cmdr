@@ -62,7 +62,8 @@ debug prefix cmdr/validate/time/minute {[debug caller] | }
 
 proc ::cmdr::validate::time::minute::2external {x}  {
     debug.cmdr/validate/time/minute {}
-    return [clock format $x -format {%H:%M}]
+    # x in [0..1440) => [0..86400) seconds.
+    return [clock format [expr {$x * 60 + [DayBase]}] -format {%H:%M}]
 }
 
 proc ::cmdr::validate::time::minute::release  {p x} { return }
@@ -84,12 +85,16 @@ proc ::cmdr::validate::time::minute::validate {p x} {
 	    set minoffset [expr {$x % 1440}]
 	} else {
 	    # TODO: error code in clock::iso8601.
-	    set minoffset [expr {([clock::iso8601 parse_time ${x}:00] / 60) % 1440}]
+	    set minoffset [expr {(([clock::iso8601 parse_time ${x}:00] - [DayBase]) / 60) % 1440}]
 	}
     } on error {e o} {
 	fail $p TIME "a time to the minute" $x
-    } 
+    }
     return $minoffset
+}
+
+proc ::cmdr::validate::time::minute::DayBase {}  {
+    clock::iso8601 parse_time 00:00:00
 }
 
 # # ## ### ##### ######## ############# #####################
