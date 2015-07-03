@@ -105,7 +105,7 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr::color(n) 1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr::color(n) 1.0.2 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
 <p>cmdr::color - Cmdr - Terminal colors</p>
 </div>
@@ -136,7 +136,7 @@
 <li><a href="#6"><b class="cmd">::cmdr::color</b> <b class="method">define</b> <i class="arg">name</i> <i class="arg">spec</i></a></li>
 <li><a href="#7"><b class="cmd">::cmdr::color</b> <b class="method">exists</b> <i class="arg">name</i></a></li>
 <li><a href="#8"><b class="cmd">::cmdr::color</b> <b class="method">unset</b> <i class="arg">name</i></a></li>
-<li><a href="#9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <i class="arg">text</i></a></li>
+<li><a href="#9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <span class="opt">?<i class="arg">text</i>?</span></a></li>
 </ul>
 </div>
 </div>
@@ -203,11 +203,17 @@ is known, returns the boolean value <b class="const">true</b> if so, and
 <dd><p>When invoked this command deletes the symbolic color <i class="arg">name</i>.
 An error is thrown if <i class="arg">name</i> is not a known symbol.
 The command returns the empty string as its result.</p></dd>
-<dt><a name="9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <i class="arg">text</i></a></dt>
-<dd><p>When <b class="cmd">::cmdr::color</b> is invoked with an unknown method name
-then this name is expected to be and treated as a list of known
-symbolic color names. These colors are applied to the <i class="arg">text</i>
-and the modified text is returned as the result of the command.</p>
+<dt><a name="9"><b class="cmd">::cmdr::color</b> <b class="method">...</b> <span class="opt">?<i class="arg">text</i>?</span></a></dt>
+<dd><p>When <b class="cmd">::cmdr::color</b> is invoked with an unknown method name then
+this name is expected to be and treated as a list of known symbolic
+color names. These colors are applied to the <i class="arg">text</i>, with a return
+to base after, and the modified text is returned as the result of the
+command.</p>
+<p>Note however, if the <i class="arg">text</i> is the empty string, then that
+string is returned, as the colorization would a <b class="const">no-op</b>,
+i.e. superfluous.</p>
+<p>If the <i class="arg">text</i> is not specified at all then the method
+returns just the application of the colors (without return to base).</p>
 <p>An error is thrown if any of the specified color symbols
 are not known.</p></dd>
 </dl>
