@@ -215,6 +215,14 @@ proc ::cmdr::color::Unknown {cmd codes {text {}}} {
 proc ::cmdr::color::Apply {codes {text {}}} {
     debug.cmdr/color {}
 
+    # Empty string, user-specified (IOW not the default value).
+    # Return as is, color superfluous (no-op: set, then reset, with
+    # nothing in between)
+    if {($text eq {}) &&
+	([llength [info level 0]] == 3)} {
+	return $text
+    }
+
     # Check codes first. Even if not active! IOW do not stop catching
     # the use of bad/unknown codes just because we switched off the
     # colorization.
@@ -237,6 +245,9 @@ proc ::cmdr::color::Apply {codes {text {}}} {
     foreach c $codes {
 	append r [dict get $char $c]
     }
+    # Empty string here can only be default value => Were called only
+    # with code, no text => No reset, we wanted just the low-level
+    # string for the color code.
     if {$text ne {}} {
 	append r $text
 	append r [dict get $char reset]
@@ -354,4 +365,4 @@ apply {{} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::color 1.0.1
+package provide cmdr::color 1.0.2
