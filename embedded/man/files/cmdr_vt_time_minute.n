@@ -283,7 +283,7 @@ package require \fBcmdr::validate::common \fR
 .sp
 package require \fBcmdr::validate::time \fR
 .sp
-\fB::cmdr::validate::time\fR \fB2external\fR \fIepoch\fR
+\fB::cmdr::validate::time\fR \fB2external\fR \fIoffset\fR
 .sp
 .BE
 .SH DESCRIPTION
@@ -308,7 +308,7 @@ The details of the exported standard API can be found in
 .PP
 A single non-standard method is provided:
 .TP
-\fB::cmdr::validate::time\fR \fB2external\fR \fIepoch\fR
+\fB::cmdr::validate::time\fR \fB2external\fR \fIoffset\fR
 This method converts the offset in minutes from midnight of a time to
 the form %H:%M and returns the conversion result as its own\&.
 .PP

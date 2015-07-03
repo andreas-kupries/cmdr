@@ -28,7 +28,7 @@ midnight for the validated input.
 
 [list_begin definitions][comment {-- begin api definitions --}]
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
-[call [cmd ::cmdr::validate::time] [method 2external] [arg epoch]]
+[call [cmd ::cmdr::validate::time] [method 2external] [arg offset]]
 
 This method converts the offset in minutes from midnight of a time to
 the form %H:%M and returns the conversion result as its own.
