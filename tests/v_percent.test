@@ -23,19 +23,19 @@ kt source vtype.tcl
 
 test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
     $vtype validate P bogus
-} -returnCodes error -result {Expected a percentage for T "P", got "bogus"}
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "bogus"}
 
 test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
     $vtype validate P {}
-} -returnCodes error -result {Expected a percentage for T "P", got ""}
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got ""}
 
 test vt-${vtype}-validate-2.2 "$vtype validate, fail range, up" -body {
     $vtype validate P 101
-} -returnCodes error -result {Expected a percentage for T "P", got "101"}
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "101"}
 
 test vt-${vtype}-validate-2.3 "$vtype validate, fail range, low" -body {
     $vtype validate P -0.5
-} -returnCodes error -result {Expected a percentage for T "P", got "-0.5"}
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "-0.5"}
 
 test vt-${vtype}-validate-2.4 "$vtype validate, ok" -body {
     $vtype validate P 33

@@ -39,8 +39,9 @@ namespace eval ::cmdr::validate {
 namespace eval ::cmdr::validate::common {
     namespace export \
 	complete-enum complete-glob complete-substr \
-	ok-directory lead-in fail fail-unknown-thing \
-	fail-known-thing
+	ok-directory strip-lead-in lead-in fail \
+	fail-unknown-thing fail-unknown-thing-msg fail-unknown-simple fail-unknown-simple-msg \
+	fail-known-thing   fail-known-thing-msg   fail-known-simple   fail-known-simple-msg
     namespace ensemble create
 }
 
@@ -74,6 +75,41 @@ proc ::cmdr::validate::common::fail-unknown-thing {p code type x {context {}}} {
     return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
 }
 
+proc ::cmdr::validate::common::fail-unknown-thing-msg {usermsg p code type x {context {}}} {
+    # Specific failure for a named thing: Expected existence, found it missing.
+    # Takes a custom message to place into the error.
+    debug.cmdr/validate/common {}
+
+    append msg "Found a problem with [$p type] \"[$p the-name]\":"
+    append msg " [lead-in $type] \"$x\" does not exist$context."
+    append msg " " $usermsg "."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-unknown-simple {p code type x {context {}}} {
+    # Specific failure for a named thing: Expected existence, found it missing.
+    # Simplified intro, leaving out the parameter information (input|option, name)
+    debug.cmdr/validate/common {}
+
+    append msg "[string to-title [strip-lead-in $type]] \"$x\" does not exist$context."
+    append msg " Please use a different value."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-unknown-simple-msg {usermsg p code type x {context {}}} {
+    # Specific failure for a named thing: Expected existence, found it missing.
+    # Takes a custom message to place into the error.
+    # Simplified intro, leaving out the parameter information (input|option, name)
+    debug.cmdr/validate/common {}
+
+    append msg "[string totitle [strip-lead-in $type]] \"$x\" does not exist$context."
+    append msg " " $usermsg "."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
 proc ::cmdr::validate::common::fail-known-thing {p code type x {context {}}} {
     # Specific failure for a named thing: Expected non-existence, found a definition.
     debug.cmdr/validate/common {}
@@ -81,6 +117,39 @@ proc ::cmdr::validate::common::fail-known-thing {p code type x {context {}}} {
     append msg "Found a problem with [$p type] \"[$p the-name]\":"
     append msg " [lead-in $type] named \"$x\" already exists$context."
     append msg " Please use a different name."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-known-thing-msg {usermsg p code type x {context {}}} {
+    # Specific failure for a named thing: Expected non-existence, found a definition.
+    debug.cmdr/validate/common {}
+
+    append msg "Found a problem with [$p type] \"[$p the-name]\":"
+    append msg " [lead-in $type] named \"$x\" already exists$context."
+    append msg " " $usermsg "."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-known-simple {p code type x {context {}}} {
+    # Specific failure for a named thing: Expected non-existence, found a definition.
+    # Simplified intro, leaving out the parameter information (input|option, name)
+    debug.cmdr/validate/common {}
+
+    append msg " [string totitle [strip-lead-in $type]] named \"$x\" already exists$context."
+    append msg " Please use a different name."
+
+    return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
+}
+
+proc ::cmdr::validate::common::fail-known-simple-msg {usermsg p code type x {context {}}} {
+    # Specific failure for a named thing: Expected non-existence, found a definition.
+    # Simplified intro, leaving out the parameter information (input|option, name)
+    debug.cmdr/validate/common {}
+
+    append msg " [string totitle [strip-lead-in $type]] named \"$x\" already exists$context."
+    append msg " " $usermsg "."
 
     return -code error -errorcode [list CMDR VALIDATE {*}$code] $msg
 }
@@ -98,6 +167,16 @@ proc ::cmdr::validate::common::lead-in {type} {
 	set lead {A }
     }
     return $lead$type
+}
+
+proc ::cmdr::validate::common::strip-lead-in {type} {
+    if {[string match {A *} $type]} {
+	return [string range $type 2 end]
+    } elseif {[string match {An *} $type]} {
+	return [string range $type 3 end]
+    } else {
+	return $type
+    }
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -192,5 +271,5 @@ proc ::cmdr::validate::common::ok-directory {path} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::common 1.2
+package provide cmdr::validate::common 1.3
 return

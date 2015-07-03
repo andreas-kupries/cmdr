@@ -374,6 +374,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -490,6 +493,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -608,6 +614,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -724,6 +733,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -842,6 +854,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -958,6 +973,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -1076,6 +1094,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -1192,6 +1213,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -1310,6 +1334,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -1426,6 +1453,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -1544,6 +1574,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -1660,6 +1693,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
@@ -1778,6 +1814,9 @@ cmdr::validate::posint
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
 .TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
+.TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday
 .TP
@@ -1894,6 +1933,9 @@ cmdr::validate::posint
 .TP
 \fBfiles/cmdr_vt_time\&.n\fR
 cmdr::validate::time
+.TP
+\fBfiles/cmdr_vt_time_minute\&.n\fR
+cmdr::validate::time::minute
 .TP
 \fBfiles/cmdr_vt_weekday\&.n\fR
 cmdr::validate::weekday

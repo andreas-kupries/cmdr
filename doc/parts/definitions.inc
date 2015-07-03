@@ -37,7 +37,8 @@
 
 [vset TITLE_VT_YEAR       "[vset PTITLE] - Validation type for years"]
 [vset TITLE_VT_WEEKDAY    "[vset PTITLE] - Validation type for weekday names"]
-[vset TITLE_VT_TIME       "[vset PTITLE] - Validation type for times"]
+[vset TITLE_VT_TIME       "[vset PTITLE] - Validation type for times (to the second)"]
+[vset TITLE_VT_TIME_MIN   "[vset PTITLE] - Validation type for times to the minute"]
 [vset TITLE_VT_POSINT     "[vset PTITLE] - Validation type for positive integers"]
 [vset TITLE_VT_DATE       "[vset PTITLE] - Validation type for dates"]
 
@@ -80,5 +81,6 @@
 [vset LABEL_VT_YEAR       [vset PROJECT]::validate::year]
 [vset LABEL_VT_WEEKDAY    [vset PROJECT]::validate::weekday]
 [vset LABEL_VT_TIME       [vset PROJECT]::validate::time]
+[vset LABEL_VT_TIME_MIN   [vset PROJECT]::validate::time::minute]
 [vset LABEL_VT_POSINT     [vset PROJECT]::validate::posint]
 [vset LABEL_VT_DATE       [vset PROJECT]::validate::date]
