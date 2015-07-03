@@ -1,0 +1,80 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::ean13).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::creditcard::visa
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::creditcard::visa
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {creditcard visa validation failure, bad char} -body {
+    $vtype validate P 4A34562749104
+} -returnCodes error \
+    -result {Not a CREDITCARD VISA number, expected only digits}
+
+foreach {n in} {
+    1  030640615
+    2  978030640615
+} {
+    test vt-${vtype}-validate-2.1.$n {creditcard visa validation failure, bad length} -body {
+    $vtype validate P $in
+    } -returnCodes error \
+        -result {Not a CREDITCARD VISA number, incorrect length, expected one of 13, or 16 characters}
+}
+
+foreach {n in} {
+    1  4012345678901
+    2  4109876543210
+    3  4992739871755
+    4  4123456781234
+    5  4012345678901234
+    6  4432109876543210
+    7  4992739871755987
+    8  4123456781234567
+} {
+    test vt-${vtype}-validate-2.2.$n {creditcard visa validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD VISA number, the check digit is incorrect}
+}
+
+foreach {n in} {
+    1  9772890458925
+    2  8285298475847568
+} {
+    test vt-${vtype}-validate-2.3.$n {creditcard visa validation failure, bad prefix} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not a CREDITCARD VISA number, incorrect prefix, expected 4}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1  401234567890 9
+    2  410987654321 1
+    3  499273987175 8
+    4  412345678123 2
+} {
+    test vt-${vtype}-validate-4.$n {creditcard visa validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

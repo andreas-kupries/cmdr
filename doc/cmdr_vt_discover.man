@@ -1,0 +1,4 @@
+[comment {--- doctools --- manpage, uses template}]
+[vset VERSION 1]
+[vset VALTYPE cc::discover]
+[include parts/valtype.inc]

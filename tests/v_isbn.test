@@ -1,0 +1,73 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::isbn).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::isbn
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::isbn
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {isbn validation failure, bad char} -body {
+    $vtype validate P A
+} -returnCodes error \
+    -result {Not an ISBN number, expected only digits, and possibly 'X' or 'x' as checkdigit}
+
+foreach {n in} {
+    1  030640615
+    2  978030640615
+} {
+    test vt-${vtype}-validate-2.1.$n {isbn validation failure, bad length} -body {
+    $vtype validate P $in
+    } -returnCodes error \
+        -result {Not an ISBN number, incorrect length, expected one of 10, or 13 characters}
+}
+
+foreach {n in} {
+    1  0306406150
+    2  978030640615x
+} {
+    test vt-${vtype}-validate-2.2.$n {isbn validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not an ISBN number, the check digit is incorrect}
+}
+
+foreach {n in} {
+    1  9774444444444
+} {
+    test vt-${vtype}-validate-2.3.$n {isbn validation failure, bad prefix} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not an ISBN number, incorrect prefix, expected one of 978, or 979}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check out} {
+    1  030640615    2 9780306406157
+    2  978030640615 7 9780306406157
+} {
+    test vt-${vtype}-validate-4.$n {isbn validation} -body {
+	$vtype validate P $in$check
+    } -result $out
+}
+
+# -------------------------------------------------------------------------
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

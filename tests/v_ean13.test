@@ -1,0 +1,62 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::ean13).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::gs1::ean13
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::gs1::ean13
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {ean13 validation failure, bad char} -body {
+    $vtype validate P A
+} -returnCodes error \
+    -result {Not an EAN13 number, expected only digits, and possibly 'X' or 'x' as checkdigit}
+
+foreach {n in} {
+    1  978030640615
+} {
+    test vt-${vtype}-validate-2.1.$n {ean13 validation failure, bad length} -body {
+    $vtype validate P $in
+    } -returnCodes error \
+        -result {Not an EAN13 number, incorrect length, expected 13 characters}
+}
+
+foreach {n in} {
+    1  978030640615x
+} {
+    test vt-${vtype}-validate-2.2.$n {ean13 validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not an EAN13 number, the check digit is incorrect}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1  978030640615 7
+    2  005717402011 2
+    3  005717402010 5
+    4  005717420121 4
+} {
+    test vt-${vtype}-validate-4.$n {ean13 validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

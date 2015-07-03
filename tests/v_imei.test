@@ -1,0 +1,63 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: valtype::imei).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate::valtype::imei
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::valtype::imei
+set vtdef {}
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+test vt-${vtype}-validate-2.0 {imei validation failure, bad char} -body {
+    $vtype validate P ABCDEFGHIJKLMNO
+} -returnCodes error \
+    -result {Not an IMEI number, expected only digits}
+
+test vt-${vtype}-validate-2.1 {imei validation failure, bad length} -body {
+    $vtype validate P 32
+} -returnCodes error \
+    -result {Not an IMEI number, incorrect length, expected 15 characters}
+
+foreach {n in} {
+    1  000000000000001
+    2  100000000000000
+    3  000000000000010
+    4  012345678901230
+    5  321098765432100
+} {
+    test vt-${vtype}-validate-3.1 {imei validation failure, bad check} -body {
+	$vtype validate P $in
+    } -returnCodes error \
+	-result {Not an IMEI number, the check digit is incorrect}
+}
+
+# -------------------------------------------------------------------------
+
+foreach {n in check} {
+    1 00000000000000  0
+    2 10000000000000  9
+    3 00000000000001  8
+    4 01234567890123  7
+    5 32109876543210  5
+} {
+    test vt-${vtype}-validate-4.$n {imei validation} -body {
+	$vtype validate P $in$check
+    } -result $in$check
+}
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return
