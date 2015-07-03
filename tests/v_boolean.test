@@ -1,0 +1,41 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: boolean).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::boolean
+set vtdef no
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected a boolean (yes, no, false, true, on, off, 0, or 1) for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, ok, true" -body {
+    $vtype validate P yes
+} -result 1
+
+test vt-${vtype}-validate-2.2 "$vtype validate, ok, false" -body {
+    $vtype validate P no
+} -result 0
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - completion
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

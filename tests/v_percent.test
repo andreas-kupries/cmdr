@@ -1,0 +1,53 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::validate package (sub: percent).
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support debug
+kt require support debug::caller
+
+kt local   support cmdr::validate::common
+kt local   testing cmdr::validate
+
+# # ## ### ##### ######## ############# #####################
+## Basic API.
+
+set vtype cmdr::validate::percent
+set vtdef 0
+kt source vtype.tcl
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour - validation
+
+test vt-${vtype}-validate-2.0 "$vtype validate, fail" -body {
+    $vtype validate P bogus
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "bogus"}
+
+test vt-${vtype}-validate-2.1 "$vtype validate, fail, strict" -body {
+    $vtype validate P {}
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got ""}
+
+test vt-${vtype}-validate-2.2 "$vtype validate, fail range, up" -body {
+    $vtype validate P 101
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "101"}
+
+test vt-${vtype}-validate-2.3 "$vtype validate, fail range, low" -body {
+    $vtype validate P -0.5
+} -returnCodes error -result {Expected a percentage ([0...100]) for T "P", got "-0.5"}
+
+test vt-${vtype}-validate-2.4 "$vtype validate, ok" -body {
+    $vtype validate P 33
+} -result 33
+
+test vt-${vtype}-validate-2.5 "$vtype validate, ok, fractional" -body {
+    $vtype validate P 50.3
+} -result 50.3
+
+# # ## ### ##### ######## ############# #####################
+## Specific behaviour
+
+# # ## ### ##### ######## ############# #####################
+cleanupTests
+return

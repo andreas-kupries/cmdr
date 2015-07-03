@@ -1,6 +1,6 @@
 
 <html><head>
-<title>cmdr::validate::time - Cmdr, a framework for command line parsing and dispatch</title>
+<title>cmdr::validate::time::minute - Cmdr, a framework for command line parsing and dispatch</title>
 <style type="text/css"><!--
     HTML {
 	background: 	#FFFFFF;
@@ -92,11 +92,11 @@
     }
 --></style>
 </head>
-<! -- Generated from file 'cmdr_vt_time.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'cmdr_vt_time_minute.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2013-2015 Andreas Kupries   -- Copyright &copy; 2013-2015 Documentation, Andreas Kupries
    -->
-<! -- CVS: $Id$ cmdr::validate::time.n
+<! -- CVS: $Id$ cmdr::validate::time::minute.n
    -->
 <body><div class="doctools">
 <hr> [
@@ -105,9 +105,9 @@
 | <a href="../toc.html">Table Of Contents</a>
 | <a href="../../index.html">Keyword Index</a>
  ] <hr>
-<h1 class="title">cmdr::validate::time(n) 1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<h1 class="title">cmdr::validate::time::minute(n) 1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
 <div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>cmdr::validate::time - Cmdr - Validation type for times (to the second)</p>
+<p>cmdr::validate::time::minute - Cmdr - Validation type for times to the minute</p>
 </div>
 <div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
 <ul class="toc">
@@ -136,18 +136,19 @@
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
 <p>This package provides the validation type
-<b class="cmd">::cmdr::validate::time</b> which accepts timestamps in ISO 8601
-syntax.</p>
-<p>The internal representation is the epoch for the validated
-input.</p>
+<b class="cmd">::cmdr::validate::time::minute</b> which accepts timestamps with
+minute precision in ISO 8601 syntax (limited to without seconds), or
+as integer offset in minutes from midnight (modulo 24 hours).</p>
+<p>The internal representation is the offset in minutes from
+midnight for the validated input.</p>
 <p>The type has no input completion.</p>
 <p>The details of the exported standard API can be found in
-<i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>. The chosen default is &quot;now&quot;.</p>
+<i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>. The chosen default is &quot;now&quot; to the minute.</p>
 <p>A single non-standard method is provided:</p>
 <dl class="definitions">
 <dt><a name="1"><b class="cmd">::cmdr::validate::time</b> <b class="method">2external</b> <i class="arg">epoch</i></a></dt>
-<dd><p>This method converts the epoch of a time to the form %H:%M:%S and
-returns the conversion result as its own.</p></dd>
+<dd><p>This method converts the offset in minutes from midnight of a time to
+the form %H:%M and returns the conversion result as its own.</p></dd>
 </dl>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Bugs, Ideas, Feedback</a></h2>

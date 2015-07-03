@@ -1,0 +1,40 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 1]
+[manpage_begin [vset LABEL_VT_TIME_MIN] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require try]
+[require clock::iso8601]
+[require cmdr::validate::common]
+[require cmdr::validate::time]
+[titledesc [vset TITLE_VT_TIME_MIN]]
+[description]
+[include parts/welcome.inc]
+
+[para] This package provides the validation type
+[cmd ::cmdr::validate::time::minute] which accepts timestamps with
+minute precision in ISO 8601 syntax (limited to without seconds), or
+as integer offset in minutes from midnight (modulo 24 hours).
+
+[para] The internal representation is the offset in minutes from
+midnight for the validated input.
+
+[para] The type has no input completion.
+
+[para] The details of the exported standard API can be found in
+[term [vset TITLE_DEV_VT]]. The chosen default is "now" to the minute.
+
+[para] A single non-standard method is provided:
+
+[list_begin definitions][comment {-- begin api definitions --}]
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::time] [method 2external] [arg epoch]]
+
+This method converts the offset in minutes from midnight of a time to
+the form %H:%M and returns the conversion result as its own.
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[list_end][comment {-- end api definitions --}]
+
+[include parts/feedback.inc]
+[manpage_end]
