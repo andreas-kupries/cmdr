@@ -103,13 +103,19 @@ proc ::cmdr::pager::Locate {text} {
     if {[info exists env(PAGER)]} {
 	lappend pager $env(PAGER)
     }
-    lappend pager less
+    lappend pager {less -R -f -F}
+    # -R Show ANSI colors
+    # -f do not prompt when thinking file is binary
+    # -F quit if the entire text can be shown on the screen
     lappend pager more
 
     foreach p $pager {
 	debug.cmdr/pager {Looking for cmd ($p)}
-	set cmd [auto_execok $p]
-	if {[llength $cmd]} break
+	set cmd [auto_execok [lindex $p 0]]
+	if {[llength $cmd]} {
+	    lappend cmd {*}[lrange $p 1 end]
+	    break
+	}
     }
 
     debug.cmdr/pager {==> ($cmd)}
@@ -118,4 +124,4 @@ proc ::cmdr::pager::Locate {text} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::pager 1
+package provide cmdr::pager 1.1
