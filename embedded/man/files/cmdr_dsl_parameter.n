@@ -311,6 +311,14 @@ cmdr-spec-dsl-parameter \- Cmdr - Parameter Specification Language
 .sp
 \fBwhen-set\fR \fIcmdprefix\fR
 .sp
+\fBstop!\fR
+.sp
+\fBtouch\fR \fIname\fR \fIvalue\fR
+.sp
+\fBtouch\fR \fIname\fR \fIvalue\fR
+.sp
+\fBdisallow\fR \fIname\fR
+.sp
 .BE
 .SH DESCRIPTION
 .PP
@@ -673,7 +681,7 @@ application while processing the command line, whereas normally the
 application drives access to parameters through their methods\&.
 .TP
 \fBwhen-complete\fR \fIcmdprefix\fR
-This command declares the state-change callback to invoke when the
+This command declares a state-change callback to invoke when the
 \fIinternal representation\fR of the \fIparameter\fR is generated
 from the \fIstring representation\fR, or the various ways of
 getting a default\&.
@@ -681,15 +689,23 @@ getting a default\&.
 The callback is invoked with two arguments, the
 \fBcmdr::parameter\fR instance of the changed \fIparameter\fR,
 and its \fIinternal representation\fR, in this order\&.
+.sp
+Multiple callbacks can be declared, by using this command
+several times\&. The callbacks are executed in the order of their
+declaration\&.
 .TP
 \fBwhen-set\fR \fIcmdprefix\fR
-This command declares the state-change callback to invoke when the
+This command declares a state-change callback to invoke when the
 \fIstring representation\fR of the \fIparameter\fR is set during
 command line parsing\&.
 .sp
 The callback is invoked with two arguments, the
 \fBcmdr::parameter\fR instance of the changed \fIparameter\fR,
 and its \fIstring representation\fR, in this order\&.
+.sp
+Multiple callbacks can be declared, by using this command
+several times\&. The callbacks are executed in the order of their
+declaration\&.
 .PP
 Due to their nature these callbacks are invoked at runtime during
 either the \fIParsing\fR, \fICompletion\fR, or \fIExecution\fR
@@ -715,6 +731,51 @@ when-complete       |          |         | immediate   | defered
 --------------------+----------+---------+-------------+-----------
 
 .CE
+.PP
+.SS "SUPPORTING COMMANDS"
+The parameter language currently provides four supporting commands
+which provide quick access to commonly useful functionality\&. All the
+helper command return anonymous procedures for use with the various
+callbacks of a parameter\&.
+.TP
+\fBstop!\fR
+The returned callback unconditionally declares its parameter as \fIundefined\fR\&. This is useful in combination with \fBgenerate\fR to abort value processing for an \fIoptional\fR \fIinput\fR after the interaction stage\&.
+.sp
+This is for inputs which are not optional per se, but declared
+as such to allow interactive entry when missing\&. A
+.CS
+
+
+    generate [stop!]
+
+.CE
+.IP clause then ensures an error when interactive entry gets disabled,
+either global, or for the specific command\&.
+.TP
+\fBtouch\fR \fIname\fR \fIvalue\fR
+The returned callback sets the \fIname\fRd sibling parameter to the
+specified \fIvalue\fR\&. A simple method of communication between
+parameters of a command\&.
+.sp
+Useful for use with \fBwhen-set\fR and/or \fBwhen-complete\fR
+.TP
+\fBtouch\fR \fIname\fR \fIvalue\fR
+The returned callback sets the \fIname\fRd sibling parameter to the
+specified \fIvalue\fR, if and only if that parameter exists\&. A simple
+method of communication between parameters of a command, where the
+sibling may not exists, depending on usage context\&.
+.sp
+Useful for use with \fBwhen-set\fR and/or \fBwhen-complete\fR
+.TP
+\fBdisallow\fR \fIname\fR
+This command simplifies the use of the parameter's \fBlock\fR
+method to signal that the \fIname\fRd parameter cannot be used with
+this one, returning a callback generating all the proper arguments
+required by the method, especially the name of the parameter invoking
+the lock\&.
+.sp
+Useful for use with \fBwhen-set\fR\&.
+.PP
 .PP
 Please continue reading with \fICmdr - Runtime Processing Flow\fR\&.
 .SH "RELATED DOCUMENTS"

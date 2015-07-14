@@ -304,7 +304,8 @@ oo::class create ::cmdr::parameter {
 	    \
 	    {touch    Touch} \
 	    {touch?   TouchIfExists} \
-	    {disallow Disallow}
+	    {disallow Disallow} \
+	    {stop!    Stop}
 	eval $valuespec
 
 	# Postprocessing ... Fill in validation and other defaults
@@ -351,6 +352,10 @@ oo::class create ::cmdr::parameter {
 	lambda {attr excluder p args} {
 	    $p config $attr lock $excluder
 	} $attr [my the-name]
+    }
+
+    method Stop {} {
+	lambda p { $p undefined! }
     }
 
     # # ## ### ##### ######## #############
@@ -1299,4 +1304,4 @@ oo::class create ::cmdr::parameter {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::parameter 1.5
+package provide cmdr::parameter 1.6

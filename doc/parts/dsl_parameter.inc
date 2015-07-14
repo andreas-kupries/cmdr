@@ -33,3 +33,6 @@ the common information which cannot have defaults, i.e.
 
 [para][subsection Signaling]
 [include dsl_para_callbacks.inc]
+
+[para][subsection {Supporting commands}]
+[include dsl_para_support.inc]
