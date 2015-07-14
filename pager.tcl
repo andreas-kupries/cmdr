@@ -105,8 +105,10 @@ proc ::cmdr::pager::Locate {text} {
     }
     lappend pager {less -R -f -F}
     # -R Show ANSI colors
-    # -f do not prompt when thinking file is binary
-    # -F quit if the entire text can be shown on the screen
+    # -f do not prompt when thinking that file is binary
+    #    (for example due to ANSI colors)
+    # -F quit immediately if the entire text can be shown
+    #    on the screen
     lappend pager more
 
     foreach p $pager {
