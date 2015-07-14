@@ -122,6 +122,7 @@
 <li class="subsection"><a href="#subsection3">Representations</a></li>
 <li class="subsection"><a href="#subsection4">Validation</a></li>
 <li class="subsection"><a href="#subsection5">Signaling</a></li>
+<li class="subsection"><a href="#subsection6">Supporting commands</a></li>
 </ul>
 </li>
 <li class="section"><a href="#section4">Related Documents</a></li>
@@ -151,6 +152,10 @@
 <li><a href="#16"><b class="cmd">presence</b></a></li>
 <li><a href="#17"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></li>
 <li><a href="#18"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#19"><b class="cmd">stop!</b></a></li>
+<li><a href="#20"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></li>
+<li><a href="#21"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></li>
+<li><a href="#22"><b class="cmd">disallow</b> <i class="arg">name</i></a></li>
 </ul>
 </div>
 </div>
@@ -459,20 +464,26 @@ application while processing the command line, whereas normally the
 application drives access to parameters through their methods.</p>
 <dl class="definitions">
 <dt><a name="17"><b class="cmd">when-complete</b> <i class="arg">cmdprefix</i></a></dt>
-<dd><p>This command declares the state-change callback to invoke when the
+<dd><p>This command declares a state-change callback to invoke when the
 <i class="term">internal representation</i> of the <i class="term">parameter</i> is generated
 from the <i class="term">string representation</i>, or the various ways of
 getting a default.</p>
 <p>The callback is invoked with two arguments, the
 <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance of the changed <i class="term">parameter</i>,
-and its <i class="term">internal representation</i>, in this order.</p></dd>
+and its <i class="term">internal representation</i>, in this order.</p>
+<p>Multiple callbacks can be declared, by using this command
+several times. The callbacks are executed in the order of their
+declaration.</p></dd>
 <dt><a name="18"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></dt>
-<dd><p>This command declares the state-change callback to invoke when the
+<dd><p>This command declares a state-change callback to invoke when the
 <i class="term">string representation</i> of the <i class="term">parameter</i> is set during
 command line parsing.</p>
 <p>The callback is invoked with two arguments, the
 <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance of the changed <i class="term">parameter</i>,
-and its <i class="term">string representation</i>, in this order.</p></dd>
+and its <i class="term">string representation</i>, in this order.</p>
+<p>Multiple callbacks can be declared, by using this command
+several times. The callbacks are executed in the order of their
+declaration.</p></dd>
 </dl>
 <p>Due to their nature these callbacks are invoked at runtime during
 either the <i class="term">Parsing</i>, <i class="term">Completion</i>, or <i class="term">Execution</i>
@@ -495,6 +506,41 @@ validate (release)  |          | test    | immediate   | defered
 when-complete       |          |         | immediate   | defered
 --------------------+----------+---------+-------------+-----------
 </pre>
+</div>
+<div id="subsection6" class="subsection"><h3><a name="subsection6">Supporting commands</a></h3>
+<p>The parameter language currently provides four supporting commands
+which provide quick access to commonly useful functionality. All the
+helper command return anonymous procedures for use with the various
+callbacks of a parameter.</p>
+<dl class="definitions">
+<dt><a name="19"><b class="cmd">stop!</b></a></dt>
+<dd><p>The returned callback unconditionally declares its parameter as <i class="term">undefined</i>. This is useful in combination with <b class="cmd">generate</b> to abort value processing for an <i class="term">optional</i> <i class="term">input</i> after the interaction stage.</p>
+<p>This is for inputs which are not optional per se, but declared
+as such to allow interactive entry when missing. A</p>
+<pre class="example">
+    generate [stop!]
+</pre>
+<p>clause then ensures an error when interactive entry gets disabled,
+either global, or for the specific command.</p></dd>
+<dt><a name="20"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></dt>
+<dd><p>The returned callback sets the <i class="arg">name</i>d sibling parameter to the
+specified <i class="arg">value</i>. A simple method of communication between
+parameters of a command.</p>
+<p>Useful for use with <b class="cmd">when-set</b> and/or <b class="cmd">when-complete</b></p></dd>
+<dt><a name="21"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></dt>
+<dd><p>The returned callback sets the <i class="arg">name</i>d sibling parameter to the
+specified <i class="arg">value</i>, if and only if that parameter exists. A simple
+method of communication between parameters of a command, where the
+sibling may not exists, depending on usage context.</p>
+<p>Useful for use with <b class="cmd">when-set</b> and/or <b class="cmd">when-complete</b></p></dd>
+<dt><a name="22"><b class="cmd">disallow</b> <i class="arg">name</i></a></dt>
+<dd><p>This command simplifies the use of the parameter's <b class="method">lock</b>
+method to signal that the <i class="arg">name</i>d parameter cannot be used with
+this one, returning a callback generating all the proper arguments
+required by the method, especially the name of the parameter invoking
+the lock.</p>
+<p>Useful for use with <b class="cmd">when-set</b>.</p></dd>
+</dl>
 <p>Please continue reading with <i class="term"><a href="cmdr_flow.html">Cmdr - Runtime Processing Flow</a></i>.</p>
 </div>
 </div>

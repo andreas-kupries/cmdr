@@ -25,7 +25,7 @@ application drives access to parameters through their methods.
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd when-complete] [arg cmdprefix]]
 
-This command declares the state-change callback to invoke when the
+This command declares a state-change callback to invoke when the
 [term {internal representation}] of the [term parameter] is generated
 from the [term {string representation}], or the various ways of
 getting a default.
@@ -34,16 +34,24 @@ getting a default.
 [package cmdr::parameter] instance of the changed [term parameter],
 and its [term {internal representation}], in this order.
 
+[para] Multiple callbacks can be declared, by using this command
+several times. The callbacks are executed in the order of their
+declaration.
+
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd when-set] [arg cmdprefix]]
 
-This command declares the state-change callback to invoke when the
+This command declares a state-change callback to invoke when the
 [term {string representation}] of the [term parameter] is set during
 command line parsing.
 
 [para] The callback is invoked with two arguments, the
 [package cmdr::parameter] instance of the changed [term parameter],
 and its [term {string representation}], in this order.
+
+[para] Multiple callbacks can be declared, by using this command
+several times. The callbacks are executed in the order of their
+declaration.
 
 [list_end]
 
