@@ -3,12 +3,12 @@
 ## CMDR - Validate::Time - Supporting validation type - iso times.
 
 # @@ Meta Begin
-# Package cmdr::validate::time 1
+# Package cmdr::validate::time 1.1
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform tcl
-# Meta summary     Standard parameter validation type for times (down to seconds)
-# Meta description Standard parameter validation type for times (down to seconds)
+# Meta summary     Standard parameter validation type for timestamps (down to seconds)
+# Meta description Standard parameter validation type for timestamps (down to seconds)
 # Meta subject {command line}
 # Meta require {Tcl 8.5-}
 # Meta require {cmdr::validate::common 1.2}
@@ -54,11 +54,11 @@ debug level  cmdr/validate/time
 debug prefix cmdr/validate/time {[debug caller] | }
 
 # # ## ### ##### ######## ############# #####################
-## Times as parsed by clock::iso86
+## Times as parsed by clock::iso8601
 
 proc ::cmdr::validate::time::2external {x}  {
     debug.cmdr/validate/time {}
-    return [clock format $x -format {%H:%M:%S}]
+    return [clock format $x -format {%Y-%m-%dT%H:%M:%S}]
 }
 
 proc ::cmdr::validate::time::release  {p x} { return }
@@ -75,15 +75,20 @@ proc ::cmdr::validate::time::complete {p x} {
 proc ::cmdr::validate::time::validate {p x} {
     debug.cmdr/validate/time {}
     try {
-	# TODO: error code in clock::iso8601.
-	set epoch [clock::iso8601 parse_time $x]
+	if {[string is integer -strict $x] && ($x >= 0)} {
+	    # Integer, direct epoch
+	    set epoch $x
+	} else {
+	    # TODO: error code in clock::iso8601.
+	    set epoch [clock::iso8601 parse_time $x]
+	}
     } on error {e o} {
-	fail $p TIME "an ISO8601 time" $x
+	fail $p TIME "an ISO8601 time or epoch" $x
     } 
     return $epoch
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::validate::time 1
+package provide cmdr::validate::time 1.1
 return

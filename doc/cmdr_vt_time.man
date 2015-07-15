@@ -12,11 +12,12 @@
 [include parts/welcome.inc]
 
 [para] This package provides the validation type
-[cmd ::cmdr::validate::time] which accepts timestamps in ISO 8601
-syntax.
+[cmd ::cmdr::validate::time] which accepts timestamps in both ISO 8601
+syntax and as epoch values, i.e. positive integer seconds since the
+beginning of unix time.
 
-[para] The internal representation is the epoch for the validated
-input.
+[para] The internal, canonical representation is the epoch for the
+validated input.
 
 [para] The type has no input completion.
 
@@ -29,8 +30,8 @@ input.
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
 [call [cmd ::cmdr::validate::time] [method 2external] [arg epoch]]
 
-This method converts the epoch of a time to the form %H:%M:%S and
-returns the conversion result as its own.
+This method converts the epoch of a time to the form
+[const %Y-%m-%dT%H:%M:%S] and returns the conversion result as its own.
 
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
 [list_end][comment {-- end api definitions --}]
