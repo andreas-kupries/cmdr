@@ -81,7 +81,7 @@ proc ::cmdr::validate::time::minute::validate {p x} {
     debug.cmdr/validate/time/minute {}
     try {
 	if {[string is integer -strict $x] && ($x >= 0)} {
-	    # Integer, direct offset from midnight, force range.
+	    # Integer, direct minute offset from midnight, force range.
 	    set minoffset [expr {$x % 1440}]
 	} else {
 	    # TODO: error code in clock::iso8601.
