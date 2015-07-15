@@ -1,6 +1,6 @@
 # -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
 # # ## ### ##### ######## ############# #####################
-## Testing the cmdr::validate package (sub: posint (integer > 0)).
+## Testing the cmdr::validate package (sub: time::minute (from midnight)).
 
 kt check Tcl     8.5
 kt check tcltest 2
