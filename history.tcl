@@ -88,9 +88,16 @@ proc ::cmdr::history::attach {actor} {
     # (***) Detect recursive entry through the extend statements
     # below. Use this to make 'history list' the default of the whole
     # history officer. And, of course, prevent infinite recursion.
+    # Lastly, not leastly, add help describing the entire ensemble.
 
     if {[$actor name] eq "history"} {
-	$actor learn {default list}
+	$actor learn {
+	    default list
+	    #section Introspection {Command history}
+	    description {
+		Manage the command history.
+	    }
+	}
 	return
     }
 
@@ -419,5 +426,5 @@ proc ::cmdr::history::Describe {} {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::history 0.1
+package provide cmdr::history 0.2
 return
