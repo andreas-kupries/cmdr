@@ -46,9 +46,6 @@
        [enum] [cmd fail-known-thing-msg]
        [enum] [cmd fail-known-simple]
        [enum] [cmd fail-known-simple-msg]
-
--- TODO -- document --
-
        [list_end]
 
 [enum] Modified integer validation to have a proper internal
