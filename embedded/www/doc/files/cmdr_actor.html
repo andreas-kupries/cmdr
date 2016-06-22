@@ -147,7 +147,7 @@
 <li><a href="#17"><b class="cmd">&lt;actor&gt;</b> <b class="method">name:</b> <i class="arg">name</i></a></li>
 <li><a href="#18"><b class="cmd">&lt;actor&gt;</b> <b class="method">parse-line</b> <i class="arg">line</i></a></li>
 <li><a href="#19"><b class="cmd">&lt;actor&gt;</b> <b class="method">root</b></a></li>
-<li><a href="#20"><b class="cmd">&lt;actor&gt;</b> <b class="method">set</b> <i class="arg">key</i> <i class="arg">data</i></a></li>
+<li><a href="#20"><b class="cmd">&lt;actor&gt;</b> <b class="method">set</b> <i class="arg">key</i> <b class="option">-extend</b> <b class="option">--</b> <i class="arg">data</i></a></li>
 <li><a href="#21"><b class="cmd">&lt;actor&gt;</b> <b class="method">super</b></a></li>
 <li><a href="#22"><b class="cmd">&lt;actor&gt;</b> <b class="method">super:</b> <i class="arg">obj</i></a></li>
 <li><a href="#23"><b class="cmd">&lt;actor&gt;</b> <b class="method">undocumented</b></a></li>
@@ -294,10 +294,14 @@ command completion.</p>
 <dt><a name="19"><b class="cmd">&lt;actor&gt;</b> <b class="method">root</b></a></dt>
 <dd><p>This accessor method returns the root actor instance the actor belongs
 to.</p></dd>
-<dt><a name="20"><b class="cmd">&lt;actor&gt;</b> <b class="method">set</b> <i class="arg">key</i> <i class="arg">data</i></a></dt>
+<dt><a name="20"><b class="cmd">&lt;actor&gt;</b> <b class="method">set</b> <i class="arg">key</i> <b class="option">-extend</b> <b class="option">--</b> <i class="arg">data</i></a></dt>
 <dd><p>This method sets the contents of the common block named by <i class="arg">key</i>
 to <i class="arg">data</i>. If the block does not exist it is created. Otherwise
 its existing content is written over.</p>
+<p>Using option <b class="option">-extend</b> will change the behaviour to
+       extend inherited content instead of writing over it.</p>
+<p>Using option <b class="option">--</b> will prevent misinterpretation of the
+       following argument as option, even if it begins with a dash.</p>
 <dl class="arguments">
 <dt>string <i class="arg">key</i></dt>
 <dd><p>The name of the common block to write.</p></dd>

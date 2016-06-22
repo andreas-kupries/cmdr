@@ -136,18 +136,19 @@
 <p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
 <p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
 <p>This package provides the validation type
-<b class="cmd">::cmdr::validate::time</b> which accepts timestamps in ISO 8601
-syntax.</p>
-<p>The internal representation is the epoch for the validated
-input.</p>
+<b class="cmd">::cmdr::validate::time</b> which accepts timestamps in both ISO 8601
+syntax and as epoch values, i.e. positive integer seconds since the
+beginning of unix time.</p>
+<p>The internal, canonical representation is the epoch for the
+validated input.</p>
 <p>The type has no input completion.</p>
 <p>The details of the exported standard API can be found in
 <i class="term"><a href="cmdr_vtypes.html">Cmdr - Writing custom validation types</a></i>. The chosen default is &quot;now&quot;.</p>
 <p>A single non-standard method is provided:</p>
 <dl class="definitions">
 <dt><a name="1"><b class="cmd">::cmdr::validate::time</b> <b class="method">2external</b> <i class="arg">epoch</i></a></dt>
-<dd><p>This method converts the epoch of a time to the form %H:%M:%S and
-returns the conversion result as its own.</p></dd>
+<dd><p>This method converts the epoch of a time to the form
+<b class="const">%Y-%m-%dT%H:%M:%S</b> and returns the conversion result as its own.</p></dd>
 </dl>
 </div>
 <div id="section2" class="section"><h2><a name="section2">Bugs, Ideas, Feedback</a></h2>

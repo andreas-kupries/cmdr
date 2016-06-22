@@ -291,7 +291,7 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 This package provides a single utility command to manage the automatic
-paging of long output, like cmdr's automatic help\&.
+paging of long output, like it is done cmdr's automatic help\&.
 .SH API
 .TP
 \fB::cmdr::pager\fR \fBtext\fR

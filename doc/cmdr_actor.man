@@ -227,11 +227,17 @@ This accessor method returns the root actor instance the actor belongs
 to.
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd <actor>] [method set] [arg key] [arg data]]
+[call [cmd <actor>] [method set] [arg key] [option -extend] [option --] [arg data]]
 
 This method sets the contents of the common block named by [arg key]
 to [arg data]. If the block does not exist it is created. Otherwise
 its existing content is written over.
+
+[para] Using option [option -extend] will change the behaviour to
+       extend inherited content instead of writing over it.
+
+[para] Using option [option --] will prevent misinterpretation of the
+       following argument as option, even if it begins with a dash.
 
 [list_begin arguments]
 [arg_def string key]  The name of the common block to write.

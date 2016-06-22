@@ -315,7 +315,7 @@ package require \fBcmdr::actor \fR
 .sp
 \fB<actor>\fR \fBroot\fR
 .sp
-\fB<actor>\fR \fBset\fR \fIkey\fR \fIdata\fR
+\fB<actor>\fR \fBset\fR \fIkey\fR \fB-extend\fR \fB--\fR \fIdata\fR
 .sp
 \fB<actor>\fR \fBsuper\fR
 .sp
@@ -501,10 +501,16 @@ The command line\&.
 This accessor method returns the root actor instance the actor belongs
 to\&.
 .TP
-\fB<actor>\fR \fBset\fR \fIkey\fR \fIdata\fR
+\fB<actor>\fR \fBset\fR \fIkey\fR \fB-extend\fR \fB--\fR \fIdata\fR
 This method sets the contents of the common block named by \fIkey\fR
 to \fIdata\fR\&. If the block does not exist it is created\&. Otherwise
 its existing content is written over\&.
+.sp
+Using option \fB-extend\fR will change the behaviour to
+extend inherited content instead of writing over it\&.
+.sp
+Using option \fB--\fR will prevent misinterpretation of the
+following argument as option, even if it begins with a dash\&.
 .RS
 .TP
 string \fIkey\fR

@@ -11,7 +11,7 @@
 [enum] Fixed generated help, added the application name to the output
        when in a cmdr shell.
 
-[enum] Fixed the generation of help format by-categorized, when
+[enum] Fixed the generation of help format [const by-categorized], when
        encountering sections with sub-sections and no commands of their
        own.
 

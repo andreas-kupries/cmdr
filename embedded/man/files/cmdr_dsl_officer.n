@@ -279,13 +279,15 @@ cmdr-spec-dsl-officer \- Cmdr - Officer Specification Language
 .sp
 \fBalias\fR \fIname\fR
 .sp
-\fBcommon\fR \fIname\fR \fItext\fR
+\fBcommon\fR \fIname\fR \fB-extend\fR \fB--\fR \fItext\fR
 .sp
 \fBdefault\fR
 .sp
 \fBdescription\fR \fItext\fR
 .sp
 \fBehandler\fR \fIcmdprefix\fR
+.sp
+\fBshandler\fR \fIcmdprefix\fR
 .sp
 \fBofficer\fR \fIname\fR \fIscript\fR
 .sp
@@ -344,7 +346,7 @@ string \fIname'\&.\&.\&.\fR
 The path to the actor, as list of names\&.
 .RE
 .TP
-\fBcommon\fR \fIname\fR \fItext\fR
+\fBcommon\fR \fIname\fR \fB-extend\fR \fB--\fR \fItext\fR
 This is another structuring command, for structuring the specification
 itself instead of the command tree it declares\&.
 .sp
@@ -384,6 +386,12 @@ block, and possibly forgetting such\&.
 .sp
 Generally speaking, the framework reserves all blocks whose
 name begins with a star, i\&.e \fB*\fR, for its own use\&.
+.sp
+Using option \fB-extend\fR will change the behaviour to
+extend inherited content instead of writing over it\&.
+.sp
+Using option \fB--\fR will prevent misinterpretation of the
+following argument as option, even if it begins with a dash\&.
 .RS
 .TP
 string \fIname\fR
@@ -432,6 +440,21 @@ cleanup code transient state \fIwill\fR leak between multiple
 commands run from such a shell, something which is definitely not
 wanted\&.
 .RE
+.TP
+\fBshandler\fR \fIcmdprefix\fR
+This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates)\&.
+.sp
+At runtime the framework will call the specified command prefix
+with a single argument, the command of the actor we wish to
+initialize\&.
+The command prefix is then allowed to modify that actor as it sees
+fit\&. The common use case will be the extension of the object with
+additional subordinates\&.
+An example of this is the package \fBcmdr::history\fR which
+provides a command \fBcmdr::history::attach\fR to add the history
+management commands to the actor in question\&.
 .TP
 \fBofficer\fR \fIname\fR \fIscript\fR
 This command creates a named subordinate \fIofficer\fR with its

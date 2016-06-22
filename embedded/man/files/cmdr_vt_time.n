@@ -294,11 +294,12 @@ For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
 .PP
 This package provides the validation type
-\fB::cmdr::validate::time\fR which accepts timestamps in ISO 8601
-syntax\&.
+\fB::cmdr::validate::time\fR which accepts timestamps in both ISO 8601
+syntax and as epoch values, i\&.e\&. positive integer seconds since the
+beginning of unix time\&.
 .PP
-The internal representation is the epoch for the validated
-input\&.
+The internal, canonical representation is the epoch for the
+validated input\&.
 .PP
 The type has no input completion\&.
 .PP
@@ -308,8 +309,8 @@ The details of the exported standard API can be found in
 A single non-standard method is provided:
 .TP
 \fB::cmdr::validate::time\fR \fB2external\fR \fIepoch\fR
-This method converts the epoch of a time to the form %H:%M:%S and
-returns the conversion result as its own\&.
+This method converts the epoch of a time to the form
+\fB%Y-%m-%dT%H:%M:%S\fR and returns the conversion result as its own\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain

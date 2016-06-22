@@ -318,6 +318,10 @@ After attachment the actor will accept the following 3 commands:
     history limit ?n? - Limit history to 'n' entries (n >= 0)\&. Unlimited for n < 0\&.
 
 .CE
+.IP
+Under most circumstances the attachment is handled through the
+\fBshandler\fR method of officers\&. See \fBcmdr::officer\fR, and
+the \fBExample\fR for more information\&.
 .TP
 \fB::cmdr::history\fR \fBsave-to\fR \fIpath\fR
 When invoked this command sets the package-wide history save file used
@@ -331,6 +335,23 @@ to \fIlimit\fR\&. A value less than zero means "no limit"\&.
 .sp
 The result of the command is the empty string\&.
 .PP
+.SH EXAMPLE
+Below an example on how to activate history for an officer\&.
+The example was taken from the \fBfx\fR application extending the
+\fBfossil\fR DVCS\&.
+.CS
+
+
+cmdr history initial-limit 20
+cmdr history save-to       ~/\&.fx_history
+
+cmdr create fx::fx [file tail $::argv0] {
+    shandler ::cmdr::history::attach
+
+    [\&.\&.\&.]
+}
+
+.CE
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
 bugs and other problems\&.
