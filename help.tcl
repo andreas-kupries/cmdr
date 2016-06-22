@@ -47,19 +47,19 @@ namespace eval ::cmdr {
 }
 
 namespace eval ::cmdr::help {
-    namespace export query format auto
+    namespace export query format auto auto-option
     namespace ensemble create
 
     namespace import ::cmdr::tty
 }
 
 # # ## ### ##### ######## ############# #####################
+## A helper to resolve a chain of words (i.e. command name path) to
+## the actor responsible for that command, starting from the specified
+## actor.
 
 proc ::cmdr::help::query {actor words} {
     debug.cmdr/help {}
-    # Resolve chain of words (command name path) to the actor
-    # responsible for that command, starting from the specified actor.
-    # This is very much a convenience command.
 
     set root   [$actor root]
     set prefix $words
@@ -74,10 +74,45 @@ proc ::cmdr::help::query {actor words} {
 }
 
 # # ## ### ##### ######## ############# #####################
+## The internal support command dynamically generating and inserting
+## the user's --help option. This is restricted to the root actor.
+
+proc ::cmdr::help::auto-option {actor} {
+    $actor learn {
+	option help {
+	    Show the help of the application or of the current
+	    command, and stop.
+	} {
+	    alias h
+	    alias ?
+	    presence
+	    when-set [lambda {p x} {
+		# Invoke the help command which will be generated and
+		# inserted below.
+		set root [$p config context root]
+		if {[$root exists *prefix*]} {
+		    # Invoke help for the current command.
+		    $root do help {*}[$root get *prefix*]
+		} else {
+		    # Invoke global help.
+		    $root do help
+		}
+		# Prevent any other processing.
+		return -code error -errorcode {CMDR QUIT} Quit
+	    }]
+	}
+    }
+    return
+}
+
+# # ## ### ##### ######## ############# #####################
+## The internal support command dynamically generating and inserting
+## the user's help command into the specified actor. See officer.tcl,
+## method 'Setup' for the place where this gets used. If the actor is
+## the root of the hierarchy a global option --help is added as well.
 
 proc ::cmdr::help::auto {actor} {
     debug.cmdr/help {}
-    # Generate a standard help command for any actor, and add it dynamically.
 
     # Auto create options based on the help formats found installed
     foreach c [lsort -dict [info commands {::cmdr::help::format::[a-z]*}]] {
@@ -136,6 +171,10 @@ proc ::cmdr::help::auto {actor} {
     }] [list ::cmdr::help::auto-help $actor]
     return
 }
+
+# # ## ### ##### ######## ############# #####################
+## Implementation/back-end of the generated help.
+## The bridge between cmd hierarchy and actual generation.
 
 proc ::cmdr::help::auto-help {actor config} {
     debug.cmdr/help {}

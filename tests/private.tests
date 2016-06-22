@@ -25,8 +25,15 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
 	    state  STATE  STATE-DESC
 	'
         argument (INPUT)
+        option (--help) = help
         option (--no-OPTION) = OPTION
         option (--OPTION) = OPTION
+        option (-?) = help
+        option (-h) = help
+        map --h --> (--help)
+        map --he --> (--help)
+        map --hel --> (--help)
+        map --help --> (--help)
         map --n --> (--no-OPTION)
         map --no --> (--no-OPTION)
         map --no- --> (--no-OPTION)
@@ -42,6 +49,23 @@ test cmdr-private-1.0 {private basics, parameter default settings, fragment use}
         map --OPTI --> (--OPTION)
         map --OPTIO --> (--OPTION)
         map --OPTION --> (--OPTION)
+        map -? --> (-?)
+        map -h --> (-h)
+        para (help) {
+            description: '
+	    Show the help of the application or of the current
+	    command, and stop.
+	'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--help -? -h]
+                --help = primary
+                -? = alias
+                -h = alias
+            ge ()
+            va (::cmdr::validate::boolean)
+            wd ()
+        }
         para (INPUT) {
             description: 'INPUT-DESC'
             ordered, cmdline, single, required, silent, immediate
@@ -96,6 +120,15 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
         argument (C)
         argument (D)
         argument (E)
+        option (--help) = help
+        option (-?) = help
+        option (-h) = help
+        map --h --> (--help)
+        map --he --> (--help)
+        map --hel --> (--help)
+        map --help --> (--help)
+        map -? --> (-?)
+        map -h --> (-h)
         para (A) {
             description: '-'
             ordered, cmdline, single, required, silent, immediate
@@ -143,6 +176,21 @@ test cmdr-private-1.1 {private basics, optional arguments, thresholding} -body {
             va (::cmdr::validate::identity)
             wd ()
         }
+        para (help) {
+            description: '
+	    Show the help of the application or of the current
+	    command, and stop.
+	'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--help -? -h]
+                --help = primary
+                -? = alias
+                -h = alias
+            ge ()
+            va (::cmdr::validate::boolean)
+            wd ()
+        }
     }
 }
 
@@ -183,6 +231,15 @@ test cmdr-private-2.3 {private, input, defaults} -setup {
     foo bar = {
         description: ''
         argument (A)
+        option (--help) = help
+        option (-?) = help
+        option (-h) = help
+        map --h --> (--help)
+        map --he --> (--help)
+        map --hel --> (--help)
+        map --help --> (--help)
+        map -? --> (-?)
+        map -h --> (-h)
         para (A) {
             description: 'D'
             ordered, cmdline, single, required, silent, immediate
@@ -190,6 +247,21 @@ test cmdr-private-2.3 {private, input, defaults} -setup {
             flags []
             ge ()
             va (::cmdr::validate::identity)
+            wd ()
+        }
+        para (help) {
+            description: '
+	    Show the help of the application or of the current
+	    command, and stop.
+	'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--help -? -h]
+                --help = primary
+                -? = alias
+                -h = alias
+            ge ()
+            va (::cmdr::validate::boolean)
             wd ()
         }
     }
@@ -230,13 +302,22 @@ test cmdr-private-3.3 {private, option, defaults} -setup {
 } -result {
     foo bar = {
         description: ''
+        option (--help) = help
         option (--no-A) = A
+        option (-?) = help
         option (-A) = A
+        option (-h) = help
+        map --h --> (--help)
+        map --he --> (--help)
+        map --hel --> (--help)
+        map --help --> (--help)
         map --n --> (--no-A)
         map --no --> (--no-A)
         map --no- --> (--no-A)
         map --no-A --> (--no-A)
+        map -? --> (-?)
         map -A --> (-A)
+        map -h --> (-h)
         para (A) {
             description: 'D'
             unordered, cmdline, single, optional, silent, immediate
@@ -244,6 +325,21 @@ test cmdr-private-3.3 {private, option, defaults} -setup {
             flags [--no-A -A]
                 --no-A = inverted
                 -A = primary
+            ge ()
+            va (::cmdr::validate::boolean)
+            wd ()
+        }
+        para (help) {
+            description: '
+	    Show the help of the application or of the current
+	    command, and stop.
+	'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--help -? -h]
+                --help = primary
+                -? = alias
+                -h = alias
             ge ()
             va (::cmdr::validate::boolean)
             wd ()
@@ -286,6 +382,15 @@ test cmdr-private-4.3 {private, state, defaults} -setup {
 } -result {
     foo bar = {
         description: ''
+        option (--help) = help
+        option (-?) = help
+        option (-h) = help
+        map --h --> (--help)
+        map --he --> (--help)
+        map --hel --> (--help)
+        map --help --> (--help)
+        map -? --> (-?)
+        map -h --> (-h)
         para (A) {
             description: 'D'
             unordered, hidden, single, required, silent, defered
@@ -293,6 +398,21 @@ test cmdr-private-4.3 {private, state, defaults} -setup {
             flags []
             ge ()
             va (::cmdr::validate::identity)
+            wd ()
+        }
+        para (help) {
+            description: '
+	    Show the help of the application or of the current
+	    command, and stop.
+	'
+            unordered, cmdline, single, optional, silent, immediate
+            default: 'no'
+            flags [--help -? -h]
+                --help = primary
+                -? = alias
+                -h = alias
+            ge ()
+            va (::cmdr::validate::boolean)
             wd ()
         }
     }
