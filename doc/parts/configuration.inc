@@ -1,6 +1,6 @@
 [comment {--- Project configuration --}]
 [vset AUTHOR {Andreas Kupries}]
-[vset COPYRIGHT 2013-2015]
+[vset COPYRIGHT 2013-2016]
 [vset LICENSE bsd]
 [vset MAN_SECTION n]
 [vset MODULE_DESC {Cmdr, a framework for command line parsing and dispatch}]
