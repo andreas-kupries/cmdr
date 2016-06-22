@@ -535,6 +535,7 @@ oo::class create ::cmdr::config {
     }
 
     method Section {args} {
+	debug.cmdr/config {}
 	# Remember the help section this private is a part of.
 	lappend mysections $args
 	return
@@ -542,12 +543,14 @@ oo::class create ::cmdr::config {
 
     # Externally visible variant of the 'Option' specification command.
     method make-option {args} {
+	debug.cmdr/config {![context fullname]}
 	# Splat is a dummy for this.
 	set splat no
 	my DefineParameter 0 1 0 0 {*}$args
     }
     # Externally visible variant of the 'State' specification command.
     method make-state {args} {
+	debug.cmdr/config {![context fullname]}
 	# Splat is a dummy for this.
 	set splat no
 	my DefineParameter 0 0 1 1 {*}$args
@@ -1052,7 +1055,7 @@ oo::class create ::cmdr::config {
     }
 
     method ProcessOption {} {
-	debug.cmdr/config {}
+	debug.cmdr/config {![context fullname]}
 	# Get option. Do special handling.
 	# Non special option gets dispatched to handler (cmdr::parameter instance).
 	# The handler is responsible for retrieved the option's value.
@@ -1068,7 +1071,7 @@ oo::class create ::cmdr::config {
 	    P unget $value
 	}
 
-	debug.cmdr/config {having ($option)}
+	debug.cmdr/config {having ($option) in ([dict keys $myfullopt])}
 
 	# Validate existence of the option
 	if {![dict exists $myfullopt $option]} {

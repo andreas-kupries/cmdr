@@ -66,11 +66,12 @@ test cmdr-runtime-1.3 {required + optional arguments, assignment under threshold
 	input E - { validate integer }
     } 1 2 3
 } -result {
-    A = '1'         v'1'
-    B = <undefined> v'0'
-    C = '2'         v'2'
-    D = <undefined> v'0'
-    E = '3'         v'3'
+    A    = '1'         v'1'
+    B    = <undefined> v'0'
+    C    = '2'         v'2'
+    D    = <undefined> v'0'
+    E    = '3'         v'3'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-1.4 {required + optional arguments, assignment under thresholding} -body {
@@ -82,11 +83,12 @@ test cmdr-runtime-1.4 {required + optional arguments, assignment under threshold
 	input E - { validate integer }
     } 1 2 3 4
 } -result {
-    A = '1'         v'1'
-    B = '2'         v'2'
-    C = '3'         v'3'
-    D = <undefined> v'0'
-    E = '4'         v'4'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    C    = '3'         v'3'
+    D    = <undefined> v'0'
+    E    = '4'         v'4'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-1.5 {required + optional arguments, assignment under thresholding} -body {
@@ -98,11 +100,12 @@ test cmdr-runtime-1.5 {required + optional arguments, assignment under threshold
 	input E - { validate integer }
     } 1 2 3 4 5
 } -result {
-    A = '1' v'1'
-    B = '2' v'2'
-    C = '3' v'3'
-    D = '4' v'4'
-    E = '5' v'5'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    C    = '3'         v'3'
+    D    = '4'         v'4'
+    E    = '5'         v'5'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-1.6 {required + optional arguments, too many} -body {
@@ -141,8 +144,9 @@ test cmdr-runtime-2.2 {required + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2
 } -result {
-    A = '1' v'1'
-    B = '2' v'2'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.3 {required + required splat} -body {
@@ -151,8 +155,9 @@ test cmdr-runtime-2.3 {required + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2 3
 } -result {
-    A = '1'   v'1'
-    B = '2 3' v'2 3'
+    A    = '1'         v'1'
+    B    = '2 3'       v'2 3'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.4 {required + required splat} -body {
@@ -161,8 +166,9 @@ test cmdr-runtime-2.4 {required + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2 3 4
 } -result {
-    A = '1'     v'1'
-    B = '2 3 4' v'2 3 4'
+    A    = '1'         v'1'
+    B    = '2 3 4'     v'2 3 4'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -181,8 +187,9 @@ test cmdr-runtime-2.6 {required + optional splat, empty} -body {
 	input B - { list ; optional ; validate integer }
     } 1
 } -result {
-    A = '1'         v'1'
-    B = <undefined> v''
+    A    = '1'         v'1'
+    B    = <undefined> v''
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.7 {required + optional splat} -body {
@@ -191,8 +198,9 @@ test cmdr-runtime-2.7 {required + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2
 } -result {
-    A = '1' v'1'
-    B = '2' v'2'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.8 {required + optional splat} -body {
@@ -201,8 +209,9 @@ test cmdr-runtime-2.8 {required + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2 3
 } -result {
-    A = '1'   v'1'
-    B = '2 3' v'2 3'
+    A    = '1'         v'1'
+    B    = '2 3'       v'2 3'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.9 {required + optional splat} -body {
@@ -211,8 +220,9 @@ test cmdr-runtime-2.9 {required + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2 3 4
 } -result {
-    A = '1'     v'1'
-    B = '2 3 4' v'2 3 4'
+    A    = '1'         v'1'
+    B    = '2 3 4'     v'2 3 4'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -231,8 +241,9 @@ test cmdr-runtime-2.11 {optional + required splat, not enough} -body {
 	input B - { list ; validate integer }
     } 1
 } -result {
-    A = <undefined> v'0'
-    B = '1'         v'1'
+    A    = <undefined> v'0'
+    B    = '1'         v'1'
+    help = <undefined> v'no'
 }
 test cmdr-runtime-2.12 {optional + required splat} -body {
     Parse {
@@ -240,8 +251,9 @@ test cmdr-runtime-2.12 {optional + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2
 } -result {
-    A = '1' v'1'
-    B = '2' v'2'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.13 {optional + required splat} -body {
@@ -250,8 +262,9 @@ test cmdr-runtime-2.13 {optional + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2 3
 } -result {
-    A = '1'   v'1'
-    B = '2 3' v'2 3'
+    A    = '1'         v'1'
+    B    = '2 3'       v'2 3'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.14 {optional + required splat} -body {
@@ -260,8 +273,9 @@ test cmdr-runtime-2.14 {optional + required splat} -body {
 	input B - { list ; validate integer }
     } 1 2 3 4
 } -result {
-    A = '1'     v'1'
-    B = '2 3 4' v'2 3 4'
+    A    = '1'         v'1'
+    B    = '2 3 4'     v'2 3 4'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -272,8 +286,9 @@ test cmdr-runtime-2.15 {optional + optional splat, not enough} -body {
 	input B - { list ; optional ; validate integer }
     }
 } -result {
-    A = <undefined> v'0'
-    B = <undefined> v''
+    A    = <undefined> v'0'
+    B    = <undefined> v''
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.16 {optional + optional splat, empty} -body {
@@ -282,8 +297,9 @@ test cmdr-runtime-2.16 {optional + optional splat, empty} -body {
 	input B - { list ; optional ; validate integer }
     } 1
 } -result {
-    A = '1'         v'1'
-    B = <undefined> v''
+    A    = '1'         v'1'
+    B    = <undefined> v''
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.17 {optional + optional splat} -body {
@@ -292,8 +308,9 @@ test cmdr-runtime-2.17 {optional + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2
 } -result {
-    A = '1' v'1'
-    B = '2' v'2'
+    A    = '1'         v'1'
+    B    = '2'         v'2'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.18 {optional + optional splat} -body {
@@ -302,8 +319,9 @@ test cmdr-runtime-2.18 {optional + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2 3
 } -result {
-    A = '1'   v'1'
-    B = '2 3' v'2 3'
+    A    = '1'         v'1'
+    B    = '2 3'       v'2 3'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-2.19 {optional + optional splat} -body {
@@ -312,8 +330,9 @@ test cmdr-runtime-2.19 {optional + optional splat} -body {
 	input B - { list ; optional ; validate integer }
     } 1 2 3 4
 } -result {
-    A = '1'     v'1'
-    B = '2 3 4' v'2 3 4'
+    A    = '1'         v'1'
+    B    = '2 3 4'     v'2 3 4'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -324,7 +343,8 @@ test cmdr-runtime-3.0 {options, simple, boolean} -body {
 	option A -
     }
 } -result {
-    A = <undefined> v'no'
+    A    = <undefined> v'no'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-3.1 {options, simple, boolean} -body {
@@ -332,7 +352,8 @@ test cmdr-runtime-3.1 {options, simple, boolean} -body {
 	option A -
     } -A 1
 } -result {
-    A = '1' v'1'
+    A    = '1'         v'1'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-3.2 {options, simple, boolean} -body {
@@ -340,18 +361,20 @@ test cmdr-runtime-3.2 {options, simple, boolean} -body {
 	option A -
     } -A 0
 } -result {
-    A = '0' v'0'
+    A    = '0'         v'0'
+    help = <undefined> v'no'
 }
 
-test cmdr-runtime-3.2 {options, simple, boolean, multiple use} -body {
+test cmdr-runtime-3.3 {options, simple, boolean, multiple use} -body {
     Parse {
 	option A -
     } -A 0 -A 1
 } -result {
-    A = '1' v'1'
+    A    = '1'         v'1'
+    help = <undefined> v'no'
 }
 
-test cmdr-runtime-3.3 {options, simple, boolean, special forms} -body {
+test cmdr-runtime-3.4 {options, simple, boolean, special forms} -body {
     Parse {
 	option A -
 	option B -
@@ -362,94 +385,102 @@ test cmdr-runtime-3.3 {options, simple, boolean, special forms} -body {
 	option G - { validate identity }
     } -A -G X --no-B -G X -C 1 -D 0 --no-E 1 --no-F 0
 } -result {
-    A = 'yes' v'1'
-    B = '0'   v'0'
-    C = '1'   v'1'
-    D = '0'   v'0'
-    E = '0'   v'0'
-    F = '1'   v'1'
-    G = 'X'   v'X'
+    A    = 'yes'       v'1'
+    B    = '0'         v'0'
+    C    = '1'         v'1'
+    D    = '0'         v'0'
+    E    = '0'         v'0'
+    F    = '1'         v'1'
+    G    = 'X'         v'X'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
 
-test cmdr-runtime-3.4 {options, list, string} -body {
+test cmdr-runtime-3.5 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     }
 } -result {
-    A = <undefined> v''
+    A    = <undefined> v''
+    help = <undefined> v'no'
 }
 
-test cmdr-runtime-3.5 {options, list, string, missing value} -body {
+test cmdr-runtime-3.6 {options, list, string, missing value} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A
 } -returnCodes error \
     -result "wrong\#args, missing value for option '-A'"
 
-test cmdr-runtime-3.6 {options, list, string} -body {
+test cmdr-runtime-3.7 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A X
 } -result {
-    A = 'X' v'X'
+    A    = 'X'         v'X'
+    help = <undefined> v'no'
 }
 
-test cmdr-runtime-3.7 {options, list, string} -body {
+test cmdr-runtime-3.8 {options, list, string} -body {
     Parse {
 	option A - { list ; validate identity }
     } -A X -A Y
 } -result {
-    A = 'X Y' v'X Y'
+    A    = 'X Y'       v'X Y'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
 
-test cmdr-runtime-3.8 {options, aliases} -body {
+test cmdr-runtime-3.9 {options, aliases} -body {
     Parse {
 	option A - { validate identity ; alias Z }
     } -A X -Z Y
 } -result {
-    A = 'Y' v'Y'
+    A    = 'Y'         v'Y'
+    help = <undefined> v'no'
 }
 
-test cmdr-runtime-3.9 {options, aliases, list} -body {
+test cmdr-runtime-3.10 {options, aliases, list} -body {
     Parse {
 	option A - { list ; validate identity ; alias Z }
     } -A X -Z Y
 } -result {
-    A = 'X Y' v'X Y'
+    A    = 'X Y'       v'X Y'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
 
-test cmdr-runtime-3.10 {options, long names} -body {
+test cmdr-runtime-3.11 {options, long names} -body {
     Parse {
 	option ALPHA - { list ; validate identity }
     } --ALPHA Z
 } -result {
-    ALPHA = 'Z' v'Z'
+    ALPHA = 'Z'         v'Z'
+    help  = <undefined> v'no'
 }
 
-test cmdr-runtime-3.11 {options, unique prefix expansion} -body {
+test cmdr-runtime-3.12 {options, unique prefix expansion} -body {
     Parse {
 	option ALPHA - { list ; validate identity }
     } --AL Z
 } -result {
-    ALPHA = 'Z' v'Z'
+    ALPHA = 'Z'         v'Z'
+    help  = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
 
-test cmdr-runtime-3.12 {options, unknown option} -body {
+test cmdr-runtime-3.13 {options, unknown option} -body {
     Parse {
 	option A - { validate identity }
     } -B Z
 } -returnCodes error \
     -result {Unknown option -B}
 
-test cmdr-runtime-3.13 {options, ambiguous prefix} -body {
+test cmdr-runtime-3.14 {options, ambiguous prefix} -body {
     Parse {
 	option ALPHA - { validate identity }
 	option ALNUM - { validate identity }
@@ -460,7 +491,7 @@ test cmdr-runtime-3.13 {options, ambiguous prefix} -body {
 # NOTE: Test is brittle, dependent on the internal order in which the
 # options are processed by UniquePrefixes.
 
-test cmdr-runtime-3.14 {options, semi-ambiguous prefix (other option)} -body {
+test cmdr-runtime-3.15 {options, semi-ambiguous prefix (other option)} -body {
     Parse {
 	option ALPHA - { validate identity }
 	option AL    - { validate identity }
@@ -468,19 +499,21 @@ test cmdr-runtime-3.14 {options, semi-ambiguous prefix (other option)} -body {
 } -result {
     AL    = 'Z'         v'Z'
     ALPHA = <undefined> v''
+    help  = <undefined> v'no'
 }
 
 # NOTE: Test is brittle, dependent on the internal order in which the
 # options are processed by UniquePrefixes.
 
-test cmdr-runtime-3.15 {options, semi-ambiguous prefix (other option)} -body {
+test cmdr-runtime-3.16 {options, semi-ambiguous prefix (other option)} -body {
     Parse {
 	option AL-PHA - { validate identity }
 	option AL     - { validate identity }
     } --AL Z --AL-PHA Y
 } -result {
-    AL     = 'Z' v'Z'
-    AL-PHA = 'Y' v'Y'
+    AL     = 'Z'         v'Z'
+    AL-PHA = 'Y'         v'Y'
+    help   = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -496,9 +529,10 @@ test cmdr-runtime-4.1 {options, arguments, and splat} -body {
     # before arguments, handling the 2nd -T before splat collection.
     # Compare to 5.1.
 } -result {
-    A = 'A'     v'A'
-    C = 'C C C' v'C C C'
-    T = 'Y'     v'Y'
+    A    = 'A'         v'A'
+    C    = 'C C C'     v'C C C'
+    help = <undefined> v'no'
+    T    = 'Y'         v'Y'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -516,9 +550,10 @@ test cmdr-runtime-5.1 {options, arguments, and splat, peek} -body {
     # into peek+validate mode, otherwise it would force the options to
     # be processed first.
 } -result {
-    A = 'A'          v'A'
-    C = 'C C C -T Y' v'C C C -T Y'
-    T = 'X'          v'X'
+    A    = 'A'          v'A'
+    C    = 'C C C -T Y' v'C C C -T Y'
+    help = <undefined>  v'no'
+    T    = 'X'          v'X'
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -545,7 +580,7 @@ test cmdr-runtime-6.1 {generator command} -setup {
     StopNotes
 } -result {
     generate MATCH
-    {} {    A = <undefined> v'G'} {}
+    {} {    A    = <undefined> v'G'} {    help = <undefined> v'no'} {}
 }
 
 test cmdr-runtime-6.2 {validation, default supplication} -setup {
@@ -571,9 +606,9 @@ test cmdr-runtime-6.2 {validation, default supplication} -setup {
     unset ons
     StopNotes
 } -result {
-    names = {}
+    names = help
     validate default MATCH
-    {} {    A = <undefined> v'zZzZz'} {}
+    {} {    A    = <undefined> v'zZzZz'} {    help = <undefined> v'no'} {}
 }
 
 test cmdr-runtime-6.3 {generator command} -setup {
@@ -596,10 +631,10 @@ test cmdr-runtime-6.3 {generator command} -setup {
     unset ons
     StopNotes
 } -result {
-    names = A
+    names = {help A}
     defined = {}
     defined MATCH
-    {} {    A = <undefined> v''} {}
+    {} {    A    = <undefined> v''} {    help = <undefined> v'no'} {}
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -611,8 +646,9 @@ test cmdr-runtime-7.1 {not-quite options, arguments} -body {
     } -1 -T -3
     # The -1 looks like an option, but is for input A.
 } -result {
-    A = '-1' v'-1'
-    T = '-3' v'-3'
+    A    = '-1'        v'-1'
+    help = <undefined> v'no'
+    T    = '-3'        v'-3'
 }
 
 test cmdr-runtime-7.2 {validation errors} -body {
@@ -637,13 +673,14 @@ test cmdr-runtime-8.0 {options, simple, boolean, special forms II} -body {
 	option G - { validate identity }
     } -A -G=X --no-B -G=X -C=1 -D=0 --no-E=1 --no-F=0
 } -result {
-    A = 'yes' v'1'
-    B = '0'   v'0'
-    C = '1'   v'1'
-    D = '0'   v'0'
-    E = '0'   v'0'
-    F = '1'   v'1'
-    G = 'X'   v'X'
+    A    = 'yes'       v'1'
+    B    = '0'         v'0'
+    C    = '1'         v'1'
+    D    = '0'         v'0'
+    E    = '0'         v'0'
+    F    = '1'         v'1'
+    G    = 'X'         v'X'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-8.1 {options, boolean, aliases} -body {
@@ -652,8 +689,9 @@ test cmdr-runtime-8.1 {options, boolean, aliases} -body {
 	option B - { neg-alias Y }
     } -X -Y
 } -result {
-    A = 'yes' v'1'
-    B = '0'   v'0'
+    A    = 'yes'       v'1'
+    B    = '0'         v'0'
+    help = <undefined> v'no'
 }
 
 test cmdr-runtime-8.2 {options, boolean, aliases, special forms} -body {
@@ -662,8 +700,9 @@ test cmdr-runtime-8.2 {options, boolean, aliases, special forms} -body {
 	option B - { neg-alias Y }
     } -X=0 -Y=0
 } -result {
-    A = '0' v'0'
-    B = '1' v'1'
+    A    = '0'         v'0'
+    B    = '1'         v'1'
+    help = <undefined> v'no'
 }
 
 # # ## ### ##### ######## ############# #####################
