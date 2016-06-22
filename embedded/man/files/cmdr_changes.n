@@ -283,6 +283,176 @@ For availability please read \fICmdr - How To Get The Sources\fR\&.
 This document provides an overview of the changes \fBcmdr\fR
 underwent from version to version\&.
 .SH CHANGES
+.SS "CHANGES FOR VERSION 1\&.2"
+.IP [1]
+Added many new standard validation types to package
+\fBcmdr::validate\fR:
+.RS
+.IP [1]
+Double
+.IP [2]
+Percent
+.IP [3]
+Posint (positive integers, > 0)
+.IP [4]
+Paths and channels
+.RS
+.IP [1]
+Readable file
+.IP [2]
+Writable file
+.IP [3]
+Read/writable file
+.IP [4]
+Readable directory
+.IP [5]
+Read/writeable directory
+.IP [6]
+readable path
+.IP [7]
+Read/writable path
+.IP [8]
+Readable path, as channel
+.IP [9]
+Writable path, as channel
+.IP [10]
+Read/writable path, as channel
+.RE
+.IP [5]
+Date and time related:
+.RS
+.IP [1]
+iso8601 date/time,
+.IP [2]
+year
+.IP [3]
+weekday,
+.IP [4]
+hour:minute
+.RE
+.RE
+.IP [2]
+Added more helper commands for validation failure messages to
+package \fBcmdr::validate::common\fR\&.
+.RS
+.IP [1]
+\fBfail-unknown-thing\fR
+.IP [2]
+\fBfail-unknown-thing-msg\fR
+.IP [3]
+\fBfail-unknown-simple\fR
+.IP [4]
+\fBfail-unknown-simple-msg\fR
+.IP [5]
+\fBfail-known-thing\fR
+.IP [6]
+\fBfail-known-thing-msg\fR
+.IP [7]
+\fBfail-known-simple\fR
+.IP [8]
+\fBfail-known-simple-msg\fR
+-- TODO -- document --
+.RE
+.IP [3]
+Modified integer validation to have a proper internal
+representation: decimal\&. Octal, hex, etc\&. input is now
+normalized to this\&.
+.IP [4]
+Various new supporting packages:
+.RS
+.TP
+\fBcmdr::tty\fR
+Test for terminal\&.
+.TP
+\fBcmdr::color\fR
+Color management, ansi control sequences\&.
+.TP
+\fBcmdr::ask\fR
+User interaction commands\&.
+.TP
+\fBcmdr::pager\fR
+Text display with automatic invokation of
+a pager for tall output\&.
+.TP
+\fBcmdr::history\fR
+Pluggable management of command history\&.
+.TP
+\fBcmdr::table\fR
+Table formatting, simplified interface to
+\fITcllib\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/toc\&.html]'s
+\fBstruct::matrix\fR and
+\fBreport\fR packages\&.
+.TP
+\fBcmdr::validate::valtype-support\fR
+Even more validation types\&.
+Wrappers around the validation commands provided by
+\fITcllib\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/toc\&.html]:
+.RS
+.IP [1]
+\fIvaltype::creditcard::amex\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_amex\&.html]
+.IP [2]
+\fIvaltype::creditcard::discover\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_discover\&.html]
+.IP [3]
+\fIvaltype::creditcard::mastercard\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_mastercard\&.html]
+.IP [4]
+\fIvaltype::creditcard::visa\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_visa\&.html]
+.IP [5]
+\fIvaltype::gs1::ean13\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/ean13\&.html]
+.IP [6]
+\fIvaltype::iban\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/iban\&.html]
+.IP [7]
+\fIvaltype::imei\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/imei\&.html]
+.IP [8]
+\fIvaltype::isbn\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/isbn\&.html]
+.IP [9]
+\fIvaltype::luhn\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/luhn\&.html]
+.IP [10]
+\fIvaltype::luhn5\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/luhn5\&.html]
+.IP [11]
+\fIvaltype::usnpi\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/usnpi\&.html]
+.IP [12]
+\fIvaltype::verhoeff\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/verhoeff\&.html]
+.RE
+.RE
+.IP [5]
+Added support for per-officer options\&. The most common use case
+will likely be the declaration of global options in the root
+officer\&.
+.sp
+Related to this, a new common block \fB*config*\fR is set to
+the active \fBconfig\fR instance, which will be different
+from the defining instance, , for per-officer options\&. This
+gives the per-officer options access to the arguments (and
+options) of the current command, instead of only their own
+sibling options\&.
+.IP [6]
+Added support for an option \fB-extend\fR for common blocks,
+allowing their extension in a subordinate instead of just
+replacing the entire content\&.
+.IP [7]
+Extended boolean options to allow the specification of negative
+aliases, i\&.e\&. representing the inverted option\&. See the DSL
+commands \fBneg-alias\fR and \fB!alias\fR in
+\fICmdr - Parameter Specification Language\fR\&.
+.IP [8]
+Extended the DSL for options in general with the ability to set
+a label for the option argument so that the generated help can
+be more descriptive\&. The option name is used as fallback for
+options for which no such label was specified\&.
+See DSL command \fBlabel\fR in
+\fICmdr - Parameter Specification Language\fR\&.
+.IP [9]
+Extended officers to accept all unique command prefixes of
+their subordinates for dispatch\&.
+.IP [10]
+Modified the help system to use the \fBshort\fR format for
+interior nodes of the command hierarchy by default\&.
+.IP [11]
+Modified the help system to exclude auto-added commands from
+the output generated by format \fBby-category\fR\&.
+.IP [12]
+\&.\&.\&. A suite of bug fixes \&.\&.\&. // TODO: list the details\&.
+.PP
 .SS "CHANGES FOR VERSION 1\&.1"
 .IP [1]
 Fixed broken requirement references in the meta data of packages
@@ -293,7 +463,7 @@ Fixed initialization issues in the help generator\&.
 Fixed generated help, added the application name to the output
 when in a cmdr shell\&.
 .IP [4]
-Fixed the generation of help format by-categorized, when
+Fixed the generation of help format \fBby-categorized\fR, when
 encountering sections with sub-sections and no commands of their
 own\&.
 .IP [5]

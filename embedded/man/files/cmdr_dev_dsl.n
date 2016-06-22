@@ -319,6 +319,9 @@ The DSL commands map to instance methods as shown below:
 \fBehandler\fR
 \fBehandler\fR
 .TP
+\fBshandler\fR
+\fBshandler\fR
+.TP
 \fBofficer\fR
 \fBOfficer\fR, forward to \fBDefineAction\fR
 .TP

@@ -11,7 +11,7 @@
 [include parts/welcome.inc]
 
 This package provides a single utility command to manage the automatic
-paging of long output, like [vset PROJECT]'s automatic help.
+paging of long output, like it is done [vset PROJECT]'s automatic help.
 
 [section API]
 [list_begin definitions]

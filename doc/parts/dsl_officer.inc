@@ -31,7 +31,7 @@ The path to the actor, as list of names.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd common] [arg name] [arg text]]
+[call [cmd common] [arg name] [option -extend] [option --] [arg text]]
 
 This is another structuring command, for structuring the specification
 itself instead of the command tree it declares.
@@ -72,6 +72,12 @@ block, and possibly forgetting such.
 
 [para] Generally speaking, the framework reserves all blocks whose
 name begins with a star, i.e [const *], for its own use.
+
+[para] Using option [option -extend] will change the behaviour to
+       extend inherited content instead of writing over it.
+
+[para] Using option [option --] will prevent misinterpretation of the
+       following argument as option, even if it begins with a dash.
 
 [list_begin arguments]
 [arg_def string name]
@@ -132,6 +138,25 @@ commands run from such a shell, something which is definitely not
 wanted.
 
 [list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd shandler] [arg cmdprefix]]
+
+This is an advanced command which should normally only be specified at
+the top of the whole hierarchy (from which its value will
+automatically propagate to all subordinates).
+
+[para] At runtime the framework will call the specified command prefix
+with a single argument, the command of the actor we wish to
+initialize.
+
+The command prefix is then allowed to modify that actor as it sees
+fit. The common use case will be the extension of the object with
+additional subordinates.
+
+An example of this is the package [package cmdr::history] which
+provides a command [cmd cmdr::history::attach] to add the history
+management commands to the actor in question.
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd officer] [arg name] [arg script]]
