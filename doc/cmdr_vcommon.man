@@ -21,9 +21,7 @@ The standard validation types defined in package
 [call [cmd ::cmdr::validate::common] [method fail] \
      [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-When invoked this command throws an error indicating a validation type
-failure. The arguments provide the information used to construct both
-error message and code.
+[include parts/fail_description.inc]
 
 [para] The generated string has the form:
 [example {
@@ -31,96 +29,139 @@ error message and code.
 }]
 
 [list_begin arguments]
-[arg_def [package cmdr::parameter] p]
-The [package cmdr::parameter] instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).
-
-[arg_def list code]
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.
-
-[arg_def string type]
-A string providing the human-readable name of the validation type
-triggering the error.
-
-[arg_def string x]
-The string value failing the validation.
-
-[arg_def string context]
-Additional context to show in the message. Defaults to the empty string.
+[include parts/fail_args.inc]
 [list_end]
 
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
 [call [cmd ::cmdr::validate::common] [method fail-unknown-thing] \
      [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-When invoked this command throws an error indicating a validation type
-failure. The arguments provide the information used to construct both
-error message and code.
+[include parts/fail_description.inc]
 
 [para] The generated string has the form:
 [example {
     Found a problem with $p.type "$p.the-name":
     A(n) $type named "$x" does not exist$context.
-    Please use a different value.
+     Please use a different value.
 }]
 
 [list_begin arguments]
-[arg_def [package cmdr::parameter] p]
-The [package cmdr::parameter] instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).
+[include parts/fail_args.inc]
+[list_end]
 
-[arg_def list code]
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-unknown-thing-msg] \
+     [arg msg] [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-[arg_def string type]
-A string providing the human-readable name of the validation type
-triggering the error.
+[vset method fail-unknown-thing][include parts/fail_desc_variant.inc]
 
-[arg_def string x]
-The string value failing the validation.
+[para] The generated string has the form:
+[example {
+    Found a problem with $p.type "$p.the-name":
+    A(n) $type named "$x" does not exist$context.
+     $msg.
+}]
 
-[arg_def string context]
-Additional context to show in the message. Defaults to the empty string.
+[list_begin arguments]
+[include parts/fail_msg_args.inc]
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-unknown-simple] \
+     [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
+
+[include parts/fail_description.inc]
+
+[para] The generated string has the form:
+[example {
+    $type "$x" does not exist$context.
+     Please use a different value.
+}]
+
+[list_begin arguments]
+[include parts/fail_args.inc]
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-unknown-simple-msg] \
+     [arg msg] [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
+
+[vset method fail-unknown-simple][include parts/fail_desc_variant.inc]
+
+[para] The generated string has the form:
+[example {
+    $type "$x" does not exist$context.
+     $msg.
+}]
+
+[list_begin arguments]
+[include parts/fail_msg_args.inc]
 [list_end]
 
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
 [call [cmd ::cmdr::validate::common] [method fail-known-thing] \
      [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-When invoked this command throws an error indicating a validation type
-failure. The arguments provide the information used to construct both
-error message and code.
+[include parts/fail_description.inc]
 
 [para] The generated string has the form:
 [example {
     Found a problem with $p.type "$p.the-name":
     A(n) $type named "$x" already exists$context.
-    Please use a different name.
+     Please use a different name.
 }]
 
 [list_begin arguments]
-[arg_def [package cmdr::parameter] p]
-The [package cmdr::parameter] instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).
+[include parts/fail_args.inc]
+[list_end]
 
-[arg_def list code]
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-known-thing-msg] \
+     [arg msg] [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
 
-[arg_def string type]
-A string providing the human-readable name of the validation type
-triggering the error.
+[vset method fail-known-thing][include parts/fail_desc_variant.inc]
 
-[arg_def string x]
-The string value failing the validation.
+[para] The generated string has the form:
+[example {
+    Found a problem with $p.type "$p.the-name":
+    A(n) $type named "$x" already exists$context.
+     $msg.
+}]
 
-[arg_def string context]
-Additional context to show in the message. Defaults to the empty string.
+[list_begin arguments]
+[include parts/fail_msg_args.inc]
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-known-simple] \
+     [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
+
+[include parts/fail_description.inc]
+
+[para] The generated string has the form:
+[example {
+    $type named "$x" already exists$context.
+     Please use a different name.
+}]
+
+[list_begin arguments]
+[include parts/fail_args.inc]
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[call [cmd ::cmdr::validate::common] [method fail-known-simple-msg] \
+     [arg msg] [arg p] [arg code] [arg type] [arg x] [opt [arg context]]]
+
+[vset method fail-known-simple][include parts/fail_desc_variant.inc]
+
+[para] The generated string has the form:
+[example {
+    $type named "$x" already exists$context.
+     $msg.
+}]
+
+[list_begin arguments]
+[include parts/fail_msg_args.inc]
 [list_end]
 
 [comment {- - -- --- ----- -------- ------------- ---------------------}]
