@@ -281,7 +281,19 @@ package require \fBcmdr::validate::common \fR
 .sp
 \fB::cmdr::validate::common\fR \fBfail-unknown-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
 .sp
+\fB::cmdr::validate::common\fR \fBfail-unknown-thing-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-unknown-simple\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-unknown-simple-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
 \fB::cmdr::validate::common\fR \fBfail-known-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-known-thing-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-known-simple\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+.sp
+\fB::cmdr::validate::common\fR \fBfail-known-simple-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
 .sp
 \fB::cmdr::validate::common\fR \fBcomplete-enum\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR
 .sp
@@ -321,23 +333,26 @@ The generated string has the form:
 .RS
 .TP
 \fBcmdr::parameter\fR \fIp\fR
-The \fBcmdr::parameter\fR instance whose validation failed\&. The
-error message will contain this parameter's type and label (flag in
-case of an option)\&.
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
 .TP
 list \fIcode\fR
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error\&.
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
 .TP
 string \fItype\fR
-A string providing the human-readable name of the validation type
-triggering the error\&.
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
 .TP
 string \fIx\fR
-The string value failing the validation\&.
+The string value which failed the validation\&.
 .TP
 string \fIcontext\fR
-Additional context to show in the message\&. Defaults to the empty string\&.
+Additional context to show in the message\&.
+Defaults to the empty string\&.
 .RE
 .TP
 \fB::cmdr::validate::common\fR \fBfail-unknown-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
@@ -351,29 +366,161 @@ The generated string has the form:
 
     Found a problem with $p\&.type "$p\&.the-name":
     A(n) $type named "$x" does not exist$context\&.
-    Please use a different value\&.
+     Please use a different value\&.
 
 .CE
 .RS
 .TP
 \fBcmdr::parameter\fR \fIp\fR
-The \fBcmdr::parameter\fR instance whose validation failed\&. The
-error message will contain this parameter's type and label (flag in
-case of an option)\&.
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
 .TP
 list \fIcode\fR
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error\&.
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
 .TP
 string \fItype\fR
-A string providing the human-readable name of the validation type
-triggering the error\&.
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
 .TP
 string \fIx\fR
-The string value failing the validation\&.
+The string value which failed the validation\&.
 .TP
 string \fIcontext\fR
-Additional context to show in the message\&. Defaults to the empty string\&.
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-unknown-thing-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+A variant of \fBfail-unknown-thing\fR which takes an additional
+user-specified message text as the first argument\&.
+.sp
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    Found a problem with $p\&.type "$p\&.the-name":
+    A(n) $type named "$x" does not exist$context\&.
+     $msg\&.
+
+.CE
+.RS
+.TP
+string \fImsg\fR
+A custom message to put into the generated error message\&.
+See the example above\&.
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-unknown-simple\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    $type "$x" does not exist$context\&.
+     Please use a different value\&.
+
+.CE
+.RS
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-unknown-simple-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+A variant of \fBfail-unknown-simple\fR which takes an additional
+user-specified message text as the first argument\&.
+.sp
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    $type "$x" does not exist$context\&.
+     $msg\&.
+
+.CE
+.RS
+.TP
+string \fImsg\fR
+A custom message to put into the generated error message\&.
+See the example above\&.
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
 .RE
 .TP
 \fB::cmdr::validate::common\fR \fBfail-known-thing\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
@@ -387,29 +534,161 @@ The generated string has the form:
 
     Found a problem with $p\&.type "$p\&.the-name":
     A(n) $type named "$x" already exists$context\&.
-    Please use a different name\&.
+     Please use a different name\&.
 
 .CE
 .RS
 .TP
 \fBcmdr::parameter\fR \fIp\fR
-The \fBcmdr::parameter\fR instance whose validation failed\&. The
-error message will contain this parameter's type and label (flag in
-case of an option)\&.
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
 .TP
 list \fIcode\fR
-A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error\&.
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
 .TP
 string \fItype\fR
-A string providing the human-readable name of the validation type
-triggering the error\&.
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
 .TP
 string \fIx\fR
-The string value failing the validation\&.
+The string value which failed the validation\&.
 .TP
 string \fIcontext\fR
-Additional context to show in the message\&. Defaults to the empty string\&.
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-known-thing-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+A variant of \fBfail-known-thing\fR which takes an additional
+user-specified message text as the first argument\&.
+.sp
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    Found a problem with $p\&.type "$p\&.the-name":
+    A(n) $type named "$x" already exists$context\&.
+     $msg\&.
+
+.CE
+.RS
+.TP
+string \fImsg\fR
+A custom message to put into the generated error message\&.
+See the example above\&.
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-known-simple\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    $type named "$x" already exists$context\&.
+     Please use a different name\&.
+
+.CE
+.RS
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
+.RE
+.TP
+\fB::cmdr::validate::common\fR \fBfail-known-simple-msg\fR \fImsg\fR \fIp\fR \fIcode\fR \fItype\fR \fIx\fR ?\fIcontext\fR?
+A variant of \fBfail-known-simple\fR which takes an additional
+user-specified message text as the first argument\&.
+.sp
+When invoked this command throws an error indicating a validation type
+failure\&. The arguments provide the information used to construct both
+error message and code\&.
+.sp
+The generated string has the form:
+.CS
+
+
+    $type named "$x" already exists$context\&.
+     $msg\&.
+
+.CE
+.RS
+.TP
+string \fImsg\fR
+A custom message to put into the generated error message\&.
+See the example above\&.
+.TP
+\fBcmdr::parameter\fR \fIp\fR
+The \fBcmdr::parameter\fR instance whose validation failed\&.
+The error message will contain this parameter's type and label
+(flag in case of an option)\&.
+.TP
+list \fIcode\fR
+A list of additional elements for the error code to throw\&.
+Should detail the internal name of the validation type triggering the
+error\&.
+.TP
+string \fItype\fR
+A string holding a human-readable name for the validation type
+triggering the error\&. (Conversely to the \fIcode\fR, which is for
+machine-readability, i\&.e\&. trapping)
+.TP
+string \fIx\fR
+The string value which failed the validation\&.
+.TP
+string \fIcontext\fR
+Additional context to show in the message\&.
+Defaults to the empty string\&.
 .RE
 .TP
 \fB::cmdr::validate::common\fR \fBcomplete-enum\fR \fIchoices\fR \fInocase\fR \fIbuffer\fR

@@ -128,12 +128,18 @@
 <ul class="syntax">
 <li><a href="#1"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
 <li><a href="#2"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
-<li><a href="#3"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
-<li><a href="#4"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></li>
-<li><a href="#5"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-substr</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></li>
-<li><a href="#6"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></li>
-<li><a href="#7"><b class="cmd">::cmdr::validate::common</b> <b class="method">ok-directory</b> <i class="arg">path</i></a></li>
-<li><a href="#8"><b class="cmd">::cmdr::validate::common</b> <b class="method">lead-in</b> <i class="arg">text</i></a></li>
+<li><a href="#3"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-thing-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-simple</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#5"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-simple-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#6"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#7"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#8"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-simple</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#9"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-simple-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></li>
+<li><a href="#10"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></li>
+<li><a href="#11"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-substr</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></li>
+<li><a href="#12"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></li>
+<li><a href="#13"><b class="cmd">::cmdr::validate::common</b> <b class="method">ok-directory</b> <i class="arg">path</i></a></li>
+<li><a href="#14"><b class="cmd">::cmdr::validate::common</b> <b class="method">lead-in</b> <i class="arg">text</i></a></li>
 </ul>
 </div>
 </div>
@@ -157,19 +163,22 @@ error message and code.</p>
 </pre>
 <dl class="arguments">
 <dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).</p></dd>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
 <dt>list <i class="arg">code</i></dt>
-<dd><p>A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.</p></dd>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
 <dt>string <i class="arg">type</i></dt>
-<dd><p>A string providing the human-readable name of the validation type
-triggering the error.</p></dd>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
 <dt>string <i class="arg">x</i></dt>
-<dd><p>The string value failing the validation.</p></dd>
+<dd><p>The string value which failed the validation.</p></dd>
 <dt>string <i class="arg">context</i></dt>
-<dd><p>Additional context to show in the message. Defaults to the empty string.</p></dd>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
 </dl></dd>
 <dt><a name="2"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
 <dd><p>When invoked this command throws an error indicating a validation type
@@ -179,25 +188,123 @@ error message and code.</p>
 <pre class="example">
     Found a problem with $p.type &quot;$p.the-name&quot;:
     A(n) $type named &quot;$x&quot; does not exist$context.
-    Please use a different value.
+     Please use a different value.
 </pre>
 <dl class="arguments">
 <dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).</p></dd>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
 <dt>list <i class="arg">code</i></dt>
-<dd><p>A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.</p></dd>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
 <dt>string <i class="arg">type</i></dt>
-<dd><p>A string providing the human-readable name of the validation type
-triggering the error.</p></dd>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
 <dt>string <i class="arg">x</i></dt>
-<dd><p>The string value failing the validation.</p></dd>
+<dd><p>The string value which failed the validation.</p></dd>
 <dt>string <i class="arg">context</i></dt>
-<dd><p>Additional context to show in the message. Defaults to the empty string.</p></dd>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
 </dl></dd>
-<dt><a name="3"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dt><a name="3"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-thing-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>A variant of <b class="method">fail-unknown-thing</b> which takes an additional
+user-specified message text as the first argument.</p>
+<p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    Found a problem with $p.type &quot;$p.the-name&quot;:
+    A(n) $type named &quot;$x&quot; does not exist$context.
+     $msg.
+</pre>
+<dl class="arguments">
+<dt>string <i class="arg">msg</i></dt>
+<dd><p>A custom message to put into the generated error message.
+See the example above.</p></dd>
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-simple</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    $type &quot;$x&quot; does not exist$context.
+     Please use a different value.
+</pre>
+<dl class="arguments">
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="5"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-unknown-simple-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>A variant of <b class="method">fail-unknown-simple</b> which takes an additional
+user-specified message text as the first argument.</p>
+<p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    $type &quot;$x&quot; does not exist$context.
+     $msg.
+</pre>
+<dl class="arguments">
+<dt>string <i class="arg">msg</i></dt>
+<dd><p>A custom message to put into the generated error message.
+See the example above.</p></dd>
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
 <dd><p>When invoked this command throws an error indicating a validation type
 failure. The arguments provide the information used to construct both
 error message and code.</p>
@@ -205,25 +312,123 @@ error message and code.</p>
 <pre class="example">
     Found a problem with $p.type &quot;$p.the-name&quot;:
     A(n) $type named &quot;$x&quot; already exists$context.
-    Please use a different name.
+     Please use a different name.
 </pre>
 <dl class="arguments">
 <dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
-<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed. The
-error message will contain this parameter's type and label (flag in
-case of an option).</p></dd>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
 <dt>list <i class="arg">code</i></dt>
-<dd><p>A list providing additional elements for the error code, detailing the
-internal name of the validation type triggering the error.</p></dd>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
 <dt>string <i class="arg">type</i></dt>
-<dd><p>A string providing the human-readable name of the validation type
-triggering the error.</p></dd>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
 <dt>string <i class="arg">x</i></dt>
-<dd><p>The string value failing the validation.</p></dd>
+<dd><p>The string value which failed the validation.</p></dd>
 <dt>string <i class="arg">context</i></dt>
-<dd><p>Additional context to show in the message. Defaults to the empty string.</p></dd>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
 </dl></dd>
-<dt><a name="4"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></dt>
+<dt><a name="7"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-thing-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>A variant of <b class="method">fail-known-thing</b> which takes an additional
+user-specified message text as the first argument.</p>
+<p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    Found a problem with $p.type &quot;$p.the-name&quot;:
+    A(n) $type named &quot;$x&quot; already exists$context.
+     $msg.
+</pre>
+<dl class="arguments">
+<dt>string <i class="arg">msg</i></dt>
+<dd><p>A custom message to put into the generated error message.
+See the example above.</p></dd>
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="8"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-simple</b> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    $type named &quot;$x&quot; already exists$context.
+     Please use a different name.
+</pre>
+<dl class="arguments">
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="9"><b class="cmd">::cmdr::validate::common</b> <b class="method">fail-known-simple-msg</b> <i class="arg">msg</i> <i class="arg">p</i> <i class="arg">code</i> <i class="arg">type</i> <i class="arg">x</i> <span class="opt">?<i class="arg">context</i>?</span></a></dt>
+<dd><p>A variant of <b class="method">fail-known-simple</b> which takes an additional
+user-specified message text as the first argument.</p>
+<p>When invoked this command throws an error indicating a validation type
+failure. The arguments provide the information used to construct both
+error message and code.</p>
+<p>The generated string has the form:</p>
+<pre class="example">
+    $type named &quot;$x&quot; already exists$context.
+     $msg.
+</pre>
+<dl class="arguments">
+<dt>string <i class="arg">msg</i></dt>
+<dd><p>A custom message to put into the generated error message.
+See the example above.</p></dd>
+<dt><b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> <i class="arg">p</i></dt>
+<dd><p>The <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> instance whose validation failed.
+The error message will contain this parameter's type and label
+(flag in case of an option).</p></dd>
+<dt>list <i class="arg">code</i></dt>
+<dd><p>A list of additional elements for the error code to throw.
+Should detail the internal name of the validation type triggering the
+error.</p></dd>
+<dt>string <i class="arg">type</i></dt>
+<dd><p>A string holding a human-readable name for the validation type
+triggering the error. (Conversely to the <i class="arg">code</i>, which is for
+machine-readability, i.e. trapping)</p></dd>
+<dt>string <i class="arg">x</i></dt>
+<dd><p>The string value which failed the validation.</p></dd>
+<dt>string <i class="arg">context</i></dt>
+<dd><p>Additional context to show in the message.
+Defaults to the empty string.</p></dd>
+</dl></dd>
+<dt><a name="10"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-enum</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></dt>
 <dd><p>When invoked this command returns a list of strings containing just
 the elements of <i class="arg">choices</i> the value of <i class="arg">buffer</i> is a prefix
 of. When <i class="arg">nocase</i> is set the command will ignore letter case and
@@ -237,7 +442,7 @@ letter-case (<b class="const">true</b>, <b class="const">nocase</b>), or not (<b
 <dt>string <i class="arg">buffer</i></dt>
 <dd><p>The string to complete via the list of <i class="arg">choices</i>.</p></dd>
 </dl></dd>
-<dt><a name="5"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-substr</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></dt>
+<dt><a name="11"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-substr</b> <i class="arg">choices</i> <i class="arg">nocase</i> <i class="arg">buffer</i></a></dt>
 <dd><p>When invoked this command returns a list of strings containing just
 the elements of <i class="arg">choices</i> the value of <i class="arg">buffer</i> is a substring
 of. When <i class="arg">nocase</i> is set the command will ignore letter case and
@@ -251,7 +456,7 @@ letter-case (<b class="const">true</b>, <b class="const">nocase</b>), or not (<b
 <dt>string <i class="arg">buffer</i></dt>
 <dd><p>The string to complete via the list of <i class="arg">choices</i>.</p></dd>
 </dl></dd>
-<dt><a name="6"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></dt>
+<dt><a name="12"><b class="cmd">::cmdr::validate::common</b> <b class="method">complete-glob</b> <i class="arg">filter</i> <i class="arg">buffer</i></a></dt>
 <dd><p>When invoked this command returns a list of strings, the paths in the
 filesystem the value of <i class="arg">buffer</i> is a prefix of, and not rejected
 by the <i class="arg">filter</i> command (prefix).</p>
@@ -266,7 +471,7 @@ it.</p></dd>
 <dt>string <i class="arg">buffer</i></dt>
 <dd><p>The string, a partial path, to complete.</p></dd>
 </dl></dd>
-<dt><a name="7"><b class="cmd">::cmdr::validate::common</b> <b class="method">ok-directory</b> <i class="arg">path</i></a></dt>
+<dt><a name="13"><b class="cmd">::cmdr::validate::common</b> <b class="method">ok-directory</b> <i class="arg">path</i></a></dt>
 <dd><p>When invoked this command checks if the specified <i class="arg">path</i> is
 suitable as a directory and returns the boolean value <b class="const">true</b> if
 so, and <b class="const">false</b> else.</p>
@@ -289,7 +494,7 @@ so, and <b class="const">false</b> else.</p>
 <dt>string <i class="arg">path</i></dt>
 <dd><p>The path to check.</p></dd>
 </dl></dd>
-<dt><a name="8"><b class="cmd">::cmdr::validate::common</b> <b class="method">lead-in</b> <i class="arg">text</i></a></dt>
+<dt><a name="14"><b class="cmd">::cmdr::validate::common</b> <b class="method">lead-in</b> <i class="arg">text</i></a></dt>
 <dd><p>A utility command supporting the construction of error messages. Given the
 <i class="arg">text</i> the command returns a modified text with a proper prefix of
 either <b class="const">A</b> or <b class="const">An</b>.</p>
