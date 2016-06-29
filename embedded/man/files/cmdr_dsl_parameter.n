@@ -315,7 +315,7 @@ cmdr-spec-dsl-parameter \- Cmdr - Parameter Specification Language
 .sp
 \fBtouch\fR \fIname\fR \fIvalue\fR
 .sp
-\fBtouch\fR \fIname\fR \fIvalue\fR
+\fBtouch?\fR \fIname\fR \fIvalue\fR
 .sp
 \fBdisallow\fR \fIname\fR
 .sp
@@ -759,7 +759,7 @@ parameters of a command\&.
 .sp
 Useful for use with \fBwhen-set\fR and/or \fBwhen-complete\fR
 .TP
-\fBtouch\fR \fIname\fR \fIvalue\fR
+\fBtouch?\fR \fIname\fR \fIvalue\fR
 The returned callback sets the \fIname\fRd sibling parameter to the
 specified \fIvalue\fR, if and only if that parameter exists\&. A simple
 method of communication between parameters of a command, where the

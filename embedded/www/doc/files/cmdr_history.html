@@ -159,7 +159,7 @@ management commands.</p></dd>
     history limit ?n? - Limit history to 'n' entries (n &gt;= 0). Unlimited for n &lt; 0.
 </pre>
 <p>Under most circumstances the attachment is handled through the
-<b class="cmd">shandler</b> method of officers. See <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>, and
+method <b class="cmd">custom-setup</b> of officers. See <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>, and
 the <span class="sectref"><a href="#section3">Example</a></span> for more information.</p></dd>
 <dt><a name="2"><b class="cmd">::cmdr::history</b> <b class="method">save-to</b> <i class="arg">path</i></a></dt>
 <dd><p>When invoked this command sets the package-wide history save file used
@@ -179,7 +179,7 @@ The example was taken from the <b class="cmd">fx</b> application extending the
 cmdr history initial-limit 20
 cmdr history save-to       ~/.fx_history
 cmdr create fx::fx [file tail $::argv0] {
-    shandler ::cmdr::history::attach
+    custom-setup ::cmdr::history::attach
     [...]
 }
 </pre>

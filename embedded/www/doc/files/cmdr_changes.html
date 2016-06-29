@@ -135,15 +135,16 @@ underwent from version to version.</p>
 <div id="section2" class="section"><h2><a name="section2">Changes</a></h2>
 <div id="subsection1" class="subsection"><h3><a name="subsection1">Changes for version 1.2</a></h3>
 <ol class="enumerated">
-<li><p>Added many new standard validation types to package
-       <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>:</p>
+<li><p>Extended the package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b> with many new
+       standard validation types:</p>
 <ol class="enumerated">
+       
 <li><p>Double</p></li>
 <li><p>Percent</p></li>
 <li><p>Posint (positive integers, &gt; 0)</p></li>
 <li><p>Paths and channels</p>
 <ol class="enumerated">
-       
+              
 <li><p>Readable file</p></li>
 <li><p>Writable file</p></li>
 <li><p>Read/writable file</p></li>
@@ -158,8 +159,8 @@ underwent from version to version.</p>
 </li>
 <li><p>Date and time related:</p>
 <ol class="enumerated">
-       
-<li><p>iso8601 date/time,</p></li>
+              
+<li><p>ISO-8601 date/time,</p></li>
 <li><p>year</p></li>
 <li><p>weekday,</p></li>
 <li><p>hour:minute</p></li>
@@ -167,25 +168,25 @@ underwent from version to version.</p>
 </li>
 </ol>
 </li>
-<li><p>Added more helper commands for validation failure messages to
-       package <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b>.</p>
+<li><p>In package <b class="package"><a href="cmdr_validate.html">cmdr::validate</a></b>, modified the integer
+       validation type to have a proper internal representation:
+       decimal. Input in octal, hex, etc. is now normalized to this.</p></li>
+<li><p>Extended package <b class="package"><a href="cmdr_vcommon.html">cmdr::validate::common</a></b> with more
+       helper commands for the generation of validation failure
+       messages</p>
 <ol class="enumerated">
        
-<li><p><b class="cmd">fail-unknown-thing</b></p></li>
 <li><p><b class="cmd">fail-unknown-thing-msg</b></p></li>
 <li><p><b class="cmd">fail-unknown-simple</b></p></li>
 <li><p><b class="cmd">fail-unknown-simple-msg</b></p></li>
-<li><p><b class="cmd">fail-known-thing</b></p></li>
 <li><p><b class="cmd">fail-known-thing-msg</b></p></li>
 <li><p><b class="cmd">fail-known-simple</b></p></li>
 <li><p><b class="cmd">fail-known-simple-msg</b></p></li>
 </ol>
 </li>
-<li><p>Modified integer validation to have a proper internal
-       representation: decimal. Octal, hex, etc. input is now
-       normalized to this.</p></li>
-<li><p>Various new supporting packages:</p>
+<li><p>Added various new supporting packages:</p>
 <dl class="definitions">
+       
 <dt><b class="package"><a href="cmdr_tty.html">cmdr::tty</a></b></dt>
 <dd><p>Test for terminal.</p></dd>
 <dt><b class="package"><a href="cmdr_color.html">cmdr::color</a></b></dt>
@@ -193,21 +194,20 @@ underwent from version to version.</p>
 <dt><b class="package"><a href="cmdr_ask.html">cmdr::ask</a></b></dt>
 <dd><p>User interaction commands.</p></dd>
 <dt><b class="package"><a href="cmdr_pager.html">cmdr::pager</a></b></dt>
-<dd><p>Text display with automatic invokation of
-     	      		    a pager for tall output.</p></dd>
+<dd><p>Text display with automatic invokation of a pager for tall
+            output.</p></dd>
 <dt><b class="package"><a href="cmdr_history.html">cmdr::history</a></b></dt>
 <dd><p>Pluggable management of command history.</p></dd>
-<dt><b class="package">cmdr::table</b></dt>
-<dd><p>Table formatting, simplified interface to
-      		            <a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/toc.html">Tcllib</a>'s
-      		            <b class="package">struct::matrix</b> and
-			    <b class="package">report</b> packages.</p></dd>
+<dt><b class="package"><a href="cmdr_table.html">cmdr::table</a></b></dt>
+<dd><p>Table formatting, a simplified interface to
+            <a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/toc.html">Tcllib</a>'s
+            <b class="package">struct::matrix</b> and <b class="package">report</b> packages.</p></dd>
 <dt><b class="package">cmdr::validate::valtype-support</b></dt>
-<dd><p>Even more validation types.
-     Wrappers around the validation commands provided by
-       <a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/toc.html">Tcllib</a>:</p>
+<dd><p>Even more validation types, now as wrappers around the
+            validation commands provided by
+            <a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/toc.html">Tcllib</a>:</p>
 <ol class="enumerated">
-       
+            
 <li><p><a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_amex.html">valtype::creditcard::amex</a></p></li>
 <li><p><a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_discover.html">valtype::creditcard::discover</a></p></li>
 <li><p><a href="http://core.tcl.tk/tcllib/doc/trunk/embedded/www/tcllib/files/modules/valtype/cc_mastercard.html">valtype::creditcard::mastercard</a></p></li>
@@ -223,35 +223,85 @@ underwent from version to version.</p>
 </ol></dd>
 </dl>
 </li>
-<li><p>Added support for per-officer options. The most common use case
-       will likely be the declaration of global options in the root
-       officer.</p>
-<p>Related to this, a new common block <b class="const">*config*</b> is set to
-       the active <b class="package">config</b> instance, which will be different
-       from the defining instance, , for per-officer options. This
-       gives the per-officer options access to the arguments (and
-       options) of the current command, instead of only their own
-       sibling options.</p></li>
-<li><p>Added support for an option <b class="option">-extend</b> for common blocks,
-       allowing their extension in a subordinate instead of just
-       replacing the entire content.</p></li>
-<li><p>Extended boolean options to allow the specification of negative
-       aliases, i.e. representing the inverted option. See the DSL
-       commands <b class="cmd">neg-alias</b> and <b class="cmd">!alias</b> in
-       <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></li>
-<li><p>Extended the DSL for options in general with the ability to set
-       a label for the option argument so that the generated help can
-       be more descriptive. The option name is used as fallback for
-       options for which no such label was specified.
-       See DSL command <b class="cmd">label</b> in
-       <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></li>
-<li><p>Extended officers to accept all unique command prefixes of
-       their subordinates for dispatch.</p></li>
-<li><p>Modified the help system to use the <b class="const">short</b> format for
-       interior nodes of the command hierarchy by default.</p></li>
-<li><p>Modified the help system to exclude auto-added commands from
-       the output generated by format <b class="const">by-category</b>.</p></li>
-<li><p>... A suite of bug fixes ... // TODO: list the details.</p></li>
+<li><p>Extended package <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b> with</p>
+<ol class="enumerated">
+       
+<li><p>Support for per-officer options. The most common use
+              case will likely be the declaration of global options in
+              the root officer.</p>
+<p>Related to this, a new common block <b class="const">*config*</b> is
+              set to the active <b class="package">config</b> instance, which will
+              be different from the defining instance, for per-officer
+              options. This gives the per-officer options access to
+              the arguments (and options) of the current command,
+              instead of only their own sibling options.</p></li>
+<li><p>Support for an option <b class="option">-extend</b> for common
+              blocks, allowing their extension in a subordinate
+              instead of just replacing the entire content.</p></li>
+<li><p>Support to accept all unique command prefixes of an
+              officer's subordinates for dispatch.</p></li>
+</ol>
+</li>
+<li><p>Extended package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> with</p>
+<ol class="enumerated">
+       
+<li><p>Support for the specification of negative aliases for
+              boolean options, i.e. representing the inverted option.</p>
+<p>See the DSL commands <b class="cmd">neg-alias</b> and <b class="cmd">!alias</b> in
+              <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></li>
+<li><p>Support for option labeling, for use in the generated
+              help, to make it more descriptive. Options for which no
+              label is specified will use their name as fallback.</p>
+<p>See DSL command <b class="cmd">label</b> in
+              <i class="term"><a href="cmdr_dsl_parameter.html">Cmdr - Parameter Specification Language</a></i>.</p></li>
+</ol>
+</li>
+<li><p>Help system changes</p>
+<ol class="enumerated">
+       
+<li><p>Modified it to use the <b class="const">short</b> format for interior
+              nodes of the command hierarchy by default.</p></li>
+<li><p>Modified it to exclude auto-added commands from the
+              output generated by format <b class="const">by-category</b>.</p></li>
+<li><p>Modified the format <b class="const">full</b> to show the option
+       	      arguments for those which have such. See also the
+       	      extension of package <b class="package"><a href="cmdr_parameter.html">cmdr::parameter</a></b> with
+       	      support for option labels, this is what is used here.</p></li>
+<li><p>Modified it to declare a standard global option
+              <b class="option">--help</b> (with aliases <b class="option">-h</b> and
+              <b class="option">-?</b>). Using the option invokes the standard help
+              (command) on the current command, if any, or the global
+              help if there is no command.</p></li>
+<li><p>Modified to use a minimum width of 10 characters for
+       	      descriptions. If the user narrowed the terminal this far
+       	      then having the text either cut off at the right edge,
+       	      or wrapped around is not worse then the help trying to
+       	      wrap the sentence with word boundaries, etc. Also,
+       	      trying to use negative width threw Tcl errors.</p></li>
+</ol>
+</li>
+<li><p>Fixed the handling of common block <b class="const">*all*</b> in package
+       <b class="package"><a href="cmdr_officer.html">cmdr::officer</a></b>. While it was ok trapping and ignoring
+       a missing definition of this block, trapping everything which
+       could go wrong was not.</p>
+<p><a href="http://core.tcl.tk/akupries/cmdr/info/9159f68bc35d9747">Details</a>.</p></li>
+<li><p>Fixed a long-standing bug of package <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> in
+       the forced calculation of parameter values in method
+       <b class="method">Force</b>). Any error in the calculations left an internal
+       flag set, causing future invokations to believe to be in a
+       recursive call and thus do nothing.</p>
+<p>While this had no effect on regular operation, i.e.
+       with the application exiting after each command, in interactive
+       mode this misbehaviour disabled all checks and validations for
+       the command in question, and also retained old parameter
+       values.</p>
+<p><a href="http://core.tcl.tk/akupries/cmdr/info/f74095b252d4c9df">Details</a></p></li>
+<li><p>Modified the formatting of <b class="package"><a href="cmdr_config.html">cmdr::config</a></b> state when
+       interactively entering it for a private. Parameter names now
+       are shown as declared, and an additional flag character
+       indicates if it is inherited from above, or not.</p></li>
+<li><p>General fixes to testsuite, code comments, bogus variable
+       names, typos in error messages, etc.</p></li>
 </ol>
 </div>
 <div id="subsection2" class="subsection"><h3><a name="subsection2">Changes for version 1.1</a></h3>

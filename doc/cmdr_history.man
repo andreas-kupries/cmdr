@@ -37,7 +37,7 @@ After attachment the actor will accept the following 3 commands:
 }]
 
 Under most circumstances the attachment is handled through the
-[cmd shandler] method of officers. See [package cmdr::officer], and
+method [cmd custom-setup] of officers. See [package cmdr::officer], and
 the [sectref Example] for more information.
 
 [comment {- - -- --- ----- -------- -------------}]
@@ -69,7 +69,7 @@ cmdr history initial-limit 20
 cmdr history save-to       ~/.fx_history
 
 cmdr create fx::fx [file tail $::argv0] {
-    shandler ::cmdr::history::attach
+    custom-setup ::cmdr::history::attach
 
     [...]
 }

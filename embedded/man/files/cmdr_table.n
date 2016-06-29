@@ -1,9 +1,9 @@
 '\"
-'\" Generated from file 'cmdr_color\&.man~' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_table\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013-2016 Andreas Kupries
 '\" Copyright (c) 2013-2016 Documentation, Andreas Kupries
 '\"
-.TH "cmdr::color" n 1\&.0\&.2 doc "Cmdr, a framework for command line parsing and dispatch"
+.TH "cmdr::table" n 0\&.1 doc "Cmdr, a framework for command line parsing and dispatch"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,29 +273,37 @@ Database Class:	\\fB\\$3\\fR
 ..
 .BS
 .SH NAME
-cmdr::color \- Cmdr - Terminal colors
+cmdr::table \- Cmdr - Simple Table creation
 .SH SYNOPSIS
-package require \fBcmdr::tty \fR
+package require \fBcmdr::util \fR
 .sp
-package require \fBcmdr::color \fR
+\fB::cmdr::table\fR \fBgeneral\fR \fIvar\fR \fIheaders\fR \fIscript\fR
 .sp
-\fB::cmdr::color\fR \fBactivate\fR ?\fIenable\fR?
+\fB::cmdr::table\fR \fBdict\fR \fIvar\fR \fIscript\fR
 .sp
-\fB::cmdr::color\fR \fBactive\fR
+\fB::cmdr::table\fR \fBborders\fR ?\fIenable\fR?
 .sp
-\fB::cmdr::color\fR \fBnames\fR
+\fB::cmdr::table\fR \fBshow\fR ?\fIcmd\fR\&.\&.\&.?
 .sp
-\fB::cmdr::color\fR \fBget\fR \fIname\fR
+\fBt\fR \fBborders\fR ?\fIenable\fR?
 .sp
-\fB::cmdr::color\fR \fBget-def\fR \fIname\fR
+\fBt\fR \fBheaders\fR ?\fIenable\fR?
 .sp
-\fB::cmdr::color\fR \fBdefine\fR \fIname\fR \fIspec\fR
+\fBt\fR \fBstyle\fR ?\fIstyle\fR?
 .sp
-\fB::cmdr::color\fR \fBexists\fR \fIname\fR
+\fBt\fR \fBadd\fR \fIword\fR\&.\&.\&.
 .sp
-\fB::cmdr::color\fR \fBunset\fR \fIname\fR
+\fBt\fR \fB+\fR \fIword\fR\&.\&.\&.
 .sp
-\fB::cmdr::color\fR \fB\&.\&.\&.\fR ?\fItext\fR?
+\fBt\fR \fB+=\fR \fIword\fR\&.\&.\&.
+.sp
+\fBt\fR \fB<<\fR \fIword\fR\&.\&.\&.
+.sp
+\fBt\fR \fB<=\fR \fIword\fR\&.\&.\&.
+.sp
+\fBt\fR \fBshow*\fR ?\fIcmd\fR?
+.sp
+\fBt\fR \fBshow\fR ?\fIcmd\fR?
 .sp
 .BE
 .SH DESCRIPTION
@@ -304,247 +312,158 @@ Welcome to the Cmdr project, written by Andreas Kupries\&.
 .PP
 For availability please read \fICmdr - How To Get The Sources\fR\&.
 .PP
-This package provides a few utility commands implementing
-the management of terminal colors\&.
+This package provides convenience commands for the easy creation of
+simple tables\&.
 .SH API
 .TP
-\fB::cmdr::color\fR \fBactivate\fR ?\fIenable\fR?
-When invoked this command enables or disables color handling,
-as per the boolean flag \fIenable\fR\&. If \fIenable\fR is not
-specified the action defaults to activation\&.
+\fB::cmdr::table\fR \fBgeneral\fR \fIvar\fR \fIheaders\fR \fIscript\fR
+This command creates a new table with the words found in the list of
+\fIheaders\fR as the top row\&.
+The \fIscript\fR is run in the calling context to configure and
+populate the table\&.
+The table's object command is stored in the named \fIvar\fR for access
+by the \fIscript\fR\&.
+The result of the command is the table's object command\&.
+.RS
+.TP
+varname \fIvar\fR
+The name of the variable in the calling scope the new table's object
+command will be stored into\&.
+.TP
+list \fIheaders\fR
+The list of words to user as column headers\&.
+.TP
+string \fIscript\fR
+The tcl script to be run to configure and populate the table\&.
+.RE
+.TP
+\fB::cmdr::table\fR \fBdict\fR \fIvar\fR \fIscript\fR
+This command creates a new table intended for the display of a Tcl
+dictionary\&.
+It will have two columns titled \fBKey\fR and \fBValue\fR\&.
+The \fIscript\fR is run in the calling context to configure and
+populate the table\&.
+The table's object command is stored in the named \fIvar\fR for access
+by the \fIscript\fR\&.
+The result of the command is the table's object command\&.
+.RS
+.TP
+varname \fIvar\fR
+The name of the variable in the calling scope the new table's object
+command will be stored into\&.
+.TP
+string \fIscript\fR
+The tcl script to be run to configure and populate the table\&.
+.RE
+.TP
+\fB::cmdr::table\fR \fBborders\fR ?\fIenable\fR?
+This command configures the global \fIborder\fR setting, which
+indicates the (non)use of borders by the tables of this package\&. Note
+that changes to this setting influence only the tables created after
+the change\&. Existing tables are not modified\&.
 .sp
-The result of the command is the new activation state\&.
+The result of the command is the new state of the setting\&.
 .sp
-The default activation state of the package after loading
-depends on \fBstdout\fR\&. The package is active if \fBstdout\fR
-is a terminal, and inactive otherwise\&.
+If the command is called without an argument it simply returns the
+current state of the setting, without making changes\&.
+.sp
+The default value for the setting is \fByes\fR\&.
+Individual tables can override the global settings via their
+\fBborders\fR method, see \fBTable API\fR\&.
 .RS
 .TP
 boolean \fIenable\fR
-If set, enable color handling, else disable it\&.
+The new value of the setting\&. Optional\&.
 .RE
 .TP
-\fB::cmdr::color\fR \fBactive\fR
-The result of this command is the current activation state
-of the package\&.
+\fB::cmdr::table\fR \fBshow\fR ?\fIcmd\fR\&.\&.\&.?
+This command configures the global \fIshow\fR setting, which is the
+command prefix to use to print a table, if the table is not given a
+specific command to use\&. Note that changes to this setting influence
+only the tables created after the change\&. Existing tables are not
+modified\&.
 .sp
-The default activation state of the package after loading
-depends on \fBstdout\fR\&. The package is active if \fBstdout\fR
-is a terminal, and inactive otherwise\&.
-.TP
-\fB::cmdr::color\fR \fBnames\fR
-When invoked this command returns a list of the symbolic color
-names known to the package\&.
-.TP
-\fB::cmdr::color\fR \fBget\fR \fIname\fR
-When invoked this command returns the character sequence
-associated with the symbolic color \fIname\fR\&. An error
-is thrown if \fIname\fR is not a known symbol\&.
-.TP
-\fB::cmdr::color\fR \fBget-def\fR \fIname\fR
-When invoked this command returns the specification
-associated with the symbolic color \fIname\fR\&. An error
-is thrown if \fIname\fR is not a known symbol\&.
-.TP
-\fB::cmdr::color\fR \fBdefine\fR \fIname\fR \fIspec\fR
-When invoked this command defines the color \fIname\fR\&. If \fIname\fR
-exists already its previous specification is overwritten\&.
-The command accepts four forms of \fIspec\fRifications, namely:
+The result of the command is the new state of the setting
+.sp
+If the command is called without any arguments it simply
+returns the current state of the setting, without making changes\&.
+.sp
+The default value for the setting is \fBputs\fR\&.
 .RS
 .TP
-=\fBrname\fR
-The \fIrname\fR must be the name of a known color\&.
-The \fIname\fR itself is not allowed, i\&.e\&. self-references are forbidden\&.
-.TP
-%\fBR\fR,\fBG\fR,\fBB\fR
-The \fIR\fR, \fIG\fR, and \fIB\fR values are integers in the range
-\fB0\fR\&.\&.\&.\fB5\fR directly specifying the chosen color\&. These
-specifications may not work if the terminal is not configured to
-support 256 colors\&.
-.TP
-[Ee]\fBcode\fR(,\&.\&.\&.)
-The value is a comma-separated list of ANSI color control characters\&.
-.TP
-*
-Any other string is acceptable too, and used as is\&.
+word \fIcmd\fR
+The command prefix to use for printing a table, as varargs\&.
+The prefix will be invoked with a single argument, the string
+representation of the table\&.
 .RE
-.TP
-\fB::cmdr::color\fR \fBexists\fR \fIname\fR
-When invoked this command tests if the symbolic color \fIname\fR
-is known, returns the boolean value \fBtrue\fR if so, and
-\fBfalse\fR else\&.
-.TP
-\fB::cmdr::color\fR \fBunset\fR \fIname\fR
-When invoked this command deletes the symbolic color \fIname\fR\&.
-An error is thrown if \fIname\fR is not a known symbol\&.
-The command returns the empty string as its result\&.
-.TP
-\fB::cmdr::color\fR \fB\&.\&.\&.\fR ?\fItext\fR?
-When \fB::cmdr::color\fR is invoked with an unknown method name then
-this name is expected to be and treated as a list of known symbolic
-color names\&. These colors are applied to the \fItext\fR, with a return
-to base after, and the modified text is returned as the result of the
-command\&.
-.sp
-Note however, if the \fItext\fR is the empty string, then that
-string is returned, as the colorization would a \fBno-op\fR,
-i\&.e\&. superfluous\&.
-.sp
-If the \fItext\fR is not specified at all then the method
-returns just the application of the colors (without return to base)\&.
-.sp
-An error is thrown if any of the specified color symbols
-are not known\&.
 .PP
-.SH "PREDEFINED COLORS"
-The following colors are defined by the package itself:
+.SH "TABLE API"
+This section lists the methods available for configuration and
+population of the tables created by this package\&.
 .TP
-black
-e30
+\fBt\fR \fBborders\fR ?\fIenable\fR?
+This is the table-level \fIborders\fR setting\&. On creation a table
+inherits the global setting (See \fB::cmdr::table borders\fR)\&. If
+that is not to suit then this method can be used to override it\&.
+.sp
+The result of the method is the new state of the setting\&. When
+called without argument no change is made and the result is the
+current state of the setting\&.
 .TP
-red
-e31
+\fBt\fR \fBheaders\fR ?\fIenable\fR?
+This method controls the visibility of the header row\&.  By default
+general tables have the header row visisble, while for dict tables the
+header is suppressed\&. This method allows the user to override these
+defaults\&.
+.sp
+The result of the method is the new state of the setting\&. When
+called without argument no change is made and the result is the
+current state of the setting\&.
 .TP
-green
-e32
+\fBt\fR \fBstyle\fR ?\fIstyle\fR?
+This method allows the user to force the use of a completely custom
+style\&.
+Please see the documentation for the Tcllib package \fBreport\fR
+on how to define table styles\&.
+.sp
+The package defines four styles of its own, all using the
+common prefix \fBcmdr/table/\fR in their names\&.
+When no custom style is set the table chooses between these based on
+its \fIborders\fR and \fIheaders\fR settings\&.
+.sp
+The result of the method is the new state of the setting\&. When
+called without argument then no change is made and the result is the
+current state of the setting\&.
+.sp
+To revert from a custom style to the automatic choice invoke
+this method with the empty string as the name of the style\&.
 .TP
-yellow
-e33
+\fBt\fR \fBadd\fR \fIword\fR\&.\&.\&.
 .TP
-blue
-e34
+\fBt\fR \fB+\fR \fIword\fR\&.\&.\&.
 .TP
-magenta
-e35
+\fBt\fR \fB+=\fR \fIword\fR\&.\&.\&.
 .TP
-cyan
-e36
+\fBt\fR \fB<<\fR \fIword\fR\&.\&.\&.
 .TP
-white
-e37
+\fBt\fR \fB<=\fR \fIword\fR\&.\&.\&.
+This method adds a new row to the table, containing the given words\&.
+If less words than headers are specified the row is padded with empty columns\&.
+If too many words are specified the superfluous words are ignored\&.
+.sp
+The result of the method is the empty string\&.
 .TP
-default
-e39
+\fBt\fR \fBshow*\fR ?\fIcmd\fR?
+This method formats the table into a string and then invokes the
+command prefix \fIcmd\fR to print that string\&. The command prefix is
+run at the global namespace and level\&. If the \fIcmd\fR is not
+specified the global \fIshow\fR setting is used instead\&.
+.sp
+The result of the method is the empty string\&.
 .TP
-bg-black
-e40
-.TP
-bg-red
-e41
-.TP
-bg-green
-e42
-.TP
-bg-yellow
-e43
-.TP
-bg-blue
-e44
-.TP
-bg-magenta
-e45
-.TP
-bg-cyan
-e46
-.TP
-bg-white
-e47
-.TP
-bg-default
-e49
-.TP
-bold
-e1
-.TP
-dim
-e2
-.TP
-italic
-e3
-.TP
-underline
-e4
-.TP
-blink
-e5
-.TP
-revers
-e7
-.TP
-hidden
-e8
-.TP
-strike
-e9
-.TP
-no-bold
-e21
-.TP
-no-dim
-e22
-.TP
-no-italic
-e23
-.TP
-no-underline
-e24
-.TP
-no-blink
-e25
-.TP
-no-revers
-e27
-.TP
-no-hidden
-e28
-.TP
-no-strike
-e29
-.TP
-reset
-e0
-.TP
-advisory
-=yellow
-.TP
-bad
-=red
-.TP
-confirm
-=red
-.TP
-error
-=magenta
-.TP
-good
-=green
-.TP
-name
-=blue
-.TP
-neutral
-=blue
-.TP
-no
-=red
-.TP
-note
-=blue
-.TP
-number
-=green
-.TP
-prompt
-=blue
-.TP
-unknown
-=cyan
-.TP
-warning
-=yellow
-.TP
-yes
-=green
+\fBt\fR \fBshow\fR ?\fIcmd\fR?
+This is a variant of method \fBshow*\fR above which not only prints
+the table as above, but also destroys it\&.
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain

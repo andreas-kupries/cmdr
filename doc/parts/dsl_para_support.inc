@@ -25,7 +25,7 @@ parameters of a command.
 
 [para] Useful for use with [cmd when-set] and/or [cmd when-complete]
 
-[call [cmd touch] [arg name] [arg value]]
+[call [cmd touch?] [arg name] [arg value]]
 
 The returned callback sets the [arg name]d sibling parameter to the
 specified [arg value], if and only if that parameter exists. A simple

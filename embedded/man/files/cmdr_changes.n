@@ -285,8 +285,8 @@ underwent from version to version\&.
 .SH CHANGES
 .SS "CHANGES FOR VERSION 1\&.2"
 .IP [1]
-Added many new standard validation types to package
-\fBcmdr::validate\fR:
+Extended the package \fBcmdr::validate\fR with many new
+standard validation types:
 .RS
 .IP [1]
 Double
@@ -322,7 +322,7 @@ Read/writable path, as channel
 Date and time related:
 .RS
 .IP [1]
-iso8601 date/time,
+ISO-8601 date/time,
 .IP [2]
 year
 .IP [3]
@@ -332,32 +332,29 @@ hour:minute
 .RE
 .RE
 .IP [2]
-Added more helper commands for validation failure messages to
-package \fBcmdr::validate::common\fR\&.
+In package \fBcmdr::validate\fR, modified the integer
+validation type to have a proper internal representation:
+decimal\&. Input in octal, hex, etc\&. is now normalized to this\&.
+.IP [3]
+Extended package \fBcmdr::validate::common\fR with more
+helper commands for the generation of validation failure
+messages
 .RS
 .IP [1]
-\fBfail-unknown-thing\fR
-.IP [2]
 \fBfail-unknown-thing-msg\fR
-.IP [3]
+.IP [2]
 \fBfail-unknown-simple\fR
-.IP [4]
+.IP [3]
 \fBfail-unknown-simple-msg\fR
-.IP [5]
-\fBfail-known-thing\fR
-.IP [6]
+.IP [4]
 \fBfail-known-thing-msg\fR
-.IP [7]
+.IP [5]
 \fBfail-known-simple\fR
-.IP [8]
+.IP [6]
 \fBfail-known-simple-msg\fR
 .RE
-.IP [3]
-Modified integer validation to have a proper internal
-representation: decimal\&. Octal, hex, etc\&. input is now
-normalized to this\&.
 .IP [4]
-Various new supporting packages:
+Added various new supporting packages:
 .RS
 .TP
 \fBcmdr::tty\fR
@@ -370,21 +367,20 @@ Color management, ansi control sequences\&.
 User interaction commands\&.
 .TP
 \fBcmdr::pager\fR
-Text display with automatic invokation of
-a pager for tall output\&.
+Text display with automatic invokation of a pager for tall
+output\&.
 .TP
 \fBcmdr::history\fR
 Pluggable management of command history\&.
 .TP
 \fBcmdr::table\fR
-Table formatting, simplified interface to
+Table formatting, a simplified interface to
 \fITcllib\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/toc\&.html]'s
-\fBstruct::matrix\fR and
-\fBreport\fR packages\&.
+\fBstruct::matrix\fR and \fBreport\fR packages\&.
 .TP
 \fBcmdr::validate::valtype-support\fR
-Even more validation types\&.
-Wrappers around the validation commands provided by
+Even more validation types, now as wrappers around the
+validation commands provided by
 \fITcllib\fR [http://core\&.tcl\&.tk/tcllib/doc/trunk/embedded/www/toc\&.html]:
 .RS
 .IP [1]
@@ -414,43 +410,101 @@ Wrappers around the validation commands provided by
 .RE
 .RE
 .IP [5]
-Added support for per-officer options\&. The most common use case
-will likely be the declaration of global options in the root
-officer\&.
+Extended package \fBcmdr::officer\fR with
+.RS
+.IP [1]
+Support for per-officer options\&. The most common use
+case will likely be the declaration of global options in
+the root officer\&.
 .sp
-Related to this, a new common block \fB*config*\fR is set to
-the active \fBconfig\fR instance, which will be different
-from the defining instance, , for per-officer options\&. This
-gives the per-officer options access to the arguments (and
-options) of the current command, instead of only their own
-sibling options\&.
+Related to this, a new common block \fB*config*\fR is
+set to the active \fBconfig\fR instance, which will
+be different from the defining instance, for per-officer
+options\&. This gives the per-officer options access to
+the arguments (and options) of the current command,
+instead of only their own sibling options\&.
+.IP [2]
+Support for an option \fB-extend\fR for common
+blocks, allowing their extension in a subordinate
+instead of just replacing the entire content\&.
+.IP [3]
+Support to accept all unique command prefixes of an
+officer's subordinates for dispatch\&.
+.RE
 .IP [6]
-Added support for an option \fB-extend\fR for common blocks,
-allowing their extension in a subordinate instead of just
-replacing the entire content\&.
-.IP [7]
-Extended boolean options to allow the specification of negative
-aliases, i\&.e\&. representing the inverted option\&. See the DSL
-commands \fBneg-alias\fR and \fB!alias\fR in
+Extended package \fBcmdr::parameter\fR with
+.RS
+.IP [1]
+Support for the specification of negative aliases for
+boolean options, i\&.e\&. representing the inverted option\&.
+.sp
+See the DSL commands \fBneg-alias\fR and \fB!alias\fR in
 \fICmdr - Parameter Specification Language\fR\&.
-.IP [8]
-Extended the DSL for options in general with the ability to set
-a label for the option argument so that the generated help can
-be more descriptive\&. The option name is used as fallback for
-options for which no such label was specified\&.
+.IP [2]
+Support for option labeling, for use in the generated
+help, to make it more descriptive\&. Options for which no
+label is specified will use their name as fallback\&.
+.sp
 See DSL command \fBlabel\fR in
 \fICmdr - Parameter Specification Language\fR\&.
+.RE
+.IP [7]
+Help system changes
+.RS
+.IP [1]
+Modified it to use the \fBshort\fR format for interior
+nodes of the command hierarchy by default\&.
+.IP [2]
+Modified it to exclude auto-added commands from the
+output generated by format \fBby-category\fR\&.
+.IP [3]
+Modified the format \fBfull\fR to show the option
+arguments for those which have such\&. See also the
+extension of package \fBcmdr::parameter\fR with
+support for option labels, this is what is used here\&.
+.IP [4]
+Modified it to declare a standard global option
+\fB--help\fR (with aliases \fB-h\fR and
+\fB-?\fR)\&. Using the option invokes the standard help
+(command) on the current command, if any, or the global
+help if there is no command\&.
+.IP [5]
+Modified to use a minimum width of 10 characters for
+descriptions\&. If the user narrowed the terminal this far
+then having the text either cut off at the right edge,
+or wrapped around is not worse then the help trying to
+wrap the sentence with word boundaries, etc\&. Also,
+trying to use negative width threw Tcl errors\&.
+.RE
+.IP [8]
+Fixed the handling of common block \fB*all*\fR in package
+\fBcmdr::officer\fR\&. While it was ok trapping and ignoring
+a missing definition of this block, trapping everything which
+could go wrong was not\&.
+.sp
+\fIDetails\fR [http://core\&.tcl\&.tk/akupries/cmdr/info/9159f68bc35d9747]\&.
 .IP [9]
-Extended officers to accept all unique command prefixes of
-their subordinates for dispatch\&.
+Fixed a long-standing bug of package \fBcmdr::config\fR in
+the forced calculation of parameter values in method
+\fBForce\fR)\&. Any error in the calculations left an internal
+flag set, causing future invokations to believe to be in a
+recursive call and thus do nothing\&.
+.sp
+While this had no effect on regular operation, i\&.e\&.
+with the application exiting after each command, in interactive
+mode this misbehaviour disabled all checks and validations for
+the command in question, and also retained old parameter
+values\&.
+.sp
+\fIDetails\fR [http://core\&.tcl\&.tk/akupries/cmdr/info/f74095b252d4c9df]
 .IP [10]
-Modified the help system to use the \fBshort\fR format for
-interior nodes of the command hierarchy by default\&.
+Modified the formatting of \fBcmdr::config\fR state when
+interactively entering it for a private\&. Parameter names now
+are shown as declared, and an additional flag character
+indicates if it is inherited from above, or not\&.
 .IP [11]
-Modified the help system to exclude auto-added commands from
-the output generated by format \fBby-category\fR\&.
-.IP [12]
-\&.\&.\&. A suite of bug fixes \&.\&.\&. // TODO: list the details\&.
+General fixes to testsuite, code comments, bogus variable
+names, typos in error messages, etc\&.
 .PP
 .SS "CHANGES FOR VERSION 1\&.1"
 .IP [1]

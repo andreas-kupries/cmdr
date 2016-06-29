@@ -353,6 +353,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -508,6 +511,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -665,6 +671,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -820,6 +829,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -977,6 +989,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -1132,6 +1147,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -1289,6 +1307,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -1444,6 +1465,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -1601,6 +1625,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -1756,6 +1783,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -1913,6 +1943,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -2068,6 +2101,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
@@ -2225,6 +2261,9 @@ cmdr::parameter
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
 .TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
+.TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty
 .TP
@@ -2380,6 +2419,9 @@ cmdr::parameter
 .TP
 \fBfiles/cmdr_private\&.n\fR
 cmdr::private
+.TP
+\fBfiles/cmdr_table\&.n\fR
+cmdr::table
 .TP
 \fBfiles/cmdr_tty\&.n\fR
 cmdr::tty

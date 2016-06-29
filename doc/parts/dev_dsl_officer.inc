@@ -14,10 +14,11 @@ on first call) to provide the necessary in-memory structures.
 [list_begin definitions]
 [def [cmd alias]]        [method Alias]
 [def [cmd common]]       [package cmdr::actor] [method set]
+[def [cmd custom-setup]] [method custom-setup]
 [def [cmd default]]      [method Default]
 [def [cmd description]]  [package cmdr::actor] [method description:]
-[def [cmd ehandler]]     [method ehandler]
-[def [cmd shandler]]     [method shandler]
+[def [cmd ehandler]]     See [cmd intercept]. [emph Deprecated].
+[def [cmd intercept]]    [method intercept]
 [def [cmd officer]]      [method Officer], forward to [method DefineAction]
 [def [cmd private]]      [method Private], forward to [method DefineAction]
 [def [cmd undocumented]] [package cmdr::actor] [method undocumented]

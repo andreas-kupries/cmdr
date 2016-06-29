@@ -79,33 +79,36 @@ oo::class create ::cmdr::officer {
 	my super: $super
 	my name:  $name
 
-	set myactions   $actions ; # Action spec for future initialization
-	set myinit      no       ; # Dispatch map will be initialized lazily
-	set mymap       {}       ; # Action map starts knowing nothing
-	set mypmap      {}       ; # Ditto for the map of action abbreviations.
-	set mycommands  {}       ; # Ditto
-	set myccommands {}       ; # Ditto, derived cache, see method CCommands.
-	set mychildren  {}       ; # List of created subordinates.
-	set myhandler   {}       ; # Handler around cmd parsing and execution.
-	set myshandler  {}       ; # Setup handler, run after regular object
-	#                          # initialization from its definition.
+	set myactions     $actions ; # Action spec for future initialization
+	set myinit        no       ; # Dispatch map will be initialized lazily
+	set mymap         {}       ; # Action map starts knowing nothing
+	set mypmap        {}       ; # Ditto for the map of action abbreviations.
+	set mycommands    {}       ; # Ditto
+	set myccommands   {}       ; # Ditto, derived cache, see method CCommands.
+	set mychildren    {}       ; # List of created subordinates.
+	set myintercept   {}       ; # Handler around cmd parsing and execution.
+	set mycustomsetup {}       ; # List of setup handlers, run after regular object
+	#                            # initialization from its definition.
 	set myconfig    {}
 	return
     }
 
     # # ## ### ##### ######## #############
 
-    method ehandler {cmd} {
+    method intercept {cmd} {
 	debug.cmdr/officer {[self] $cmd}
-	set myhandler $cmd
+	set myintercept $cmd
 	return
     }
 
-    method shandler {cmd} {
+    method custom-setup {cmd} {
 	debug.cmdr/officer {[self] $cmd}
-	set myshandler $cmd
+	lappend mycustomsetup $cmd
 	return
     }
+
+    forward ehandler my intercept
+    forward shandler my custom-setup
 
     # # ## ### ##### ######## #############
     ## Public API. (Introspection, mostly).
@@ -254,9 +257,9 @@ oo::class create ::cmdr::officer {
 
 	# Invoke the user-specified hook for extending a newly-made
 	# officer, if any.
-	debug.cmdr/officer {[debug caller] | call shandler}
-	if {[llength $myshandler]} {
-	    {*}$myshandler [self]
+	debug.cmdr/officer {[debug caller] | call custom-setup}
+	foreach cmd $mycustomsetup {
+	    {*}$cmd [self]
 	}
 
 	debug.cmdr/officer {[debug caller] | /done}
@@ -271,8 +274,12 @@ oo::class create ::cmdr::officer {
 	# instance methods of this class.
 
 	link \
-	    {ehandler    ehandler} \
-	    {shandler    shandler} \
+	    {intercept   intercept} \
+	    {ehandler    intercept} \
+	    \
+	    {custom-setup custom-setup} \
+	    {shandler     custom-setup} \
+	    \
 	    {private     Private} \
 	    {officer     Officer} \
 	    {default     Default} \
@@ -377,9 +384,11 @@ oo::class create ::cmdr::officer {
 	set handler [self namespace]::${what}_$name
 	cmdr::$what create $handler [self] $name {*}$args
 
-	# Propagate error and setup handlers.
-	$handler ehandler $myhandler
-	$handler shandler $myshandler
+	# Propagate error (interceptor) and custom setup handlers.
+	$handler intercept $myintercept
+	foreach cmd  $mycustomsetup {
+	    $handler custom-setup $cmd
+	}
 
 	lappend mychildren $handler
 
@@ -505,9 +514,10 @@ oo::class create ::cmdr::officer {
 	    if {[my Known $cmd]} {
 		debug.cmdr/officer {[debug caller] | /known $cmd}
 
-		my lappend *prefix* $cmd
-		[my lookup $cmd] do {*}$remainder
+		[my root] lappend *prefix* $cmd
+		debug.cmdr/officer {[debug caller] | /prefix [my root] ([my get *prefix*])}
 
+		[my lookup $cmd] do {*}$remainder
 		debug.cmdr/officer {[debug caller] | /done known}
 		return
 	    }
@@ -775,7 +785,7 @@ oo::class create ::cmdr::officer {
     # # ## ### ##### ######## #############
 
     variable myinit myactions mymap mycommands myccommands mychildren \
-	myreplexit myhandler mypmap myshandler myconfig
+	myreplexit myintercept mypmap mycustomsetup myconfig
 
     # # ## ### ##### ######## #############
 }

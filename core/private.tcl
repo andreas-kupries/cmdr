@@ -64,7 +64,7 @@ oo::class create ::cmdr::private {
 	set myarguments $arguments
 	set mycmd       $cmdprefix
 	set myinit      0
-	set myhandler   {}
+	set myintercept {}
 	return
     }
 
@@ -93,18 +93,21 @@ oo::class create ::cmdr::private {
 
     # # ## ### ##### ######## #############
 
-    method ehandler {cmd} {
+    method intercept {cmd} {
 	debug.cmdr/private {}
-	set myhandler $cmd
+	set myintercept $cmd
 	return
     }
 
-    method shandler {cmd} {
+    method custom-setup {cmd} {
 	debug.cmdr/private {}
-	# Privates have no setup handler/hook.
-	# Ignoring the inherited definition.
+	# Privates have no hook/handler for custom setup.
+	# Ignore the inherited definition.
 	return
     }
+
+    forward ehandler my intercept
+    forward shandler my custom-setup
 
     # # ## ### ##### ######## #############
     ## Internal. Argument processing. Defered until required.
@@ -139,10 +142,10 @@ oo::class create ::cmdr::private {
 
 	my history-add [my FullCmd $args]
 
-	if {[llength $myhandler]} {
+	if {[llength $myintercept]} {
 	    # The handler is expected to have a try/finally construct
-	    # which captures all of interest.
-	    {*}$myhandler {
+	    # which captures everything of interest to it.
+	    {*}$myintercept {
 		my Run $args
 	    }
 	} else {
@@ -211,7 +214,7 @@ oo::class create ::cmdr::private {
 
     # # ## ### ##### ######## #############
 
-    variable myarguments mycmd myinit myconfig myhandler
+    variable myarguments mycmd myinit myconfig myintercept
 
     # # ## ### ##### ######## #############
 }
