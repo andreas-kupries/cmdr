@@ -1,0 +1,454 @@
+# -*- tcl -*- tcl.tk//DSL tcltest//EN//2.0
+# # ## ### ##### ######## ############# #####################
+## Testing the cmdr::table package.
+
+kt check Tcl     8.5
+kt check tcltest 2
+
+kt require support TclOO
+kt require support debug
+kt require support debug::caller
+kt require support report
+kt require support struct::matrix
+kt local   support cmdr::color
+
+kt local   testing cmdr::table
+
+proc nop  {args} {}
+proc ping {args} { set ::ping 1 ; return }
+proc record  {s} { set ::ping $s }
+
+# # ## ### ##### ######## ############# #####################
+## Basic wrong#args checks.
+
+test cmdr-table-1.0 {table, wrong num args, not enough} -body {
+    cmdr table
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table subcommand ?argument ...?"}
+
+test cmdr-table-1.1 {table, bogus sub-command} -body {
+    cmdr table foo
+} -returnCodes error \
+    -result {unknown or ambiguous subcommand "foo": must be borders, dict, general, or show}
+
+# # ## ### ##### ######## ############# #####################
+## Global border control
+
+test cmdr-table-2.0 {table borders, wrong num args, too many} -body {
+    cmdr table borders 0 X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table borders ?enable?"}
+
+test cmdr-table-2.1 {table borders, default} -body {
+    cmdr table borders
+} -result yes
+
+test cmdr-table-2.2.0 {table borders, clear} -body {
+    cmdr table borders 0
+} -result 0
+
+test cmdr-table-2.2.1 {table borders, set} -body {
+    cmdr table borders 1
+} -result 1
+
+test cmdr-table-2.2.2 {table borders, set, not boolean} -body {
+    cmdr table borders bogus
+} -returnCodes error -result {Expected boolean, got "bogus"}
+
+test cmdr-table-2.3.0 {table borders, style influence, no borders} -body {
+    cmdr table borders 0
+    cmdr table general T {a b} {}
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/plain
+
+test cmdr-table-2.3.1 {table borders, style influence, with borders} -body {
+    cmdr table borders 1
+    cmdr table general T {a b} {}
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders
+
+# # ## ### ##### ######## ############# #####################
+## Global show command
+## Note: No wrong#args, accepts 0 and more arguments.
+
+test cmdr-table-3.0 {table show, default} -body {
+    cmdr table show
+} -result puts
+
+test cmdr-table-3.1 {table show, set} -body {
+    cmdr table show this way
+} -result {this way}
+
+test cmdr-table-3.2 {table show, fallback} -setup {
+    unset -nocomplain ping
+} -body {
+    cmdr table show ping
+    cmdr table general T {a b} {}
+    $T show*
+    set ping
+} -cleanup {
+    $T destroy
+    unset T ping
+} -result 1
+
+# # ## ### ##### ######## ############# #####################
+## General table
+
+test cmdr-table-4.0.0 {table general, wrong num args, not enough} -body {
+    cmdr table general
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table general v headings script"}
+
+test cmdr-table-4.0.1 {table general, wrong num args, not enough} -body {
+    cmdr table general T
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table general v headings script"}
+
+test cmdr-table-4.0.2 {table general, wrong num args, not enough} -body {
+    cmdr table general T H
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table general v headings script"}
+
+test cmdr-table-4.0.3 {table general, wrong num args, too many} -body {
+    cmdr table general T H S X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table general v headings script"}
+
+test cmdr-table-4.1.0 {table general, empty, lifecycle, constructor} -body {
+    cmdr table general T {a b} {}
+} -cleanup {
+    $T destroy
+    unset T
+} -match glob -result {::oo::Obj*}
+
+test cmdr-table-4.1.1 {table general, empty, lifecycle, destructor} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T destroy
+} -cleanup {
+    unset T
+} -result {}
+
+# # ## ### ##### ######## ############# #####################
+## Dict table
+
+test cmdr-table-5.0.0 {table dict, wrong num args, not enough} -body {
+    cmdr table dict
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table dict v script"}
+
+test cmdr-table-5.0.1 {table dict, wrong num args, not enough} -body {
+    cmdr table dict T
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table dict v script"}
+
+test cmdr-table-5.0.2 {table dict, wrong num args, too many} -body {
+    cmdr table dict T S X
+} -returnCodes error \
+    -result {wrong # args: should be "cmdr table dict v script"}
+
+test cmdr-table-5.1.0 {table dict, empty, lifecycle, constructor} -body {
+    cmdr table dict T {}
+} -cleanup {
+    $T destroy
+    unset T
+} -match glob -result {::oo::Obj*}
+
+test cmdr-table-5.1.1 {table dict, empty, lifecycle, destructor} -setup {
+    cmdr table dict T {}
+} -body {
+    $T destroy
+} -cleanup {
+    unset T
+} -result {}
+
+# # ## ### ##### ######## ############# #####################
+## table row add - no wrong num args, everything is possible
+
+test cmdr-table-6.0.0 {table row add, result} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T add c d
+} -cleanup {
+    $T destroy
+    unset T
+} -result {}
+
+test cmdr-table-6.0.1 {table row add, content} -setup {
+    unset -nocomplain ping
+    cmdr table general T {a b} {}
+} -body {
+    $T add c d
+    $T show* record
+    set ping
+} -cleanup {
+    $T destroy
+    unset T ping
+} -match glob -result {*| c | d |*}
+
+# # ## ### ##### ######## ############# #####################
+## Per-table border control
+
+test cmdr-table-7.0 {table borders, wrong num args, too many} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders 0 X
+} -cleanup {
+    $T destroy
+    unset T
+} -returnCodes error \
+    -match glob -result {wrong # args: should be "::oo::Obj* borders \?enable\?"}
+
+test cmdr-table-7.1.0 {table borders, default} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders
+} -cleanup {
+    $T destroy
+    unset T
+} -result 1
+
+test cmdr-table-7.1.1 {dict borders, default} -setup {
+    cmdr table dict T {}
+} -body {
+    $T borders
+} -cleanup {
+    $T destroy
+    unset T
+} -result 1
+
+test cmdr-table-7.2.0 {table borders, clear} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders 0
+} -cleanup {
+    $T destroy
+    unset T
+} -result 0
+
+test cmdr-table-7.2.1 {table borders, set} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders 1
+} -cleanup {
+    $T destroy
+    unset T
+} -result 1
+
+test cmdr-table-7.2.2 {table borders, set, not boolean} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders bogus
+} -cleanup {
+    $T destroy
+    unset T
+} -returnCodes error -result {Expected boolean, got "bogus"}
+
+test cmdr-table-7.3.0 {table borders, style influence, no borders} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders 0
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/plain
+
+test cmdr-table-7.3.1 {table borders, style influence, with borders} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T borders 1
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders
+
+# # ## ### ##### ######## ############# #####################
+## Per-table header control
+
+test cmdr-table-8.0 {table headers, wrong num args, too many} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers 0 X
+} -cleanup {
+    $T destroy
+    unset T
+} -returnCodes error \
+    -match glob -result {wrong # args: should be "::oo::Obj* headers \?enable\?"}
+
+test cmdr-table-8.1.0 {table headers, default} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers
+} -cleanup {
+    $T destroy
+    unset T
+} -result 1
+
+test cmdr-table-8.1.1 {dict headers, default} -setup {
+    cmdr table dict T {}
+} -body {
+    $T headers
+} -cleanup {
+    $T destroy
+    unset T
+} -result no
+
+test cmdr-table-8.2.0 {table headers, clear} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers 0
+} -cleanup {
+    $T destroy
+    unset T
+} -result 0
+
+test cmdr-table-8.2.1 {table headers, set} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers 1
+} -cleanup {
+    $T destroy
+    unset T
+} -result 1
+
+test cmdr-table-8.2.2 {table headers, set, not boolean} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers bogus
+} -cleanup {
+    $T destroy
+    unset T
+} -returnCodes error -result {Expected boolean, got "bogus"}
+
+test cmdr-table-8.3.0 {table headers, style influence, no headers} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers 0
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders/nohdr
+
+test cmdr-table-8.3.1 {table headers, style influence, with headers} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T headers 1
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders
+
+# # ## ### ##### ######## ############# #####################
+## Per-table style control
+
+test cmdr-table-9.0 {table style, wrong num args, too many} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T style 0 X
+} -cleanup {
+    $T destroy
+    unset T
+} -returnCodes error \
+    -match glob -result {wrong # args: should be "::oo::Obj* style \?style\?"}
+
+test cmdr-table-9.1.0 {table style, default} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders
+
+test cmdr-table-9.1.1 {dict style, default} -setup {
+    cmdr table dict T {}
+} -body {
+    $T style
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders/nohdr
+
+test cmdr-table-9.2.0 {table style, reset to default} -setup {
+    cmdr table general T {a b} {}
+    $T style foo
+} -body {
+    $T style {}
+} -cleanup {
+    $T destroy
+    unset T
+} -result cmdr/table/borders
+
+test cmdr-table-9.2.1 {table style, set} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T style foo
+} -cleanup {
+    $T destroy
+    unset T
+} -result foo
+
+# # ## ### ##### ######## ############# #####################
+## Table printing with auto-destruction
+
+test cmdr-table-10.0 {table show, wrong num args, too many} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T show C X
+} -cleanup {
+    $T destroy
+    unset T
+} -match glob -returnCodes error \
+    -result {wrong # args: should be "::oo::Obj* show ?cmd?"}
+
+test cmdr-table-10.1 {table show, and automatic destruction} -setup {
+    unset -nocomplain ping
+    cmdr table general T {a b} {}
+} -body {
+    $T show ping
+    list $ping [llength [info commands $T]]
+} -cleanup {
+    unset T ping
+} -result {1 0}
+
+# # ## ### ##### ######## ############# #####################
+## Table printing, no auto-destruction
+
+test cmdr-table-11.0 {table show*, wrong num args, too many} -setup {
+    cmdr table general T {a b} {}
+} -body {
+    $T show* C X
+} -cleanup {
+    $T destroy
+    unset T
+} -match glob -returnCodes error \
+    -result {wrong # args: should be "::oo::Obj* show\* ?cmd?"}
+
+test cmdr-table-11.1 {table show*, no destruction} -setup {
+    unset -nocomplain ping
+    cmdr table general T {a b} {}
+} -body {
+    $T show* ping
+    list $ping [llength [info commands $T]]
+} -cleanup {
+    $T destroy
+    unset T ping
+} -result {1 1}
+
+# # ## ### ##### ######## ############# #####################
+rename nop    {}
+rename ping   {}
+rename record {}
+
+cleanupTests
+return

@@ -1,0 +1,195 @@
+[comment {-*- tcl -*- doctools manpage}]
+[include parts/definitions.inc]
+[vset VERSION 0.1]
+[manpage_begin [vset LABEL_TABLE] [vset MAN_SECTION] [vset VERSION]]
+[include parts/module.inc]
+[require cmdr::util]
+[titledesc [vset TITLE_TABLE]]
+[description]
+[include parts/welcome.inc]
+
+This package provides convenience commands for the easy creation of
+simple tables.
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[section API]
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::table] [method general] [arg var] [arg headers] [arg script]]
+
+This command creates a new table with the words found in the list of
+[arg headers] as the top row.
+
+The [arg script] is run in the calling context to configure and
+populate the table.
+
+The table's object command is stored in the named [arg var] for access
+by the [arg script].
+
+The result of the command is the table's object command.
+
+[list_begin arguments]
+[arg_def varname var]
+The name of the variable in the calling scope the new table's object
+command will be stored into.
+[arg_def list headers]
+The list of words to user as column headers.
+[arg_def string  script]
+The tcl script to be run to configure and populate the table.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::table] [method dict] [arg var] [arg script]]
+
+This command creates a new table intended for the display of a Tcl
+dictionary.
+It will have two columns titled [const Key] and [const Value].
+
+The [arg script] is run in the calling context to configure and
+populate the table.
+
+The table's object command is stored in the named [arg var] for access
+by the [arg script].
+
+The result of the command is the table's object command.
+
+[list_begin arguments]
+[arg_def varname var]
+The name of the variable in the calling scope the new table's object
+command will be stored into.
+[arg_def string  script]
+The tcl script to be run to configure and populate the table.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::table] [method borders] [opt [arg enable]]]
+
+This command configures the global [term border] setting, which
+indicates the (non)use of borders by the tables of this package. Note
+that changes to this setting influence only the tables created after
+the change. Existing tables are not modified.
+
+[para] The result of the command is the new state of the setting.
+
+[para] If the command is called without an argument it simply returns the
+current state of the setting, without making changes.
+
+[para] The default value for the setting is [const yes].
+
+Individual tables can override the global settings via their
+[method borders] method, see [sectref {Table API}].
+
+[list_begin arguments]
+[arg_def boolean enable]
+The new value of the setting. Optional.
+[list_end]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd ::cmdr::table] [method show] [opt [arg cmd]...]]
+
+This command configures the global [term show] setting, which is the
+command prefix to use to print a table, if the table is not given a
+specific command to use. Note that changes to this setting influence
+only the tables created after the change. Existing tables are not
+modified.
+
+[para] The result of the command is the new state of the setting
+
+[para] If the command is called without any arguments it simply
+returns the current state of the setting, without making changes.
+
+[para] The default value for the setting is [const puts].
+
+[list_begin arguments]
+[arg_def word cmd]
+The command prefix to use for printing a table, as varargs.
+The prefix will be invoked with a single argument, the string
+representation of the table.
+[list_end]
+[list_end]
+
+[comment {- - -- --- ----- -------- ------------- ---------------------}]
+[section {Table API}]
+
+This section lists the methods available for configuration and
+population of the tables created by this package.
+
+[list_begin definitions]
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method borders] [opt [arg enable]]]
+
+This is the table-level [term borders] setting. On creation a table
+inherits the global setting (See [cmd {::cmdr::table borders}]). If
+that is not to suit then this method can be used to override it.
+
+[para] The result of the method is the new state of the setting. When
+called without argument no change is made and the result is the
+current state of the setting.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method headers] [opt [arg enable]]]
+
+This method controls the visibility of the header row.  By default
+general tables have the header row visisble, while for dict tables the
+header is suppressed. This method allows the user to override these
+defaults.
+
+[para] The result of the method is the new state of the setting. When
+called without argument no change is made and the result is the
+current state of the setting.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method style] [opt [arg style]]]
+
+This method allows the user to force the use of a completely custom
+style.
+
+Please see the documentation for the Tcllib package [package report]
+on how to define table styles.
+
+[para] The package defines four styles of its own, all using the
+common prefix [const cmdr/table/] in their names.
+
+When no custom style is set the table chooses between these based on
+its [term borders] and [term headers] settings.
+
+[para] The result of the method is the new state of the setting. When
+called without argument then no change is made and the result is the
+current state of the setting.
+
+[para] To revert from a custom style to the automatic choice invoke
+this method with the empty string as the name of the style.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method add] [arg word]...]
+[call [var t] [method +]   [arg word]...]
+[call [var t] [method +=]  [arg word]...]
+[call [var t] [method <<]  [arg word]...]
+[call [var t] [method <=]  [arg word]...]
+
+This method adds a new row to the table, containing the given words.
+If less words than headers are specified the row is padded with empty columns.
+If too many words are specified the superfluous words are ignored.
+
+[para] The result of the method is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method show*] [opt [arg cmd]]]
+
+This method formats the table into a string and then invokes the
+command prefix [arg cmd] to print that string. The command prefix is
+run at the global namespace and level. If the [arg cmd] is not
+specified the global [term show] setting is used instead.
+
+[para] The result of the method is the empty string.
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [var t] [method show] [opt [arg cmd]]]
+
+This is a variant of method [method show*] above which not only prints
+the table as above, but also destroys it.
+
+[list_end]
+
+[include parts/feedback.inc]
+[manpage_end]
