@@ -184,6 +184,8 @@ The following colors are defined by the package itself:
 [def unknown ] =cyan
 [def warning ] =yellow
 [def yes     ] =green
+[def heading ] =bold
+
 [list_end]
 
 [include parts/feedback.inc]
