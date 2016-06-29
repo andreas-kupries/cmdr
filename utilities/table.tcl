@@ -3,15 +3,20 @@
 ## Easy table generation
 
 # @@ Meta Begin
-# Package cmdr::table 0
-# Meta author      ?
-# Meta category    ?
-# Meta description ?
-# Meta location    http:/core.tcl.tk/akupries/cmdr
+# Package cmdr::table 0.1
+# Meta author   {Andreas Kupries}
+# Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform    tcl
-# Meta require     ?
-# Meta subject     ?
-# Meta summary     ?
+# Meta summary Easy generation of tables
+# Meta description Easy generation of tables
+# Meta subject {command line} table matrix report
+# Meta require {Tcl 8.5-}
+# Meta require TclOO
+# Meta require cmdr::color
+# Meta require debug
+# Meta require debug::caller
+# Meta require report
+# Meta require struct::matrix
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
@@ -97,35 +102,42 @@ namespace eval ::cmdr {
     namespace ensemble create
 }
 namespace eval ::cmdr::table {
-    variable plain   no   ;# Global style setting (plain yes/no)
+    variable borders yes  ;# Global style setting (use borders: yes/no)
     variable showcmd puts ;# Global print setting (command prefix)
 
-    namespace export general dict plain show
+    namespace export general dict borders show
     namespace ensemble create
 }
 
 # # ## ### ##### ######## ############# #####################
 ## API
 
-proc ::cmdr::table::plain {v} {
+proc ::cmdr::table::borders {{enable {}}} {
     debug.cmdr/table {}
-    variable plain $v
-    return
+    variable borders
+    if {[llength [info level 0]] > 1} {
+	CheckBool $enable
+	set borders $enable
+    }
+    return $borders
 }
 
 proc ::cmdr::table::show {args} {
     debug.cmdr/table {}
-    variable showcmd $args
-    return
+    variable showcmd
+    if {[llength $args]} {
+	set showcmd $args
+    }
+    return $showcmd
 }
 
 proc ::cmdr::table::general {v headings script} {
     debug.cmdr/table {}
 
-    variable plain
+    variable borders
     upvar 1 $v t
     set t [uplevel 1 [list ::cmdr::table::Impl::general new {*}$headings]]
-    if {$plain} { $t plain }
+    if {!$borders} { $t borders no }
     uplevel 1 $script
     return $t
 }
@@ -134,11 +146,18 @@ proc ::cmdr::table::dict {v script} {
     debug.cmdr/table {}
 
     upvar 1 $v t
-    variable plain
+    variable borders
     set t [uplevel 1 [list ::cmdr::table::Impl::dict new]]
-    if {$plain} { $t plain }
+    if {!$borders} { $t borders no }
     uplevel 1 $script
     return $t
+}
+
+proc ::cmdr::table::CheckBool {v} {
+    debug.cmdr/table {}
+    if {[string is boolean -strict $v]} return
+    return -code error -errorcode {CMDR TABLE NOT-A-BOOLEAN} \
+	"Expected boolean, got \"$v\""
 }
 
 # # ## ### ##### ######## ############# #####################
@@ -159,8 +178,8 @@ oo::class create ::cmdr::table::Impl::general {
 	foreach w $args { lappend headings [color heading $w] }
 
 	M add row $headings
-	set myplain 0
-	set myheader 1
+	set myborders 1
+	set myheaders 1
 	set mystyle {}
 	return
     }
@@ -199,50 +218,58 @@ oo::class create ::cmdr::table::Impl::general {
 	return
     }
 
-    method plain {} {
+    method borders {{enable {}}} {
 	debug.cmdr/table {}
-	set myplain 1
-	return
+	if {[llength [info level 0]] > 2} {
+	    ::cmdr::table::CheckBool $enable
+	    set myborders $enable
+	}
+	return $myborders
     }
 
-    method style {style} {
+    method headers {{enable {}}} {
 	debug.cmdr/table {}
-	set mystyle $style
-	return
+	if {[llength [info level 0]] > 2} {
+	    ::cmdr::table::CheckBool $enable
+	    set myheaders $enable
+	}
+	return $myheaders
     }
 
-    method noheader {} {
+    method style {{style {}}} {
 	debug.cmdr/table {}
-	if {!$myheader} return
-	set myheader 0
-	M delete row 0
-	return
+	if {[llength [info level 0]] > 2} {
+	    set mystyle $style
+	}
+	return [my Style]
     }
 
-    method String {} {
+    method Style {} {
 	debug.cmdr/table {}
-	# Choose style (user-specified, plain y/n, header y/n)
-
+	# Determine and return style (user-specified, borders y/n, header y/n)
 	if {$mystyle ne {}} {
 	    set thestyle $mystyle
-	} elseif {$myplain} {
-	    if {$myheader} {
-		set thestyle cmdr/table/plain
-	    } else {
-		set thestyle cmdr/table/plain/nohdr
-	    }
-	} else {
-	    if {$myheader} {
+	} elseif {$myborders} {
+	    if {$myheaders} {
 		set thestyle cmdr/table/borders
 	    } else {
 		set thestyle cmdr/table/borders/nohdr
 	    }
+	} elseif {$myheaders} {
+	    set thestyle cmdr/table/plain
+	} else {
+	    set thestyle cmdr/table/plain/nohdr
 	}
 
-	set r [report::report [self namespace]::R [M columns] style $thestyle]
+	debug.cmdr/table {==> ($thestyle)}
+	return $thestyle
+    }
+
+    method String {} {
+	debug.cmdr/table {}
+	set r [report::report [self namespace]::R [M columns] style [my Style]]
 	set str [M format 2string $r]
 	$r destroy
-
 	return [string trimright $str]
     }
 
@@ -252,7 +279,7 @@ oo::class create ::cmdr::table::Impl::general {
     # # ## ### ##### ######## #############
     ## State
 
-    variable myplain myheader mystyle
+    variable myborders myheaders mystyle
 
     # # ## ### ##### ######## #############
 }
@@ -266,7 +293,7 @@ oo::class create ::cmdr::table::Impl::dict {
     constructor {} {
 	debug.cmdr/table {}
 	next Key Value
-	my noheader ;# suppress header row.
+	my headers no ;# suppress header row.
 	# Keys are the headers (side ways table).
 	return
     }
@@ -289,14 +316,8 @@ oo::class create ::cmdr::table::Impl::dict {
     }
 
     # # ## ### ##### ######## #############
-    ## Internal commands.
-
-    # # ## ### ##### ######## #############
-    ## State - None of its own.
-
-    # # ## ### ##### ######## #############
 }
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::table 0
+package provide cmdr::table 0.1
