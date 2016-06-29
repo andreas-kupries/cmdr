@@ -350,6 +350,9 @@ namespace eval ::cmdr::color {
     define  warning  =yellow
     define  yes      =green
 
+    # Standard for cmdr::table
+    define  heading  =bold
+
     variable smap {}
 }
 

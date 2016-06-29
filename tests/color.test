@@ -12,7 +12,7 @@ kt require support debug::caller
 kt local   support cmdr::tty
 kt local   testing cmdr::color
 
-set thecolors {advisory bad bg-black bg-blue bg-cyan bg-default bg-green bg-magenta bg-red bg-white bg-yellow black blink blue bold confirm cyan default dim error good green hidden italic magenta name neutral no no-blink no-bold no-dim no-hidden no-italic no-revers no-strike no-underline note number prompt red reset revers strike underline unknown warning white yellow yes}
+set thecolors {advisory bad bg-black bg-blue bg-cyan bg-default bg-green bg-magenta bg-red bg-white bg-yellow black blink blue bold confirm cyan default dim error good green heading hidden italic magenta name neutral no no-blink no-bold no-dim no-hidden no-italic no-revers no-strike no-underline note number prompt red reset revers strike underline unknown warning white yellow yes}
 
 set thechars {
     advisory	{\033[33m}
@@ -37,6 +37,7 @@ set thechars {
     error	{\033[35m}
     good	{\033[32m}
     green	{\033[32m}
+    heading	{\033[1m}
     hidden	{\033[8m}
     italic	{\033[3m}
     magenta	{\033[35m}
@@ -89,6 +90,7 @@ set thedefs {
     error	=magenta
     good	=green
     green	e32
+    heading	=bold
     hidden	e8
     italic	e3
     magenta	e35
