@@ -310,6 +310,9 @@ The DSL commands map to instance methods as shown below:
 \fBcommon\fR
 \fBcmdr::actor\fR \fBset\fR
 .TP
+\fBcustom-setup\fR
+\fBcustom-setup\fR
+.TP
 \fBdefault\fR
 \fBDefault\fR
 .TP
@@ -317,10 +320,10 @@ The DSL commands map to instance methods as shown below:
 \fBcmdr::actor\fR \fBdescription:\fR
 .TP
 \fBehandler\fR
-\fBehandler\fR
+See \fBintercept\fR\&. \fIDeprecated\fR\&.
 .TP
-\fBshandler\fR
-\fBshandler\fR
+\fBintercept\fR
+\fBintercept\fR
 .TP
 \fBofficer\fR
 \fBOfficer\fR, forward to \fBDefineAction\fR

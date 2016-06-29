@@ -147,7 +147,11 @@ The words of the command line to parse and match to parameters.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd <officer>] [method intercept] [arg cmd]]
 [call [cmd <officer>] [method ehandler] [arg cmd]]
+
+[emph Note:] While the form [method ehandler] is still usable, it is
+deprecated and will be removed in a future release.
 
 This method specifies a command prefix to wrap around the parsing of
 the command line for the officer, and the execution of its action.
@@ -161,6 +165,30 @@ prefix then has the responsbility to perform any custom cleanup action
 required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i.e. in
 an interactive shell run by the framework).
+[list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <officer>] [method custom-setup] [arg cmd]]
+
+This method specifies a command prefix which will be run all the
+regular setup of the officer from its specification is done, to
+perform customizations.
+
+[para] An example of this can be seen in the package
+[package cmdr::history]. It provides a command
+[cmd cmdr::history::attach] to add the history management commands to
+the actor in question, suitable as argument to this method.
+
+[para] When called multiple times, the specified commands
+accumulate. This makes it easy to specify several indepedent
+customizations.
+
+[list_begin arguments]
+[arg_def cmd-prefix cmd]
+A command prefix taking a single argument, the instance command of an
+[package cmd::actor]. The command prefix has full access to this actor
+and can modify it as it sees fit. The common use case will be the
+extension of the actor with additional subordinates.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]

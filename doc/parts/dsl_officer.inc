@@ -106,7 +106,11 @@ thrown instead.
 This command declares the help text of the [term officer].
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd intercept] [arg cmdprefix]]
 [call [cmd ehandler] [arg cmdprefix]]
+
+[emph Note:] While the form [cmd ehandler] is still usable, it is
+deprecated and will be removed in a future release.
 
 This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
@@ -140,15 +144,18 @@ wanted.
 [list_end]
 
 [comment {- - -- --- ----- -------- -------------}]
-[call [cmd shandler] [arg cmdprefix]]
+[call [cmd custom-setup] [arg cmdprefix]]
 
 This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates).
 
-[para] At runtime the framework will call the specified command prefix
-with a single argument, the command of the actor we wish to
-initialize.
+[para] When called multiple times, the specified commands
+accumulate. This makes it easy to specify several indepedent
+customizations.
+
+[para] At runtime the framework will invoke all the specified commands
+with a single argument, the command of the actor to initialize.
 
 The command prefix is then allowed to modify that actor as it sees
 fit. The common use case will be the extension of the object with

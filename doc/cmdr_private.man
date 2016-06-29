@@ -105,7 +105,11 @@ The words of the command line to parse and match to parameters.
 [list_end][comment arguments]
 
 [comment {- - -- --- ----- -------- -------------}]
+[call [cmd <private>] [method intercept] [arg cmd]]
 [call [cmd <private>] [method ehandler] [arg cmd]]
+
+[emph Note:] While the form [method ehandler] is still usable, it is
+deprecated and will be removed in a future release.
 
 This method specifies a command prefix to wrap around the parsing of
 the command line for the private, and the execution of its action.
@@ -120,6 +124,18 @@ required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i.e. in
 an interactive shell run by the framework).
 [list_end][comment arguments]
+
+[comment {- - -- --- ----- -------- -------------}]
+[call [cmd <private>] [method custom-setup] [arg cmd]]
+
+This method specifies a command prefix which will be run all the
+regular setup of an officer from its specification is done, to perform
+customizations.
+
+[para] The [cmd <private>] here ignores such calls.
+
+[para] The method exists only to avoid having to special-case code the
+places propagating these commands down the hierarchy.
 
 [comment {- - -- --- ----- -------- -------------}]
 [call [cmd <private>] [method find] [arg path]]

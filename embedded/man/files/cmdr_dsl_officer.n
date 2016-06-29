@@ -285,9 +285,11 @@ cmdr-spec-dsl-officer \- Cmdr - Officer Specification Language
 .sp
 \fBdescription\fR \fItext\fR
 .sp
+\fBintercept\fR \fIcmdprefix\fR
+.sp
 \fBehandler\fR \fIcmdprefix\fR
 .sp
-\fBshandler\fR \fIcmdprefix\fR
+\fBcustom-setup\fR \fIcmdprefix\fR
 .sp
 \fBofficer\fR \fIname\fR \fIscript\fR
 .sp
@@ -413,7 +415,11 @@ thrown instead\&.
 \fBdescription\fR \fItext\fR
 This command declares the help text of the \fIofficer\fR\&.
 .TP
+\fBintercept\fR \fIcmdprefix\fR
+.TP
 \fBehandler\fR \fIcmdprefix\fR
+\fINote:\fR While the form \fBehandler\fR is still usable, it is
+deprecated and will be removed in a future release\&.
 This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates)\&.
@@ -441,14 +447,17 @@ commands run from such a shell, something which is definitely not
 wanted\&.
 .RE
 .TP
-\fBshandler\fR \fIcmdprefix\fR
+\fBcustom-setup\fR \fIcmdprefix\fR
 This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates)\&.
 .sp
-At runtime the framework will call the specified command prefix
-with a single argument, the command of the actor we wish to
-initialize\&.
+When called multiple times, the specified commands
+accumulate\&. This makes it easy to specify several indepedent
+customizations\&.
+.sp
+At runtime the framework will invoke all the specified commands
+with a single argument, the command of the actor to initialize\&.
 The command prefix is then allowed to modify that actor as it sees
 fit\&. The common use case will be the extension of the object with
 additional subordinates\&.

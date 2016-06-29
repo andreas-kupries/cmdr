@@ -295,7 +295,11 @@ package require \fBcmdr::officer \fR
 .sp
 \fB<officer>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
 .sp
+\fB<officer>\fR \fBintercept\fR \fIcmd\fR
+.sp
 \fB<officer>\fR \fBehandler\fR \fIcmd\fR
+.sp
+\fB<officer>\fR \fBcustom-setup\fR \fIcmd\fR
 .sp
 \fB<officer>\fR \fBexit\fR
 .sp
@@ -441,7 +445,11 @@ string \fIword\fR
 The words of the command line to parse and match to parameters\&.
 .RE
 .TP
+\fB<officer>\fR \fBintercept\fR \fIcmd\fR
+.TP
 \fB<officer>\fR \fBehandler\fR \fIcmd\fR
+\fINote:\fR While the form \fBehandler\fR is still usable, it is
+deprecated and will be removed in a future release\&.
 This method specifies a command prefix to wrap around the parsing of
 the command line for the officer, and the execution of its action\&.
 .RS
@@ -454,6 +462,28 @@ prefix then has the responsbility to perform any custom cleanup action
 required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i\&.e\&. in
 an interactive shell run by the framework)\&.
+.RE
+.TP
+\fB<officer>\fR \fBcustom-setup\fR \fIcmd\fR
+This method specifies a command prefix which will be run all the
+regular setup of the officer from its specification is done, to
+perform customizations\&.
+.sp
+An example of this can be seen in the package
+\fBcmdr::history\fR\&. It provides a command
+\fBcmdr::history::attach\fR to add the history management commands to
+the actor in question, suitable as argument to this method\&.
+.sp
+When called multiple times, the specified commands
+accumulate\&. This makes it easy to specify several indepedent
+customizations\&.
+.RS
+.TP
+cmd-prefix \fIcmd\fR
+A command prefix taking a single argument, the instance command of an
+\fBcmd::actor\fR\&. The command prefix has full access to this actor
+and can modify it as it sees fit\&. The common use case will be the
+extension of the actor with additional subordinates\&.
 .RE
 .TP
 \fB<officer>\fR \fBexit\fR

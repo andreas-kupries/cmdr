@@ -82,7 +82,7 @@ proc ::cmdr::history::initial-limit {new} {
 
 proc ::cmdr::history::attach {actor} {
     debug.cmdr/history {}
-    # cmdr shandler to use.
+    # For use by cmdr's custom-setup command.
     # The actor is the officer to extend.
 
     # (***) Detect recursive entry through the extend statements
@@ -141,8 +141,9 @@ proc ::cmdr::history::attach {actor} {
 	}
     } ::cmdr::history::Show
     # This recurses into 'attach' through the automatic inheritance of
-    # the shandler. See (***) above for the code intercepting the
-    # recursion and preventing it from becoming infinite.
+    # the custom-setup hooks. See (***) above for the code
+    # intercepting the recursion and preventing it from becoming
+    # infinite.
 
     $actor extend {history clear} {
 	section Introspection {Command history}

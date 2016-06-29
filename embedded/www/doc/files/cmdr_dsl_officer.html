@@ -130,11 +130,12 @@
 <li><a href="#3"><b class="cmd">common</b> <i class="arg">name</i> <b class="option">-extend</b> <b class="option">--</b> <i class="arg">text</i></a></li>
 <li><a href="#4"><b class="cmd">default</b></a></li>
 <li><a href="#5"><b class="cmd">description</b> <i class="arg">text</i></a></li>
-<li><a href="#6"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#7"><b class="cmd">shandler</b> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#8"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></li>
-<li><a href="#9"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></li>
-<li><a href="#10"><b class="cmd">undocumented</b></a></li>
+<li><a href="#6"><b class="cmd">intercept</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#7"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#8"><b class="cmd">custom-setup</b> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#9"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></li>
+<li><a href="#10"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#11"><b class="cmd">undocumented</b></a></li>
 </ul>
 </div>
 </div>
@@ -231,8 +232,12 @@ this default is used. If no default is specified an error will be
 thrown instead.</p></dd>
 <dt><a name="5"><b class="cmd">description</b> <i class="arg">text</i></a></dt>
 <dd><p>This command declares the help text of the <i class="term">officer</i>.</p></dd>
-<dt><a name="6"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></dt>
-<dd><p>This is an advanced command which should normally only be specified at
+<dt><a name="6"><b class="cmd">intercept</b> <i class="arg">cmdprefix</i></a></dt>
+<dd></dd>
+<dt><a name="7"><b class="cmd">ehandler</b> <i class="arg">cmdprefix</i></a></dt>
+<dd><p><em>Note:</em> While the form <b class="cmd">ehandler</b> is still usable, it is
+deprecated and will be removed in a future release.
+This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates).</p>
 <p>At runtime the framework will call the specified command prefix
@@ -254,23 +259,25 @@ cleanup code transient state <em>will</em> leak between multiple
 commands run from such a shell, something which is definitely not
 wanted.</p></li>
 </ol></dd>
-<dt><a name="7"><b class="cmd">shandler</b> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="8"><b class="cmd">custom-setup</b> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This is an advanced command which should normally only be specified at
 the top of the whole hierarchy (from which its value will
 automatically propagate to all subordinates).</p>
-<p>At runtime the framework will call the specified command prefix
-with a single argument, the command of the actor we wish to
-initialize.
+<p>When called multiple times, the specified commands
+accumulate. This makes it easy to specify several indepedent
+customizations.</p>
+<p>At runtime the framework will invoke all the specified commands
+with a single argument, the command of the actor to initialize.
 The command prefix is then allowed to modify that actor as it sees
 fit. The common use case will be the extension of the object with
 additional subordinates.
 An example of this is the package <b class="package"><a href="cmdr_history.html">cmdr::history</a></b> which
 provides a command <b class="cmd">cmdr::history::attach</b> to add the history
 management commands to the actor in question.</p></dd>
-<dt><a name="8"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></dt>
+<dt><a name="9"><b class="cmd">officer</b> <i class="arg">name</i> <i class="arg">script</i></a></dt>
 <dd><p>This command creates a named subordinate <i class="term">officer</i> with its
 specification <i class="arg">script</i> of officer commands as described here.</p></dd>
-<dt><a name="9"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></dt>
+<dt><a name="10"><b class="cmd">private</b> <i class="arg">name</i> <i class="arg">script</i> <i class="arg">cmdprefix</i></a></dt>
 <dd><p>This command creates a named subordinate <i class="term">private</i> with its
 specification <i class="arg">script</i> of private commands
 (See <i class="term"><a href="cmdr_dsl_private.html">Cmdr - Private Specification Language</a></i>), and a command prefix to invoke
@@ -280,7 +287,7 @@ when it is chosen.</p>
 private.</p>
 <p>For an example see section <i class="term">Simple backend</i>
 of <i class="term"><a href="cmdr_dsl.html">Cmdr - Introduction to the Specification Language</a></i>.</p></dd>
-<dt><a name="10"><b class="cmd">undocumented</b></a></dt>
+<dt><a name="11"><b class="cmd">undocumented</b></a></dt>
 <dd><p>This command excludes the <i class="term">officer</i> (and its subordinates) from
 the generated help.
 Note that subordinates reachable through aliases may be included,

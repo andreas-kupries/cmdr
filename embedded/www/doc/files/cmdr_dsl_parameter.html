@@ -154,7 +154,7 @@
 <li><a href="#18"><b class="cmd">when-set</b> <i class="arg">cmdprefix</i></a></li>
 <li><a href="#19"><b class="cmd">stop!</b></a></li>
 <li><a href="#20"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></li>
-<li><a href="#21"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></li>
+<li><a href="#21"><b class="cmd">touch?</b> <i class="arg">name</i> <i class="arg">value</i></a></li>
 <li><a href="#22"><b class="cmd">disallow</b> <i class="arg">name</i></a></li>
 </ul>
 </div>
@@ -527,7 +527,7 @@ either global, or for the specific command.</p></dd>
 specified <i class="arg">value</i>. A simple method of communication between
 parameters of a command.</p>
 <p>Useful for use with <b class="cmd">when-set</b> and/or <b class="cmd">when-complete</b></p></dd>
-<dt><a name="21"><b class="cmd">touch</b> <i class="arg">name</i> <i class="arg">value</i></a></dt>
+<dt><a name="21"><b class="cmd">touch?</b> <i class="arg">name</i> <i class="arg">value</i></a></dt>
 <dd><p>The returned callback sets the <i class="arg">name</i>d sibling parameter to the
 specified <i class="arg">value</i>, if and only if that parameter exists. A simple
 method of communication between parameters of a command, where the

@@ -285,7 +285,11 @@ package require \fBcmdr::private \fR
 .sp
 \fB<private>\fR \fBdo\fR ?\fIword\fR\&.\&.\&.?
 .sp
+\fB<private>\fR \fBintercept\fR \fIcmd\fR
+.sp
 \fB<private>\fR \fBehandler\fR \fIcmd\fR
+.sp
+\fB<private>\fR \fBcustom-setup\fR \fIcmd\fR
 .sp
 \fB<private>\fR \fBfind\fR \fIpath\fR
 .sp
@@ -380,7 +384,11 @@ string \fIword\fR
 The words of the command line to parse and match to parameters\&.
 .RE
 .TP
+\fB<private>\fR \fBintercept\fR \fIcmd\fR
+.TP
 \fB<private>\fR \fBehandler\fR \fIcmd\fR
+\fINote:\fR While the form \fBehandler\fR is still usable, it is
+deprecated and will be removed in a future release\&.
 This method specifies a command prefix to wrap around the parsing of
 the command line for the private, and the execution of its action\&.
 .RS
@@ -394,6 +402,16 @@ required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i\&.e\&. in
 an interactive shell run by the framework)\&.
 .RE
+.TP
+\fB<private>\fR \fBcustom-setup\fR \fIcmd\fR
+This method specifies a command prefix which will be run all the
+regular setup of an officer from its specification is done, to perform
+customizations\&.
+.sp
+The \fB<private>\fR here ignores such calls\&.
+.sp
+The method exists only to avoid having to special-case code the
+places propagating these commands down the hierarchy\&.
 .TP
 \fB<private>\fR \fBfind\fR \fIpath\fR
 This method returns the instance command of the sub-ordinate with the

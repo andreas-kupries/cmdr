@@ -37,6 +37,7 @@ package require cmdr::pager
 debug define cmdr/help
 debug level  cmdr/help
 debug prefix cmdr/help {[debug caller] | }
+debug prefix cmdr/help/short {| }
 
 # # ## ### ##### ######## ############# #####################
 ## Definition
@@ -90,7 +91,9 @@ proc ::cmdr::help::auto-option {actor} {
 		# Invoke the help command which will be generated and
 		# inserted below.
 		set root [$p config context root]
+
 		if {[$root exists *prefix*]} {
+		    debug.cmdr/help/short {/prefix $root ([$root get *prefix*])}
 		    # Invoke help for the current command.
 		    $root do help {*}[$root get *prefix*]
 		} else {

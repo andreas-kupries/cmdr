@@ -320,7 +320,7 @@ After attachment the actor will accept the following 3 commands:
 .CE
 .IP
 Under most circumstances the attachment is handled through the
-\fBshandler\fR method of officers\&. See \fBcmdr::officer\fR, and
+method \fBcustom-setup\fR of officers\&. See \fBcmdr::officer\fR, and
 the \fBExample\fR for more information\&.
 .TP
 \fB::cmdr::history\fR \fBsave-to\fR \fIpath\fR
@@ -346,7 +346,7 @@ cmdr history initial-limit 20
 cmdr history save-to       ~/\&.fx_history
 
 cmdr create fx::fx [file tail $::argv0] {
-    shandler ::cmdr::history::attach
+    custom-setup ::cmdr::history::attach
 
     [\&.\&.\&.]
 }

@@ -351,6 +351,9 @@ doc
 \fBcmdr::private\fR
 \fIfiles/cmdr_private\&.n\fR: Cmdr - (Internal) Single command handling, options, and arguments
 .TP
+\fBcmdr::table\fR
+\fIfiles/cmdr_table\&.n\fR: Cmdr - Simple Table creation
+.TP
 \fBcmdr::tty\fR
 \fIfiles/cmdr_tty\&.n\fR: Cmdr - Check if stdin is a tty, i\&.e\&. terminal
 .TP

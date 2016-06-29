@@ -132,10 +132,12 @@
 <li><a href="#2"><b class="cmd">::cmdr::private</b> <b class="method">create</b> <i class="arg">obj</i> <i class="arg">super</i> <i class="arg">name</i> <i class="arg">arguments</i> <i class="arg">action</i></a></li>
 <li><a href="#3"><b class="cmd">&lt;private&gt;</b> <b class="method">complete-words</b> <i class="arg">parse</i></a></li>
 <li><a href="#4"><b class="cmd">&lt;private&gt;</b> <b class="method">do</b> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
-<li><a href="#5"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
-<li><a href="#6"><b class="cmd">&lt;private&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></li>
-<li><a href="#7"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
-<li><a href="#8"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
+<li><a href="#5"><b class="cmd">&lt;private&gt;</b> <b class="method">intercept</b> <i class="arg">cmd</i></a></li>
+<li><a href="#6"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></li>
+<li><a href="#7"><b class="cmd">&lt;private&gt;</b> <b class="method">custom-setup</b> <i class="arg">cmd</i></a></li>
+<li><a href="#8"><b class="cmd">&lt;private&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></li>
+<li><a href="#9"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></li>
+<li><a href="#10"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></li>
 </ul>
 </div>
 </div>
@@ -210,8 +212,12 @@ filled container of parameters.</p>
 <dt>string <i class="arg">word</i></dt>
 <dd><p>The words of the command line to parse and match to parameters.</p></dd>
 </dl></dd>
-<dt><a name="5"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></dt>
-<dd><p>This method specifies a command prefix to wrap around the parsing of
+<dt><a name="5"><b class="cmd">&lt;private&gt;</b> <b class="method">intercept</b> <i class="arg">cmd</i></a></dt>
+<dd></dd>
+<dt><a name="6"><b class="cmd">&lt;private&gt;</b> <b class="method">ehandler</b> <i class="arg">cmd</i></a></dt>
+<dd><p><em>Note:</em> While the form <b class="method">ehandler</b> is still usable, it is
+deprecated and will be removed in a future release.
+This method specifies a command prefix to wrap around the parsing of
 the command line for the private, and the execution of its action.</p>
 <dl class="arguments">
 <dt>cmd-prefix <i class="arg">cmd</i></dt>
@@ -223,7 +229,14 @@ required by the application using the framework to prevent leakage of
 data between multiple commands executed one after the other (i.e. in
 an interactive shell run by the framework).</p></dd>
 </dl></dd>
-<dt><a name="6"><b class="cmd">&lt;private&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></dt>
+<dt><a name="7"><b class="cmd">&lt;private&gt;</b> <b class="method">custom-setup</b> <i class="arg">cmd</i></a></dt>
+<dd><p>This method specifies a command prefix which will be run all the
+regular setup of an officer from its specification is done, to perform
+customizations.</p>
+<p>The <b class="cmd">&lt;private&gt;</b> here ignores such calls.</p>
+<p>The method exists only to avoid having to special-case code the
+places propagating these commands down the hierarchy.</p></dd>
+<dt><a name="8"><b class="cmd">&lt;private&gt;</b> <b class="method">find</b> <i class="arg">path</i></a></dt>
 <dd><p>This method returns the instance command of the sub-ordinate with the
 given <i class="arg">path</i> of names. An error is thrown if such a sub-ordinate
 does not exist, i.e. whenever <i class="arg">path</i> is not empty, as a private
@@ -236,7 +249,7 @@ high-end of the recursion which may end in this method.</p>
 <dt>string <i class="arg">path</i></dt>
 <dd><p>The path of names to the sub-ordinate to look for.</p></dd>
 </dl></dd>
-<dt><a name="7"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
+<dt><a name="9"><b class="cmd">&lt;private&gt;</b> <b class="method">help</b> <span class="opt">?<i class="arg">prefix</i>?</span></a></dt>
 <dd><p>This method returns the help information for the private and its
 parameters. The <i class="arg">prefix</i>, if specified provides the name of the
 private within the help data. It defaults to the empty string.
@@ -246,7 +259,7 @@ described in section <span class="sectref"><a href="#section4">Help Information<
 <dt>string <i class="arg">prefix</i></dt>
 <dd><p>The name to use for the private within the generated help.</p></dd>
 </dl></dd>
-<dt><a name="8"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
+<dt><a name="10"><b class="cmd">&lt;private&gt;</b> <b class="method">unknown</b> <i class="arg">m</i> <span class="opt">?<i class="arg">word</i>...?</span></a></dt>
 <dd><p>This method overrides the standard behaviour for unknown methods.
 Instead of throwing an error they are routed to the hidden container
 of the private's parameters, of class <b class="package"><a href="cmdr_config.html">cmdr::config</a></b>.</p>

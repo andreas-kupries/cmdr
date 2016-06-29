@@ -1,0 +1,293 @@
+
+<html><head>
+<title>cmdr::table - Cmdr, a framework for command line parsing and dispatch</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cmdr_table.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013-2016 Andreas Kupries   -- Copyright &copy; 2013-2016 Documentation, Andreas Kupries
+   -->
+<! -- CVS: $Id$ cmdr::table.n
+   -->
+<body><div class="doctools">
+<hr> [
+   <a href="../../../../../../home">Home</a>
+| <a href="../../toc.html">Main Table Of Contents</a>
+| <a href="../toc.html">Table Of Contents</a>
+| <a href="../../index.html">Keyword Index</a>
+ ] <hr>
+<h1 class="title">cmdr::table(n) 0.1 doc &quot;Cmdr, a framework for command line parsing and dispatch&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cmdr::table - Cmdr - Simple Table creation</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">API</a></li>
+<li class="section"><a href="#section3">Table API</a></li>
+<li class="section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">cmdr::util</b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">::cmdr::table</b> <b class="method">general</b> <i class="arg">var</i> <i class="arg">headers</i> <i class="arg">script</i></a></li>
+<li><a href="#2"><b class="cmd">::cmdr::table</b> <b class="method">dict</b> <i class="arg">var</i> <i class="arg">script</i></a></li>
+<li><a href="#3"><b class="cmd">::cmdr::table</b> <b class="method">borders</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">::cmdr::table</b> <b class="method">show</b> <span class="opt">?<i class="arg">cmd</i>...?</span></a></li>
+<li><a href="#5"><b class="variable">t</b> <b class="method">borders</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#6"><b class="variable">t</b> <b class="method">headers</b> <span class="opt">?<i class="arg">enable</i>?</span></a></li>
+<li><a href="#7"><b class="variable">t</b> <b class="method">style</b> <span class="opt">?<i class="arg">style</i>?</span></a></li>
+<li><a href="#8"><b class="variable">t</b> <b class="method">add</b> <i class="arg">word</i>...</a></li>
+<li><a href="#9"><b class="variable">t</b> <b class="method">+</b> <i class="arg">word</i>...</a></li>
+<li><a href="#10"><b class="variable">t</b> <b class="method">+=</b> <i class="arg">word</i>...</a></li>
+<li><a href="#11"><b class="variable">t</b> <b class="method">&lt;&lt;</b> <i class="arg">word</i>...</a></li>
+<li><a href="#12"><b class="variable">t</b> <b class="method">&lt;=</b> <i class="arg">word</i>...</a></li>
+<li><a href="#13"><b class="variable">t</b> <b class="method">show*</b> <span class="opt">?<i class="arg">cmd</i>?</span></a></li>
+<li><a href="#14"><b class="variable">t</b> <b class="method">show</b> <span class="opt">?<i class="arg">cmd</i>?</span></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>Welcome to the Cmdr project, written by Andreas Kupries.</p>
+<p>For availability please read <i class="term"><a href="cmdr_howto_get_sources.html">Cmdr - How To Get The Sources</a></i>.</p>
+<p>This package provides convenience commands for the easy creation of
+simple tables.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">API</a></h2>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">::cmdr::table</b> <b class="method">general</b> <i class="arg">var</i> <i class="arg">headers</i> <i class="arg">script</i></a></dt>
+<dd><p>This command creates a new table with the words found in the list of
+<i class="arg">headers</i> as the top row.
+The <i class="arg">script</i> is run in the calling context to configure and
+populate the table.
+The table's object command is stored in the named <i class="arg">var</i> for access
+by the <i class="arg">script</i>.
+The result of the command is the table's object command.</p>
+<dl class="arguments">
+<dt>varname <i class="arg">var</i></dt>
+<dd><p>The name of the variable in the calling scope the new table's object
+command will be stored into.</p></dd>
+<dt>list <i class="arg">headers</i></dt>
+<dd><p>The list of words to user as column headers.</p></dd>
+<dt>string <i class="arg">script</i></dt>
+<dd><p>The tcl script to be run to configure and populate the table.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::cmdr::table</b> <b class="method">dict</b> <i class="arg">var</i> <i class="arg">script</i></a></dt>
+<dd><p>This command creates a new table intended for the display of a Tcl
+dictionary.
+It will have two columns titled <b class="const">Key</b> and <b class="const">Value</b>.
+The <i class="arg">script</i> is run in the calling context to configure and
+populate the table.
+The table's object command is stored in the named <i class="arg">var</i> for access
+by the <i class="arg">script</i>.
+The result of the command is the table's object command.</p>
+<dl class="arguments">
+<dt>varname <i class="arg">var</i></dt>
+<dd><p>The name of the variable in the calling scope the new table's object
+command will be stored into.</p></dd>
+<dt>string <i class="arg">script</i></dt>
+<dd><p>The tcl script to be run to configure and populate the table.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::cmdr::table</b> <b class="method">borders</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>This command configures the global <i class="term">border</i> setting, which
+indicates the (non)use of borders by the tables of this package. Note
+that changes to this setting influence only the tables created after
+the change. Existing tables are not modified.</p>
+<p>The result of the command is the new state of the setting.</p>
+<p>If the command is called without an argument it simply returns the
+current state of the setting, without making changes.</p>
+<p>The default value for the setting is <b class="const">yes</b>.
+Individual tables can override the global settings via their
+<b class="method">borders</b> method, see <span class="sectref"><a href="#section3">Table API</a></span>.</p>
+<dl class="arguments">
+<dt>boolean <i class="arg">enable</i></dt>
+<dd><p>The new value of the setting. Optional.</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::cmdr::table</b> <b class="method">show</b> <span class="opt">?<i class="arg">cmd</i>...?</span></a></dt>
+<dd><p>This command configures the global <i class="term">show</i> setting, which is the
+command prefix to use to print a table, if the table is not given a
+specific command to use. Note that changes to this setting influence
+only the tables created after the change. Existing tables are not
+modified.</p>
+<p>The result of the command is the new state of the setting</p>
+<p>If the command is called without any arguments it simply
+returns the current state of the setting, without making changes.</p>
+<p>The default value for the setting is <b class="const">puts</b>.</p>
+<dl class="arguments">
+<dt>word <i class="arg">cmd</i></dt>
+<dd><p>The command prefix to use for printing a table, as varargs.
+The prefix will be invoked with a single argument, the string
+representation of the table.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">Table API</a></h2>
+<p>This section lists the methods available for configuration and
+population of the tables created by this package.</p>
+<dl class="definitions">
+<dt><a name="5"><b class="variable">t</b> <b class="method">borders</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>This is the table-level <i class="term">borders</i> setting. On creation a table
+inherits the global setting (See <b class="cmd">::cmdr::table borders</b>). If
+that is not to suit then this method can be used to override it.</p>
+<p>The result of the method is the new state of the setting. When
+called without argument no change is made and the result is the
+current state of the setting.</p></dd>
+<dt><a name="6"><b class="variable">t</b> <b class="method">headers</b> <span class="opt">?<i class="arg">enable</i>?</span></a></dt>
+<dd><p>This method controls the visibility of the header row.  By default
+general tables have the header row visisble, while for dict tables the
+header is suppressed. This method allows the user to override these
+defaults.</p>
+<p>The result of the method is the new state of the setting. When
+called without argument no change is made and the result is the
+current state of the setting.</p></dd>
+<dt><a name="7"><b class="variable">t</b> <b class="method">style</b> <span class="opt">?<i class="arg">style</i>?</span></a></dt>
+<dd><p>This method allows the user to force the use of a completely custom
+style.
+Please see the documentation for the Tcllib package <b class="package">report</b>
+on how to define table styles.</p>
+<p>The package defines four styles of its own, all using the
+common prefix <b class="const">cmdr/table/</b> in their names.
+When no custom style is set the table chooses between these based on
+its <i class="term">borders</i> and <i class="term">headers</i> settings.</p>
+<p>The result of the method is the new state of the setting. When
+called without argument then no change is made and the result is the
+current state of the setting.</p>
+<p>To revert from a custom style to the automatic choice invoke
+this method with the empty string as the name of the style.</p></dd>
+<dt><a name="8"><b class="variable">t</b> <b class="method">add</b> <i class="arg">word</i>...</a></dt>
+<dd></dd>
+<dt><a name="9"><b class="variable">t</b> <b class="method">+</b> <i class="arg">word</i>...</a></dt>
+<dd></dd>
+<dt><a name="10"><b class="variable">t</b> <b class="method">+=</b> <i class="arg">word</i>...</a></dt>
+<dd></dd>
+<dt><a name="11"><b class="variable">t</b> <b class="method">&lt;&lt;</b> <i class="arg">word</i>...</a></dt>
+<dd></dd>
+<dt><a name="12"><b class="variable">t</b> <b class="method">&lt;=</b> <i class="arg">word</i>...</a></dt>
+<dd><p>This method adds a new row to the table, containing the given words.
+If less words than headers are specified the row is padded with empty columns.
+If too many words are specified the superfluous words are ignored.</p>
+<p>The result of the method is the empty string.</p></dd>
+<dt><a name="13"><b class="variable">t</b> <b class="method">show*</b> <span class="opt">?<i class="arg">cmd</i>?</span></a></dt>
+<dd><p>This method formats the table into a string and then invokes the
+command prefix <i class="arg">cmd</i> to print that string. The command prefix is
+run at the global namespace and level. If the <i class="arg">cmd</i> is not
+specified the global <i class="term">show</i> setting is used instead.</p>
+<p>The result of the method is the empty string.</p></dd>
+<dt><a name="14"><b class="variable">t</b> <b class="method">show</b> <span class="opt">?<i class="arg">cmd</i>?</span></a></dt>
+<dd><p>This is a variant of method <b class="method">show*</b> above which not only prints
+the table as above, but also destroys it.</p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<p>Both the package(s) and this documentation will undoubtedly contain
+bugs and other problems.
+Please report such at
+<a href="https:/core.tcl.tk/akupries/cmdr">Cmdr Tickets</a>.</p>
+<p>Please also report any ideas you may have for enhancements of
+either package(s) and/or documentation.</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../index.html#key4">arguments</a>, <a href="../../index.html#key5">command hierarchy</a>, <a href="../../index.html#key9">command line completion</a>, <a href="../../index.html#key11">command line handling</a>, <a href="../../index.html#key13">command tree</a>, <a href="../../index.html#key0">editing command line</a>, <a href="../../index.html#key8">help for command line</a>, <a href="../../index.html#key6">hierarchy of commands</a>, <a href="../../index.html#key3">interactive command shell</a>, <a href="../../index.html#key1">optional arguments</a>, <a href="../../index.html#key2">options</a>, <a href="../../index.html#key12">parameters</a>, <a href="../../index.html#key10">processing command line</a>, <a href="../../index.html#key7">tree of commands</a></p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013-2016 Andreas Kupries<br>
+Copyright &copy; 2013-2016 Documentation, Andreas Kupries</p>
+</div>
+</div></body></html>
