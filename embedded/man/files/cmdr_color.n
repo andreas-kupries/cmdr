@@ -1,5 +1,5 @@
 '\"
-'\" Generated from file 'cmdr_color\&.man~' by tcllib/doctools with format 'nroff'
+'\" Generated from file 'cmdr_color\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2013-2016 Andreas Kupries
 '\" Copyright (c) 2013-2016 Documentation, Andreas Kupries
 '\"
@@ -545,6 +545,9 @@ warning
 .TP
 yes
 =green
+.TP
+heading
+=bold
 .PP
 .SH "BUGS, IDEAS, FEEDBACK"
 Both the package(s) and this documentation will undoubtedly contain
