@@ -402,6 +402,8 @@ oo::class create ::cmdr::officer {
 	dict set mymap a,$name $handler
 	lappend mycommands $name
 
+	#puts |Def|[my fullname]|+|$name|\t\t($handler)
+
 	# Update the map of action prefixes
 	set prefix {}
 	foreach c [split $name {}] {
@@ -429,13 +431,22 @@ oo::class create ::cmdr::officer {
     method Known {name} {
 	debug.cmdr/officer {[debug caller] | }
 	# Known exact action is good
-	if {[dict exists $mymap a,$name]} { return 1 }
+	if {[dict exists $mymap a,$name]} {
+	    debug.cmdr/officer {found action as-is}
+	    return 1
+	}
 	debug.cmdr/officer {no action, maybe prefix}
 	# Unknown prefix is bad
-	if {![dict exists $mypmap $name]} { return 0 }
+	if {![dict exists $mypmap $name]} {
+	    debug.cmdr/officer {no prefix}
+	    return 0
+	}
 	debug.cmdr/officer {prefix, maybe ambiguous}
 	# As is an ambiguous prefix
-	if {[llength [dict get $mypmap $name]] > 1} { return 0 }
+	if {[llength [dict get $mypmap $name]] > 1} {
+	    debug.cmdr/officer {ambiguous, found: [dict get $mypmap $name]}
+	    return 0
+	}
 	debug.cmdr/officer {unique prefix}
 	# Known unique prefix is good.
 	return 1
