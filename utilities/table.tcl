@@ -2,6 +2,9 @@
 # # ## ### ##### ######## ############# #####################
 ## Easy table generation
 
+# TODO: control colorization a bit more - Allow for global and
+# per-table suppression.
+
 # @@ Meta Begin
 # Package cmdr::table 0.1
 # Meta author   {Andreas Kupries}
@@ -267,6 +270,12 @@ oo::class create ::cmdr::table::Impl::general {
 
     method String {} {
 	debug.cmdr/table {}
+
+	if {!$myheaders} {
+	    # Remove the header row pushed by the constructor.
+	    M delete row 0
+	}
+	
 	set r [report::report [self namespace]::R [M columns] style [my Style]]
 	set str [M format 2string $r]
 	$r destroy
@@ -320,4 +329,4 @@ oo::class create ::cmdr::table::Impl::dict {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::table 0.1
+package provide cmdr::table 0.2
