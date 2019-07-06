@@ -6,7 +6,7 @@
 # per-table suppression.
 
 # @@ Meta Begin
-# Package cmdr::table 0.1
+# Package cmdr::table 0.3
 # Meta author   {Andreas Kupries}
 # Meta location https://core.tcl.tk/akupries/cmdr
 # Meta platform    tcl
@@ -279,6 +279,13 @@ oo::class create ::cmdr::table::Impl::general {
 	set r [report::report [self namespace]::R [M columns] style [my Style]]
 	set str [M format 2string $r]
 	$r destroy
+
+	set tmp {}
+	foreach line [split $str \n] {
+	    lappend tmp [string trimright $line]
+	}
+	set str [join $tmp \n]
+	
 	return [string trimright $str]
     }
 
@@ -329,4 +336,4 @@ oo::class create ::cmdr::table::Impl::dict {
 
 # # ## ### ##### ######## ############# #####################
 ## Ready
-package provide cmdr::table 0.2
+package provide cmdr::table 0.3
